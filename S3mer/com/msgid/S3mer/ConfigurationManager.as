@@ -26,25 +26,25 @@ package com.msgid.S3mer
 		private var _schedulesNew:ArrayCollection;
 		private var _playlistsNew:ArrayCollection;
 		
-		private var _containers:ArrayCollection;
+		private var _container:Container;
 
-		private var _heartbeatTimer:Timer;
+		private static var _heartbeatTimer:Timer;
 
 		private var _config:XML;
 		
-		private var _downloadQueue:DownloadQueue;
+		private static var _downloadQueue:DownloadQueue;
 		
 		// BaseURL for media, can be overwritten by config file
 		private var _mediaURL:String = ApplicationSettings.URL_MEDIA;
 		
-		private var _hearbeatURL:String = ApplicationSettings.URL_HEARTBEAT + "?playerid=";
+		private static var _hearbeatURL:String = ApplicationSettings.URL_HEARTBEAT + "?playerid=";
 		
 		// Configuration URL
-		private var _configURL:String = ApplicationSettings.URL_CONFIG + "?playerid=";
+		private var _configURL:String = ApplicationSettings.URL_CONFIG;
 	
 		private var _stopped:Boolean;
 			
-		public function ConfigurationManager(containers:ArrayCollection) {
+		public function ConfigurationManager(container:Container) {
 			this._showsNew = new ArrayCollection();
 			this._schedulesNew = new ArrayCollection();
 			this._playlistsNew = new ArrayCollection();
@@ -53,24 +53,29 @@ package com.msgid.S3mer
 			this._schedulesCur = new ArrayCollection();
 			this._playlistsCur = new ArrayCollection();
 			
-			this._containers = containers;
-			this._downloadQueue = new DownloadQueue();
+			this._container = container;
 			
-			this._downloadQueue.addEventListener(DownloaderEvent.PROGRESS,OnDownloadProgress,false,0,true);
-			this._downloadQueue.addEventListener(DownloaderEvent.PARTIAL_COMPLETE,OnDownloadFileComplete,false,0,true);
-			this._downloadQueue.addEventListener(DownloaderEvent.COMPLETE,OnDownloadComplete,false,0,true);
+			if (_downloadQueue == null) {
+				_downloadQueue = new DownloadQueue();
+			}
+			
+			_downloadQueue.addEventListener(DownloaderEvent.PROGRESS,this.OnDownloadProgress,false,0,true);
+			_downloadQueue.addEventListener(DownloaderEvent.PARTIAL_COMPLETE,this.OnDownloadFileComplete,false,0,true);
+			_downloadQueue.addEventListener(DownloaderEvent.COMPLETE,this.OnDownloadComplete,false,0,true);
 
-			this._heartbeatTimer = new Timer(1000);
-			this._heartbeatTimer.addEventListener(TimerEvent.TIMER, OnHeartbeatTimer,false,0,true);
-			this._heartbeatTimer.start();
+			if (_heartbeatTimer == null) {
+				_heartbeatTimer = new Timer(1000);
+				_heartbeatTimer.addEventListener(TimerEvent.TIMER, OnHeartbeatTimer,false,0,true);
+				_heartbeatTimer.start();
+			}
 			
 			this._stopped = true;
 		}
 		
-		private function OnHeartbeatTimer(e:TimerEvent):void {
+		private static function OnHeartbeatTimer(e:TimerEvent):void {
 			var _loader:URLLoader = new URLLoader();
 			var _loaderReq:URLRequest;
-			this._heartbeatTimer.stop();
+			_heartbeatTimer.stop();
 			
 			
 			
@@ -78,7 +83,7 @@ package com.msgid.S3mer
 			_loader.addEventListener(IOErrorEvent.IO_ERROR,OnIOError,false,0,true);
 			_loader.dataFormat = URLLoaderDataFormat.TEXT;
 			try {
-				_loaderReq = new URLRequest(this._hearbeatURL + ApplicationSettings.getValue("channel.id",""));
+				_loaderReq = new URLRequest(_hearbeatURL + ApplicationSettings.getValue("channel.id",""));
 //				_loaderReq.setLoginCredentials("development","mils0ft");
 				
 				_loader.load(_loaderReq);
@@ -87,13 +92,13 @@ package com.msgid.S3mer
 			}
 		}
 		
-		private function OnIOError(e:IOErrorEvent):void {
+		private static function OnIOError(e:IOErrorEvent):void {
 			Logger.addEvent("HEARTBEAT FAILED: Probably not connected");
-			this._heartbeatTimer.start();
+			_heartbeatTimer.start();
 		}
 		 
 		
-		private function OnHeartbeat_stage2(e:Event):void {
+		private static function OnHeartbeat_stage2(e:Event):void {
 			var response:String;
 			
 			response = e.target.data;
@@ -106,7 +111,7 @@ package com.msgid.S3mer
 					break;
 				case 'R':
 					//Refresh
-					this.updateConfiguration();
+//					this.updateConfiguration();
 					break;
 				case 'O':
 					//OK
@@ -115,7 +120,7 @@ package com.msgid.S3mer
 					//Other Error
 					break;
 			}
-			this._heartbeatTimer.start();
+			_heartbeatTimer.start();
 		}
 
 		private function OnDownloadProgress(e:DownloaderEvent):void {
@@ -135,19 +140,26 @@ package com.msgid.S3mer
 		
 		// Called whenever the configuration file was updated
 		public function updateConfiguration():void {
-			this._downloadQueue.addEventListener(DownloaderEvent.COMPLETE,updateConfiguration_step2,false,0,true)
+			var screenId:int = S3merWindow(this._container).screenId;
+			
+			_downloadQueue.addEventListener(DownloaderEvent.COMPLETE,updateConfiguration_step2,false,0,true)
 
-			this._downloadQueue.addItem(_configURL + ApplicationSettings.getValue("channel.id",""), "", "config.xml", false,true);
+			Logger.addEvent("ConfigurationManager::updateConfiguration: screenId = " + ApplicationSettings.getValue("screen"+ screenId +".channel.id",""));
+			_downloadQueue.addItem(getChannelUrl(ApplicationSettings.getValue("screen"+ screenId +".channel.id","")), "", "config" + screenId + ".xml", false,true);
 
-			this._downloadQueue.start();
+			_downloadQueue.start();
+		}
+		
+		private function getChannelUrl(channelNumber:String):String {
+			return this._configURL + "?playerid=" + channelNumber;
 		}
 		
 		private function updateConfiguration_step2(e:DownloaderEvent):void {
-			var configFile:File = new File(FileIO.mediaPath("config.xml"));
+			var configFile:File = new File(FileIO.mediaPath("config" + S3merWindow(this._container).screenId + ".xml"));
 			var configReader:FileStream;
 			var config:XML;
 			
-			this._downloadQueue.removeEventListener(DownloaderEvent.COMPLETE,updateConfiguration_step2)
+			_downloadQueue.removeEventListener(DownloaderEvent.COMPLETE,updateConfiguration_step2)
 			
 			configReader = new FileStream;
 			
@@ -189,7 +201,7 @@ package com.msgid.S3mer
 				
 				parseShows(); // Shows may contain Playlists and Schedules so this is last
 				
-				this._downloadQueue.addEventListener(DownloaderEvent.COMPLETE,updateConfiguration_step3,false,0,true);
+				_downloadQueue.addEventListener(DownloaderEvent.COMPLETE,updateConfiguration_step3,false,0,true);
 				initiateDownloads();
 				
 				
@@ -200,20 +212,20 @@ package com.msgid.S3mer
 		}
 		
 		private function updateConfiguration_step3(e:DownloaderEvent):void {
-			this._downloadQueue.removeEventListener(DownloaderEvent.COMPLETE,updateConfiguration_step3);
+			_downloadQueue.removeEventListener(DownloaderEvent.COMPLETE,updateConfiguration_step3);
 			
 			this.dispatchEvent(new ConfigurationEvent(ConfigurationEvent.UPDATED));
 		}
 		
-		public function play(screenNumber:int):void {
+		public function play():void {
 			this._stopped = false;
-			this.switchShow("",screenNumber);		
+			this.switchShow("");		
 		}
 		
 		public function stop():void {
 			var myShowObject:Show;
 			
-			for each( var _screen:Container in this._containers) {
+			for each( var _screen:Container in this._container) {
 				myShowObject = Show(_screen.getChildByName("currentShow"));
 			}
 			
@@ -228,7 +240,7 @@ package com.msgid.S3mer
 			var myShowObject:Show 
 
 			
-			for each( var _screen:Container in this._containers) {
+			for each( var _screen:Container in this._container) {
 				myShowObject = Show(_screen.getChildByName("currentShow"));
 			
 				this.stop();
@@ -243,7 +255,7 @@ package com.msgid.S3mer
 		public function setSmoothing(active:Boolean):void {
 			var myShowObject:Show;
 			
-			for each( var _screen:Container in this._containers) {
+			for each( var _screen:Container in this._container) {
 				myShowObject = Show(_screen.getChildByName("currentShow"));
 				
 				if (myShowObject != null) {
@@ -255,11 +267,11 @@ package com.msgid.S3mer
 		private function initiateDownloads():void {
 			for each (var _playlist:Playlist in this._playlistsNew) {
 				for each( var _playlistObj:PlaylistObject in _playlist.pendingFiles ) {
-					this._downloadQueue.addItem(_mediaURL + _playlistObj.url, _playlistObj.hash);
+					_downloadQueue.addItem(_mediaURL + _playlistObj.url, _playlistObj.hash);
 				}
 			}
 			
-			this._downloadQueue.start();
+			_downloadQueue.start();
 		}
 		
 		private function parsePlaylists():void {
@@ -309,8 +321,8 @@ package com.msgid.S3mer
 
 				newShow.x = 0;
 				newShow.y = 0;
-				newShow.width = this._containers.getItemAt(0).width;
-				newShow.height = this._containers.getItemAt(0).height;
+				newShow.width = this._container.width;
+				newShow.height = this._container.height;
 							
 				newShow.resizeX = newShow.width/newShow.configuredWidth;
 				newShow.resizeY = newShow.height/newShow.configuredHeight;
@@ -361,7 +373,7 @@ package com.msgid.S3mer
 		}
 	
 		
-		public function switchShow(newShowId:String, screenNumber:int):void {
+		public function switchShow(newShowId:String):void {
 			//TODO: Check this and make sure it works properly
 			
 			var newShowObject:Show
@@ -372,11 +384,11 @@ package com.msgid.S3mer
 			}
 			
 			if( this._showsNew.length == 0 ) {
-				oldShowObject = Show(this._containers.getItemAt(screenNumber).getChildByName("currentShow"));
+				oldShowObject = Show(this._container.getChildByName("currentShow"));
 				
 				if( oldShowObject != null ) {
 					oldShowObject.stop(true);
-					this._containers.getItemAt(screenNumber).removeChild(oldShowObject);
+					this._container.removeChild(oldShowObject);
 				}
 				return;
 			}
@@ -388,11 +400,11 @@ package com.msgid.S3mer
 			}
 
 			if (newShowObject != null) {
-				oldShowObject = Show(this._containers.getItemAt(screenNumber).getChildByName("currentShow"));
+				oldShowObject = Show(this._container.getChildByName("currentShow"));
 				newShowObject.fadeOut(0);
 				newShowObject.name = "currentShow";
-				this._containers.getItemAt(screenNumber).addChildAt(newShowObject,0);
-				S3merWindow(this._containers.getItemAt(screenNumber)).show = newShowObject;
+				this._container.addChildAt(newShowObject,0);
+				S3merWindow(this._container).show = newShowObject;
 				
 				if (oldShowObject != null) {
 					oldShowObject.name = "oldShow";
@@ -410,17 +422,17 @@ package com.msgid.S3mer
 		}
 		
 		//Remove old Show, begin fadein of new layout
-		private function switchShow_stage2(e:EffectEvent, screenNumber:int):void {
-			var oldShowObject:Show = Show(this._containers.getItemAt(screenNumber).getChildByName("oldShow"));
-			var currShowObject:Show = Show(this._containers.getItemAt(screenNumber).getChildByName("currentShow"));
+		private function switchShow_stage2(e:EffectEvent):void {
+			var oldShowObject:Show = Show(this._container.getChildByName("oldShow"));
+			var currShowObject:Show = Show(this._container.getChildByName("currentShow"));
 			oldShowObject.stop(true);
 			oldShowObject.removeEventListener(EffectEvent.EFFECT_END,switchShow_stage2);
 			currShowObject.addEventListener(EffectEvent.EFFECT_END,switchShow_stage3,false,0,true);
-			this._containers.getItemAt(screenNumber).removeChild(oldShowObject);
+			this._container.removeChild(oldShowObject);
 			
 						
 			if( this._stopped == true ) {
-				this._containers.getItemAt(screenNumber).removeChild(currShowObject);
+				this._container.removeChild(currShowObject);
 			} else {
 				currShowObject.play();			
 				currShowObject.fadeIn();
@@ -430,13 +442,13 @@ package com.msgid.S3mer
 		}
 
 		//Begin processing new Show
-		private function switchShow_stage3(e:EffectEvent, screenNumber:int):void {
-			var currShowObject:Show = Show(this._containers.getItemAt(screenNumber).getChildByName("currentShow"));
+		private function switchShow_stage3(e:EffectEvent):void {
+			var currShowObject:Show = Show(this._container.getChildByName("currentShow"));
 			currShowObject.removeEventListener(EffectEvent.EFFECT_END,switchShow_stage3);
 	
 			if( this._stopped == true ) {
 				currShowObject.stop(true);
-				this._containers.getItemAt(screenNumber).removeChild(currShowObject);
+				this._container.removeChild(currShowObject);
 			}
 		
 			

@@ -9,19 +9,10 @@
 	applicationDeactivate="reAquireFocus()"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off" backgroundColor="#000000"
      xmlns:ns1="com.msgid.S3mer.*">
-	<mx:constraintRows>
-		<mx:ConstraintRow id="WindowedApplication1_row1" height="40%"/>
-		<mx:ConstraintRow id="WindowedApplication1_row3" height="20%"/>
-		<mx:ConstraintRow id="WindowedApplication1_row2" height="39.0%"/>
-	</mx:constraintRows>
-	<mx:constraintColumns>
-		<mx:ConstraintColumn id="WindowedApplication1_col1" width="40%"/>
-		<mx:ConstraintColumn id="WindowedApplication1_col3" width="20%"/>
-		<mx:ConstraintColumn id="WindowedApplication1_col2" width="38.1%"/>
-	</mx:constraintColumns>
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.core.Window;
 			import com.msgid.S3mer.KeyboardManager;
 			import mx.collections.ArrayCollection;
 			import com.msgid.S3mer.S3merWindow;
@@ -59,38 +50,27 @@
 			import mx.core.Application;
 			import mx.events.FlexEvent;
 			
-			private var _configuration:ConfigurationManager;
 			private var _log:Logger = Logger.instance;
 			private var _updater:ApplicationUpdater;
+			private var myLoginWindow:LoginWindow;
+			private var _playerWindows:ArrayCollection = new ArrayCollection;
 			
-			private var _stopped:Boolean = true;
 			
 //			[Embed(source="assets/loader.gif")]
 //			[Bindable]
 //			public static var LoadingImage:Class;
 			
-			[Embed(source="assets/logo.swf")]
-			[Bindable]
-			public static var LogoSwf:Class;
-
-			[Embed(source="assets/register.png")]
-			[Bindable]
-			public static var StaticSwf:Class;
 
 			private function reAquireFocus():void {
 				this.activate();
 				systemManager.stage.nativeWindow.orderToFront();
 			}
-
-			
 			
 			private function OnHideLogComplete(e:TweenEvent):void {
 				e.target.removeEventListener(TweenEvent.TWEEN_END,OnHideLogComplete);
 				this.appLog.visible = false;
 			}
 			
-			private var myLoginWindow:LoginWindow;
-			private var Windows:ArrayCollection = new ArrayCollection;
 			
 			
 			private function onAppLoad(e:FlexEvent):void {
@@ -111,11 +91,9 @@
 					_window.setScreen(screenNumber);
 					_window.open(false);
 					_window.showWindow();
-//					_window.setKeyListener(HandleKeyUp);
-					this.Windows.addItem(_window);
+					this._playerWindows.addItem(_window);
 					screenNumber++;	
 				}
-//				systemManager.stage.addEventListener(KeyboardEvent.KEY_UP,HandleKeyUp,false,0,true);
 
 				myLoginWindow.checkCredentials(onAppLoad_postLogin);
 			}
@@ -136,9 +114,7 @@
 				}	
 			}
 			
-			private function doLogin():void {
-				this.LoadingCanvas.visible = false;
-				
+			private function doLogin():void {				
 				var tmpWidth:Number = myLoginWindow.width + 30;
 				var tmpHeight:Number = myLoginWindow.height + 30;
 				
@@ -152,10 +128,6 @@
 				myLoginWindow.setup();
 				myLoginWindow.visible = true;
 				this.setStyle("backgroundColor","#FFFFFF");
-				this.myLoadingStatic.source = StaticSwf;
-				this.myLoadingStatic.maintainAspectRatio = false;
-				this.myLoadingStatic.visible = true;
-				this.setChildIndex(this.myLoadingStatic,this.numChildren-1);
 				this.setChildIndex(myLoginWindow,this.numChildren-1);
 
 				
@@ -170,9 +142,6 @@
 			
 			private function onAppLoad_stage2(e:Event):void {
 				this.removeChild(this.myLoginWindow);
-				this.myLoadingStatic.visible = false;
-				this.LoadingCanvas.visible = true;
-				this._stopped = false;
 
 				systemManager.stage.addEventListener(KeyboardEvent.KEY_UP,HandleKeyUp,false,0,true);
 				if (ApplicationSettings.getValue("ui.showcursor") != "true") {
@@ -189,19 +158,9 @@
 				
 				this.setStyle("backgroundColor","#FFFFFF");
 				
-				
-				myLoadingImage.source = LogoSwf;
-				myLoadingImage.maintainAspectRatio = true;
-
-				LoadingCanvas.visible = true;
-				
-				this._configuration = new ConfigurationManager(this.Windows);
-				
-				this._configuration.addEventListener(ConfigurationEvent.UPDATED, OnConfigurationUpdate,false,0,true);
-				this._configuration.addEventListener(DownloaderEvent.PARTIAL_COMPLETE, OnDownloadProgress,false,0,true);
-				this._configuration.addEventListener(DownloaderEvent.PROGRESS, OnDownloadProgress,false,0,true);				
-				
-				this._configuration.updateConfiguration();
+				for each( var _window:S3merWindow in this._playerWindows) {
+					_window.loadConfiguration();
+				}
 				this.setFocus();
 			}
 			
@@ -288,77 +247,17 @@
 //					this._configuration.resize(DisplayObject(e.target).height,DisplayObject(e.target).width);
 //				}
 			}
-		
-		
-			private var _fader:FadePanel;
-			private var _loaderShown:Boolean = false;
-			private function OnConfigurationUpdate(e:ConfigurationEvent):void {
-				
-				if (_loaderShown == false) {
-					myFileProgress.setProgress(100,100);
-					myTotalProgress.setProgress(100,100);
-					
-					_fader = new FadePanel();
-					
-					_fader.setup(this);
-					_fader.addEventListener(EffectEvent.EFFECT_END, OnFadeComplete);
-	
-					_fader.fadeOut(1000);
-					_loaderShown = true;
-				} else {
-					this.setStyle("backgroundColor","#000000");
-					this.LoadingCanvas.visible = false;
-					this._configuration.play(0);
+			
+			private function play():void {
+				for each( var _window:S3merWindow in this._playerWindows) {
+					_window.play();
 				}
 				
-			}
-			
-			private function OnFadeComplete(e:EffectEvent):void {
-				_fader.removeEventListener(EffectEvent.EFFECT_END, OnFadeComplete);
-				_fader.addEventListener(EffectEvent.EFFECT_END, OnFadeComplete_stage2);
-				
-				Logger.addEvent("Current BKG Color : " + this.getStyle("backgroundColor"));
-				this.setStyle("backgroundColor","#000000");
-				Logger.addEvent("Current BKG Color : " + this.getStyle("backgroundColor"));
-				this.LoadingCanvas.visible = false;
-				
-				_fader.fadeIn(100);
-			}
-			
-			private function OnFadeComplete_stage2(e:EffectEvent):void {
-				_fader.removeEventListener(EffectEvent.EFFECT_END, OnFadeComplete_stage2);
-				this.removeChild(_fader);
-				
-				if (this._stopped == true) {
-					this._stopped = false;
-				} else {
-					this._configuration.play(0);
-				}
-			}
-			
-			private function OnDownloadProgress(e:DownloaderEvent):void {
-				this.myTotalProgress.setProgress(DownloadQueue(e._downloader).percent,100);
 			}
 			
 		]]>
 	</mx:Script>
 	<mx:TextArea id="appLog" visible="false" height="116" wordWrap="true" editable="false" enabled="true"  color="#000000" cornerRadius="0" alpha="0.5" borderStyle="none" borderThickness="8" left="13" right="12" bottom="10"/>
-	<mx:Canvas left="WindowedApplication1_col3:0" right="WindowedApplication1_col3:0" top="WindowedApplication1_row3:0" bottom="WindowedApplication1_row3:0" id="LoadingCanvas" verticalScrollPolicy="off" horizontalScrollPolicy="off" visible="true">
-		<mx:constraintRows>
-			<mx:ConstraintRow id="Canvas11_row3" height="90%"/>
-			<mx:ConstraintRow id="Canvas14_row1" height="5%"/>
-			<mx:ConstraintRow id="Canvas14_row2" height="5%"/>
-		</mx:constraintRows>
-		<mx:constraintColumns>
-			<mx:ConstraintColumn id="Canvas14_col1" width="10%"/>
-			<mx:ConstraintColumn id="Canvas14_col3" width="80%"/>
-			<mx:ConstraintColumn id="Canvas14_col2" width="10%"/>
-		</mx:constraintColumns>
-		<mx:SWFLoader left="Canvas14_col3:0" top="0" right="Canvas14_col3:0" bottom="Canvas14_row1:0" id="myLoadingImage"/>
-		<mx:ProgressBar left="0" bottom="Canvas14_row1:0" right="0" top="Canvas14_row1:0" labelPlacement="bottom" id="myFileProgress" enabled="true" mode="manual" label=" " visible="false"/>
-	<mx:ProgressBar  left="0" bottom="0" right="0" top="Canvas14_row2:0" labelPlacement="bottom" id="myTotalProgress" enabled="true" mode="manual" label=" "/>
-	</mx:Canvas>
-	<mx:SWFLoader  top="0" left="0" right="0" bottom="0" id="myLoadingStatic"/>
 	<ns1:NotificationPanel id="_notificationPanel" right="10" top="10" visible="false">
 	</ns1:NotificationPanel>
 		
