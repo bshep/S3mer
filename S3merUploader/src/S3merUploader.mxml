@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="initApp()" layout="absolute" width="650" height="350" backgroundGradientAlphas="[1.0, 1.0]" backgroundGradientColors="[#FFFFFF, #FFFFFF]" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+	<mx:Script>
+		<![CDATA[
+			import mx.events.CollectionEventKind;
+			import mx.events.CollectionEvent;
+			import mx.managers.DragManager;
+			import mx.events.DragEvent;
+			import mx.effects.DefaultTileListEffect;
+			import mx.collections.ArrayCollection;
+			import mx.events.EffectEvent;
+			import mx.effects.Fade;
+			
+			private static var URL_GETTOKEN:String="http://www.s3mer.com/upload.php?action=gettoken";
+			private static var URL_GENTOKEN:String="http://www.s3mer.com/upload.php?action=generatetoken";
+			private static var URL_UPLOAD:String="http://www.s3mer.com/upload.php?action=upload&token=";
+			private static var URL_DELETE:String="http://www.s3mer.com/remoteprocedures.php?action=delete&mediaid=";
+			private static var URL_LIBRARY:String="http://www.s3mer.com/remoteprocedures.php?action=library";
+
+			private var _refAddFiles:FileReferenceList;
+			
+			private var _uploadingFiles:ArrayCollection = new ArrayCollection;
+			private var _remoteFiles:ArrayCollection = new ArrayCollection;
+			
+			[Bindable]
+			private var _libraryFiles:ArrayCollection = new ArrayCollection;
+			
+			[Bindable]
+			private var _playlistFiles:ArrayCollection = new ArrayCollection;
+			
+			private var _token:String;
+
+			[Embed(source="assets/spinner.swf")]
+			[Bindable]
+			public static var SpinnerSWF:Class;
+			
+		
+			private function OnUpload_stage2(e:Event):void {
+               for (var j:int = 0; j < _refAddFiles.fileList.length; j++) {
+					trace("Filename: " + _refAddFiles.fileList[j].name);
+					doUpload(_refAddFiles.fileList[j]);
+                }
+			}
+			
+			private function initApp():void {
+                Security.allowDomain("*");
+                
+                this.addEventListener("DELETE_LIBRARY_ITEM",doDeleteLibrary);
+                this.addEventListener("DELETE_PLAYLIST_ITEM",doDeletePlaylist);
+                this._playlistFiles.addEventListener(CollectionEvent.COLLECTION_CHANGE, playlistchanged);
+                
+                this.txtStatus.text = "Loading.";
+                this.getToken();
+                this.getLibrary();
+            }
+            
+            private function playlistchanged(e:CollectionEvent):void {
+            	trace("_playlist changed event: " + e.kind);
+            	
+            	if (e.kind == CollectionEventKind.ADD || e.kind == CollectionEventKind.REMOVE ) {
+            		var order:int = 0;
+            		
+            		for each (var item:XML in ArrayCollection(e.target) ) {
+            			item.order = order;
+            			
+            			order++;
+            		}
+            	}	
+            }
+            
+            private function doDeletePlaylist(e:Event):void {
+				var request:URLRequest = new URLRequest();
+				var _loader:URLLoader = new URLLoader();
+
+            	this.swfSpinner.visible = true;
+
+            	request.url = URL_DELETE + XML(e.target.data).@id;
+
+				
+//				_loader.addEventListener(Event.COMPLETE,doDelete_stage2);
+//				
+//				_loader.load(request);				
+
+            	trace("DELETED!" + XML(e.target.data).name + " order: " + XML(e.target.data).order);
+            	
+            	this._playlistFiles.removeItemAt(XML(e.target.data).order);
+            }
+            
+            private function doDeleteLibrary(e:Event):void {
+				var request:URLRequest = new URLRequest();
+				var _loader:URLLoader = new URLLoader();
+
+            	this.swfSpinner.visible = true;
+
+            	request.url = URL_DELETE + XML(e.target.data).@id;
+
+				
+				_loader.addEventListener(Event.COMPLETE,doDelete_stage2);
+				
+				_loader.load(request);				
+
+            	trace("DELETED!" + XML(e.target.data).name);
+            }
+            
+            private function doDelete_stage2(e:Event):void {
+            	this.swfSpinner.visible = false;
+            	getLibrary();
+            }
+			
+			private function doUpload(file:FileReference):void {
+                var sendVars:URLVariables = new URLVariables();
+                var _loader:URLLoader = new URLLoader();
+                sendVars.action = "upload";
+                
+                var request:URLRequest = new URLRequest();
+                request.data = sendVars;
+                request.url = URL_UPLOAD + this._token; //?PHPSESSID=gujlbvr38riaj8johkleh1fjn3";
+                request.method = URLRequestMethod.POST;
+//                _loader.addEventListener(Event.COMPLETE,OnPreload);
+                _loader.load(request);
+                
+//				file.addEventListener(ProgressEvent.PROGRESS, onUploadProgress);
+				file.addEventListener(Event.COMPLETE, onUploadComplete);
+//				file.addEventListener(IOErrorEvent.IO_ERROR, onUploadIoError);
+//				file.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onUploadSecurityError);
+				file.upload(request,"userfile");
+
+			}
+			
+			private function onUploadComplete(e:Event):void {
+				getLibrary();
+			
+			}
+			
+			private function getLibrary():void {
+                var request:URLRequest = new URLRequest();
+             	request.url = URL_LIBRARY;
+
+				var _loader:URLLoader = new URLLoader();
+				
+				_loader.addEventListener(Event.COMPLETE,getLibrary_stage2);
+				
+				_loader.load(request);				
+                this.txtStatus.text = "Loading..";
+			}
+			
+			private function getLibrary_stage2(e:Event):void {
+				var libraryXML:XML = new XML(URLLoader(e.target).data);
+				
+				this._remoteFiles.removeAll();
+				
+				for each( var libItemXML:XML in libraryXML.item ) {
+					this._remoteFiles.addItem(libItemXML);
+				}
+					
+				updateLibrary();
+			}
+ 
+			private function updateLibrary():void {
+//				this._libraryFiles.removeAll();
+				var obj:Object;
+				var tmpList:ArrayCollection = new ArrayCollection();
+				
+				for each( obj in _uploadingFiles ) {
+					tmpList.addItem(obj);
+				}
+				
+				for each( obj in _remoteFiles ) {
+					tmpList.addItem(obj);
+				}
+				
+				
+				for each( obj in tmpList ) {
+					if( !this.itemInList(obj,this._libraryFiles) ) {
+						var itemIndex:int = itemFindPlacebyID(obj,this._libraryFiles);
+						
+						if(itemIndex >= this._libraryFiles.length) {
+							this._libraryFiles.addItem(obj);
+						} else {					
+							this._libraryFiles.addItemAt(obj, itemIndex);
+						}
+					}
+				}
+				
+				for each( obj in _libraryFiles ) {
+					if( !this.itemInList(obj,tmpList) ) {
+						this._libraryFiles.removeItemAt(this._libraryFiles.getItemIndex(obj));
+					}
+				}
+
+
+			}
+			
+			private function itemFindPlacebyID(item:Object, list:ArrayCollection):int {
+				var searchID:int = XML(item).@id;
+				var currID:int; 
+				
+				if( list.length == 0 ) {
+					return 0;
+				}
+				
+				for each( var obj:Object in list) {
+					currID = XML(obj).@id;
+					
+					if( currID < searchID ) {
+						if (list.getItemIndex(obj) > 0 ) {
+							return list.getItemIndex(obj);
+						} else {
+							return 0;
+						}
+					}
+				}
+				
+				return list.length;
+			}
+				
+			private function itemInList(item:Object, list:ArrayCollection):Boolean {
+				
+				for each( var obj:Object in list) {
+					if (obj == item) {
+						return true;
+					}
+				}
+				return false;
+			}
+ 
+ 			private function getToken():void {
+                var request:URLRequest = new URLRequest();
+             	request.url = URL_GETTOKEN;
+
+				var _loader:URLLoader = new URLLoader();
+				
+				_loader.addEventListener(Event.COMPLETE,getToken_stage2);
+				
+				_loader.load(request);				
+                this.txtStatus.text = "Loading..";
+			}
+			
+			private function getToken_stage2(e:Event):void {
+                this.txtStatus.text = "Loading...";
+				if( URLLoader(e.target).data == "0" ) {
+                	this.txtStatus.text = "Loading....";
+					generateToken();
+				} else {
+					hideStatus();
+					this._token = URLLoader(e.target).data.toString();
+				}
+			}
+			
+			private function hideStatus():void {
+				var _fader:Fade = new Fade;
+				
+				_fader.alphaFrom = 1;
+				_fader.alphaTo = 0;
+				_fader.duration = 1500;
+				_fader.addEventListener(EffectEvent.EFFECT_END,hideStatus_stage2);
+				_fader.play([this.txtStatus]);
+			}
+
+			private function hideStatus_stage2(e:Event):void {
+				this.txtStatus.visible = false;
+			}
+			
+			private function generateToken():void {
+                var request:URLRequest = new URLRequest();
+                 request.url = URL_GENTOKEN;
+
+				var _loader:URLLoader = new URLLoader();
+				
+				_loader.addEventListener(Event.COMPLETE,generateToken_stage2);								
+				_loader.load(request);				
+            	this.txtStatus.text = "Loading.....";
+			}
+			
+			private function generateToken_stage2(e:Event):void {
+				if( URLLoader(e.target).data == "0" ) {
+            		this.txtStatus.text = "Error Loading!";
+					//Error
+				} else {
+					this.hideStatus();
+					this._token = URLLoader(e.target).data.toString();
+				}
+			}
+		
+			private function OnUpload():void {
+                _refAddFiles = new FileReferenceList();
+                _refAddFiles.addEventListener(Event.SELECT, OnUpload_stage2);
+                _refAddFiles.browse();
+
+			}
+			
+			private function ListDragEnter(e:DragEvent):String	 {
+				return DragManager.NONE;
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<mx:DefaultTileListEffect id="myDTLE" 
+        moveDuration="300" >
+		
+	</mx:DefaultTileListEffect>
+        
+    <mx:DefaultListEffect id="myDLE">
+    	
+    </mx:DefaultListEffect>
+
+	 
+	<mx:TileList id="libraryList" dataProvider="{_libraryFiles}" itemRenderer="LibraryItem"  width="380" top="25" left="0" allowMultipleSelection="false" dragEnabled="true" bottom="0" columnCount="4" rowHeight="105" direction="horizontal" itemsChangeEffect="{myDTLE}" offscreenExtraRowsOrColumns="2"></mx:TileList>
+	<mx:List bottom="0" right="0" top="25" width="263" 
+		dragEnter="ListDragEnter(event)" dropEnabled="true"  
+		dragMoveEnabled="true" dragEnabled="true" itemRenderer="PlaylistItem" 
+		alternatingItemColors="[#FFFFFF, #FBFBFB]"
+		variableRowHeight="false" dataProvider="{_playlistFiles}"
+		rowHeight="50">
+	</mx:List>
+	<mx:Label text="Library" fontSize="19" width="86" top="0" left="0" height="26"/>
+	<mx:Label text="Playlist" fontSize="19" right="190" top="0" height="26"/>
+	<mx:Button x="299" y="1" label="Tiles"/>
+	<mx:Button y="1" label="List" right="359"/>
+	<mx:Button y="1" label="Apply" right="10"/>
+	<mx:Button x="172" y="1" label="Upload" click="OnUpload()"/>
+	<mx:Label y="162" fontSize="20" left="100" right="100" id="txtStatus"/>
+	<mx:SWFLoader id="swfSpinner" x="94" y="5" width="16" height="16" visible="false" source="{}"/>
+
+</mx:Application>

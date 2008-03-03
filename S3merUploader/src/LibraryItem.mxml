@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="95" height="105" horizontalScrollPolicy="off" verticalScrollPolicy="off" mouseOver="btnDelete.visible = true;" mouseOut="btnDelete.visible = false;" alpha="{getAlpha(data)}">
+	<mx:Image id="thumb" source="{getSource(data)}" height="85" scaleContent="true" width="85" x="5" y="5" verticalAlign="middle" horizontalAlign="center"/>
+	<mx:Label text="{data.name}" width="75" y="87" horizontalCenter="0" textAlign="center"/>
+	
+	<mx:Script>
+		<![CDATA[
+			[Embed(source="assets/ImageIcon.swf")]
+			[Bindable]
+			public static var ImageSwf:Class;
+
+			[Embed(source="assets/DeleteIcon.swf")]
+			[Bindable]
+			public static var DeleteSwf:Class;
+
+			public function getAlpha(data:Object):Number {
+				return 1;
+			}
+
+			public function getSource(data:Object):Object {
+				if(XML(data).thumbnail == "") {
+					thumb.scaleContent = false;
+					return ImageSwf;
+				} else {
+					thumb.scaleContent = true;
+					return "http://www.s3mer.com/" + XML(data).thumbnail;
+				}
+			}
+			
+			private function doDelete(data:Object):void {
+				this.alpha = .5;
+				dispatchEvent(new Event("DELETE_LIBRARY_ITEM",true));
+			}
+		]]>
+	</mx:Script>
+	<mx:Image source="{DeleteSwf}" x="70" y="10" width="15" height="15" visible="false" id="btnDelete" click="doDelete(data)"/>
+	
+
+	
+</mx:Canvas>

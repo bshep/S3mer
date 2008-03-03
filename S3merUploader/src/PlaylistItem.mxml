@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="250" height="50"  mouseOver="btnDelete.visible = true;" mouseOut="btnDelete.visible = false;" >
+	<mx:Image id="thumb" source="{getSource(data)}" scaleContent="true" width="40" left="5" verticalAlign="middle" horizontalAlign="center" bottom="5" top="5"/>
+	<mx:Label text="{data.name}"  x="50" y="10" width="167"/>
+	<mx:SWFLoader id="btnDelete" source="{DeleteSwf}" x="225" width="15" height="15" verticalCenter="0" visible="false" click="{doDelete(data)}"/>
+	
+		<mx:Script>
+		<![CDATA[
+			[Embed(source="assets/ImageIcon.swf")]
+			[Bindable]
+			public static var ImageSwf:Class;
+
+			[Embed(source="assets/DeleteIcon.swf")]
+			[Bindable]
+			public static var DeleteSwf:Class;
+
+			public function getAlpha(data:Object):Number {
+				return 1;
+			}
+
+			public function getSource(data:Object):Object {
+				if(XML(data).thumbnail == "") {
+					thumb.scaleContent = false;
+					return ImageSwf;
+				} else {
+					thumb.scaleContent = true;
+					return "http://www.s3mer.com/" + XML(data).thumbnail;
+				}
+			}
+			
+			private function doDelete(data:Object):void {
+//				this.alpha = .5;
+				dispatchEvent(new Event("DELETE_PLAYLIST_ITEM",true));
+			}
+		]]>
+	</mx:Script>
+	
+</mx:Canvas>
