@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Window xmlns:mx="http://www.adobe.com/2006/mxml" showStatusBar="false"
+	verticalScrollPolicy="off" 
+	horizontalScrollPolicy="off" 
+	visible="true" horizontalAlign="center" 
+	verticalAlign="middle" cornerRadius="0" layout="absolute"
+	backgroundColor="#000000"
+	resize="onWindowResize(event)"
+	 xmlns:ns1="com.msgid.S3mer.*">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.events.TweenEvent;
+			import mx.events.ResizeEvent;
+			import mx.managers.SystemManager;
+			
+			private var _screenNumber:int;
+			private var _show:Show;
+			private var _log:Logger = Logger.instance;
+			
+			public function set show(myShow:Show):void {
+				this._show = myShow;
+				
+				this.onWindowResize(null);
+			}
+			public function get show():Show{
+				return _show;
+			}
+			
+			//Receives screenNumber in which to display this screen, returns screenNumber or -1
+			public function setScreen(screenNumber:int):int {
+				var _screen:Screen;
+				
+				if ( screenNumber >= Screen.screens.length ) {
+					return -1;
+				} 
+				
+				_screen = Screen.screens[screenNumber];
+				
+				this.bounds = _screen.bounds;
+				this._screenNumber = screenNumber;
+				
+				return screenNumber;
+			}
+			
+			public function getScreen():int {
+				return this._screenNumber;
+			}
+			
+			public function showWindow():void {
+				var _screen:Screen = Screen.screens[this._screenNumber];
+				
+				this.visible = true;
+
+				this.move(_screen.bounds.x,_screen.bounds.y);
+				
+				this.stage.addEventListener(KeyboardEvent.KEY_UP,HandleKeyUp,false,0,true);
+				this._log.addEventListener(Event.ADDED, onLogUpdate,false,0,true);
+				
+				this.title = "Screen #" + this._screenNumber;
+				this.screenNumber.text = "Screen #" + this._screenNumber;
+				this.stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
+			}
+			
+			private function HandleKeyUp(e:KeyboardEvent):void {
+				KeyboardManager.HandleKeyUp(e,this);
+			}
+			
+//			private var _keylistener:Function;
+//			public function setKeyListener(listener:Function = null):Function {
+//				if( systemManager.stage.hasEventListener(KeyboardEvent.KEY_UP) == true && _keylistener != null) {
+//					systemManager.stage.removeEventListener(KeyboardEvent.KEY_UP, _keylistener);	
+//				}
+//				
+//				if( listener != null ) {
+//					systemManager.stage.addEventListener(KeyboardEvent.KEY_UP,listener,false,0,true);
+//				}
+//				_keylistener = listener; 
+//				
+//				return _keylistener;
+//			}
+			
+			private function onWindowResize(e:ResizeEvent):void {
+				Logger.addEvent("Screen #" + this._screenNumber + " size is: " + this.width + "x" + this.height);
+				
+				if( this._show != null ) {
+					Logger.addEvent("Screen #" + this._screenNumber + ": resizing");
+					this._show.width = this.width;
+					this._show.height = this.height;
+					this._show.resize();
+				} else {
+					Logger.addEvent("Screen #" + this._screenNumber + ": NOT resizing, show is null");
+				}
+			}
+			
+			private function onLogUpdate(e:Event):void {
+				this.appLog.text = Logger.log;
+			}
+
+			public function OnHideLogComplete(e:TweenEvent):void {
+				e.target.removeEventListener(TweenEvent.TWEEN_END,OnHideLogComplete);
+				this.appLog.visible = false;
+			}
+
+		]]>
+	</mx:Script>
+	<mx:Label id="screenNumber" text="Screen #" fontSize="36" fontFamily="Georgia" fontWeight="bold" horizontalCenter="0" verticalCenter="0"/>
+	<ns1:NotificationPanel id="_notificationPanel" right="10" top="10" visible="false">
+	</ns1:NotificationPanel>
+	<mx:TextArea visible="false" height="116" wordWrap="true" editable="false" enabled="true" id="appLog" color="#000000" cornerRadius="0" alpha="0.5" borderStyle="none" borderThickness="8" left="13" right="12" bottom="10"/>
+
+</mx:Window>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="300" backgroundColor="#000000">
+	<mx:Script>
+		<![CDATA[
+			import mx.events.EffectEvent;
+
+			private var _timer:Timer;
+			private var _direction:int;
+			private var _length:int;
+		
+			public function get faded():Boolean {
+				if (alpha == 1) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		
+			public function setup(container:DisplayObjectContainer):void {
+				this.alpha = 0;
+
+				this.x = 0;
+				this.y = 0;
+				this.width = container.width;
+				this.height = container.height;
+				this.visible = true;
+
+				container.addChild(this);
+			}
+			
+			public function fadeOut(length:int):void {
+				if( length == 0 ) {
+					this.alpha = 1;
+				} else {
+					fadeCommon(length,1); 
+				}
+			}
+			
+			public function fadeIn(length:int):void {
+				if( length == 0 ) {
+					this.alpha = 0;
+				} else {
+					fadeCommon(length,-1); 
+				}
+			}
+			
+			private function fadeCommon(length:int, direction:int):void {
+				if (_timer == null) {
+					_timer = new Timer(10,0);
+					
+					_timer.addEventListener(TimerEvent.TIMER,timerTick,false,0,true);
+				} else {
+					_timer.reset();
+				}
+				
+				this._direction = direction;
+				this._length = length;
+				_timer.start();
+				
+			}
+			
+			public function toggle(length:int):void {
+				if (this.faded) {
+					fadeIn(length);
+				} else {
+					fadeOut(length);
+				}
+			}
+			
+			
+			public function timerTick(e:TimerEvent):void {
+				var delta:Number;
+				
+				delta = this._length/10;
+				delta = 1/delta;
+				
+				this.alpha += delta*this._direction;
+				
+				if (this.alpha <= 0) {
+					this.alpha = 0;
+					this._timer.stop();
+					dispatchEvent(new EffectEvent(EffectEvent.EFFECT_END));
+				} 
+				
+				if (this.alpha >= 1) {
+					this.alpha = 1;
+					this._timer.stop();
+					dispatchEvent(new EffectEvent(EffectEvent.EFFECT_END));
+				}
+			}
+			
+		]]>
+	</mx:Script>
+</mx:Canvas>

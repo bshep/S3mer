@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="335" height="252" alpha="1" 
+	creationComplete="OnLoad(event)"
+	verticalScrollPolicy="off" horizontalScrollPolicy="off"
+ backgroundAlpha="0">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.events.ListEvent;
+			import mx.controls.Text;
+			import mx.collections.ListCollectionView;
+			import mx.collections.ICollectionView;
+			import mx.logging.LogEvent;
+			import mx.effects.Resize;
+			import mx.effects.Parallel;
+			import mx.events.EffectEvent;
+			import com.msgid.S3mer.Effects.TVEffect;
+			private var _TVEffect:TVEffect;
+
+			[Embed(source="assets/spinner.swf")]
+			[Bindable]
+			public static var SpinnerSwf:Class;
+
+			
+			private function doRemoteCommand(command:String, listener:Function):void {
+				var _loader:URLLoader = new URLLoader;
+				var _loaderReq:URLRequest;
+				var _url:String;
+				
+				_loader.dataFormat = URLLoaderDataFormat.TEXT;
+				_loader.addEventListener(Event.COMPLETE, listener,false,0,true);
+				_loader.addEventListener(IOErrorEvent.IO_ERROR, RemoteCommand_error,false,0,true);
+				
+				switch(command) {
+					case "login":
+						_url = ApplicationSettings.URL_LOGIN + "?username=" + 
+							this.username.text + "&password=" + this.password.text;
+						break;
+					case "logout":
+						_url = ApplicationSettings.URL_LOGOUT;
+						break;
+					case "playerlist":
+						_url = ApplicationSettings.URL_PLAYER_LIST+ "?data=1";
+						break;
+					case "userinfo":
+						_url = ApplicationSettings.URL_USER_INFO + "?data=2";
+						break;
+					case "checkstatus":
+						_url = ApplicationSettings.URL_STATUS;
+						break;
+				}
+
+				_loaderReq = new URLRequest(_url);
+//				_loaderReq.setLoginCredentials("development","mils0ft");
+				
+				_loader.load(_loaderReq);
+				
+			}
+			
+			private function RemoteCommand_error(e:IOErrorEvent):void {
+				resetFields();
+				hidePlayerPanel();
+			}
+			
+		
+			private function OnLoad(e:Event):void {
+			}
+			
+			public function setup():void {
+				this.playerPanel.visible = false;
+				this.height -= this.playerPanel.height;	
+			}
+			
+			private function OnLoginClick(e:Event):void {
+				
+				if (this.btnTune.label == "Tune In") {
+					this.saveInfo();
+					this.hide();
+				} else if (this.btnTune.label == "Log In") {
+					doLogin();
+				}
+			}
+			
+			private function doLogin():void {
+				this.username.enabled = false;
+				this.password.enabled = false;
+				this.spinner.source = SpinnerSwf;
+				this.spinner.visible = true;
+				doRemoteCommand("login", doLogin_stage2);
+			}
+			
+			private function doLogin_stage2(e:Event):void {
+				var result:String;
+				
+				result = URLLoader(e.target).data;
+				
+				Logger.addEvent("LOGIN RESULT: " + result);
+				
+				if( result == "OK" ) {
+					highlightTextbox(this.username,"",false);
+					highlightTextbox(this.password,"",false);
+					doRemoteCommand("playerlist",playerListLoaded);
+					
+					doRemoteCommand("checkstatus",doLogin_stage3);
+				} else {
+					this.username.enabled = true;
+					this.password.enabled = true;
+					highlightTextbox(this.username);
+					highlightTextbox(this.password);
+					this.spinner.visible = false;
+				}
+				
+			}
+			
+			private function highlightTextbox(obj:TextInput,color:String = "#FF0000", enable:Boolean = true):void {
+				if ( enable ) {
+					obj.setStyle("borderColor",color);
+					obj.setStyle("borderThickness","3");
+				} else {
+					obj.setStyle("borderColor","#000000");
+					obj.setStyle("borderThickness","1");
+				}
+ 			}
+			
+			private function doLogin_stage3(e:Event):void {
+				var result:String;
+				
+				result = URLLoader(e.target).data;
+				
+				Logger.addEvent("LOGIN RESULT: " + result);
+			}
+			
+			private function playerListLoaded(e:Event):void {
+				var result:XML;
+				
+				this.btnTune.label = "Tune In";
+				this.showPlayerPanel();
+				this.spinner.visible = false;
+				
+				result = new XML(URLLoader(e.target).data);
+				
+				ListCollectionView(cmbPlayers.dataProvider).removeAll();
+				for each( var _player:XML in result.player ) {
+					ListCollectionView(cmbPlayers.dataProvider).addItem({label:_player.@name, data:_player.id});
+					Logger.addEvent("Player ID: " + _player.@name );
+				}
+				
+				if (ListCollectionView(cmbPlayers.dataProvider).length > 0) {
+					cmbPlayers.selectedIndex = 0;
+					rbExistingPlayer.selected = true;
+				} else {
+					rbNewPlayer.selected = true;
+				}
+				
+				
+			}
+			
+			
+			private function setupEffect():void {
+				
+				if (_TVEffect == null ) {
+				 	_TVEffect = new TVEffect();
+					
+					_TVEffect.alphaFrom = 0;
+					_TVEffect.alphaTo = 1;
+					_TVEffect.alphaDuration = 1000;
+					_TVEffect.widthFrom = 2;
+					_TVEffect.widthTo = this.width;
+					_TVEffect.heightFrom = 2;
+					_TVEffect.heightTo = this.height;
+					
+					this.width = 2;
+					this.height = 2;
+				}
+
+			}
+			
+			public function show():void {
+				setupEffect();
+				_TVEffect.play([this]);
+			}
+			
+			public function hide():void	{
+				setupEffect();
+				_TVEffect.addEventListener(EffectEvent.EFFECT_END,OnClosed,false,0,true);
+				_TVEffect.play([this],true);
+				
+			}
+			
+			public var squeezeIn:Parallel;
+			
+			public function setupSqueeIn():void {
+				if (squeezeIn == null) {
+					squeezeIn = new Parallel(this.playerPanel);
+					var myResize:Resize;
+					
+					myResize = new Resize(this.playerPanel);
+					myResize.heightFrom = 0;
+					myResize.heightTo = this.playerPanel.height;
+					
+					squeezeIn.addChild(myResize);
+	
+					myResize = new Resize(this);
+					myResize.heightFrom = this.height;
+					myResize.heightTo = this.height + this.playerPanel.height;
+	
+					squeezeIn.addChild(myResize);
+				}
+			}
+			
+			public function showPlayerPanel():void {
+				
+				
+				this.playerPanel.visible = false;
+
+				this.setupSqueeIn();
+	
+				this.playerPanel.height = 0;
+				this.playerPanel.visible = true;
+				
+				squeezeIn.play();				
+				
+			}
+			
+			public function hidePlayerPanel():void {
+				this.password.displayAsPassword = false;			
+				
+				this.setupSqueeIn();
+				
+				squeezeIn.play(null,true);				
+				
+			}
+			
+			private function resetFields():void {
+				this.username.enabled = true;
+				this.password.enabled = true;
+				this.username.text = "e-mail"; 
+				this.password.text = "password"; 
+				this.btnTune.label = "Log In";
+			}
+			
+			private function doLogout():void {
+				doRemoteCommand("logout",noop);
+				resetFields();
+				hidePlayerPanel();				
+			}
+			
+			
+			private function noop(e:Event):void {
+				doRemoteCommand("checkstatus",noop_stage2);
+			}
+
+			private function noop_stage2(e:Event):void {
+				var result:String;
+				
+				result = URLLoader(e.target).data;
+				
+				Logger.addEvent("LOGIN RESULT: " + result);
+			}
+
+		
+			private function OnClosed(e:Event):void {
+				_TVEffect.removeEventListener(EffectEvent.EFFECT_END,OnClosed);
+				this.dispatchEvent(new Event("WINDOW_CLOSED"));
+			}
+			
+			public function saveInfo():void {
+				ApplicationSettings.load();
+									
+				ApplicationSettings.setValue("user.username",this.username.text);
+				ApplicationSettings.setValue("user.password",this.password.text);
+				ApplicationSettings.setValue("channel.id",this.cmbPlayers.selectedItem.data[0]);
+
+				ApplicationSettings.save();
+			}
+			
+			public function checkCredentials(listener:Function):void {
+				ApplicationSettings.load();
+					
+				this.username.text = ApplicationSettings.getValue("user.username","");
+				this.password.text = ApplicationSettings.getValue("user.password","");
+				
+				if (this.username.text == "" || this.password.text == "") {
+					listener(null);
+				} else {
+					this.doRemoteCommand("login",listener);
+				}
+				this.resetFields();				
+			}
+			
+			private function OnComboChanged(e:ListEvent):void {
+				trace("Selected ID: " + this.cmbPlayers.selectedItem.data[0]);
+			}
+		]]>
+	</mx:Script>
+
+	<mx:Panel layout="absolute" title="Please register this player" fontSize="14" backgroundColor="#FFFFFF" top="0" bottom="0" left="0" right="0" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+		<mx:TextInput text="e-mail" id="username" enter="password.setFocus()" focusIn="if(username.text == 'e-mail') this.username.text=''" toolTip="Enter your e-mail or username" top="14" height="27" left="39" right="40" borderStyle="solid"/>
+		<mx:TextInput text="password" id="password" enter="OnLoginClick(event)" focusIn="if(password.text == 'password') {this.password.text=''; this.password.displayAsPassword = true};" toolTip="Enter your password here" borderStyle="solid" top="49" right="40" left="39"/>
+		<mx:Button label="Log In" right="39.950005" click="OnLoginClick(event)" toolTip="Click here to log-in" id="btnTune" bottom="16" height="27" width="87.99999"/>
+		<mx:Canvas id="playerPanel" right="40" left="39" top="84" height="84" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+			<mx:RadioButton y="36" label="New Player" x="10" id="rbNewPlayer"/>
+			<mx:RadioButton y="12" x="10" id="rbExistingPlayer" />
+			<mx:ComboBox id="cmbPlayers" y="10" height="21" dataProvider="Player list" width="182" x="31" focusIn="rbExistingPlayer.selected = true" change="OnComboChanged(event)"></mx:ComboBox>
+			<mx:LinkButton label="Different user?" width="121.399994" fontFamily="Verdana" textDecoration="underline" color="#0042FF" fontSize="11" bottom="0" left="0" textAlign="left">
+				<mx:click>doLogout()</mx:click>
+			</mx:LinkButton>
+		</mx:Canvas>
+		<mx:LinkButton label="Not Registered?" width="152.4" fontFamily="Verdana" textDecoration="underline" color="#0042FF" fontSize="11" bottom="16" left="39" textAlign="left">
+			<mx:click>navigateToURL(new URLRequest('http://www.s3mer.com'), 'S3mer')</mx:click>
+		</mx:LinkButton>
+		<mx:SWFLoader visible="true" id="spinner" verticalAlign="middle" horizontalAlign="center" top="19" left="280" width="16" height="16"/>
+	</mx:Panel>
+	
+</mx:Canvas>

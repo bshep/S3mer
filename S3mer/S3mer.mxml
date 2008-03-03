@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" 
+	layout="absolute" 
+	applicationComplete="onAppLoad(event)"
+	invoke="onInvoke(event)"
+	resize="onAppResize(event)" 
+	close="onAppClose(event)"
+	borderStyle="none" showStatusBar="false" 
+	applicationDeactivate="reAquireFocus()"
+	verticalScrollPolicy="off" horizontalScrollPolicy="off" backgroundColor="#000000"
+     xmlns:ns1="com.msgid.S3mer.*">
+	<mx:constraintRows>
+		<mx:ConstraintRow id="WindowedApplication1_row1" height="40%"/>
+		<mx:ConstraintRow id="WindowedApplication1_row3" height="20%"/>
+		<mx:ConstraintRow id="WindowedApplication1_row2" height="39.0%"/>
+	</mx:constraintRows>
+	<mx:constraintColumns>
+		<mx:ConstraintColumn id="WindowedApplication1_col1" width="40%"/>
+		<mx:ConstraintColumn id="WindowedApplication1_col3" width="20%"/>
+		<mx:ConstraintColumn id="WindowedApplication1_col2" width="38.1%"/>
+	</mx:constraintColumns>
+	
+	<mx:Script>
+		<![CDATA[
+			import com.msgid.S3mer.KeyboardManager;
+			import mx.collections.ArrayCollection;
+			import com.msgid.S3mer.S3merWindow;
+			import com.msgid.S3mer.Show;
+			import com.msgid.S3mer.ApplicationUpdater;
+			import mx.skins.halo.ApplicationTitleBarBackgroundSkin;
+			import com.msgid.S3mer.ApplicationSettings;
+			import com.msgid.S3mer.Effects.TVEffect;
+			import mx.effects.Sequence;
+			import mx.effects.Resize;
+			import mx.charts.effects.SeriesEffect;
+			import com.msgid.S3mer.LoginWindow;
+			import mx.messaging.Producer;
+			import com.msgid.S3mer.DownloadQueue;
+			import com.msgid.S3mer.DownloaderEvent;
+			import mx.events.EffectEvent;
+			import com.msgid.S3mer.FadePanel;
+			import mx.containers.Canvas;
+			import mx.controls.ProgressBar;
+			import mx.binding.utils.BindingUtils;
+			import mx.controls.Image;
+			import com.msgid.S3mer.RSSFeedPanel;
+			import mx.events.TweenEvent;
+			import mx.effects.Move;
+			import mx.effects.Fade;
+			import mx.effects.TweenEffect;
+			import mx.effects.Tween;
+			import com.msgid.S3mer.FileIO;
+			import mx.controls.SWFLoader;
+			import com.msgid.S3mer.Logger;
+			import mx.effects.Effect;
+			import mx.events.ResizeEvent;
+			import com.msgid.S3mer.ConfigurationManager;
+			import com.msgid.S3mer.ConfigurationEvent;
+			import mx.core.Application;
+			import mx.events.FlexEvent;
+			
+			private var _configuration:ConfigurationManager;
+			private var _log:Logger = Logger.instance;
+			private var _updater:ApplicationUpdater;
+			
+			private var _stopped:Boolean = true;
+			
+//			[Embed(source="assets/loader.gif")]
+//			[Bindable]
+//			public static var LoadingImage:Class;
+			
+			[Embed(source="assets/logo.swf")]
+			[Bindable]
+			public static var LogoSwf:Class;
+
+			[Embed(source="assets/register.png")]
+			[Bindable]
+			public static var StaticSwf:Class;
+
+			private function reAquireFocus():void {
+				this.activate();
+				systemManager.stage.nativeWindow.orderToFront();
+			}
+
+			
+			
+			private function OnHideLogComplete(e:TweenEvent):void {
+				e.target.removeEventListener(TweenEvent.TWEEN_END,OnHideLogComplete);
+				this.appLog.visible = false;
+			}
+			
+			private var myLoginWindow:LoginWindow;
+			private var Windows:ArrayCollection = new ArrayCollection;
+			
+			
+			private function onAppLoad(e:FlexEvent):void {
+				this.frameRate = 30;
+				this._log.addEventListener(Event.ADDED, onLogUpdate,false,0,true);
+				URLRequestDefaults.setLoginCredentialsForHost("www.s3mer.com","development","mils0ft");
+				
+				myLoginWindow = new LoginWindow();
+				myLoginWindow.visible = false;
+				this.addChild(myLoginWindow);
+				
+				
+				var screenNumber:int = 0;
+				var _window:S3merWindow;
+				for each( var _screen:Screen in Screen.screens ) {
+					Logger.addEvent("Creating window for screen #" + screenNumber);
+					_window = new S3merWindow();
+					_window.setScreen(screenNumber);
+					_window.open(false);
+					_window.showWindow();
+//					_window.setKeyListener(HandleKeyUp);
+					this.Windows.addItem(_window);
+					screenNumber++;	
+				}
+//				systemManager.stage.addEventListener(KeyboardEvent.KEY_UP,HandleKeyUp,false,0,true);
+
+				myLoginWindow.checkCredentials(onAppLoad_postLogin);
+			}
+			
+			private function HandleKeyUp(e:KeyboardEvent):void {
+				KeyboardManager.HandleKeyUp(e,this);
+			}
+			
+			private function onAppClose(e:Event):void {
+				exit();
+			}
+			
+			private function onAppLoad_postLogin(e:Event):void {
+				if (e == null || URLLoader(e.target).data != "OK") {
+					this.doLogin();
+				} else {
+					onAppLoad_stage2(e);
+				}	
+			}
+			
+			private function doLogin():void {
+				this.LoadingCanvas.visible = false;
+				
+				var tmpWidth:Number = myLoginWindow.width + 30;
+				var tmpHeight:Number = myLoginWindow.height + 30;
+				
+				this.move((Capabilities.screenResolutionX - tmpWidth)/2,(Capabilities.screenResolutionY - tmpHeight)/2);
+//				systemManager.topLevelSystemManager.screen.x = (Capabilities.screenResolutionX - this.width)/2;
+//				systemManager.topLevelSystemManager.screen.y = (Capabilities.screenResolutionY - this.height)/2;
+				
+				myLoginWindow.setStyle("horizontalCenter",0);
+				myLoginWindow.setStyle("verticalCenter",0);
+				myLoginWindow.addEventListener("WINDOW_CLOSED",onAppLoad_stage2,false,0,true);
+				myLoginWindow.setup();
+				myLoginWindow.visible = true;
+				this.setStyle("backgroundColor","#FFFFFF");
+				this.myLoadingStatic.source = StaticSwf;
+				this.myLoadingStatic.maintainAspectRatio = false;
+				this.myLoadingStatic.visible = true;
+				this.setChildIndex(this.myLoadingStatic,this.numChildren-1);
+				this.setChildIndex(myLoginWindow,this.numChildren-1);
+
+				
+				stage.nativeWindow.visible = true;
+				this.visible = true;
+				cursorManager.removeBusyCursor();
+				
+				myLoginWindow.show();	
+				this.width = tmpWidth;			
+				this.height = tmpHeight;		
+			}
+			
+			private function onAppLoad_stage2(e:Event):void {
+				this.removeChild(this.myLoginWindow);
+				this.myLoadingStatic.visible = false;
+				this.LoadingCanvas.visible = true;
+				this._stopped = false;
+
+				systemManager.stage.addEventListener(KeyboardEvent.KEY_UP,HandleKeyUp,false,0,true);
+				if (ApplicationSettings.getValue("ui.showcursor") != "true") {
+					this.cursorManager.setBusyCursor();
+					this.cursorManager.hideCursor();
+				}
+//				systemManager.stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
+				this.move(-100-this.width,this.y);
+//				systemManager.stage.nativeWindow.alwaysInFront = true;
+				stage.nativeWindow.visible = true;
+				this._updater.start();
+				
+				doInitialSetup();
+				
+				this.setStyle("backgroundColor","#FFFFFF");
+				
+				
+				myLoadingImage.source = LogoSwf;
+				myLoadingImage.maintainAspectRatio = true;
+
+				LoadingCanvas.visible = true;
+				
+				this._configuration = new ConfigurationManager(this.Windows);
+				
+				this._configuration.addEventListener(ConfigurationEvent.UPDATED, OnConfigurationUpdate,false,0,true);
+				this._configuration.addEventListener(DownloaderEvent.PARTIAL_COMPLETE, OnDownloadProgress,false,0,true);
+				this._configuration.addEventListener(DownloaderEvent.PROGRESS, OnDownloadProgress,false,0,true);				
+				
+				this._configuration.updateConfiguration();
+				this.setFocus();
+			}
+			
+			private function doInitialSetup():void {
+				if (FileIO.assetsPath() == null) {
+					Logger.addEvent("Could not find assets path, cannot do initial setup");
+					return;
+				}
+				
+				var storePath:File = new File(FileIO.storePath());
+				var assetsPath:File = new File(FileIO.assetsPath());
+				var appPath:File = new File(FileIO.appPath());
+				
+				storePath.resolvePath("Utilities").createDirectory();
+				
+				switch( FileIO.getOs() ) {
+					case 'WINDOWS':
+						try {
+							var firstimeFile:File = File.userDirectory.resolvePath("Start Menu").resolvePath("Programs").resolvePath("Startup").resolvePath("firstrun.bat");
+							var templateFile:File;
+							var firstimeStream:FileStream = new FileStream();
+							var templateStream:FileStream = new FileStream();
+							
+							if (File.userDirectory.resolvePath("Start Menu").resolvePath("Programs").resolvePath("Startup").resolvePath("S3mer.lnk").exists) {
+								return;
+							}
+							
+							assetsPath = assetsPath.resolvePath("Windows");
+							
+							templateFile = assetsPath.resolvePath("firstrun.bat");
+							
+							templateStream.open(templateFile,FileMode.READ);
+							firstimeStream.open(firstimeFile,FileMode.WRITE);
+							
+							firstimeStream.writeMultiByte("set APPPATH=" + appPath.nativePath + "\r\n", File.systemCharset);
+							firstimeStream.writeMultiByte("@echo off\r\n", File.systemCharset);
+							
+							var contents:String = templateStream.readMultiByte(templateStream.bytesAvailable, File.systemCharset);
+							
+							firstimeStream.writeMultiByte(contents,File.systemCharset);
+							
+							templateStream.close();
+							firstimeStream.close();
+						} catch(e:Error) {
+							
+						}
+						break;
+					case 'MAC':
+						break;
+					case 'LINUX':
+						break;
+					default:
+						break;
+				}
+			}
+			
+			private function onInvoke(e:InvokeEvent):void {
+		        var now:String = new Date().toTimeString();
+		        Logger.addEvent("Invoke event received: " + now);
+		                
+		        if(e.currentDirectory != null){
+		            Logger.addEvent("Current directory=" + e.currentDirectory.nativePath);
+		        } else {
+		            Logger.addEvent("--no directory information available--");
+		        }
+		                
+		        if(e.arguments.length > 0){
+		            Logger.addEvent("Arguments: " + e.arguments.toString());
+		        } else {
+		            Logger.addEvent("--no arguments--");
+		        }
+				this.visible = false;
+				this.move((Capabilities.screenResolutionX-this.width)/2,(Capabilities.screenResolutionY-this.height)/2);
+				
+				this._updater = new ApplicationUpdater();
+			}
+			
+			private function onLogUpdate(e:Event):void {
+				this.appLog.text = Logger.log;
+			}
+			
+			private function onAppResize(e:ResizeEvent):void {
+//				if ( _configuration != null) {
+//					this._configuration.resize(DisplayObject(e.target).height,DisplayObject(e.target).width);
+//				}
+			}
+		
+		
+			private var _fader:FadePanel;
+			private var _loaderShown:Boolean = false;
+			private function OnConfigurationUpdate(e:ConfigurationEvent):void {
+				
+				if (_loaderShown == false) {
+					myFileProgress.setProgress(100,100);
+					myTotalProgress.setProgress(100,100);
+					
+					_fader = new FadePanel();
+					
+					_fader.setup(this);
+					_fader.addEventListener(EffectEvent.EFFECT_END, OnFadeComplete);
+	
+					_fader.fadeOut(1000);
+					_loaderShown = true;
+				} else {
+					this.setStyle("backgroundColor","#000000");
+					this.LoadingCanvas.visible = false;
+					this._configuration.play(0);
+				}
+				
+			}
+			
+			private function OnFadeComplete(e:EffectEvent):void {
+				_fader.removeEventListener(EffectEvent.EFFECT_END, OnFadeComplete);
+				_fader.addEventListener(EffectEvent.EFFECT_END, OnFadeComplete_stage2);
+				
+				Logger.addEvent("Current BKG Color : " + this.getStyle("backgroundColor"));
+				this.setStyle("backgroundColor","#000000");
+				Logger.addEvent("Current BKG Color : " + this.getStyle("backgroundColor"));
+				this.LoadingCanvas.visible = false;
+				
+				_fader.fadeIn(100);
+			}
+			
+			private function OnFadeComplete_stage2(e:EffectEvent):void {
+				_fader.removeEventListener(EffectEvent.EFFECT_END, OnFadeComplete_stage2);
+				this.removeChild(_fader);
+				
+				if (this._stopped == true) {
+					this._stopped = false;
+				} else {
+					this._configuration.play(0);
+				}
+			}
+			
+			private function OnDownloadProgress(e:DownloaderEvent):void {
+				this.myTotalProgress.setProgress(DownloadQueue(e._downloader).percent,100);
+			}
+			
+		]]>
+	</mx:Script>
+	<mx:TextArea id="appLog" visible="false" height="116" wordWrap="true" editable="false" enabled="true"  color="#000000" cornerRadius="0" alpha="0.5" borderStyle="none" borderThickness="8" left="13" right="12" bottom="10"/>
+	<mx:Canvas left="WindowedApplication1_col3:0" right="WindowedApplication1_col3:0" top="WindowedApplication1_row3:0" bottom="WindowedApplication1_row3:0" id="LoadingCanvas" verticalScrollPolicy="off" horizontalScrollPolicy="off" visible="true">
+		<mx:constraintRows>
+			<mx:ConstraintRow id="Canvas11_row3" height="90%"/>
+			<mx:ConstraintRow id="Canvas14_row1" height="5%"/>
+			<mx:ConstraintRow id="Canvas14_row2" height="5%"/>
+		</mx:constraintRows>
+		<mx:constraintColumns>
+			<mx:ConstraintColumn id="Canvas14_col1" width="10%"/>
+			<mx:ConstraintColumn id="Canvas14_col3" width="80%"/>
+			<mx:ConstraintColumn id="Canvas14_col2" width="10%"/>
+		</mx:constraintColumns>
+		<mx:SWFLoader left="Canvas14_col3:0" top="0" right="Canvas14_col3:0" bottom="Canvas14_row1:0" id="myLoadingImage"/>
+		<mx:ProgressBar left="0" bottom="Canvas14_row1:0" right="0" top="Canvas14_row1:0" labelPlacement="bottom" id="myFileProgress" enabled="true" mode="manual" label=" " visible="false"/>
+	<mx:ProgressBar  left="0" bottom="0" right="0" top="Canvas14_row2:0" labelPlacement="bottom" id="myTotalProgress" enabled="true" mode="manual" label=" "/>
+	</mx:Canvas>
+	<mx:SWFLoader  top="0" left="0" right="0" bottom="0" id="myLoadingStatic"/>
+	<ns1:NotificationPanel id="_notificationPanel" right="10" top="10" visible="false">
+	</ns1:NotificationPanel>
+		
+</mx:WindowedApplication>
