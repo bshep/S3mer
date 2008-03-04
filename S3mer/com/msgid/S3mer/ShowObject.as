@@ -172,6 +172,12 @@ package com.msgid.S3mer
 			newVideo.id	= objectXML.@id;
 			newVideo.name = objectXML.@id;
 			
+			if (this._parent.hasAudio==true) {
+				newVideo.volume = 1;								
+			} else {
+				newVideo.volume = 0;				
+			}
+			
 			newVideo.addEventListener(VideoEvent.COMPLETE,videoComplete,false,0,true);
 			
 			this._realObject = newVideo;

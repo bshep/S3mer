@@ -4,7 +4,6 @@
 	applicationComplete="onAppLoad(event)"
 	invoke="onInvoke(event)"
 	resize="onAppResize(event)" 
-	close="onAppClose(event)"
 	borderStyle="none" showStatusBar="false" 
 	applicationDeactivate="reAquireFocus()"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off" backgroundColor="#000000"
@@ -95,6 +94,7 @@
 					screenNumber++;	
 				}
 
+				this.stage.addEventListener(Event.CLOSE,onAppClose, false, 0, true);
 				myLoginWindow.checkCredentials(onAppLoad_postLogin);
 			}
 			
@@ -149,7 +149,8 @@
 					this.cursorManager.hideCursor();
 				}
 //				systemManager.stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
-				this.move(-100-this.width,this.y);
+				
+//				this.move(-100-this.width,this.y);
 //				systemManager.stage.nativeWindow.alwaysInFront = true;
 				stage.nativeWindow.visible = true;
 				this._updater.start();
@@ -161,7 +162,9 @@
 				for each( var _window:S3merWindow in this._playerWindows) {
 					_window.loadConfiguration();
 				}
-				this.setFocus();
+				this.stage.removeEventListener(Event.CLOSE,onAppClose);
+				this._playerWindows.getItemAt(0).setFocus();
+				this.close();
 			}
 			
 			private function doInitialSetup():void {

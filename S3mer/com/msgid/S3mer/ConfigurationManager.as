@@ -28,7 +28,7 @@ package com.msgid.S3mer
 		
 		private var _container:Container;
 
-		private static var _heartbeatTimer:Timer;
+		private var _heartbeatTimer:Timer;
 
 		private var _config:XML;
 		
@@ -37,7 +37,7 @@ package com.msgid.S3mer
 		// BaseURL for media, can be overwritten by config file
 		private var _mediaURL:String = ApplicationSettings.URL_MEDIA;
 		
-		private static var _hearbeatURL:String = ApplicationSettings.URL_HEARTBEAT + "?playerid=";
+		private var _hearbeatURL:String = ApplicationSettings.URL_HEARTBEAT + "?playerid=";
 		
 		// Configuration URL
 		private var _configURL:String = ApplicationSettings.URL_CONFIG;
@@ -63,7 +63,7 @@ package com.msgid.S3mer
 			_downloadQueue.addEventListener(DownloaderEvent.PARTIAL_COMPLETE,this.OnDownloadFileComplete,false,0,true);
 			_downloadQueue.addEventListener(DownloaderEvent.COMPLETE,this.OnDownloadComplete,false,0,true);
 
-			if (_heartbeatTimer == null) {
+			if (_heartbeatTimer == null && S3merWindow(this._container).screenId == 0) {
 				_heartbeatTimer = new Timer(1000);
 				_heartbeatTimer.addEventListener(TimerEvent.TIMER, OnHeartbeatTimer,false,0,true);
 				_heartbeatTimer.start();
@@ -72,7 +72,7 @@ package com.msgid.S3mer
 			this._stopped = true;
 		}
 		
-		private static function OnHeartbeatTimer(e:TimerEvent):void {
+		private function OnHeartbeatTimer(e:TimerEvent):void {
 			var _loader:URLLoader = new URLLoader();
 			var _loaderReq:URLRequest;
 			_heartbeatTimer.stop();
@@ -92,13 +92,15 @@ package com.msgid.S3mer
 			}
 		}
 		
-		private static function OnIOError(e:IOErrorEvent):void {
+		private function OnIOError(e:IOErrorEvent):void {
 			Logger.addEvent("HEARTBEAT FAILED: Probably not connected");
-			_heartbeatTimer.start();
+			if(this._heartbeatTimer != null) {
+				this._heartbeatTimer.start();
+			}
 		}
 		 
 		
-		private static function OnHeartbeat_stage2(e:Event):void {
+		private function OnHeartbeat_stage2(e:Event):void {
 			var response:String;
 			
 			response = e.target.data;
@@ -111,7 +113,7 @@ package com.msgid.S3mer
 					break;
 				case 'R':
 					//Refresh
-//					this.updateConfiguration();
+					this.updateConfiguration();
 					break;
 				case 'O':
 					//OK
@@ -141,7 +143,7 @@ package com.msgid.S3mer
 		// Called whenever the configuration file was updated
 		public function updateConfiguration():void {
 			var screenId:int = S3merWindow(this._container).screenId;
-			
+
 			_downloadQueue.addEventListener(DownloaderEvent.COMPLETE,updateConfiguration_step2,false,0,true)
 
 			Logger.addEvent("ConfigurationManager::updateConfiguration: screenId = " + ApplicationSettings.getValue("screen"+ screenId +".channel.id",""));
@@ -329,9 +331,13 @@ package com.msgid.S3mer
 
 				try {
 					for each (var regionXML:XML in showXML.region) {
+						var hasAudio:String;
+						
+						hasAudio = ApplicationSettings.getValue("screen"+ S3merWindow(this._container).screenId +".audio","");
+						
 						Logger.addEvent("- region id: " + regionXML.@id + " type: " + regionXML.@type);
 						
-						newShow.addObject(regionXML);
+						newShow.addObject(regionXML, hasAudio);
 						
 						parseShow_addPlaylists(regionXML, newShow);
 						parseShow_addSchedules(regionXML, newShow);
@@ -444,6 +450,11 @@ package com.msgid.S3mer
 		//Begin processing new Show
 		private function switchShow_stage3(e:EffectEvent):void {
 			var currShowObject:Show = Show(this._container.getChildByName("currentShow"));
+			
+			if( currShowObject == null ) {
+				return;
+			}
+			
 			currShowObject.removeEventListener(EffectEvent.EFFECT_END,switchShow_stage3);
 	
 			if( this._stopped == true ) {

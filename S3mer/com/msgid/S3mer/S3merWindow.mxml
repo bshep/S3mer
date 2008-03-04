@@ -181,8 +181,8 @@
 				
 				if (this._stopped == true) {
 					this._stopped = false;
+					this.play();
 				}
-				this.play();
 				
 			}
 			

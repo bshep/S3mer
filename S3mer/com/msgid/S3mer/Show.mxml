@@ -23,9 +23,15 @@
 			
 			private var _showObjects:ArrayCollection = new ArrayCollection();
 			
+			private var _hasAudio:Boolean;
+			
 			private function OnCreated(e:Event):void {
 				this.initFader();
 				
+			}
+			
+			public function get hasAudio():Boolean {
+				return this._hasAudio;
 			}
 			
 			public function resize():void {
@@ -46,7 +52,7 @@
 			
 			// Content related functions
 //			public function addObject(id:String,object:DisplayObject):void {
-			public function addObject(objectXML:XML):void {
+			public function addObject(objectXML:XML, hasAudio:String):void {
 				var showObject:ShowObject;
 				
 				showObject = getObjectById(objectXML.@id);
@@ -65,7 +71,12 @@
 //				tmpObject.object = object;	
 				showObject.parent = this;
 				showObject.configure(objectXML);
-			
+				
+				if( hasAudio == "1" ) {
+					this._hasAudio = true;
+				} else {
+					this._hasAudio = false;
+				}
 			}
 			
 			public function onInvalidPlaylistItem(e:ShowEvent):void {
