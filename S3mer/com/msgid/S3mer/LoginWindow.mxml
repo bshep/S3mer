@@ -269,7 +269,7 @@
 									
 				ApplicationSettings.setValue("user.username",this.username.text);
 				ApplicationSettings.setValue("user.password",this.password.text);
-				ApplicationSettings.setValue("channel.id",this.cmbPlayers.selectedItem.data[0]);
+				ApplicationSettings.setValue("screen0.channel.id",this.cmbPlayers.selectedItem.data[0]);
 
 				ApplicationSettings.save();
 			}
