@@ -332,12 +332,14 @@ package com.msgid.S3mer
 				try {
 					for each (var regionXML:XML in showXML.region) {
 						var hasAudio:String;
+						var audioPan:String;
 						
-						hasAudio = ApplicationSettings.getValue("screen"+ S3merWindow(this._container).screenId +".audio","");
+						hasAudio = ApplicationSettings.getValue("screen"+ S3merWindow(this._container).screenId +".audio.enabled","");
+						audioPan = ApplicationSettings.getValue("screen"+ S3merWindow(this._container).screenId +".audio.pan","C");
 						
 						Logger.addEvent("- region id: " + regionXML.@id + " type: " + regionXML.@type);
 						
-						newShow.addObject(regionXML, hasAudio);
+						newShow.addObject(regionXML, hasAudio, audioPan);
 						
 						parseShow_addPlaylists(regionXML, newShow);
 						parseShow_addSchedules(regionXML, newShow);

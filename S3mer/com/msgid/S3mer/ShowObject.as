@@ -5,6 +5,7 @@ package com.msgid.S3mer
 	import flash.events.EventDispatcher;
 	import flash.events.TimerEvent;
 	import flash.filters.BlurFilter;
+	import flash.media.SoundTransform;
 	import flash.utils.Timer;
 	
 	import mx.collections.ArrayCollection;
@@ -173,10 +174,17 @@ package com.msgid.S3mer
 			newVideo.name = objectXML.@id;
 			
 			if (this._parent.hasAudio==true) {
-				newVideo.volume = 1;								
+				var newSoundTransform:SoundTransform = newVideo.soundTransform;
+				
+				newVideo.volume = 1;			
+			
+				newVideo.pan = this._parent.audioPan;
+//				newVideo.soundTransform = newSoundTransform;
+									
 			} else {
 				newVideo.volume = 0;				
 			}
+			
 			
 			newVideo.addEventListener(VideoEvent.COMPLETE,videoComplete,false,0,true);
 			

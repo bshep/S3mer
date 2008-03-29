@@ -163,7 +163,7 @@
 					_window.loadConfiguration();
 				}
 				this.stage.removeEventListener(Event.CLOSE,onAppClose);
-				this._playerWindows.getItemAt(0).setFocus();
+				Window(this._playerWindows.getItemAt(0)).activate();
 				this.close();
 			}
 			

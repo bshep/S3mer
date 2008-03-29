@@ -24,6 +24,7 @@
 			private var _showObjects:ArrayCollection = new ArrayCollection();
 			
 			private var _hasAudio:Boolean;
+			private var _audioPan:String;
 			
 			private function OnCreated(e:Event):void {
 				this.initFader();
@@ -32,6 +33,10 @@
 			
 			public function get hasAudio():Boolean {
 				return this._hasAudio;
+			}
+			
+			public function get audioPan():String {
+				return this._audioPan;
 			}
 			
 			public function resize():void {
@@ -52,7 +57,7 @@
 			
 			// Content related functions
 //			public function addObject(id:String,object:DisplayObject):void {
-			public function addObject(objectXML:XML, hasAudio:String):void {
+			public function addObject(objectXML:XML, hasAudio:String, audioPan:String):void {
 				var showObject:ShowObject;
 				
 				showObject = getObjectById(objectXML.@id);
@@ -77,6 +82,8 @@
 				} else {
 					this._hasAudio = false;
 				}
+				
+				this._audioPan = audioPan;
 			}
 			
 			public function onInvalidPlaylistItem(e:ShowEvent):void {

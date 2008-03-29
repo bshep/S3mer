@@ -9,6 +9,7 @@ package com.msgid.S3mer
 	{
 		
 		private var _smoothing:Boolean = false;
+		private var _pan:String = "C"
 		
 		public function SmoothVideoDisplay()
 		{
@@ -27,5 +28,46 @@ package com.msgid.S3mer
 			return _smoothing;
 		}
 		
+		public function set pan(value:String):void {
+			this._pan = value;
+			
+			doPan();
+		}
+		
+		public function get pan():String {
+			return this._pan;
+		}
+		
+	    public override function play():void {
+	    	super.play();
+	    	
+	    	doPan();
+	    }
+	    
+	    private function doPan():void {
+			switch(this._pan) {
+				case 'L':
+					this.soundTransform.leftToRight = 0;
+					this.soundTransform.leftToLeft = 1;
+					this.soundTransform.rightToLeft = 1;
+					this.soundTransform.rightToRight = 0;
+					
+					break;
+				case 'R':
+					this.soundTransform.leftToRight = 1;
+					this.soundTransform.leftToLeft = 0;
+					this.soundTransform.rightToLeft = 0;
+					this.soundTransform.rightToRight = 1;
+
+					break;
+				case 'C':
+					this.soundTransform.leftToRight = 0;
+					this.soundTransform.leftToLeft = 1;
+					this.soundTransform.rightToLeft = 0;
+					this.soundTransform.rightToRight = 1;
+
+					break;
+			}
+	    }
 	}
 }
