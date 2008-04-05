@@ -11,6 +11,7 @@ package com.msgid.S3mer
 	{
 		public var _item:PlaylistObject;
 		public var _feedRSS:XML;
+		public var _errored:Boolean;
 		
 		public var _currentItemURL:String;
 		
@@ -51,31 +52,40 @@ package com.msgid.S3mer
 			
 			this.dispatchEvent(new Event(Event.COMPLETE));
 			
-			loadCurrentFile();
 		}
 		
-		private function loadCurrentFile():void {
+		public function queueDownload():void {
 			if(FileIO.fileExists(FileIO.Url2Filename(_currentItemURL))) {
 				Logger.addEvent("Already Downloaded File:"+ FileIO.Url2Filename(_currentItemURL));
-				downloadComplete(null);
+//				downloadComplete(null);
 			} else {
 				Logger.addEvent("Downloading File:"+ FileIO.Url2Filename(_currentItemURL));
-				PodcastManager._queue.addItem(_currentItemURL);
-				PodcastManager._queue.addEventListener(DownloaderEvent.COMPLETE,downloadComplete);
+				PodcastManager._queue.addItem(_currentItemURL,"",null,false,false);
+//				PodcastManager._queue.addEventListener(DownloaderEvent.COMPLETE,downloadComplete);
 			}
+			
+			_item.file = FileIO.Url2Filename(_currentItemURL);
 		}
 		
 		private function OnIOError(e:IOErrorEvent):void {
+			_errored = true;
 			Logger.addEvent("LOADRSS FAILED: url may not be valid: " + this._item.url);
+			dispatchEvent(new Event("ERROR"));
 		}
 		
-		public function downloadComplete(e:DownloaderEvent):void {
-			PodcastManager._queue.removeEventListener(DownloaderEvent.COMPLETE,downloadComplete);
-			
-			_item.file = FileIO.Url2Filename(_currentItemURL);
-			
-			dispatchEvent(new Event(Event.COMPLETE));
+//		public function downloadComplete(e:DownloaderEvent):void {
+//			PodcastManager._queue.removeEventListener(DownloaderEvent.COMPLETE,downloadComplete);
+//			
+//			_item.file = FileIO.Url2Filename(_currentItemURL);
+//			
+//			dispatchEvent(new Event(Event.COMPLETE));
+//		}
+		public function loaded():Boolean {
+			return (_feedRSS!=null);
 		}
-
+	
+		public function available():Boolean {
+			return FileIO.fileExists(FileIO.Url2Filename(_currentItemURL));
+		}
 	}
 }

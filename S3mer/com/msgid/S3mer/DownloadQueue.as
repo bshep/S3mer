@@ -3,7 +3,6 @@ package com.msgid.S3mer
 	import flash.events.EventDispatcher;
 	import flash.events.ProgressEvent;
 	
-	import mx.charts.chartClasses.StackedSeries;
 	import mx.collections.ArrayCollection;
 
 	public class DownloadQueue extends EventDispatcher
@@ -52,9 +51,9 @@ package com.msgid.S3mer
 			myDL = new Downloader(url, hash, filename, forceUpdate);
 			this._downloaders.addItem(myDL);
 		
-			myDL.addEventListener(DownloaderEvent.PROGRESS,OnProgress,false,0,true);
-			myDL.addEventListener(DownloaderEvent.COMPLETE,OnComplete,false,0,true);
-			
+			myDL.addEventListener(DownloaderEvent.PROGRESS,OnProgress);
+			myDL.addEventListener(DownloaderEvent.COMPLETE,OnComplete);
+			myDL.addEventListener(DownloaderEvent.ERROR,OnError);
 			if (this._started) {
 				this.startNext();			
 			}
@@ -108,6 +107,8 @@ package com.msgid.S3mer
 			}
 		}
 
-		
+		private function OnError(e:DownloaderEvent):void {
+			dispatchEvent(e);
+		}
 	}
 }

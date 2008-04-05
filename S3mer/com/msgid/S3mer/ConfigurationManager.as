@@ -61,9 +61,9 @@ package com.msgid.S3mer
 				PodcastManager.setQueue(_downloadQueue);
 			}
 			
-			_downloadQueue.addEventListener(DownloaderEvent.PROGRESS,this.OnDownloadProgress,false,0,true);
-			_downloadQueue.addEventListener(DownloaderEvent.PARTIAL_COMPLETE,this.OnDownloadFileComplete,false,0,true);
-			_downloadQueue.addEventListener(DownloaderEvent.COMPLETE,this.OnDownloadComplete,false,0,true);
+			_downloadQueue.addEventListener(DownloaderEvent.PROGRESS,OnDownloadProgress,false,0,true);
+			_downloadQueue.addEventListener(DownloaderEvent.PARTIAL_COMPLETE,OnDownloadFileComplete,false,0,true);
+			_downloadQueue.addEventListener(DownloaderEvent.COMPLETE,OnDownloadComplete,false,0,true);
 
 			if (_heartbeatTimer == null && S3merWindow(this._container).screenId == 0) {
 				_heartbeatTimer = new Timer(1000);
@@ -147,6 +147,7 @@ package com.msgid.S3mer
 			var screenId:int = S3merWindow(this._container).screenId;
 
 			_downloadQueue.addEventListener(DownloaderEvent.COMPLETE,updateConfiguration_step2,false,0,true)
+			_downloadQueue.addEventListener(DownloaderEvent.ERROR,onDownloadError,false,0,true)
 
 			Logger.addEvent("ConfigurationManager::updateConfiguration: screenId = " + ApplicationSettings.getValue("screen"+ screenId +".channel.id",""));
 //			_downloadQueue.addItem(getChannelUrl(ApplicationSettings.getValue("screen"+ screenId +".channel.id","")), "", "config" + screenId + ".xml", false,true);
@@ -159,12 +160,17 @@ package com.msgid.S3mer
 			return this._configURL + "?playerid=" + channelNumber;
 		}
 		
+		private function onDownloadError(e:Event):void {
+			Logger.addEvent("Error with download" + (e.target).toString());
+		}
+		
 		private function updateConfiguration_step2(e:DownloaderEvent):void {
 			var configFile:File = new File(FileIO.mediaPath("config" + S3merWindow(this._container).screenId + ".xml"));
 			var configReader:FileStream;
 			var config:XML;
 			
-			_downloadQueue.removeEventListener(DownloaderEvent.COMPLETE,updateConfiguration_step2)
+			_downloadQueue.removeEventListener(DownloaderEvent.ERROR,onDownloadError);
+			_downloadQueue.removeEventListener(DownloaderEvent.COMPLETE,updateConfiguration_step2);
 			
 			configReader = new FileStream;
 			
@@ -271,12 +277,25 @@ package com.msgid.S3mer
 		
 		private function initiateDownloads():void {
 			for each (var _playlist:Playlist in this._playlistsNew) {
+				//Run through all playlist items and determine which ones we need to download,
+				//this also creates all podcast items.
 				for each( var _playlistObj:PlaylistObject in _playlist.pendingFiles ) {
 					_downloadQueue.addItem(_mediaURL + _playlistObj.url, _playlistObj.hash);
 				}
 			}
 			
+
+			//Setup an event listener to get notified when the PodcastManager is done loading podcasts
+			PodcastManager._podcastManager.addEventListener(Event.COMPLETE,initiateDownloads_step2);
+			//Tell all podcast items to queue downloads at the end of the queue
+			PodcastManager.setupDownloads();
+			
+		}
+		
+		private function initiateDownloads_step2(e:Event):void {
+			//Start the queue
 			_downloadQueue.start();
+			
 		}
 		
 		private function parsePlaylists():void {

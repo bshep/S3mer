@@ -91,7 +91,7 @@ package com.msgid.S3mer
 		private function OnIOError(e:IOErrorEvent):void {
 			Logger.addEvent("Net connection error, using old config");
 			this._complete = true;
-			this.dispatchEvent(new DownloaderEvent(DownloaderEvent.COMPLETE, this));			
+			this.dispatchEvent(new DownloaderEvent(DownloaderEvent.ERROR, this));			
 		}
 		
 		private function OnProgress(e:ProgressEvent):void {

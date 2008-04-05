@@ -5,6 +5,7 @@ package com.msgid.S3mer
  
 	public class DownloaderEvent extends ProgressEvent
 	{
+		public static const ERROR:String = "ERROR";
 		public static const COMPLETE:String = "COMPLETE";
 		public static const PROGRESS:String = "PROGRESS";
 		public static const PARTIAL_COMPLETE:String = "PARTIAL_COMPLETE";
