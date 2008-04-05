@@ -3,6 +3,7 @@ package com.msgid.S3mer
 	import flash.events.EventDispatcher;
 	import flash.events.ProgressEvent;
 	
+	import mx.charts.chartClasses.StackedSeries;
 	import mx.collections.ArrayCollection;
 
 	public class DownloadQueue extends EventDispatcher

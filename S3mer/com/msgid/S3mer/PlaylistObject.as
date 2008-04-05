@@ -30,6 +30,9 @@ package com.msgid.S3mer
 			return this._type;
 		}
 
+		public function set file(val:String):void {
+			this._file = val;
+		}
 
 		public function PlaylistObject(playlistItemXML:XML):void {
 			this._configXML = playlistItemXML;

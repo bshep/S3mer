@@ -8,6 +8,18 @@ package com.msgid.S3mer
 	public class ApplicationSettings
 	{
 		private static var _AppSettingsInstance:ApplicationSettings;	
+		//Static Vars
+		public static const URL_LOGIN:String = "http://www.s3mer.com/loginplayer.php";
+		public static const URL_LOGOUT:String = "http://www.s3mer.com/logout.php";
+		public static const URL_PLAYER_LIST:String = "http://www.s3mer.com/playergetdata.php";
+		public static const URL_USER_INFO:String = "http://www.s3mer.com/playergetdata.php";
+		public static const URL_STATUS:String = "http://www.s3mer.com/checklogged.php";
+
+		public static const URL_MEDIA:String = "http://www.s3mer.com/";
+		public static const URL_HEARTBEAT:String = "http://www.s3mer.com/heartbeat.php";
+		public static const URL_CONFIG:String = "http://www.s3mer.com/getxml.php";
+		public static const URL_UPDATE:String = "http://www.s3mer.com/media/app/checkversion.php";
+
 		private var _settings:XML;
 		private var _settingsFile:File;
 		
@@ -88,18 +100,6 @@ package com.msgid.S3mer
 			return elem[0];
 		}
 		
-		//Static Vars
-		public static const URL_LOGIN:String = "http://www.s3mer.com/loginplayer.php";
-		public static const URL_LOGOUT:String = "http://www.s3mer.com/logout.php";
-		public static const URL_PLAYER_LIST:String = "http://www.s3mer.com/playergetdata.php";
-		public static const URL_USER_INFO:String = "http://www.s3mer.com/playergetdata.php";
-		public static const URL_STATUS:String = "http://www.s3mer.com/checklogged.php";
-
-
-		public static const URL_MEDIA:String = "http://www.s3mer.com/";
-		public static const URL_HEARTBEAT:String = "http://www.s3mer.com/heartbeat.php";
-		public static const URL_CONFIG:String = "http://www.s3mer.com/getxml.php";
-		public static const URL_UPDATE:String = "http://www.s3mer.com/media/app/checkversion.php";
 		
 		
 

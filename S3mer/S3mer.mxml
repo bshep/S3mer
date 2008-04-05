@@ -75,7 +75,7 @@
 			private function onAppLoad(e:FlexEvent):void {
 				this.frameRate = 30;
 				this._log.addEventListener(Event.ADDED, onLogUpdate,false,0,true);
-				URLRequestDefaults.setLoginCredentialsForHost("www.s3mer.com","development","mils0ft");
+				//URLRequestDefaults.setLoginCredentialsForHost("www.s3mer.com","development","mils0ft");
 				
 				myLoginWindow = new LoginWindow();
 				myLoginWindow.visible = false;

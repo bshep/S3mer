@@ -110,9 +110,15 @@ package com.msgid.S3mer
 		}
 
 		public function get avaiable():Boolean {
+			var _itemType:String
+			
 			for each (var item:PlaylistObject in this._items) {
-				if(!item.avaiable) {
-					return false;
+				_itemType = (item.configXML.@type).toString();
+				
+				if( _itemType != "podcast" &&  _itemType != "rss" ) {
+					if(!item.avaiable) {
+						return false;
+					}
 				}
 			}
 			return true;
@@ -122,8 +128,19 @@ package com.msgid.S3mer
 			var pending:ArrayCollection = new ArrayCollection();
 			
 			for each (var item:PlaylistObject in this._items) {
-				if(!item.avaiable) {
-					pending.addItem(item);
+				Logger.addEvent("Item Type: " + item.configXML.@type);
+				switch((item.configXML.@type).toString()) {
+					case "video":
+					case "images":
+					case "swf":
+						if(!item.avaiable) {
+							pending.addItem(item);
+						}
+						break;
+					case "podcast":
+						PodcastManager.addPodcast(item)
+						break;
+					
 				}
 			}
 			return pending;

@@ -138,6 +138,7 @@ package com.msgid.S3mer
 		}
 
 
+
  		private function configure_image(objectXML:XML):void {
 			var newImage:Image = new Image();
 			
@@ -287,6 +288,9 @@ package com.msgid.S3mer
 					break;	
 				case "rss":
 					play_next_rss();
+					break;	
+				case "podcast":
+					play_next_podcast();
 					break;	
 				case "timedate":
 					play_next_timedate();
@@ -445,6 +449,40 @@ package com.msgid.S3mer
 			cleancut(this._prevObject, this._realObject);
 			TimeDateObject(this._realObject).play();
 		}
+		
+		private function play_next_podcast():void {
+			play_next_video();
+			
+			return;
+			var _playlist:Playlist = this.currentPlaylist;
+			var tmpTimer:TimerId = getTimerById("video_check");
+						
+			// For videos we need to setup the video_check timer which detects stuck video and when the video is done.
+			if ( tmpTimer == null ) {
+				tmpTimer = new TimerId("video_check",200);
+				this._timers.addItem(tmpTimer);
+				
+				tmpTimer.addEventListener(TimerEvent.TIMER,video_check,false,0,true);
+			}
+
+			this._prevObject = this._realObject;
+			this.configure_video(this._configXML);
+			SmoothVideoDisplay(this._realObject).source = FileIO.mediaPath(_playlist.current.file);
+//			SmoothVideoDisplay(this._realObject).play();
+			cleancut(this._prevObject, this._realObject);
+			
+			if (ApplicationSettings.getValue("video.smoothing") == "false") {
+				SmoothVideoDisplay(this._realObject).smoothing = false;
+			} else {
+				SmoothVideoDisplay(this._realObject).smoothing = true;
+			}
+			
+			Logger.addEvent("Play next: " + FileIO.mediaPath(_playlist.current.file));
+			
+			tmpTimer.start();
+		}
+		
+		
 		
 		private function play_next_image():void {
 			var _playlist:Playlist = this.currentPlaylist;

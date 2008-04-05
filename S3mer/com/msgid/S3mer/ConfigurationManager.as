@@ -57,6 +57,8 @@ package com.msgid.S3mer
 			
 			if (_downloadQueue == null) {
 				_downloadQueue = new DownloadQueue();
+				
+				PodcastManager.setQueue(_downloadQueue);
 			}
 			
 			_downloadQueue.addEventListener(DownloaderEvent.PROGRESS,this.OnDownloadProgress,false,0,true);
@@ -147,7 +149,8 @@ package com.msgid.S3mer
 			_downloadQueue.addEventListener(DownloaderEvent.COMPLETE,updateConfiguration_step2,false,0,true)
 
 			Logger.addEvent("ConfigurationManager::updateConfiguration: screenId = " + ApplicationSettings.getValue("screen"+ screenId +".channel.id",""));
-			_downloadQueue.addItem(getChannelUrl(ApplicationSettings.getValue("screen"+ screenId +".channel.id","")), "", "config" + screenId + ".xml", false,true);
+//			_downloadQueue.addItem(getChannelUrl(ApplicationSettings.getValue("screen"+ screenId +".channel.id","")), "", "config" + screenId + ".xml", false,true);
+			_downloadQueue.addItem(getChannelUrl(ApplicationSettings.getValue("screen"+ screenId +".channel.id","")), "", "config" + screenId + ".xml", false,false);
 
 			_downloadQueue.start();
 		}
