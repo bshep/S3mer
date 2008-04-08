@@ -2,6 +2,8 @@ package com.msgid.S3mer
 {
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	import flash.events.TimerEvent;
+	import flash.utils.Timer;
 	
 	import mx.collections.ArrayCollection;
 	
@@ -11,6 +13,7 @@ package com.msgid.S3mer
 		public static var _podcastManager:PodcastManager;
 		public static var _queue:DownloadQueue;
 		private static var _podcasts:ArrayCollection;
+		private static var _reloadTimer:Timer;
 		
 		//Instance class declarations
 		
@@ -28,6 +31,10 @@ package com.msgid.S3mer
 				_podcasts = new ArrayCollection();
 			}
 			
+			if (_reloadTimer == null) {
+				_reloadTimer = new Timer(1*60*1000);
+				_reloadTimer.addEventListener(TimerEvent.TIMER, onReloadTick);
+			}
 		}
 		
 		public static function setQueue(queue:DownloadQueue):void {
@@ -57,7 +64,7 @@ package com.msgid.S3mer
 		}
 		
 		public static function loadError(e:Event):void {
-			
+			//TODO: do something useful here
 			
 		}
 		
@@ -68,6 +75,7 @@ package com.msgid.S3mer
 					
 			if( loaded() == true ) {		
 				_podcastManager.dispatchEvent(new Event(Event.COMPLETE));
+				_reloadTimer.start();
 			}			
 		}
 		
@@ -80,6 +88,13 @@ package com.msgid.S3mer
 			}
 			return true;
 		}
+		
+		public static function onReloadTick(e:TimerEvent):void {
+			for each( var item:PodcastItem in _podcasts ) {
+				item.checkRSS();
+			}
+		}
+		
 	}
 	
 

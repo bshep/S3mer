@@ -40,16 +40,8 @@ package com.msgid.S3mer
 		
 		
 		private function reloadRSS_complete(e:Event):void {
-			this._feedRSS = new XML((e.target as URLLoader).data);
-			
-//			Logger.addEvent("PODCAST LOAD COMPLETE");
-			
-			this._feedRSS.setNamespace(new Namespace());
-			
-//			Logger.addEvent("first podcast url: " + _feedRSS.channel.item[0].enclosure.@url.toString() );
-			
-			this._currentItemURL = _feedRSS.channel.item[0].enclosure.@url.toString();
-			
+			extractFeedData((e.target as URLLoader).data);
+						
 			this.dispatchEvent(new Event(Event.COMPLETE));
 			
 		}
@@ -57,11 +49,9 @@ package com.msgid.S3mer
 		public function queueDownload():void {
 			if(FileIO.fileExists(FileIO.Url2Filename(_currentItemURL))) {
 				Logger.addEvent("Already Downloaded File:"+ FileIO.Url2Filename(_currentItemURL));
-//				downloadComplete(null);
 			} else {
 				Logger.addEvent("Downloading File:"+ FileIO.Url2Filename(_currentItemURL));
 				PodcastManager._queue.addItem(_currentItemURL,"",null,false,false);
-//				PodcastManager._queue.addEventListener(DownloaderEvent.COMPLETE,downloadComplete);
 			}
 			
 			_item.file = FileIO.Url2Filename(_currentItemURL);
@@ -73,19 +63,55 @@ package com.msgid.S3mer
 			dispatchEvent(new Event("ERROR"));
 		}
 		
-//		public function downloadComplete(e:DownloaderEvent):void {
-//			PodcastManager._queue.removeEventListener(DownloaderEvent.COMPLETE,downloadComplete);
-//			
-//			_item.file = FileIO.Url2Filename(_currentItemURL);
-//			
-//			dispatchEvent(new Event(Event.COMPLETE));
-//		}
 		public function loaded():Boolean {
 			return (_feedRSS!=null);
 		}
 	
 		public function available():Boolean {
 			return FileIO.fileExists(FileIO.Url2Filename(_currentItemURL));
+		}
+		
+		public function checkRSS():void {
+			var _loader:URLLoader = new URLLoader();
+			var _loaderReq:URLRequest;
+			
+			_loader.addEventListener(IOErrorEvent.IO_ERROR,OnIOError);
+			_loader.addEventListener(Event.COMPLETE,checkRSS_complete);
+			_loader.dataFormat = URLLoaderDataFormat.TEXT;
+			try {
+				_loaderReq = new URLRequest(this._item.url);
+				_loader.load(_loaderReq);
+			} catch(e:Error) {
+				Logger.addEvent("HEARTBEAT FAILED");
+			}			
+		}
+		
+		public function checkRSS_complete(e:Event):void {
+			extractFeedData((e.target as URLLoader).data);
+			
+			if(FileIO.fileExists(FileIO.Url2Filename(_currentItemURL))) {
+				Logger.addEvent("Already Downloaded File:"+ FileIO.Url2Filename(_currentItemURL));
+				_item.file = FileIO.Url2Filename(_currentItemURL);
+			} else {
+				Logger.addEvent("Downloading File:"+ FileIO.Url2Filename(_currentItemURL));
+				
+				PodcastManager._queue.addEventListener(DownloaderEvent.PARTIAL_COMPLETE,checkRSS_loadmedia_complete);
+				PodcastManager._queue.addItem(_currentItemURL);
+			}
+						
+		}
+		
+		public function checkRSS_loadmedia_complete(e:DownloaderEvent):void {
+			if(FileIO.fileExists(FileIO.Url2Filename(_currentItemURL))) {
+				Logger.addEvent("Media for RSS updated: " + this._item.url);
+				_item.file = FileIO.Url2Filename(_currentItemURL);
+			}			
+		}
+		
+		private function extractFeedData(data:String):void {
+			this._feedRSS = new XML(data);
+			this._currentItemURL = _feedRSS.channel.item[0].enclosure.@url.toString();
+			
 		}
 	}
 }

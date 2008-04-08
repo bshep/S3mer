@@ -10,12 +10,11 @@ package com.msgid.S3mer
 	import flash.net.URLLoader;
 	import flash.net.URLLoaderDataFormat;
 	import flash.net.URLRequest;
-	import flash.net.URLRequestDefaults;
 	
 	public class Downloader extends EventDispatcher
 	{
 		private var _loader:URLLoader;
-		private var _url:String;
+		public var _url:String;
 		private var _filename:String;
 		private var _lastPercentage:int;
 		private var _complete:Boolean;
@@ -42,6 +41,10 @@ package com.msgid.S3mer
 		
 		public function get started():Boolean {
 			return this._started;
+		}
+		
+		public function get url():String {
+			return this._url;
 		}
 		
 		public function Downloader(url:String, hash:String, destination:String, forceUpdate:Boolean) {
