@@ -10,7 +10,7 @@ package com.msgid.S3mer
 	public class PodcastManager extends EventDispatcher
 	{
 		//Static class declarations
-		public static var _podcastManager:PodcastManager;
+		private static var _podcastManager:PodcastManager;
 		public static var _queue:DownloadQueue;
 		private static var _podcasts:ArrayCollection;
 		private static var _reloadTimer:Timer;
@@ -20,6 +20,12 @@ package com.msgid.S3mer
 		public function PodcastManager()
 		{
 			super();
+		}
+		
+		public static function get podcastManager():PodcastManager {
+			init();
+			
+			return _podcastManager;
 		}
 		
 		public static function init():void {
@@ -56,6 +62,11 @@ package com.msgid.S3mer
 		}
 		
 		public static function setupDownloads():void {
+			if (_podcasts.length == 0) {
+				_podcastManager.dispatchEvent(new Event(Event.COMPLETE));
+				return;
+			}
+			
 			
 			for each( var item:PodcastItem in _podcasts ) {
 				item.reloadRSS();

@@ -1,5 +1,7 @@
 package com.msgid.S3mer
 {
+	import flash.media.Camera;
+	
 	import mx.controls.VideoDisplay;
 	import mx.core.mx_internal;
 	
@@ -9,12 +11,14 @@ package com.msgid.S3mer
 	{
 		
 		private var _smoothing:Boolean = false;
-		private var _pan:String = "C"
+		private var _pan:String = "C";
+		public var cameraAttached:Boolean;
 		
 		public function SmoothVideoDisplay()
 		{
 			super();
 //			this.smoothing = true;
+			this.cameraAttached = false;
 		}
 		
 		[Bindable]
@@ -42,6 +46,25 @@ package com.msgid.S3mer
 	    	super.play();
 	    	
 	    	doPan();
+	    }
+	    
+	    public override function set source(value:String):void {
+//	    	if( this.cameraAttached == true ) {
+//	  			videoPlayer.clear();
+//				this.close();
+//	    	}
+	    	
+	    	super.source = value;
+	    	
+	    	this.cameraAttached = false;
+	    } 
+	    
+	    public override function attachCamera(camera:Camera):void {
+	    	super.attachCamera(camera);
+  			videoPlayer.clear();
+	    	
+	    	this.cameraAttached = true;
+	    	
 	    }
 	    
 	    private function doPan():void {

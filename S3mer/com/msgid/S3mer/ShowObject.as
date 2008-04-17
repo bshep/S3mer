@@ -5,6 +5,7 @@ package com.msgid.S3mer
 	import flash.events.EventDispatcher;
 	import flash.events.TimerEvent;
 	import flash.filters.BlurFilter;
+	import flash.media.Camera;
 	import flash.media.SoundTransform;
 	import flash.utils.Timer;
 	
@@ -162,9 +163,9 @@ package com.msgid.S3mer
 			if (_currVideoDisplay == null) {
 				_currVideoDisplay = new SmoothVideoDisplay();
 			}
-			if (_lastVideoDisplay == null) {
+//			if (_lastVideoDisplay == null) {
 				_lastVideoDisplay = new SmoothVideoDisplay();
-			}
+//			}
 			
 			var newVideo:SmoothVideoDisplay = _lastVideoDisplay;
 			
@@ -191,6 +192,25 @@ package com.msgid.S3mer
 			
 			this._realObject = newVideo;
 			this.resize();
+		}
+		
+		private function configure_live(objectXML:XML):void {
+			var newVideo:SmoothVideoDisplay = new SmoothVideoDisplay();
+			
+			newVideo.maintainAspectRatio = false;
+			newVideo.id	= objectXML.@id;
+			newVideo.name = objectXML.@id;
+			
+			
+			if (this._parent.hasAudio==true) {
+				newVideo.volume = 1;			
+			} else {
+				newVideo.volume = 0;				
+			}
+			
+			this._realObject = newVideo;
+			this.resize();
+			
 		}
 		
 		private function configure_timedate(objectXML:XML):void {
@@ -292,6 +312,9 @@ package com.msgid.S3mer
 				case "podcast":
 					play_next_podcast();
 					break;	
+				case "live":
+					play_next_live();
+					break;	
 				case "timedate":
 					play_next_timedate();
 					break;
@@ -315,18 +338,31 @@ package com.msgid.S3mer
 			
 			if ( this._parent != null ) {
 				
+				if (nextObj.parent != null) {
+					nextObj.parent.removeChild(nextObj);
+				}
+				
 				if (currentObj.parent == this._parent) {
 					this._parent.addChildAt(nextObj,this._parent.getChildIndex(currentObj));
 					nextObj.alpha = 1;
 				} else {
-					this._parent.addChild(nextObj);
+					try {
+						this._parent.addChild(nextObj);
+					} catch(e:Error) {
+						Logger.addEvent(e.message);
+					}
 				}
+
 				
 
 				
 				if (nextObj is SmoothVideoDisplay) {
-					(nextObj as SmoothVideoDisplay).addEventListener(VideoEvent.READY,cleancut_stage2,false,0,true);
-					(nextObj as SmoothVideoDisplay).play();
+					if ((nextObj as SmoothVideoDisplay).cameraAttached != true ) {
+						(nextObj as SmoothVideoDisplay).addEventListener(VideoEvent.READY,cleancut_stage2,false,0,true);
+						(nextObj as SmoothVideoDisplay).play();
+					} else {
+						cleancut_stage2(null);
+					}
 				} else {
 					if (currentObj.parent == this._parent) {
 						this._parent.removeChild(currentObj);
@@ -380,11 +416,75 @@ package com.msgid.S3mer
 				tmpVideoDisplay = this._currVideoDisplay;
 				this._currVideoDisplay = this._realObject as SmoothVideoDisplay;
 				this._lastVideoDisplay = tmpVideoDisplay;
-				this._lastVideoDisplay.stop();
-				this._lastVideoDisplay.close();
-				this._lastVideoDisplay.source = null;
+				if( this._lastVideoDisplay != null && this._lastVideoDisplay.cameraAttached != true ) {
+					this._lastVideoDisplay.stop();
+					this._lastVideoDisplay.close();
+					this._lastVideoDisplay.source = null;
+				}
 			}
 
+		}
+		
+		private function play_next_live():void {
+			var _playlist:Playlist = this.currentPlaylist;
+			var tmpTimer:TimerId = getTimerById("live_video_done");
+			var tmpDuration:String = _playlist.current.configXML.@duration;
+			// For live video we need to setup the live_video_done timer 
+			// which fires when we are done playing the video.
+			if ( tmpTimer == null ) {
+				
+				if (!(tmpDuration == "" || tmpDuration == "0")) {				
+					tmpTimer = new TimerId("live_video_done",parseInt(tmpDuration)*1000);
+					this._timers.addItem(tmpTimer);
+					
+					tmpTimer.addEventListener(TimerEvent.TIMER,live_video_done,false,0,true);
+				}
+			}
+			
+			tmpTimer = getTimerById("video_check");
+			
+			if (tmpTimer != null) {
+				tmpTimer.stop();
+			}
+
+			this._prevObject = this._realObject;
+			this.configure_live(this._configXML);
+			
+			var cam:Camera = getPreferedCaptureDevice();
+			
+			if (cam != null) {
+
+				SmoothVideoDisplay(this._realObject).scaleX = SmoothVideoDisplay(this._realObject).width / 10;
+				SmoothVideoDisplay(this._realObject).scaleY = SmoothVideoDisplay(this._realObject).height / 10;
+				SmoothVideoDisplay(this._realObject).width = 10;
+				SmoothVideoDisplay(this._realObject).height = 10;
+				
+				cam.setMode(640,480,15);
+				
+				SmoothVideoDisplay(this._realObject).attachCamera(cam);
+			} else {
+				SmoothVideoDisplay(this._realObject).attachCamera(Camera.getCamera())
+			}
+
+//			SmoothVideoDisplay(this._realObject).play();
+			cleancut(this._prevObject, this._realObject);
+			
+			if (ApplicationSettings.getValue("video.smoothing") == "false") {
+				SmoothVideoDisplay(this._realObject).smoothing = false;
+			} else {
+				SmoothVideoDisplay(this._realObject).smoothing = true;
+			}
+			
+			Logger.addEvent("Play live video");
+			
+			if (!(tmpDuration == "" || tmpDuration == "0")) {
+				getTimerById("live_video_done").start();
+			}		
+		}
+		
+		private function live_video_done(e:Event):void {
+			(e.target as Timer).stop();
+			this.play_next();
 		}
 		
 		private function play_next_video():void {
@@ -398,8 +498,15 @@ package com.msgid.S3mer
 				tmpTimer.addEventListener(TimerEvent.TIMER,video_check,false,0,true);
 			}
 
+			tmpTimer = getTimerById("live_video_done");
+			
+			if (tmpTimer != null) {
+				tmpTimer.stop();
+			}
+
 			this._prevObject = this._realObject;
 			this.configure_video(this._configXML);
+			
 			SmoothVideoDisplay(this._realObject).source = FileIO.mediaPath(_playlist.current.file);
 //			SmoothVideoDisplay(this._realObject).play();
 			cleancut(this._prevObject, this._realObject);
@@ -412,7 +519,7 @@ package com.msgid.S3mer
 			
 			Logger.addEvent("Play next: " + FileIO.mediaPath(_playlist.current.file));
 			
-			tmpTimer.start();
+			getTimerById("video_check").start();
 		}
 		
 		private function play_next_rss():void {
@@ -512,13 +619,14 @@ package com.msgid.S3mer
 
 		public function video_check(e:TimerEvent):void {
 			Timer(e.target).stop();
-			videoNext();
-			Timer(e.target).start();			
+			if ( videoNext() == true ) { // Only restart the timer if we didnt move to another video
+				Timer(e.target).start();			
+			}
 		}
 		
 		private var handlingVideoEvent:Boolean = false;
 		
-		private function videoNext():void {
+		private function videoNext():Boolean {
 			
 			if (handlingVideoEvent == false) {
 				handlingVideoEvent = true; 
@@ -528,7 +636,15 @@ package com.msgid.S3mer
 						if (SmoothVideoDisplay(this._realObject).state == VideoEvent.STOPPED ) {
 							this.play_next();
 							handlingVideoEvent = false; 
-							return;					
+							return false;					
+						}
+						
+						if (SmoothVideoDisplay(this._realObject).videoHeight == 0 ||
+							SmoothVideoDisplay(this._realObject).videoWidth == 0 ) {
+								
+							this.play_next();
+							handlingVideoEvent = false; 
+							return false;					
 						}
 						
 						
@@ -544,7 +660,7 @@ package com.msgid.S3mer
 							this.play_next();
 							handlingVideoEvent = false; 
 							
-							return;					
+							return false;					
 						}
 						
 						_videoLastTimeCode = SmoothVideoDisplay(this._realObject).playheadTime;
@@ -555,6 +671,8 @@ package com.msgid.S3mer
 				handlingVideoEvent = false; 
 					
 			}
+			
+			return true;
 		}
 		
 		//This sets the stopped flag to true.  When the current item ends, then stop_stage2 will be called to cleanup
@@ -620,6 +738,19 @@ package com.msgid.S3mer
 			
 			return null;
 		}
-
+		
+		private function getPreferedCaptureDevice():Camera {
+			var camlist:Array = Camera.names;
+			
+			
+			for( var a:int; a< camlist.length; a++ ){
+				if( camlist[a] == "DV Video" ) {
+					return Camera.getCamera(a.toString())
+				}
+			}
+			
+			return null;
+		}
+		
 	}
 }

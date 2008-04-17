@@ -11,54 +11,25 @@
 	
 	<mx:Script>
 		<![CDATA[
-			import mx.core.Window;
-			import com.msgid.S3mer.KeyboardManager;
-			import mx.collections.ArrayCollection;
-			import com.msgid.S3mer.S3merWindow;
-			import com.msgid.S3mer.Show;
-			import com.msgid.S3mer.ApplicationUpdater;
-			import mx.skins.halo.ApplicationTitleBarBackgroundSkin;
-			import com.msgid.S3mer.ApplicationSettings;
-			import com.msgid.S3mer.Effects.TVEffect;
-			import mx.effects.Sequence;
-			import mx.effects.Resize;
-			import mx.charts.effects.SeriesEffect;
-			import com.msgid.S3mer.LoginWindow;
-			import mx.messaging.Producer;
-			import com.msgid.S3mer.DownloadQueue;
-			import com.msgid.S3mer.DownloaderEvent;
-			import mx.events.EffectEvent;
-			import com.msgid.S3mer.FadePanel;
-			import mx.containers.Canvas;
-			import mx.controls.ProgressBar;
-			import mx.binding.utils.BindingUtils;
-			import mx.controls.Image;
-			import com.msgid.S3mer.RSSFeedPanel;
-			import mx.events.TweenEvent;
-			import mx.effects.Move;
-			import mx.effects.Fade;
-			import mx.effects.TweenEffect;
-			import mx.effects.Tween;
 			import com.msgid.S3mer.FileIO;
-			import mx.controls.SWFLoader;
+			import mx.core.Window;
+			import com.msgid.S3mer.ApplicationSettings;
+			import com.msgid.S3mer.KeyboardManager;
+			import com.msgid.S3mer.S3merWindow;
+			import mx.collections.ArrayCollection;
+			import com.msgid.S3mer.LoginWindow;
+			import com.msgid.S3mer.ApplicationUpdater;
 			import com.msgid.S3mer.Logger;
-			import mx.effects.Effect;
 			import mx.events.ResizeEvent;
-			import com.msgid.S3mer.ConfigurationManager;
-			import com.msgid.S3mer.ConfigurationEvent;
-			import mx.core.Application;
 			import mx.events.FlexEvent;
+			import mx.events.TweenEvent;
 			
 			private var _log:Logger = Logger.instance;
 			private var _updater:ApplicationUpdater;
 			private var myLoginWindow:LoginWindow;
 			private var _playerWindows:ArrayCollection = new ArrayCollection;
 			
-			
-//			[Embed(source="assets/loader.gif")]
-//			[Bindable]
-//			public static var LoadingImage:Class;
-			
+			private var _reloadPlayerTimer:Timer;
 
 			private function reAquireFocus():void {
 				this.activate();
@@ -71,10 +42,35 @@
 			}
 			
 			
+			private function onReloadPlayerWindows(e:TimerEvent):void {
+				var tmpScreen:int;
+				var tmpArray:ArrayCollection = new ArrayCollection();
+				
+				for each( var _window:S3merWindow in this._playerWindows ) {
+					tmpScreen = _window.getScreen();
+					_window.stop();
+					_window.close();
+					
+					_window = new S3merWindow();
+					_window.setScreen(tmpScreen);
+					_window.open(false);
+					_window.showWindow();
+					_window.loadConfiguration();
+					
+					tmpArray.addItem(_window);
+				}
+				this._playerWindows.removeAll();
+				this._playerWindows = tmpArray;
+			}
+			
 			
 			private function onAppLoad(e:FlexEvent):void {
 				this.frameRate = 30;
 				this._log.addEventListener(Event.ADDED, onLogUpdate,false,0,true);
+//				this._reloadPlayerTimer = new Timer(5*60*1000);
+//				this._reloadPlayerTimer.addEventListener(TimerEvent.TIMER, onReloadPlayerWindows);
+//				this._reloadPlayerTimer.start();
+				
 				//URLRequestDefaults.setLoginCredentialsForHost("www.s3mer.com","development","mils0ft");
 				
 				myLoginWindow = new LoginWindow();
@@ -91,7 +87,8 @@
 					_window.open(false);
 					_window.showWindow();
 					this._playerWindows.addItem(_window);
-					screenNumber++;	
+					screenNumber++;
+					break; // Only show 1 window
 				}
 
 				this.stage.addEventListener(Event.CLOSE,onAppClose, false, 0, true);

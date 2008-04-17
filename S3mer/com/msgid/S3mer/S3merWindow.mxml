@@ -189,6 +189,13 @@
 			private function OnDownloadProgress(e:DownloaderEvent):void {
 				this.myTotalProgress.setProgress(DownloadQueue(e._downloader).percent,100);
 			}
+			
+			public function stop():void {
+				this._configuration.stop();
+				this._show = null;
+				this._configuration = null;
+				this._fader = null;
+			}
 
 		]]>
 	</mx:Script>

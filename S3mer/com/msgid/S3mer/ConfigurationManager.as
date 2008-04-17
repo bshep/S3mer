@@ -1,5 +1,6 @@
 package com.msgid.S3mer
 {
+	import flash.display.DisplayObject;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.IOErrorEvent;
@@ -235,9 +236,11 @@ package com.msgid.S3mer
 		
 		public function stop():void {
 			var myShowObject:Show;
+
+			myShowObject = Show(this._container.getChildByName("currentShow"));
 			
-			for each( var _screen:Container in this._container) {
-				myShowObject = Show(_screen.getChildByName("currentShow"));
+			for each( var _showObj:DisplayObject in this._container.getChildren()) {
+				this._container.removeChild(_showObj);
 			}
 			
 			this._stopped = true;
@@ -286,7 +289,7 @@ package com.msgid.S3mer
 			
 
 			//Setup an event listener to get notified when the PodcastManager is done loading podcasts
-			PodcastManager._podcastManager.addEventListener(Event.COMPLETE,initiateDownloads_step2);
+			PodcastManager.podcastManager.addEventListener(Event.COMPLETE,initiateDownloads_step2);
 			//Tell all podcast items to queue downloads at the end of the queue
 			PodcastManager.setupDownloads();
 			
