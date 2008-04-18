@@ -275,6 +275,7 @@
 			}
 			
 			public function checkCredentials(listener:Function):void {
+				
 				ApplicationSettings.load();
 					
 				this.username.text = ApplicationSettings.getValue("user.username","");
@@ -302,11 +303,11 @@
 			<mx:RadioButton y="36" label="New Player" x="10" id="rbNewPlayer"/>
 			<mx:RadioButton y="12" x="10" id="rbExistingPlayer" />
 			<mx:ComboBox id="cmbPlayers" y="10" height="21" dataProvider="Player list" width="182" x="31" focusIn="rbExistingPlayer.selected = true" change="OnComboChanged(event)"></mx:ComboBox>
-			<mx:LinkButton label="Different user?" width="121.399994" fontFamily="Verdana" textDecoration="underline" color="#0042FF" fontSize="11" bottom="0" left="0" textAlign="left">
+			<mx:LinkButton label="Different user?" width="126" fontFamily="Verdana" textDecoration="underline" color="#0042FF" fontSize="11" bottom="0" left="0" textAlign="left">
 				<mx:click>doLogout()</mx:click>
 			</mx:LinkButton>
 		</mx:Canvas>
-		<mx:LinkButton label="Not Registered?" width="152.4" fontFamily="Verdana" textDecoration="underline" color="#0042FF" fontSize="11" bottom="16" left="39" textAlign="left">
+		<mx:LinkButton label="Not Registered?" width="126" fontFamily="Verdana" textDecoration="underline" color="#0042FF" fontSize="11" bottom="16" left="39" textAlign="left">
 			<mx:click>navigateToURL(new URLRequest('http://www.s3mer.com'), 'S3mer')</mx:click>
 		</mx:LinkButton>
 		<mx:SWFLoader visible="true" id="spinner" verticalAlign="middle" horizontalAlign="center" top="19" left="280" width="16" height="16"/>

@@ -75,7 +75,8 @@
 				
 				myLoginWindow = new LoginWindow();
 				myLoginWindow.visible = false;
-				this.addChild(myLoginWindow);
+//				this.addChild(myLoginWindow);
+
 				
 				
 				var screenNumber:int = 0;
@@ -87,12 +88,17 @@
 					_window.open(false);
 					_window.showWindow();
 					this._playerWindows.addItem(_window);
+					if( screenNumber == 0 ) {
+						_window.addChild(myLoginWindow);
+					}
 					screenNumber++;
 					break; // Only show 1 window
 				}
 
+
 				this.stage.addEventListener(Event.CLOSE,onAppClose, false, 0, true);
 				myLoginWindow.checkCredentials(onAppLoad_postLogin);
+//				this.close();
 			}
 			
 			private function HandleKeyUp(e:KeyboardEvent):void {
@@ -125,7 +131,7 @@
 				myLoginWindow.setup();
 				myLoginWindow.visible = true;
 				this.setStyle("backgroundColor","#FFFFFF");
-				this.setChildIndex(myLoginWindow,this.numChildren-1);
+//				this.setChildIndex(myLoginWindow,this.numChildren-1);
 
 				
 				stage.nativeWindow.visible = true;
@@ -138,7 +144,7 @@
 			}
 			
 			private function onAppLoad_stage2(e:Event):void {
-				this.removeChild(this.myLoginWindow);
+				myLoginWindow.parent.removeChild(this.myLoginWindow);
 
 				systemManager.stage.addEventListener(KeyboardEvent.KEY_UP,HandleKeyUp,false,0,true);
 				if (ApplicationSettings.getValue("ui.showcursor") != "true") {
@@ -149,19 +155,20 @@
 				
 //				this.move(-100-this.width,this.y);
 //				systemManager.stage.nativeWindow.alwaysInFront = true;
-				stage.nativeWindow.visible = true;
+//				stage.nativeWindow.visible = true;
 				this._updater.start();
 				
 				doInitialSetup();
 				
-				this.setStyle("backgroundColor","#FFFFFF");
+//				this.setStyle("backgroundColor","#FFFFFF");
 				
 				for each( var _window:S3merWindow in this._playerWindows) {
 					_window.loadConfiguration();
+					_window.enableKeyHandler();
 				}
 				this.stage.removeEventListener(Event.CLOSE,onAppClose);
 				Window(this._playerWindows.getItemAt(0)).activate();
-				this.close();
+//				this.close();
 			}
 			
 			private function doInitialSetup():void {
@@ -233,7 +240,7 @@
 		            Logger.addEvent("--no arguments--");
 		        }
 				this.visible = false;
-				this.move((Capabilities.screenResolutionX-this.width)/2,(Capabilities.screenResolutionY-this.height)/2);
+				this.move(-1000,-1000);
 				
 				this._updater = new ApplicationUpdater();
 			}

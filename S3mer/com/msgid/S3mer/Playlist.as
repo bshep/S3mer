@@ -131,7 +131,7 @@ package com.msgid.S3mer
 				Logger.addEvent("Item Type: " + item.configXML.@type);
 				switch((item.configXML.@type).toString()) {
 					case "video":
-					case "images":
+					case "image":
 					case "swf":
 						if(!item.avaiable) {
 							pending.addItem(item);

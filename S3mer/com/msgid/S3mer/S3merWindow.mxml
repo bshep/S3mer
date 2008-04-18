@@ -68,11 +68,11 @@
 			public function showWindow():void {
 				var _screen:Screen = Screen.screens[this._screenNumber];
 				
+				this.setStyle("backgroundColor","#FFFFFF");				
 				this.visible = true;
 
 				this.move(_screen.bounds.x,_screen.bounds.y);
 				
-				this.stage.addEventListener(KeyboardEvent.KEY_UP,HandleKeyUp,false,0,true);
 				this._log.addEventListener(Event.ADDED, onLogUpdate,false,0,true);
 				
 				this.title = "Screen #" + this._screenNumber;
@@ -83,8 +83,12 @@
 				this.LoadingCanvas.visible = false;
 				this.myLoadingStatic.source = StaticSwf;
 				this.myLoadingStatic.maintainAspectRatio = false;
-				this.myLoadingStatic.visible = true;
+				this.myLoadingStatic.visible = false;
 				this.setChildIndex(this.myLoadingStatic,this.numChildren-1);
+			}
+			
+			public function enableKeyHandler():void {
+				this.stage.addEventListener(KeyboardEvent.KEY_UP,HandleKeyUp,false,0,true);
 			}
 			
 			private function HandleKeyUp(e:KeyboardEvent):void {
@@ -212,7 +216,7 @@
 	</mx:constraintColumns>
 
 	
-	<mx:Label id="screenNumber" text="Screen #" fontSize="36" fontFamily="Georgia" fontWeight="bold" horizontalCenter="0" verticalCenter="0"/>
+	<mx:Label visible="false" id="screenNumber" text="Screen #" fontSize="36" fontFamily="Georgia" fontWeight="bold" horizontalCenter="0" verticalCenter="0"/>
 	<ns1:NotificationPanel id="_notificationPanel" right="10" top="10" visible="false">
 	</ns1:NotificationPanel>
 	<mx:TextArea visible="false" height="116" wordWrap="true" editable="false" enabled="true" id="appLog" color="#000000" cornerRadius="0" alpha="0.5" borderStyle="none" borderThickness="8" left="13" right="12" bottom="10"/>
