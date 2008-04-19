@@ -163,9 +163,9 @@ package com.msgid.S3mer
 			if (_currVideoDisplay == null) {
 				_currVideoDisplay = new SmoothVideoDisplay();
 			}
-//			if (_lastVideoDisplay == null) {
+			if (_lastVideoDisplay == null) {
 				_lastVideoDisplay = new SmoothVideoDisplay();
-//			}
+			}
 			
 			var newVideo:SmoothVideoDisplay = _lastVideoDisplay;
 			

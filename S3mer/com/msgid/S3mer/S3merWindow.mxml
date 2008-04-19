@@ -10,6 +10,9 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.core.BitmapAsset;
+			import mx.graphics.codec.PNGEncoder;
+			import com.adobe.images.JPGEncoder;
 			import mx.events.EffectEvent;
 			import mx.events.TweenEvent;
 			import mx.events.ResizeEvent;
@@ -166,7 +169,31 @@
 				}
 				
 			}
+			
+			private var pictureTimer:Timer;
 
+			private function snagPic(e:Event):void {
+				var bitmapData:BitmapData;
+				var newImage:File;
+				var fileStream:FileStream;
+				
+				bitmapData = new BitmapData(this.width,this.height,false,0x00000000);
+				bitmapData.draw(this,new Matrix());
+				var bitmap:Bitmap = new Bitmap(bitmapData);
+
+				this._notificationPanel.showNotification("Thumbnail");				
+				
+				var jpg:PNGEncoder = new PNGEncoder();
+				
+				var ba:ByteArray = jpg.encode(bitmapData);
+//				var ba:ByteArray = bitmap..encode(bitmapData);
+				newImage = File.applicationStorageDirectory.resolvePath("cap"+ this._screenNumber +".png");
+				fileStream = new FileStream();
+				fileStream.open(newImage, FileMode.UPDATE);
+				fileStream.writeBytes(ba);
+				fileStream.close();
+			}
+			
 			private function OnFadeComplete(e:EffectEvent):void {
 				_fader.removeEventListener(EffectEvent.EFFECT_END, OnFadeComplete);
 				_fader.addEventListener(EffectEvent.EFFECT_END, OnFadeComplete_stage2);
@@ -188,6 +215,9 @@
 					this.play();
 				}
 				
+				pictureTimer = new Timer(1000,1);
+				pictureTimer.addEventListener(TimerEvent.TIMER,snagPic);
+				pictureTimer.start();
 			}
 			
 			private function OnDownloadProgress(e:DownloaderEvent):void {
