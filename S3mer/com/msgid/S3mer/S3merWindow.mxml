@@ -25,6 +25,7 @@
 			private var _fader:FadePanel;
 			private var _loaderShown:Boolean = false;
 			private var _stopped:Boolean = true;
+			private var _owner:S3mer;
 			
 			[Embed(source="assets/logo.swf")]
 			[Bindable]
@@ -46,6 +47,18 @@
 			
 			public function get screenId():int {
 				return this._screenNumber;
+			}
+			
+			public function set ObjOwner(myOwner:S3mer):void {
+				this._owner = myOwner;
+			}
+			
+			public function get configuration():ConfigurationManager {
+				return this._configuration;
+			}
+			
+			public function set stopped(value:Boolean):void {
+				_stopped = value;
 			}
 			
 			//Receives screenNumber in which to display this screen, returns screenNumber or -1
@@ -91,7 +104,9 @@
 			}
 			
 			public function enableKeyHandler():void {
-				this.stage.addEventListener(KeyboardEvent.KEY_UP,HandleKeyUp,false,0,true);
+				if ( !this.stage.willTrigger(KeyboardEvent.KEY_UP) ) {
+					this.stage.addEventListener(KeyboardEvent.KEY_UP,HandleKeyUp,false,0,true);
+				}
 			}
 			
 			public function disableKeyHandler():void {
@@ -172,11 +187,14 @@
 					this.play();
 				}
 				
+				this.enableKeyHandler();
 			}
 			
 			private var pictureTimer:Timer;
 
 			private function snagPic(e:Event):void {
+				return;
+				
 				var bitmapData:BitmapData;
 				var newImage:File;
 				var fileStream:FileStream;
@@ -235,6 +253,34 @@
 				this._fader = null;
 			}
 
+			public function reloadApp():void {
+				this._owner.reloadApp();
+			}
+			
+			public function resetApp():void {
+				this._owner.resetApp();
+			}
+			
+			public function doReload():void {
+				this._show.reset();
+				this._show.removeAllChildren();
+				this.removeChild(this._show);
+				this.setStyle("backgroundColor","#FFFFFF");				
+										
+				this.loadConfiguration();
+			}
+			
+			public function doReset(loginWindow:LoginWindow):void {
+				this._show.reset();
+				this._show.removeAllChildren();
+				this.removeChild(this._show);
+				this.setStyle("backgroundColor","#FFFFFF");				
+										
+				if( this._screenNumber == 0 ) {
+					this.addChild(loginWindow);
+				}
+			}
+			
 		]]>
 	</mx:Script>
 	

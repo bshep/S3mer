@@ -164,6 +164,12 @@
 				this.initFader();
 				_fader.fadeIn(delay);
 			}
+			
+			public function reset():void {
+				for each (var obj:ShowObject in this._showObjects ) {
+					obj.reset();
+				}
+			}
 		]]>
 	</mx:Script>
 </mx:Canvas>

@@ -4,7 +4,6 @@ package com.msgid.S3mer
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.TimerEvent;
-	import flash.filters.BlurFilter;
 	import flash.media.Camera;
 	import flash.media.SoundTransform;
 	import flash.utils.Timer;
@@ -14,6 +13,7 @@ package com.msgid.S3mer
 	import mx.controls.Image;
 	import mx.controls.Label;
 	import mx.effects.Fade;
+	import mx.events.EffectEvent;
 	import mx.events.VideoEvent;
 	
 	public class ShowObject extends EventDispatcher
@@ -147,10 +147,10 @@ package com.msgid.S3mer
 			var newImage:Image = new Image();
 			
 			newImage.scaleContent = true;
-
+			newImage.opaqueBackground = null;
 			
 			newImage.maintainAspectRatio = false;
-			newImage.filters = [new BlurFilter(1.5,1.5,1)];
+//			newImage.filters = [new BlurFilter(1.5,1.5,1)];
 //			newImage.source = FileIO.Url2Path(objectXML.url.toString());
 //			Logger.addEvent("IMG SRC: " + newImage.source);
 			newImage.id	= objectXML.@id;
@@ -340,6 +340,24 @@ package com.msgid.S3mer
 		
 		private var cleancutFade:Fade ;
 		
+		private function isImage2Image(obj1:DisplayObject, obj2:DisplayObject):Boolean {
+			if (obj1 is Image && obj2 is Image) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		private static function getAncestor(startObj:DisplayObject):S3merWindow {
+			var _currAncestor:DisplayObject = startObj;
+			
+			while( _currAncestor != null && !(_currAncestor is S3merWindow) ) {
+				_currAncestor = _currAncestor.parent;
+			}
+			
+			return (_currAncestor as S3merWindow);
+		}
+		
 		private function cleancut(currentObj:DisplayObject, nextObj:DisplayObject):void	{
 			
 			if ( this._parent != null ) {
@@ -348,15 +366,42 @@ package com.msgid.S3mer
 					nextObj.parent.removeChild(nextObj);
 				}
 				
-				if (currentObj.parent == this._parent) {
-					this._parent.addChildAt(nextObj,this._parent.getChildIndex(currentObj));
+				//If nextObj is an Image  and  currentObj is an Image then Fade
+				if (isImage2Image(currentObj,nextObj)) {
+					nextObj.alpha = 0;
+				} else {
 					nextObj.alpha = 1;
+				}
+				
+				if ( currentObj is HTML && !(nextObj is HTML) ) {
+					getAncestor(this._parent).enableKeyHandler();
+				} 
+					
+				if (currentObj.parent == this._parent) {
+					if (isImage2Image(currentObj,nextObj)) {
+						this._parent.addChild(nextObj);
+					} else {
+						this._parent.addChildAt(nextObj,this._parent.getChildIndex(currentObj));						
+					}
 				} else {
 					try {
 						this._parent.addChild(nextObj);
 					} catch(e:Error) {
 						Logger.addEvent(e.message);
 					}
+				}
+				
+				//Start Fade for images
+				if (nextObj is Image && currentObj is Image) {
+					if (cleancutFade == null) {
+						cleancutFade = new Fade();
+					}
+					
+					cleancutFade.addEventListener(EffectEvent.EFFECT_END,Image2ImageFade);
+					cleancutFade.alphaFrom = 0;
+					cleancutFade.alphaTo = 1;
+					cleancutFade.duration = 500;
+					cleancutFade.play([nextObj]);
 				}
 				
 				this.resize();
@@ -369,8 +414,12 @@ package com.msgid.S3mer
 						cleancut_stage2(null);
 					}
 				} else {
-					if (currentObj.parent == this._parent) {
-						this._parent.removeChild(currentObj);
+					if (nextObj is Image && currentObj is Image) {
+						// This will be done after the fade...
+					} else {
+						if (currentObj.parent == this._parent) {
+							this._parent.removeChild(currentObj);
+						}
 					}
 				}
 				
@@ -408,6 +457,12 @@ package com.msgid.S3mer
 
 			}
 		} 
+
+		private function Image2ImageFade(e:EffectEvent):void {
+			if (this._prevObject.parent == this._parent) {
+				this._parent.removeChild(_prevObject);
+			}			
+		}
 
 		private function cleancut_stage2(e:Event):void {
 			if (this._prevObject.parent == this._parent) {
@@ -820,5 +875,14 @@ package com.msgid.S3mer
 			return null;
 		}
 		
+		
+		public function reset():void {
+			this.stop(true);
+			for each (var _timer:Timer in this._timers ) {
+				_timer.stop();
+			}
+			
+			this._timers.removeAll();
+		}
 	}
 }

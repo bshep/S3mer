@@ -79,23 +79,22 @@ package com.msgid.S3mer
 					break;
 				case "X": // Resets config and reloads
 					statusDisplay("Reset Config", target);
-					target.systemManager.stage.removeEventListener(KeyboardEvent.KEY_UP,HandleKeyUp);
-					target.systemManager.stage.displayState = StageDisplayState.NORMAL;
-					//TODO: Clear login credentials
-					target._configuration.reset();
+					(target as S3merWindow).disableKeyHandler(); 
+					(target as S3merWindow).configuration.reset();
 					ApplicationSettings.setValue("user.username","");
 					ApplicationSettings.setValue("user.password","");
 					ApplicationSettings.save();
-					target.onAppLoad(null);
-					target._stopped = true;
+					
+					(target as S3merWindow).resetApp();
+					
+					(target as S3merWindow).stopped = true;
 					break;
 				case "R": //Reloads config from disk
 					statusDisplay("Reload Config", target);
-					target.systemManager.stage.removeEventListener(KeyboardEvent.KEY_UP,HandleKeyUp); 
-					target.visible = false;
-					target._configuration.reset();
-					target.onAppLoad(null);
-					target._stopped = true;
+					(target as S3merWindow).disableKeyHandler(); 
+					(target as S3merWindow).configuration.reset();
+					target.reloadApp();
+					(target as S3merWindow).stopped = true;
 					break;
 				case "S":
 					//Toggle smoothing
