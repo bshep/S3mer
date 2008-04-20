@@ -306,6 +306,7 @@ package com.msgid.S3mer
 				case "video":
 					play_next_video();
 					break;
+				case "swf":
 				case "image":
 					play_next_image();
 					break;	
@@ -407,7 +408,7 @@ package com.msgid.S3mer
 				this.resize();
 				
 				if (nextObj is SmoothVideoDisplay) {
-					if ((nextObj as SmoothVideoDisplay).cameraAttached != true ) {
+					if ((nextObj as SmoothVideoDisplay).cameraAttached != true && (nextObj as SmoothVideoDisplay).source != null ) {
 						(nextObj as SmoothVideoDisplay).addEventListener(VideoEvent.READY,cleancut_stage2,false,0,true);
 						(nextObj as SmoothVideoDisplay).play();
 					} else {
@@ -583,7 +584,8 @@ package com.msgid.S3mer
 //			(this._realObject as HTML)
 			(this._realObject as HTML).location = _playlist.current.url;
 			(this._realObject as HTML).reload();
-			(this._realObject as HTML).paintsDefaultBackground = false;
+			(this._realObject as HTML).paintsDefaultBackground = true;
+			(this._realObject as HTML).setStyle("backgroundColor","#000000");
 //			(this._realObject as HTML).alpha = .5;
 //			(this._realObject as HTML).scaleX = .5;
 //			(this._realObject as HTML).scaleY = .5;
@@ -788,7 +790,7 @@ package com.msgid.S3mer
 						
 						_videoLastTimeCode = SmoothVideoDisplay(this._realObject).playheadTime;
 					}
-				} catch(e:Error) {
+				} catch(e:TypeError) {
 					Logger.addEvent(e.message + e.getStackTrace());
 				}
 				handlingVideoEvent = false; 

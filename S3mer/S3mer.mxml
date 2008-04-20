@@ -85,6 +85,7 @@
 					Logger.addEvent("Creating window for screen #" + screenNumber);
 					_window = new S3merWindow();
 					_window.setScreen(screenNumber);
+					_window.ObjOwner = this;
 					_window.open(false);
 					_window.showWindow();
 					this._playerWindows.addItem(_window);
@@ -109,6 +110,22 @@
 				exit();
 			}
 			
+			public function resetApp():void {
+				myLoginWindow = new LoginWindow;
+				myLoginWindow.visible = false;
+				
+				for each( var _window:S3merWindow in this._playerWindows ) {
+					_window.doReset(myLoginWindow);
+				}				
+				myLoginWindow.checkCredentials(onAppLoad_postLogin);
+			}
+			
+			public function reloadApp():void {
+				for each( var _window:S3merWindow in this._playerWindows ) {
+					_window.doReload();
+				}				
+			}
+			
 			private function onAppLoad_postLogin(e:Event):void {
 				if (e == null || URLLoader(e.target).data != "OK") {
 					this.doLogin();
@@ -118,10 +135,10 @@
 			}
 			
 			private function doLogin():void {				
-				var tmpWidth:Number = myLoginWindow.width + 30;
-				var tmpHeight:Number = myLoginWindow.height + 30;
+//				var tmpWidth:Number = myLoginWindow.width + 30;
+//				var tmpHeight:Number = myLoginWindow.height + 30;
 				
-				this.move((Capabilities.screenResolutionX - tmpWidth)/2,(Capabilities.screenResolutionY - tmpHeight)/2);
+//				this.move((Capabilities.screenResolutionX - tmpWidth)/2,(Capabilities.screenResolutionY - tmpHeight)/2);
 //				systemManager.topLevelSystemManager.screen.x = (Capabilities.screenResolutionX - this.width)/2;
 //				systemManager.topLevelSystemManager.screen.y = (Capabilities.screenResolutionY - this.height)/2;
 				
@@ -133,14 +150,16 @@
 				this.setStyle("backgroundColor","#FFFFFF");
 //				this.setChildIndex(myLoginWindow,this.numChildren-1);
 
-				
-				stage.nativeWindow.visible = true;
-				this.visible = true;
+				if ( stage.nativeWindow.closed != true ) { 
+					stage.nativeWindow.visible = true;
+					this.visible = true;
+				}
+					
 				cursorManager.removeBusyCursor();
 				
 				myLoginWindow.show();	
-				this.width = tmpWidth;			
-				this.height = tmpHeight;		
+//				this.width = tmpWidth;			
+//				this.height = tmpHeight;		
 			}
 			
 			private function onAppLoad_stage2(e:Event):void {
@@ -158,7 +177,9 @@
 //				stage.nativeWindow.visible = true;
 				this._updater.start();
 				
-				doInitialSetup();
+				if( doInitialSetup() == false ) {
+					return;
+				}
 				
 //				this.setStyle("backgroundColor","#FFFFFF");
 				
@@ -171,10 +192,10 @@
 				this.close();
 			}
 			
-			private function doInitialSetup():void {
+			private function doInitialSetup():Boolean {
 				if (FileIO.assetsPath() == null) {
 					Logger.addEvent("Could not find assets path, cannot do initial setup");
-					return;
+					return false;
 				}
 				
 				var storePath:File = new File(FileIO.storePath());
@@ -183,16 +204,22 @@
 				
 				storePath.resolvePath("Utilities").createDirectory();
 				
+				try {
+					NativeApplication.nativeApplication.startAtLogin = true;				
+				} catch( e:IllegalOperationError) {
+					Logger.addEvent("could not set to startup");
+				}
+				
 				switch( FileIO.getOs() ) {
 					case 'WINDOWS':
 						try {
-							var firstimeFile:File = File.userDirectory.resolvePath("Start Menu").resolvePath("Programs").resolvePath("Startup").resolvePath("firstrun.bat");
+							var firstimeFile:File = File.userDirectory.resolvePath("firstrun.bat");
 							var templateFile:File;
 							var firstimeStream:FileStream = new FileStream();
 							var templateStream:FileStream = new FileStream();
 							
-							if (File.userDirectory.resolvePath("Start Menu").resolvePath("Programs").resolvePath("Startup").resolvePath("S3mer.lnk").exists) {
-								return;
+							if (File.userDirectory.resolvePath("S3merSetupDone").exists) {
+								return true;
 							}
 							
 							assetsPath = assetsPath.resolvePath("Windows");
@@ -211,17 +238,37 @@
 							
 							templateStream.close();
 							firstimeStream.close();
-						} catch(e:Error) {
 							
+							assetsPath.resolvePath("s3merConfig.ico").copyTo(File.userDirectory.resolvePath("s3merConfig.ico"),true);
+							assetsPath.resolvePath("LAUNCH.SHK").copyTo(File.userDirectory.resolvePath("Desktop").resolvePath("S3mer.lnk"),true);
+						} catch(e:Error) {
+							trace(e.message);
 						}
 						break;
 					case 'MAC':
+						if (File.userDirectory.resolvePath("Library").resolvePath("Preferences").resolvePath("com.s3mer.playerConfig").resolvePath("configDone").exists) {
+							return true;
+						}
+						
+						assetsPath = assetsPath.resolvePath("Mac");
+						
+						assetsPath.resolvePath("S3merConfig.app").copyTo(File.userDirectory.resolvePath("Desktop").resolvePath("S3merConfig.app"));
+
+						return false;
+												
 						break;
 					case 'LINUX':
 						break;
 					default:
 						break;
 				}
+				
+				for each( var _win:S3merWindow in this._playerWindows) {
+					_win.displayImage(assetsPath.resolvePath("firstrun.png"));
+					_win.enableKeyHandler();
+				}
+				
+				return false;
 			}
 			
 			private function onInvoke(e:InvokeEvent):void {
