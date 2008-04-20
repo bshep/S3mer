@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AMApplicationBuild</key>
+	<string>156</string>
+	<key>AMApplicationVersion</key>
+	<string>2.0.1</string>
+	<key>AMDocumentVersion</key>
+	<string>2</string>
+	<key>actions</key>
+	<array>
+		<dict>
+			<key>action</key>
+			<dict>
+				<key>AMAccepts</key>
+				<dict>
+					<key>Container</key>
+					<string>List</string>
+					<key>Optional</key>
+					<true/>
+					<key>Types</key>
+					<array/>
+				</dict>
+				<key>AMActionVersion</key>
+				<string>1.0</string>
+				<key>AMParameterProperties</key>
+				<dict>
+					<key>alertSetting</key>
+					<dict/>
+					<key>inputSetting</key>
+					<dict/>
+					<key>muteOutput</key>
+					<dict/>
+					<key>outputSetting</key>
+					<dict/>
+				</dict>
+				<key>AMProvides</key>
+				<dict>
+					<key>Container</key>
+					<string>List</string>
+					<key>Types</key>
+					<array/>
+				</dict>
+				<key>ActionBundlePath</key>
+				<string>/System/Library/Automator/Set Computer Volume.action</string>
+				<key>ActionName</key>
+				<string>Set Computer Volume</string>
+				<key>ActionParameters</key>
+				<dict>
+					<key>alertSetting</key>
+					<integer>0</integer>
+					<key>inputSetting</key>
+					<integer>0</integer>
+					<key>muteOutput</key>
+					<false/>
+					<key>outputSetting</key>
+					<integer>100</integer>
+				</dict>
+				<key>Application</key>
+				<array>
+					<string>System</string>
+				</array>
+				<key>BundleIdentifier</key>
+				<string>com.apple.Automator.SetComputerVolume</string>
+				<key>CFBundleVersion</key>
+				<string>1.0</string>
+				<key>CanShowSelectedItemsWhenRun</key>
+				<true/>
+				<key>CanShowWhenRun</key>
+				<true/>
+				<key>Category</key>
+				<array>
+					<string>AMCategoryUtilities</string>
+				</array>
+				<key>Class Name</key>
+				<string>AMAppleScriptAction</string>
+				<key>InputUUID</key>
+				<string>D285E314-0364-49FC-813C-C7459A1F994D</string>
+				<key>Keywords</key>
+				<array>
+					<string>Set</string>
+					<string>Volume</string>
+					<string>Sound</string>
+					<string>Audio</string>
+					<string>Input</string>
+					<string>Output</string>
+					<string>Alert</string>
+				</array>
+				<key>OutputUUID</key>
+				<string>8A1BAE87-0704-4CDE-B8B9-DA35F46D03A8</string>
+				<key>StartAction</key>
+				<false/>
+				<key>UUID</key>
+				<string>4383A801-C221-48E5-ACE5-2378D0DD18F7</string>
+				<key>UnlocalizedApplications</key>
+				<array>
+					<string>System</string>
+				</array>
+				<key>arguments</key>
+				<dict>
+					<key>0</key>
+					<dict>
+						<key>default value</key>
+						<integer>-1</integer>
+						<key>name</key>
+						<string>alertSetting</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>0</string>
+					</dict>
+					<key>1</key>
+					<dict>
+						<key>default value</key>
+						<integer>-1</integer>
+						<key>name</key>
+						<string>inputSetting</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>1</string>
+					</dict>
+					<key>2</key>
+					<dict>
+						<key>default value</key>
+						<false/>
+						<key>name</key>
+						<string>muteOutput</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>2</string>
+					</dict>
+					<key>3</key>
+					<dict>
+						<key>default value</key>
+						<integer>-1</integer>
+						<key>name</key>
+						<string>outputSetting</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>3</string>
+					</dict>
+				</dict>
+				<key>isViewVisible</key>
+				<false/>
+				<key>location</key>
+				<string>543.500000:828.000000</string>
+				<key>nibPath</key>
+				<string>/System/Library/Automator/Set Computer Volume.action/Contents/Resources/English.lproj/main.nib</string>
+			</dict>
+			<key>isViewVisible</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>action</key>
+			<dict>
+				<key>AMAccepts</key>
+				<dict>
+					<key>Container</key>
+					<string>List</string>
+					<key>Optional</key>
+					<true/>
+					<key>Types</key>
+					<array>
+						<string>com.apple.applescript.object</string>
+					</array>
+				</dict>
+				<key>AMActionVersion</key>
+				<string>1.0</string>
+				<key>AMParameterProperties</key>
+				<dict>
+					<key>source</key>
+					<dict/>
+				</dict>
+				<key>AMProvides</key>
+				<dict>
+					<key>Container</key>
+					<string>List</string>
+					<key>Types</key>
+					<array>
+						<string>com.apple.applescript.object</string>
+					</array>
+				</dict>
+				<key>ActionBundlePath</key>
+				<string>/System/Library/Automator/Run AppleScript.action</string>
+				<key>ActionName</key>
+				<string>Run AppleScript</string>
+				<key>ActionParameters</key>
+				<dict>
+					<key>source</key>
+					<string>on run {input, parameters}	tell application "System Events"		set the_username to do shell script "whoami"		set the_password to "password"		display dialog "Please enter password for: " &amp; the_username &amp; " 
+
+This account must have Administrator access to this computer." default answer "password" buttons {"OK", "Cancel"} default button "OK" with icon 2 with title "Password" with hidden answer		set the_password to text returned of the result	end tell	return {the_password}end run</string>
+				</dict>
+				<key>Application</key>
+				<array>
+					<string>Automator</string>
+				</array>
+				<key>BundleIdentifier</key>
+				<string>com.apple.Automator.RunScript</string>
+				<key>CFBundleVersion</key>
+				<string>1.0</string>
+				<key>CanShowSelectedItemsWhenRun</key>
+				<false/>
+				<key>CanShowWhenRun</key>
+				<true/>
+				<key>Category</key>
+				<array>
+					<string>AMCategoryUtilities</string>
+				</array>
+				<key>Class Name</key>
+				<string>RunScriptAction</string>
+				<key>InputUUID</key>
+				<string>157ADECF-FB1F-4392-9BF3-A9D66BBAD3AA</string>
+				<key>Keywords</key>
+				<array>
+					<string>Run</string>
+				</array>
+				<key>OutputUUID</key>
+				<string>2449DB7C-B591-402E-9315-E903AC7E1A3C</string>
+				<key>UUID</key>
+				<string>FA2344C2-846A-4482-82B7-383F42BBB7EA</string>
+				<key>UnlocalizedApplications</key>
+				<array>
+					<string>Automator</string>
+				</array>
+				<key>arguments</key>
+				<dict>
+					<key>0</key>
+					<dict>
+						<key>default value</key>
+						<string>on run {input, parameters}
+	
+	(* Your script goes here *)
+	
+	return input
+end run</string>
+						<key>name</key>
+						<string>source</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>0</string>
+					</dict>
+				</dict>
+				<key>isViewVisible</key>
+				<true/>
+				<key>location</key>
+				<string>543.500000:786.000000</string>
+				<key>nibPath</key>
+				<string>/System/Library/Automator/Run AppleScript.action/Contents/Resources/English.lproj/main.nib</string>
+			</dict>
+			<key>isViewVisible</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>action</key>
+			<dict>
+				<key>AMAccepts</key>
+				<dict>
+					<key>Container</key>
+					<string>List</string>
+					<key>Optional</key>
+					<true/>
+					<key>Types</key>
+					<array>
+						<string>com.apple.cocoa.string</string>
+					</array>
+				</dict>
+				<key>AMActionVersion</key>
+				<string>2.0.1</string>
+				<key>AMParameterProperties</key>
+				<dict>
+					<key>COMMAND_STRING</key>
+					<dict/>
+					<key>CheckedForUserDefaultShell</key>
+					<dict/>
+					<key>inputMethod</key>
+					<dict/>
+					<key>shell</key>
+					<dict/>
+					<key>source</key>
+					<dict/>
+				</dict>
+				<key>AMProvides</key>
+				<dict>
+					<key>Container</key>
+					<string>List</string>
+					<key>Types</key>
+					<array>
+						<string>com.apple.cocoa.string</string>
+					</array>
+				</dict>
+				<key>ActionBundlePath</key>
+				<string>/System/Library/Automator/Run Shell Script.action</string>
+				<key>ActionName</key>
+				<string>Run Shell Script</string>
+				<key>ActionParameters</key>
+				<dict>
+					<key>COMMAND_STRING</key>
+					<string>#!/bin/bash
+
+exec echo $1 | sudo -v -S;
+if [ $? -eq 1 ]	
+then
+	echo "you are not a sudoer";
+else
+	defaults -currentHost write com.apple.screensaver idleTime 0
+	exec echo $1 | sudo pmset -a sleep 0 spindown 0 displaysleep 0
+	exec echo $1 | sudo pmset repeat restart MTWRFSU 04:00:00
+	mkdir ~/Library/Preferences/com.s3mer.playerConfig
+	#cd ~/Library/Preferences/com.s3mer.playerConfig
+	echo "" &gt; ~/Library/Preferences/com.s3mer.playerConfig/configDone
+	./Applications/S3mer.app/Contents/MacOS/S3mer
+	rm -R ~/Desktop/S3merConfig.app
+fi</string>
+					<key>CheckedForUserDefaultShell</key>
+					<true/>
+					<key>inputMethod</key>
+					<integer>1</integer>
+					<key>shell</key>
+					<string>/bin/bash</string>
+					<key>source</key>
+					<string></string>
+				</dict>
+				<key>Application</key>
+				<array>
+					<string>Automator</string>
+				</array>
+				<key>BundleIdentifier</key>
+				<string>com.apple.RunShellScript</string>
+				<key>CFBundleVersion</key>
+				<string>2.0.1</string>
+				<key>CanShowSelectedItemsWhenRun</key>
+				<false/>
+				<key>CanShowWhenRun</key>
+				<true/>
+				<key>Category</key>
+				<array>
+					<string>AMCategoryUtilities</string>
+				</array>
+				<key>Class Name</key>
+				<string>RunShellScriptAction</string>
+				<key>InputUUID</key>
+				<string>90F333AF-AB8D-4EB2-87E6-1FB1D64A182C</string>
+				<key>Keywords</key>
+				<array>
+					<string>Shell</string>
+					<string>Script</string>
+					<string>Command</string>
+					<string>Run</string>
+					<string>Unix</string>
+				</array>
+				<key>OutputUUID</key>
+				<string>D5A0AC50-025D-497D-903A-BB717D8782A5</string>
+				<key>UUID</key>
+				<string>1A4ACA6C-D8B8-44B4-9B17-9DC80F4D6AE2</string>
+				<key>UnlocalizedApplications</key>
+				<array>
+					<string>Automator</string>
+				</array>
+				<key>arguments</key>
+				<dict>
+					<key>0</key>
+					<dict>
+						<key>default value</key>
+						<integer>0</integer>
+						<key>name</key>
+						<string>inputMethod</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>0</string>
+					</dict>
+					<key>1</key>
+					<dict>
+						<key>default value</key>
+						<string>/bin/sh</string>
+						<key>name</key>
+						<string>shell</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>1</string>
+					</dict>
+					<key>2</key>
+					<dict>
+						<key>default value</key>
+						<string></string>
+						<key>name</key>
+						<string>source</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>2</string>
+					</dict>
+					<key>3</key>
+					<dict>
+						<key>default value</key>
+						<string></string>
+						<key>name</key>
+						<string>COMMAND_STRING</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>3</string>
+					</dict>
+					<key>4</key>
+					<dict>
+						<key>default value</key>
+						<false/>
+						<key>name</key>
+						<string>CheckedForUserDefaultShell</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>4</string>
+					</dict>
+				</dict>
+				<key>isViewVisible</key>
+				<true/>
+				<key>location</key>
+				<string>543.500000:473.000000</string>
+				<key>nibPath</key>
+				<string>/System/Library/Automator/Run Shell Script.action/Contents/Resources/English.lproj/main.nib</string>
+			</dict>
+			<key>isViewVisible</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>action</key>
+			<dict>
+				<key>AMAccepts</key>
+				<dict>
+					<key>Container</key>
+					<string>List</string>
+					<key>Optional</key>
+					<true/>
+					<key>Types</key>
+					<array/>
+				</dict>
+				<key>AMActionVersion</key>
+				<string>1.0</string>
+				<key>AMParameterProperties</key>
+				<dict>
+					<key>appPath</key>
+					<dict>
+						<key>isPathPopUp</key>
+						<true/>
+						<key>variableUUIDsInMenu</key>
+						<array/>
+					</dict>
+				</dict>
+				<key>AMProvides</key>
+				<dict>
+					<key>Container</key>
+					<string>List</string>
+					<key>Types</key>
+					<array/>
+				</dict>
+				<key>ActionBundlePath</key>
+				<string>/System/Library/Automator/Launch Application.action</string>
+				<key>ActionName</key>
+				<string>Launch Application</string>
+				<key>ActionParameters</key>
+				<dict>
+					<key>appPath</key>
+					<string>/Applications/S3mer.app</string>
+				</dict>
+				<key>Application</key>
+				<array>
+					<string>Finder</string>
+				</array>
+				<key>BundleIdentifier</key>
+				<string>com.apple.Automator.OpenApplication</string>
+				<key>CFBundleVersion</key>
+				<string>1.0</string>
+				<key>CanShowSelectedItemsWhenRun</key>
+				<true/>
+				<key>CanShowWhenRun</key>
+				<true/>
+				<key>Category</key>
+				<array>
+					<string>AMCategoryUtilities</string>
+				</array>
+				<key>Class Name</key>
+				<string>AMAppleScriptAction</string>
+				<key>InputUUID</key>
+				<string>EB4E03EC-C0A5-41FB-A2C6-802898944788</string>
+				<key>Keywords</key>
+				<array>
+					<string>File</string>
+					<string>Open</string>
+				</array>
+				<key>OutputUUID</key>
+				<string>3EA9DF9E-149B-4CD3-BB2B-E1F8F0FF52C7</string>
+				<key>UUID</key>
+				<string>F7592CCD-88E2-4A53-9AF1-83959C95825A</string>
+				<key>UnlocalizedApplications</key>
+				<array>
+					<string>Finder</string>
+				</array>
+				<key>arguments</key>
+				<dict>
+					<key>0</key>
+					<dict>
+						<key>default value</key>
+						<string>/Applications/Address Book.app</string>
+						<key>name</key>
+						<string>appPath</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>0</string>
+					</dict>
+				</dict>
+				<key>isViewVisible</key>
+				<true/>
+				<key>location</key>
+				<string>543.500000:113.000000</string>
+				<key>nibPath</key>
+				<string>/System/Library/Automator/Launch Application.action/Contents/Resources/English.lproj/main.nib</string>
+			</dict>
+			<key>isViewVisible</key>
+			<true/>
+		</dict>
+	</array>
+	<key>connectors</key>
+	<dict>
+		<key>95199991-44A1-47D2-844F-48B015A7CEA3</key>
+		<dict>
+			<key>from</key>
+			<string>FA2344C2-846A-4482-82B7-383F42BBB7EA - FA2344C2-846A-4482-82B7-383F42BBB7EA</string>
+			<key>to</key>
+			<string>1A4ACA6C-D8B8-44B4-9B17-9DC80F4D6AE2 - 1A4ACA6C-D8B8-44B4-9B17-9DC80F4D6AE2</string>
+		</dict>
+		<key>A579FBB2-979F-4869-BBB1-8D58D1F55726</key>
+		<dict>
+			<key>from</key>
+			<string>4383A801-C221-48E5-ACE5-2378D0DD18F7 - 4383A801-C221-48E5-ACE5-2378D0DD18F7</string>
+			<key>to</key>
+			<string>FA2344C2-846A-4482-82B7-383F42BBB7EA - FA2344C2-846A-4482-82B7-383F42BBB7EA</string>
+		</dict>
+		<key>FA7DC2D5-89BE-4DD5-88A2-9889BC4B1E4C</key>
+		<dict>
+			<key>from</key>
+			<string>1A4ACA6C-D8B8-44B4-9B17-9DC80F4D6AE2 - 1A4ACA6C-D8B8-44B4-9B17-9DC80F4D6AE2</string>
+			<key>to</key>
+			<string>F7592CCD-88E2-4A53-9AF1-83959C95825A - F7592CCD-88E2-4A53-9AF1-83959C95825A</string>
+		</dict>
+	</dict>
+	<key>state</key>
+	<dict>
+		<key>EditorSplitViewPosition</key>
+		<real>0.0</real>
+		<key>MainSplitViewPosition_v2</key>
+		<real>338</real>
+		<key>windowFrame</key>
+		<string>{{0, 4}, {1440, 874}}</string>
+		<key>windowFrameTopLeft</key>
+		<string>{{0, 0}, {1440, 874}}</string>
+		<key>workflowViewScrollPosition</key>
+		<string>{{0, 0}, {1087, 778}}</string>
+	</dict>
+</dict>
+</plist>
