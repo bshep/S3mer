@@ -94,6 +94,10 @@
 				this.stage.addEventListener(KeyboardEvent.KEY_UP,HandleKeyUp,false,0,true);
 			}
 			
+			public function disableKeyHandler():void {
+				this.stage.removeEventListener(KeyboardEvent.KEY_UP,HandleKeyUp);				
+			}
+			
 			private function HandleKeyUp(e:KeyboardEvent):void {
 				KeyboardManager.HandleKeyUp(e,this);
 			}

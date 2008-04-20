@@ -10,6 +10,7 @@ package com.msgid.S3mer
 	import flash.utils.Timer;
 	
 	import mx.collections.ArrayCollection;
+	import mx.controls.HTML;
 	import mx.controls.Image;
 	import mx.controls.Label;
 	import mx.effects.Fade;
@@ -31,6 +32,7 @@ package com.msgid.S3mer
 		
 		private var _currentPlaylist:Playlist;
 		private var _stopped:Boolean;	
+		private var _errorplaying:Boolean;
 		
 		private var _videoLastTimeCode:Number;
 		private var _videoRepeatTimeCode:int;
@@ -43,6 +45,7 @@ package com.msgid.S3mer
 			this._timers = new ArrayCollection();
 			
 			this._stopped = true;
+			this._errorplaying = false;
 		}
 		
 		public function resize():void {
@@ -318,6 +321,9 @@ package com.msgid.S3mer
 				case "timedate":
 					play_next_timedate();
 					break;
+				case "url":
+					play_next_url();
+					break;
 				default:
 					Logger.addEvent(this.toString() + ": bad playlist item type. Value = " + (this._currentPlaylist.current as PlaylistObject).type);
 					
@@ -352,9 +358,8 @@ package com.msgid.S3mer
 						Logger.addEvent(e.message);
 					}
 				}
-
 				
-
+				this.resize();
 				
 				if (nextObj is SmoothVideoDisplay) {
 					if ((nextObj as SmoothVideoDisplay).cameraAttached != true ) {
@@ -427,24 +432,32 @@ package com.msgid.S3mer
 		
 		private function play_next_live():void {
 			var _playlist:Playlist = this.currentPlaylist;
-			var tmpTimer:TimerId = getTimerById("live_video_done");
+			var liveTimer:TimerId = getTimerById("live_video_done");
+			var videocheckTimer:TimerId = getTimerById("video_check");
 			var tmpDuration:String = _playlist.current.configXML.@duration;
 			// For live video we need to setup the live_video_done timer 
 			// which fires when we are done playing the video.
-			if ( tmpTimer == null ) {
+			
+			if (!parseInt(tmpDuration)) {
+				tmpDuration = "0";
+			}
+			
+			if ( liveTimer == null ) {
 				
-				if (!(tmpDuration == "" || tmpDuration == "0")) {				
-					tmpTimer = new TimerId("live_video_done",parseInt(tmpDuration)*1000);
-					this._timers.addItem(tmpTimer);
+				if (tmpDuration != "0") {				
+					liveTimer = new TimerId("live_video_done",parseInt(tmpDuration)*1000);
+					this._timers.addItem(liveTimer);
 					
-					tmpTimer.addEventListener(TimerEvent.TIMER,live_video_done,false,0,true);
+					liveTimer.addEventListener(TimerEvent.TIMER,live_video_done,false,0,true);
 				}
 			}
 			
-			tmpTimer = getTimerById("video_check");
-			
-			if (tmpTimer != null) {
-				tmpTimer.stop();
+			if ( videocheckTimer == null ) {
+				videocheckTimer = new TimerId("video_check",200);
+				this._timers.addItem(videocheckTimer);
+				
+				videocheckTimer.addEventListener(TimerEvent.TIMER,video_check,false,0,true);
+				videocheckTimer.stop();
 			}
 
 			this._prevObject = this._realObject;
@@ -452,18 +465,19 @@ package com.msgid.S3mer
 			
 			var cam:Camera = getPreferedCaptureDevice();
 			
-			if (cam != null) {
 
-				SmoothVideoDisplay(this._realObject).scaleX = SmoothVideoDisplay(this._realObject).width / 10;
-				SmoothVideoDisplay(this._realObject).scaleY = SmoothVideoDisplay(this._realObject).height / 10;
-				SmoothVideoDisplay(this._realObject).width = 10;
-				SmoothVideoDisplay(this._realObject).height = 10;
+			SmoothVideoDisplay(this._realObject).scaleX = SmoothVideoDisplay(this._realObject).width / 10;
+			SmoothVideoDisplay(this._realObject).scaleY = SmoothVideoDisplay(this._realObject).height / 10;
+			SmoothVideoDisplay(this._realObject).width = 10;
+			SmoothVideoDisplay(this._realObject).height = 10;
+			
 				
-				cam.setMode(640,480,15);
-				
+			if (cam != null) {
+				cam.setMode(720,480,30);
 				SmoothVideoDisplay(this._realObject).attachCamera(cam);
 			} else {
-				SmoothVideoDisplay(this._realObject).attachCamera(Camera.getCamera())
+				_errorplaying = true;
+				videocheckTimer.start();
 			}
 
 //			SmoothVideoDisplay(this._realObject).play();
@@ -477,8 +491,8 @@ package com.msgid.S3mer
 			
 			Logger.addEvent("Play live video");
 			
-			if (!(tmpDuration == "" || tmpDuration == "0")) {
-				getTimerById("live_video_done").start();
+			if ((tmpDuration != "0") && cam != null) {
+				liveTimer.start();
 			}		
 		}
 		
@@ -486,6 +500,53 @@ package com.msgid.S3mer
 			(e.target as Timer).stop();
 			this.play_next();
 		}
+		
+		private function play_next_url():void {
+			var liveTimer:TimerId = getTimerById("live_video_done");
+			var _playlist:Playlist = this.currentPlaylist;
+			var tmpDuration:String = _playlist.current.configXML.@duration;
+			// For live video we need to setup the live_video_done timer 
+			// which fires when we are done playing the video.
+			
+			if (!parseInt(tmpDuration)) {
+				tmpDuration = "0";
+			}
+			
+			if ( liveTimer == null ) {
+				
+				if (tmpDuration != "0") {				
+					liveTimer = new TimerId("live_video_done",parseInt(tmpDuration)*1000);
+					this._timers.addItem(liveTimer);
+					
+					liveTimer.addEventListener(TimerEvent.TIMER,live_video_done,false,0,true);
+				}
+			}
+
+			this._prevObject = this._realObject;
+			
+			this._realObject = new HTML();
+//			(this._realObject as HTML)
+			(this._realObject as HTML).location = _playlist.current.url;
+			(this._realObject as HTML).reload();
+			(this._realObject as HTML).paintsDefaultBackground = false;
+//			(this._realObject as HTML).alpha = .5;
+//			(this._realObject as HTML).scaleX = .5;
+//			(this._realObject as HTML).scaleY = .5;
+			(this._realObject as HTML).horizontalScrollPolicy = "false";
+			(this._realObject as HTML).verticalScrollPolicy = "false";
+//			(this._realObject as HTML).filters = [new BlurFilter(8)];
+			
+
+//			this.resize();
+			cleancut(this._prevObject, this._realObject);
+			
+			(this.parent.parent as S3merWindow).disableKeyHandler();
+
+			if ((tmpDuration != "0")) {
+				liveTimer.start();
+			}		
+		}
+		
 		
 		private function play_next_video():void {
 			var _playlist:Playlist = this.currentPlaylist;
@@ -637,6 +698,13 @@ package com.msgid.S3mer
 							this.play_next();
 							handlingVideoEvent = false; 
 							return false;					
+						}
+						
+						if (this._errorplaying == true) {
+							this.play_next();
+							handlingVideoEvent = false;
+							this._errorplaying = false;
+							return false;
 						}
 						
 						if (SmoothVideoDisplay(this._realObject).videoHeight == 0 ||

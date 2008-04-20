@@ -27,7 +27,7 @@
 			private var _audioPan:String;
 			
 			private function OnCreated(e:Event):void {
-				this.initFader();
+//				this.initFader();
 				
 			}
 			
@@ -134,11 +134,13 @@
 				if (this._fader == null) {
 					_fader = new FadePanel()
 					_fader.setup(this);
-					_fader.addEventListener(EffectEvent.EFFECT_END, OnFadeComplete,false,0,true);
+					_fader.addEventListener(EffectEvent.EFFECT_END, OnFadeComplete);
 				} else {
 					this.removeChild(this._fader);
 					this.addChild(this._fader);
 				}
+				
+				
 			}
 			
 			public function OnFadeComplete(e:EffectEvent):void {

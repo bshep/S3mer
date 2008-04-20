@@ -115,7 +115,7 @@ package com.msgid.S3mer
 			for each (var item:PlaylistObject in this._items) {
 				_itemType = (item.configXML.@type).toString();
 				
-				if( _itemType != "podcast" &&  _itemType != "rss" ) {
+				if( _itemType != "podcast" &&  _itemType != "rss" &&  _itemType != "url" ) {
 					if(!item.avaiable) {
 						return false;
 					}

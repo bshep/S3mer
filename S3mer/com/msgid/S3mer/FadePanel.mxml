@@ -31,6 +31,7 @@
 			public function fadeOut(length:int):void {
 				if( length == 0 ) {
 					this.alpha = 1;
+					dispatchEvent(new EffectEvent(EffectEvent.EFFECT_END));
 				} else {
 					fadeCommon(length,1); 
 				}
@@ -39,6 +40,7 @@
 			public function fadeIn(length:int):void {
 				if( length == 0 ) {
 					this.alpha = 0;
+					dispatchEvent(new EffectEvent(EffectEvent.EFFECT_END));
 				} else {
 					fadeCommon(length,-1); 
 				}

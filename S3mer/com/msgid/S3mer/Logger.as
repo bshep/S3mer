@@ -22,12 +22,12 @@ package com.msgid.S3mer
 		}
 		
 		public static function addEvent(str:String):void {
-			return;
+//			return;
 //			if ( _instanceLog == null ) {
 //				_instanceLog = new Logger();
 //			}
 //			
-//			//trace(str);
+			trace(str);
 //			_log = str + "\n" + _log;
 //			
 //			if (_log.length > 5000) {

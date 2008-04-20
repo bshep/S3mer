@@ -168,7 +168,7 @@
 				}
 				this.stage.removeEventListener(Event.CLOSE,onAppClose);
 				Window(this._playerWindows.getItemAt(0)).activate();
-//				this.close();
+				this.close();
 			}
 			
 			private function doInitialSetup():void {

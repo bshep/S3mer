@@ -64,7 +64,7 @@
 					_reloadTimer = new Timer(this.delay);
 					_reloadTimer.addEventListener(TimerEvent.TIMER, OnReloadTimer,false,0,true);
 				} else {
-					_reloadTimer.delay = 5*60*1000;
+					_reloadTimer.delay = 1*60*1000;
 				}
 
 				this._lastUpdateDate = new Date();
@@ -78,6 +78,8 @@
 				this.logo.visible = false;
 
 				this.resize();
+				
+				_reloadTimer.start();
 			}
 			
 			public function stop():void {
@@ -186,7 +188,7 @@
 			}
 			
 			private function OnRSSLoadComplete(e:Event):void {
-				_reloadTimer.delay = 5*60*1000;
+				_reloadTimer.delay = 10*60*1000;
 				_reloadTimer.start();
 				this.visible = true;
 				this.logo.source = this.logoUrl;
