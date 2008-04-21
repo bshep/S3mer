@@ -16,6 +16,8 @@ package com.msgid.S3mer
 		private var _remoteVersion:Number;
 		private var _timer:Timer;
 		
+		private var _newVersion:String;
+		
 		public function ApplicationUpdater()
 			{
 			super();
@@ -56,6 +58,8 @@ package com.msgid.S3mer
 				_remoteVersion = parseFloat(versionXML.version);
 				
 				if ( localVersion < _remoteVersion ) {
+					this._newVersion = versionXML.version.toString();
+					
 					Logger.addEvent("UPDATER: New version found local = " + localVersion + " remote = " + _remoteVersion);
 					if (ApplicationSettings.getValue("updatesEnabled") != "false") {
 						Logger.addEvent("UPDATER: Updating...");
@@ -97,7 +101,7 @@ package com.msgid.S3mer
 			myStorageStream.close();
 			
 			try {
-				(new Updater).update(myStorageFile,this._remoteVersion.toString());
+				(new Updater).update(myStorageFile,this._newVersion);
 			} catch(e:Error) {
 				
 			}

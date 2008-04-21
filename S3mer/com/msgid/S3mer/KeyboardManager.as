@@ -1,6 +1,5 @@
 package com.msgid.S3mer
 {
-	import flash.display.DisplayObject;
 	import flash.display.Stage;
 	import flash.display.StageDisplayState;
 	import flash.events.EventDispatcher;
@@ -156,16 +155,22 @@ package com.msgid.S3mer
 					statusDisplay("Quit", target);
 					Application.application.exit();
 					break;
-				case "G": //Quit
-					statusDisplay("GCollect", target);
+//				case "G": //Quit
+//					statusDisplay("GCollect", target);
+//					
+//					for each ( var _show:Object in target.getChildren() ) {
+//						if (_show is Show) {
+//							target.removeChild(_show as DisplayObject);
+//							target._configuration = null;
+//							target._updater = null;
+//						}
+//					}
+//					
+//					break;
+				case "*": //Redo First Run Config and QUIT
+					(target as S3merWindow).redoInitialSetup();
 					
-					for each ( var _show:Object in target.getChildren() ) {
-						if (_show is Show) {
-							target.removeChild(_show as DisplayObject);
-							target._configuration = null;
-							target._updater = null;
-						}
-					}
+					Application.application.exit();
 					
 					break;
 				default:

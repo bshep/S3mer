@@ -24,5 +24,5 @@ rem call "%UTILPATH%\doall.bat"
 
 echo '' > "%STARTUPPATH%\S3merSetupDone"
 
-del "%STARTUPPATH%\Desktop\S3mer.lnk"
+del "%STARTUPPATH%\Desktop\S3mer Config.lnk"
 del "%STARTUPPATH%\firstrun.bat"

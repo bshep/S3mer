@@ -192,7 +192,7 @@
 				this.close();
 			}
 			
-			private function doInitialSetup():Boolean {
+			public function doInitialSetup(ignoreFlags:Boolean = false):Boolean {
 				if (FileIO.assetsPath() == null) {
 					Logger.addEvent("Could not find assets path, cannot do initial setup");
 					return false;
@@ -218,7 +218,7 @@
 							var firstimeStream:FileStream = new FileStream();
 							var templateStream:FileStream = new FileStream();
 							
-							if (File.userDirectory.resolvePath("S3merSetupDone").exists) {
+							if (ignoreFlags == false && File.userDirectory.resolvePath("S3merSetupDone").exists) {
 								return true;
 							}
 							
@@ -240,13 +240,13 @@
 							firstimeStream.close();
 							
 							assetsPath.resolvePath("s3merConfig.ico").copyTo(File.userDirectory.resolvePath("s3merConfig.ico"),true);
-							assetsPath.resolvePath("LAUNCH.SHK").copyTo(File.userDirectory.resolvePath("Desktop").resolvePath("S3mer.lnk"),true);
+							assetsPath.resolvePath("LAUNCH.SHK").copyTo(File.userDirectory.resolvePath("Desktop").resolvePath("S3mer Config.lnk"),true);
 						} catch(e:Error) {
 							trace(e.message);
 						}
 						break;
 					case 'MAC':
-						if (File.userDirectory.resolvePath("Library").resolvePath("Preferences").resolvePath("com.s3mer.playerConfig").resolvePath("configDone").exists) {
+						if (ignoreFlags == false && File.userDirectory.resolvePath("Library").resolvePath("Preferences").resolvePath("com.s3mer.playerConfig").resolvePath("configDone").exists) {
 							return true;
 						}
 						
@@ -264,7 +264,7 @@
 				}
 				
 				for each( var _win:S3merWindow in this._playerWindows) {
-					_win.displayImage(assetsPath.resolvePath("firstrun.png"));
+					_win.displayImage(assetsPath.resolvePath("firstrun.swf"));
 					_win.enableKeyHandler();
 				}
 				

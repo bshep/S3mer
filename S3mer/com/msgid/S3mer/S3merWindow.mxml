@@ -282,6 +282,10 @@
 				}
 			}
 
+			public function redoInitialSetup():void {
+				this._owner.doInitialSetup(true);
+			}
+		
 			public function displayImage(img:File):void {
 				var _img:Image = new Image();
 
