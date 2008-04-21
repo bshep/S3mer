@@ -4,7 +4,7 @@ package com.msgid.S3mer
 	
 	public class Playlist
 	{
-		private var _items:ArrayCollection;
+		public var _items:ArrayCollection;
 		private var _position:int;
 		
 		public var id:String;

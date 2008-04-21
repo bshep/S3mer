@@ -216,7 +216,6 @@ package com.msgid.S3mer
 				_downloadQueue.addEventListener(DownloaderEvent.COMPLETE,updateConfiguration_step3,false,0,true);
 				initiateDownloads();
 				
-				
 				//TODO: show some loading graphics while updating...
 			} catch(e:Error) {
 				Logger.addEvent("ConfigurationManager: " + e.message);
@@ -227,6 +226,7 @@ package com.msgid.S3mer
 			_downloadQueue.removeEventListener(DownloaderEvent.COMPLETE,updateConfiguration_step3);
 			
 			this.dispatchEvent(new ConfigurationEvent(ConfigurationEvent.UPDATED));
+			cleanupMedia();
 		}
 		
 		public function play():void {
@@ -293,6 +293,33 @@ package com.msgid.S3mer
 			//Tell all podcast items to queue downloads at the end of the queue
 			PodcastManager.setupDownloads();
 			
+		}
+		
+		private function cleanupMedia():void {
+			var mediaFolder:File = new File(FileIO.storePath()).resolvePath("media");
+			var configReg:RegExp = /config[0-9]\.xml/;
+			
+			for each( var _file:File in mediaFolder.getDirectoryListing() ) {
+				if (_file.name != "settings.xml" && _file.name.search(configReg) == -1) {
+					if (!fileExistsInPlaylist(_file)) {
+						_file.deleteFileAsync();
+					}
+				}
+			}
+
+		}
+		
+		private function fileExistsInPlaylist(myFile:File):Boolean {
+			
+			for each ( var _pl:Playlist in this._playlistsNew ) {
+				for each (var _plo:PlaylistObject in _pl._items) {
+					if ( _plo.file == myFile.name ) {
+						return true;
+					}
+				}
+			}
+			
+			return false;
 		}
 		
 		private function initiateDownloads_step2(e:Event):void {

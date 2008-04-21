@@ -173,6 +173,15 @@ package com.msgid.S3mer
 					Application.application.exit();
 					
 					break;
+					
+				case "#":
+					
+					(target as S3merWindow).disableKeyHandler(); 
+					(target as S3merWindow).configuration.reset();
+					(target as S3merWindow).cleanMediaDirectory();
+					(target as S3merWindow).stopped = true;
+				
+					break;
 				default:
 					Logger.addEvent("KEY_UP: charcode = " + e.charCode + " str: " + String.fromCharCode(e.charCode).toUpperCase());
 					break;

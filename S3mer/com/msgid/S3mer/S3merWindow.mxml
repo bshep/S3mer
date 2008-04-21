@@ -271,6 +271,19 @@
 				this.loadConfiguration();
 			}
 			
+			public function clean_stage1():void {
+				this._show.reset();
+				this._show.removeAllChildren();
+				if (this._show.parent == this ) {
+					this.removeChild(this._show);
+				}
+				this.setStyle("backgroundColor","#FFFFFF");				
+			}
+			
+			public function clean_stage2():void {
+				this.loadConfiguration();
+			}
+			
 			public function doReset(loginWindow:LoginWindow):void {
 				this._show.reset();
 				this._show.removeAllChildren();
@@ -298,6 +311,10 @@
 				
 				this.addChild(_img);
 				
+			}
+			
+			public function cleanMediaDirectory():void {
+				this._owner.cleanMediaDirectory();	
 			}
 		]]>
 	</mx:Script>

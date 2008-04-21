@@ -11,6 +11,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.core.Application;
 			import com.msgid.S3mer.FileIO;
 			import mx.core.Window;
 			import com.msgid.S3mer.ApplicationSettings;
@@ -309,6 +310,20 @@
 				
 			}
 			
+			public function cleanMediaDirectory():void {
+				var curMedia:File = new File(FileIO.storePath()).resolvePath("media");
+
+				for each( var _file:File in curMedia.getDirectoryListing()) {
+					try {
+						if (_file.name != "settings.xml" ) {
+							_file.deleteFileAsync();
+						}
+					} catch (e:Error) {
+						Logger.addEvent(e.message);
+					}
+				}
+				Application.application.exit();							
+			}
 		]]>
 	</mx:Script>
 	<mx:TextArea id="appLog" visible="false" height="116" wordWrap="true" editable="false" enabled="true"  color="#000000" cornerRadius="0" alpha="0.5" borderStyle="none" borderThickness="8" left="13" right="12" bottom="10"/>
