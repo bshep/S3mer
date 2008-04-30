@@ -4,6 +4,10 @@ package com.msgid.S3mer
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
+	import flash.utils.setInterval;
+	
+	import mx.utils.Base64Decoder;
+	import mx.utils.Base64Encoder;
 	
 	public class ApplicationSettings
 	{
@@ -17,8 +21,10 @@ package com.msgid.S3mer
 
 		public static const URL_MEDIA:String = "http://www.s3mer.com/";
 		public static const URL_HEARTBEAT:String = "http://www.s3mer.com/heartbeat.php";
-		public static const URL_CONFIG:String = "http://www.s3mer.com/getxml.php";
+		public static const URL_CONFIG:String = "http://localhost/s3mer/app/getxml.php";
 		public static const URL_UPDATE:String = "http://www.s3mer.com/media/app/checkversion.php";
+
+		private static const SETTINGS_KEY:String = "oewiur0830nf,mnv098-39n kchj098-932n,mcn-09";
 
 		private var _settings:XML;
 		private var _settingsFile:File;
@@ -38,10 +44,17 @@ package com.msgid.S3mer
 		
 		public function _save():Boolean {
 			var settingsRW:FileStream = new FileStream;
-
+			var settings:String;
+			var b64enc:Base64Encoder = new Base64Encoder();
+			
+			settings = this._settings.toXMLString();
+			settings = FileIO.simpleCrypt(settings,ApplicationSettings.SETTINGS_KEY);
+			b64enc.encode(settings);
+			settings = b64enc.toString();
+			
 			try {
 				settingsRW.open(this._settingsFile,FileMode.WRITE);
-				settingsRW.writeUTFBytes(this._settings.toXMLString());
+				settingsRW.writeUTFBytes(settings);
 				settingsRW.close();
 			} catch(e:Error) {
 				Logger.addEvent("_AppSettingsInstance._save: " + e.message);
@@ -53,6 +66,8 @@ package com.msgid.S3mer
 		
 		public function _load(reload:Boolean):Boolean {
 			var settingsRead:FileStream = new FileStream;
+			var settings:String;
+			var b64dec:Base64Decoder = new Base64Decoder();
 			
 			if (this._loaded == true && reload == false ) {
 				return true;
@@ -60,8 +75,21 @@ package com.msgid.S3mer
 
 			try {
 				settingsRead.open(this._settingsFile,FileMode.UPDATE);
-				this._settings = new XML(settingsRead.readUTFBytes(settingsRead.bytesAvailable));
+				
+				settings = settingsRead.readUTFBytes(settingsRead.bytesAvailable);
 				settingsRead.close();
+				
+				if (settings.charAt(0) != "<" ) {
+					b64dec.decode(settings);
+					settings = b64dec.toByteArray().toString();
+					
+					settings = FileIO.simpleCrypt(settings,ApplicationSettings.SETTINGS_KEY);					
+					this._settings = new XML(settings);
+				} else {
+					this._settings = new XML(settings);
+					this._save();
+				}
+								
 			} catch(e:Error) {
 				Logger.addEvent("_AppSettingsInstance._load: " + e.message);
 				return false;

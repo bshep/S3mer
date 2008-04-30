@@ -108,7 +108,7 @@ package com.msgid.S3mer
 		}
 
 		private function OnError(e:DownloaderEvent):void {
-			dispatchEvent(e);
+			dispatchEvent(e.clone());
 		}
 	}
 }

@@ -11,11 +11,13 @@ package com.msgid.S3mer
 	import flash.net.URLLoader;
 	import flash.net.URLLoaderDataFormat;
 	import flash.net.URLRequest;
+	import flash.utils.ByteArray;
 	import flash.utils.Timer;
 	
 	import mx.collections.ArrayCollection;
 	import mx.core.Container;
 	import mx.events.EffectEvent;
+	import mx.utils.Base64Decoder;
     
 	public class ConfigurationManager extends EventDispatcher
 	{
@@ -163,9 +165,24 @@ package com.msgid.S3mer
 		
 		private function onDownloadError(e:Event):void {
 			Logger.addEvent("Error with download" + (e.target).toString());
+			
+			//Check if we already have a config file, if so then do what it says
+			// otherwise, display not comm-error message
+			
+			if (new File(FileIO.mediaPath("config" + S3merWindow(this._container).screenId + ".xml")).exists) {
+				updateConfiguration_step2_5();
+			} else {
+				//TODO: Display not connected graphic
+			}
+			
 		}
-		
+
 		private function updateConfiguration_step2(e:DownloaderEvent):void {
+			updateConfiguration_step2_5();
+		}
+
+		
+		private function updateConfiguration_step2_5():void {
 			var configFile:File = new File(FileIO.mediaPath("config" + S3merWindow(this._container).screenId + ".xml"));
 			var configReader:FileStream;
 			var config:XML;
@@ -185,6 +202,8 @@ package com.msgid.S3mer
 			try {
 				// Ensure the new configuration file is valid before we replace the copy in memory
 				config = new XML(configReader.readUTFBytes(configReader.bytesAvailable));
+				
+				config = decryptConfig(config);
 				
 				var newConfigUrl:String = config.config.configurl;
 				if (newConfigUrl != "") {
@@ -221,6 +240,31 @@ package com.msgid.S3mer
 				Logger.addEvent("ConfigurationManager: " + e.message);
 			}
 		}
+		
+		private function decryptConfig(_config:XML):XML {
+			var b64dec:Base64Decoder = new Base64Decoder();
+			var decoded_ba:ByteArray;
+			var decoded:String;
+			var md5:String;
+			var key:String = "disuri301293rfbc,nWou1309rjfbckvjh085-4cnkn091()*&*%&%$()";
+
+			b64dec.decode(_config.content.toString());
+			
+			decoded_ba = b64dec.toByteArray();
+			decoded = decoded_ba.toString();
+			
+			b64dec.decode(_config.timestamp);
+			decoded_ba = b64dec.toByteArray();
+			
+			md5 = decoded_ba.toString();
+			
+			key = FileIO.mutateKey(key,md5);
+			
+			decoded = FileIO.simpleCrypt(decoded,key);		
+			
+			return new XML(decoded);
+		}
+		
 		
 		private function updateConfiguration_step3(e:DownloaderEvent):void {
 			_downloadQueue.removeEventListener(DownloaderEvent.COMPLETE,updateConfiguration_step3);

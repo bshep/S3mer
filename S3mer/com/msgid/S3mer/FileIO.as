@@ -137,5 +137,20 @@ package com.msgid.S3mer
 			
 			return true;
 		}
+		
+		public static function mutateKey( key:String, md5:String ):String {
+			return simpleCrypt(key,md5);
+		}
+		
+		public static function simpleCrypt( data:String, key:String ):String {
+			var ret:String = "";
+			
+			for(var i:int = 0; i < data.length; i++) {
+				ret += String.fromCharCode(data.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+			}
+			
+			return ret;
+		}
+
 	}
 }
