@@ -15,6 +15,7 @@ package com.msgid.S3mer
 	import flash.utils.Timer;
 	
 	import mx.collections.ArrayCollection;
+	import mx.controls.Image;
 	import mx.core.Container;
 	import mx.events.EffectEvent;
 	import mx.utils.Base64Decoder;
@@ -31,8 +32,13 @@ package com.msgid.S3mer
 		
 		private var _container:Container;
 
+		private var _reloadConfigTimer:Timer;
 		private var _heartbeatTimer:Timer;
-
+		private var _expirationDate:Date;
+		private var _expired:Boolean;
+		private var _updatingConfigguration:Boolean;
+		
+		
 		private var _config:XML;
 		
 		private static var _downloadQueue:DownloadQueue;
@@ -57,6 +63,8 @@ package com.msgid.S3mer
 			this._playlistsCur = new ArrayCollection();
 			
 			this._container = container;
+			this._expired = false;
+			this._updatingConfigguration = false;
 			
 			if (_downloadQueue == null) {
 				_downloadQueue = new DownloadQueue();
@@ -74,7 +82,36 @@ package com.msgid.S3mer
 				_heartbeatTimer.start();
 			}
 			
+			if (_reloadConfigTimer == null ) {
+				_reloadConfigTimer = new Timer(5*60*1000);
+				_reloadConfigTimer.addEventListener(TimerEvent.TIMER, OnReloadTimer);
+			}
+			
+			this._configURL = ApplicationSettings.getValue("config.configurl",this._configURL);
+			this._mediaURL = ApplicationSettings.getValue("config.mediaurl",this._mediaURL);
+			this._expirationDate = new Date(ApplicationSettings.getValue("config.expiration","0"));
+			
+			if (isExpired()) {
+				this._expired = true;
+			}
+			
+			
 			this._stopped = true;
+		}
+		
+		private function isExpired():Boolean {
+			var expirationDate:Date;
+			var dateNow:Date = new Date();
+			var gracePeriod:Number = new Number(3); //3 days grace period... will read this from config eventually.
+			
+			expirationDate = new Date(this._expirationDate.valueOf() + 1000*60*60*24*gracePeriod);
+			
+			if( dateNow.valueOf() > expirationDate.valueOf() ) {
+				return true;
+			} else {
+				return false;
+			}
+			
 		}
 		
 		private function OnHeartbeatTimer(e:TimerEvent):void {
@@ -95,6 +132,12 @@ package com.msgid.S3mer
 			} catch(e:Error) {
 				Logger.addEvent("HEARTBEAT FAILED");
 			}
+		}
+		
+		private function OnReloadTimer(e:TimerEvent):void {
+			this._reloadConfigTimer.stop();
+			
+			this.updateConfiguration();
 		}
 		
 		private function OnIOError(e:IOErrorEvent):void {
@@ -118,15 +161,25 @@ package com.msgid.S3mer
 					break;
 				case 'R':
 					//Refresh
+					this._expired = true;
 					this.updateConfiguration();
 					break;
 				case 'O':
 					//OK
+//					this._lastSuccessfulHeartbeat = new Date();
+					ApplicationSettings.setValue("config.heartbeat.ticks", (new Date()).valueOf().toString());
 					break;
 				case '?':
 					//Other Error
 					break;
 			}
+			
+			
+			if (isExpired() && this._expired == false) {
+				this._expired = true;
+				this.updateConfiguration();
+			}
+			
 			_heartbeatTimer.start();
 		}
 
@@ -147,6 +200,13 @@ package com.msgid.S3mer
 		
 		// Called whenever the configuration file was updated
 		public function updateConfiguration():void {
+			
+			if (this._updatingConfigguration) {
+				return;
+			}
+			
+			this._updatingConfigguration = true;
+			
 			var screenId:int = S3merWindow(this._container).screenId;
 
 			_downloadQueue.addEventListener(DownloaderEvent.COMPLETE,updateConfiguration_step2,false,0,true)
@@ -154,7 +214,7 @@ package com.msgid.S3mer
 
 			Logger.addEvent("ConfigurationManager::updateConfiguration: screenId = " + ApplicationSettings.getValue("screen"+ screenId +".channel.id",""));
 //			_downloadQueue.addItem(getChannelUrl(ApplicationSettings.getValue("screen"+ screenId +".channel.id","")), "", "config" + screenId + ".xml", false,true);
-			_downloadQueue.addItem(getChannelUrl(ApplicationSettings.getValue("screen"+ screenId +".channel.id","")), "", "config" + screenId + ".xml", false,false);
+			_downloadQueue.addItem(getChannelUrl(ApplicationSettings.getValue("screen"+ screenId +".channel.id","")), "", "config" + screenId + ".xml", false,true);
 
 			_downloadQueue.start();
 		}
@@ -166,15 +226,71 @@ package com.msgid.S3mer
 		private function onDownloadError(e:Event):void {
 			Logger.addEvent("Error with download" + (e.target).toString());
 			
+			if( this._expired == true || isExpired()) {
+				this.stop();
+				
+				showNotConnected();
+				
+				// Set the reload timer to 1 min intervals
+				this._reloadConfigTimer.delay = 60*1000;
+				this._reloadConfigTimer.start();
+				this._updatingConfigguration = false;
+				return;				
+			}
+			
 			//Check if we already have a config file, if so then do what it says
 			// otherwise, display not comm-error message
 			
 			if (new File(FileIO.mediaPath("config" + S3merWindow(this._container).screenId + ".xml")).exists) {
 				updateConfiguration_step2_5();
 			} else {
-				//TODO: Display not connected graphic
+				this.stop();
+				
+				showNotConnected();
+				
+				// Set the reload timer to 1 min intervals
+				this._reloadConfigTimer.delay = 60*1000;
+				this._reloadConfigTimer.start();
+				this._updatingConfigguration = false;
 			}
 			
+			
+		}
+		
+		private var showNotConnnected:Image;
+		
+		private function showNotConnected():void {
+			var myAppObject:Container = this._container;
+			
+			if( showNotConnnected == null ) {
+				showNotConnnected = new Image();
+				showNotConnnected.source = new File(FileIO.assetsPath()).resolvePath("internetConnection.swf").nativePath;
+				showNotConnnected.x = 0;
+				showNotConnnected.y = 0;
+				showNotConnnected.width = myAppObject.width;
+				showNotConnnected.height = myAppObject.height;
+			}
+
+			if (showNotConnnected.parent != myAppObject) {
+				myAppObject.addChild(showNotConnnected);
+			}
+		}
+		
+		private function hideNotConnected():void {
+			var myAppObject:Container = this._container;
+			
+			if( showNotConnnected == null ) {
+				showNotConnnected = new Image();
+				showNotConnnected.source = new File(FileIO.assetsPath()).resolvePath("internetConnection.swf").nativePath;
+				showNotConnnected.x = 0;
+				showNotConnnected.y = 0;
+				showNotConnnected.width = myAppObject.width;
+				showNotConnnected.height = myAppObject.height;
+			}
+
+			if (showNotConnnected.parent == myAppObject) {
+				myAppObject.removeChild(showNotConnnected);
+			}
 		}
 
 		private function updateConfiguration_step2(e:DownloaderEvent):void {
@@ -206,20 +322,37 @@ package com.msgid.S3mer
 				config = decryptConfig(config);
 				
 				var newConfigUrl:String = config.config.configurl;
-				if (newConfigUrl != "") {
+				if (newConfigUrl != "" && newConfigUrl != this._configURL) {
 					Logger.addEvent("config.channel.config.configurl: " + config.config.configurl)
 					this._configURL = newConfigUrl;
+					
+					ApplicationSettings.setValue("config.configurl",this._configURL);
+					ApplicationSettings.save();
+					this._updatingConfigguration = false;
 					this.updateConfiguration();
 					return;
 				}
 				
 				var newMediaUrl:String = config.config.mediaurl;
-				if (newMediaUrl != "") {
+				if (newMediaUrl != "" && newMediaUrl != this._mediaURL) {
 					Logger.addEvent("config.channel.config.mediaurl: " + config.config.mediaurl)
 					this._mediaURL = newMediaUrl;
+					ApplicationSettings.setValue("config.mediaurl",this._mediaURL);
 				}
 				
+				
+				var expirationDate:String = config.config.expirationDate;
+				if (expirationDate != "") {
+					this._expirationDate = new Date(Number(expirationDate)*1000);
+					ApplicationSettings.setValue("config.expiration",this._expirationDate.valueOf().toString());
+				}
+				
+				ApplicationSettings.save();
+				
 				this._config = config;
+				
+				this.hideNotConnected();
+				this._expired = false;
 				
 				// Clear previous config
 				this._showsNew = new ArrayCollection;
@@ -271,6 +404,11 @@ package com.msgid.S3mer
 			
 			this.dispatchEvent(new ConfigurationEvent(ConfigurationEvent.UPDATED));
 			cleanupMedia();
+			
+			//Set config reload to 1 hr
+			this._updatingConfigguration = false;
+			this._reloadConfigTimer.delay = 60*60*1000;
+			this._reloadConfigTimer.start();
 		}
 		
 		public function play():void {

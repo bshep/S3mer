@@ -30,8 +30,6 @@
 			private var myLoginWindow:LoginWindow;
 			private var _playerWindows:ArrayCollection = new ArrayCollection;
 			
-			private var _reloadPlayerTimer:Timer;
-
 			private function reAquireFocus():void {
 				this.activate();
 				systemManager.stage.nativeWindow.orderToFront();
