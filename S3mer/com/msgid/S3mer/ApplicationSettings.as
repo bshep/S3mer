@@ -4,7 +4,6 @@ package com.msgid.S3mer
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
-	import flash.utils.setInterval;
 	
 	import mx.utils.Base64Decoder;
 	import mx.utils.Base64Encoder;
@@ -12,17 +11,18 @@ package com.msgid.S3mer
 	public class ApplicationSettings
 	{
 		private static var _AppSettingsInstance:ApplicationSettings;	
+		public static const SERVER:String = "localhost/s3mer/app";
 		//Static Vars
-		public static const URL_LOGIN:String = "http://www.s3mer.com/loginplayer.php";
-		public static const URL_LOGOUT:String = "http://www.s3mer.com/logout.php";
-		public static const URL_PLAYER_LIST:String = "http://www.s3mer.com/playergetdata.php";
-		public static const URL_USER_INFO:String = "http://www.s3mer.com/playergetdata.php";
-		public static const URL_STATUS:String = "http://www.s3mer.com/checklogged.php";
+		public static const URL_LOGIN:String = "http://" + SERVER + "/loginplayer.php";
+		public static const URL_LOGOUT:String = "http://" + SERVER + "/logout.php";
+		public static const URL_PLAYER_LIST:String = "http://" + SERVER + "/playergetdata.php";
+		public static const URL_USER_INFO:String = "http://" + SERVER + "/playergetdata.php";
+		public static const URL_STATUS:String = "http://" + SERVER + "/checklogged.php";
 
-		public static const URL_MEDIA:String = "http://www.s3mer.com/";
-		public static const URL_HEARTBEAT:String = "http://www.s3mer.com/heartbeat.php";
-		public static const URL_CONFIG:String = "http://localhost/s3mer/app/getxml.php";
-		public static const URL_UPDATE:String = "http://www.s3mer.com/media/app/checkversion.php";
+		public static const URL_MEDIA:String = "http://media1.s3mer.com/";
+		public static const URL_HEARTBEAT:String = "http://" + SERVER + "/heartbeat.php";
+		public static const URL_CONFIG:String = "http://" + SERVER + "/getxml.php";
+		public static const URL_UPDATE:String = "http://" + SERVER + "/checkversion.php";
 
 		private static const SETTINGS_KEY:String = "oewiur0830nf,mnv098-39n kchj098-932n,mcn-09";
 

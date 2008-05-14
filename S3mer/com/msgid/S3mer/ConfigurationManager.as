@@ -44,7 +44,7 @@ package com.msgid.S3mer
 		private static var _downloadQueue:DownloadQueue;
 		
 		// BaseURL for media, can be overwritten by config file
-		private var _mediaURL:String = ApplicationSettings.URL_MEDIA;
+		private var _mediaURL:String = "";//ApplicationSettings.URL_MEDIA;
 		
 		private var _hearbeatURL:String = ApplicationSettings.URL_HEARTBEAT + "?playerid=";
 		
@@ -319,7 +319,7 @@ package com.msgid.S3mer
 				// Ensure the new configuration file is valid before we replace the copy in memory
 				config = new XML(configReader.readUTFBytes(configReader.bytesAvailable));
 				
-				config = decryptConfig(config);
+				//config = decryptConfig(config);
 				
 				var newConfigUrl:String = config.config.configurl;
 				if (newConfigUrl != "" && newConfigUrl != this._configURL) {
@@ -465,7 +465,7 @@ package com.msgid.S3mer
 				//Run through all playlist items and determine which ones we need to download,
 				//this also creates all podcast items.
 				for each( var _playlistObj:PlaylistObject in _playlist.pendingFiles ) {
-					_downloadQueue.addItem(_mediaURL + _playlistObj.url, _playlistObj.hash);
+					_downloadQueue.addItem(_playlistObj.url, _playlistObj.hash);
 				}
 			}
 			

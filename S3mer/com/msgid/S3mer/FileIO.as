@@ -1,6 +1,6 @@
 package com.msgid.S3mer
 {
-	import com.adobe.crypto.SHA1;
+//	import com.adobe.crypto.SHA1;
 	
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;
@@ -111,29 +111,29 @@ package com.msgid.S3mer
 			}
 			
 			
-			if (ENABLE_HASH) {
-				var myStream:FileStream = new FileStream()
-				var data:ByteArray;
-				myStream.open(myStorageDir.resolvePath("media").resolvePath(fileName),FileMode.READ);
-				
-				data = new ByteArray();
-				myStream.readBytes(data);
-				var myMD5Hash:String = com.adobe.crypto.SHA1.hashBytes(data);
-				
-				myStream.close();
-				
-				Logger.addEvent("FileName: " +  fileName);
-				Logger.addEvent("SHA1 Hash(args): " +  md5);
-				Logger.addEvent("SHA1 Hash(calc): " +  myMD5Hash);
-				
-				if (md5 != "") {
-					if (md5 == myMD5Hash) {
-						return true;
-					} else {
-						return false;
-					}
-				}
-			}
+//			if (ENABLE_HASH) {
+//				var myStream:FileStream = new FileStream()
+//				var data:ByteArray;
+//				myStream.open(myStorageDir.resolvePath("media").resolvePath(fileName),FileMode.READ);
+//				
+//				data = new ByteArray();
+//				myStream.readBytes(data);
+//				var myMD5Hash:String = com.adobe.crypto.SHA1.hashBytes(data);
+//				
+//				myStream.close();
+//				
+//				Logger.addEvent("FileName: " +  fileName);
+//				Logger.addEvent("SHA1 Hash(args): " +  md5);
+//				Logger.addEvent("SHA1 Hash(calc): " +  myMD5Hash);
+//				
+//				if (md5 != "") {
+//					if (md5 == myMD5Hash) {
+//						return true;
+//					} else {
+//						return false;
+//					}
+//				}
+//			}
 			
 			return true;
 		}
