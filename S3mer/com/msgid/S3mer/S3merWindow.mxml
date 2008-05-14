@@ -307,7 +307,7 @@
 				_img.width = this.width;
 				_img.height = this.height
 				_img.maintainAspectRatio = false;
-				_img.source = img.nativePath;
+				_img.source = img.url;
 				
 				this.addChild(_img);
 				

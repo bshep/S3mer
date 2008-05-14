@@ -254,10 +254,7 @@
 						if(!File.userDirectory.resolvePath("Desktop").resolvePath("S3merConfig.app").exists) {
 							assetsPath.resolvePath("S3merConfig.app").copyTo(File.userDirectory.resolvePath("Desktop").resolvePath("S3merConfig.app"));						
 						}
-						
-
-						return false;
-												
+																		
 						break;
 					case 'LINUX':
 						break;
