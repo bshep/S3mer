@@ -34,6 +34,19 @@
 				resize();
 			}
 			
+			public function set color(val:String):void {
+				this._color = val;
+				
+				if (headtext != null ) { 
+					this.headtext.setStyle("color","#" + val);
+					this.bodytext.setStyle("color","#" + val);
+				}
+			}
+			
+			public function get color():String {
+				return this._color;
+			}
+			
 			private const _origWidth:int = 971;
 			private const _origHeight:int = 81;
 			
@@ -47,6 +60,8 @@
 			private var _RSSXML:XML = new XML();
 			private var _loader:URLLoader;
 			private var _currentHeadline:int = 0;
+			
+			private var _color:String;
 			
 			public function play():void {
 				trace("RSS URL: " +this.source);
@@ -78,6 +93,11 @@
 				this.logo.visible = false;
 
 				this.resize();
+
+				if (headtext != null ) { 
+					this.headtext.setStyle("color","#" + this._color);
+					this.bodytext.setStyle("color","#" + this._color);
+				}
 				
 				_reloadTimer.start();
 			}
@@ -346,7 +366,7 @@
 			<mx:ConstraintColumn id="Canvas12_col2" width="5%"/>
 		</mx:constraintColumns>
 		<mx:Label fontFamily="HelvNeueBlack" fontSize="41" color="#000000" id="headtext" fontWeight="normal" truncateToFit="false" y="10" left="1"/>
-		<mx:Label text="" fontFamily="HelvNeueBlack" fontSize="20" color="#65723D" id="bodytext" truncateToFit="false" y="53" left="1"/>
+		<mx:Label text="" fontFamily="HelvNeueBlack" fontSize="20" color="#000000" id="bodytext" truncateToFit="false" y="53" left="1" alpha="0.45"/>
 	</mx:Canvas>
 	
 </mx:Canvas>

@@ -36,6 +36,7 @@ package com.msgid.S3mer
 		
 		private var _videoLastTimeCode:Number;
 		private var _videoRepeatTimeCode:int;
+		private var _videoRepeatTimeCode2:int;
 		
 		private var _parent:Show;
 		
@@ -136,6 +137,7 @@ package com.msgid.S3mer
 			var newRSS:RSSFeedPanel = new RSSFeedPanel();
 			
 			newRSS.id	= objectXML.@id;
+			
 			
 			this._realObject = newRSS;
 			this.resize();
@@ -516,6 +518,10 @@ package com.msgid.S3mer
 				videocheckTimer.stop();
 			}
 
+			if ( getTimerById("image_check") != null ) {
+				getTimerById("image_check").stop();
+			}
+
 			this._prevObject = this._realObject;
 			this.configure_live(this._configXML);
 			
@@ -647,7 +653,7 @@ package com.msgid.S3mer
 			this.configure_rss(this._configXML);
 			
 			RSSFeedPanel(this._realObject).source = _playlist.current.url;
-
+			RSSFeedPanel(this._realObject).color = _playlist.current.configXML.@rsscolor;
 			var tmpDuration:String;
 			
 			tmpDuration = _playlist.current.configXML.@duration;
@@ -766,10 +772,16 @@ package com.msgid.S3mer
 						
 						if (SmoothVideoDisplay(this._realObject).videoHeight == 0 ||
 							SmoothVideoDisplay(this._realObject).videoWidth == 0 ) {
-								
-							this.play_next();
-							handlingVideoEvent = false; 
-							return false;					
+							
+							if(_videoRepeatTimeCode2 >= 10) {				
+								this.play_next();
+								handlingVideoEvent = false; 
+								return false;					
+							} else {
+								_videoRepeatTimeCode2++;
+							}
+						} else {
+							_videoRepeatTimeCode2 = 0;
 						}
 						
 						

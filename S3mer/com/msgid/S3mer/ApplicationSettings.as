@@ -11,18 +11,18 @@ package com.msgid.S3mer
 	public class ApplicationSettings
 	{
 		private static var _AppSettingsInstance:ApplicationSettings;	
-		public static const SERVER:String = "localhost/s3mer/app";
+		public static var SERVER:String = "localhost/s3mer/app";
 		//Static Vars
-		public static const URL_LOGIN:String = "http://" + SERVER + "/loginplayer.php";
-		public static const URL_LOGOUT:String = "http://" + SERVER + "/logout.php";
-		public static const URL_PLAYER_LIST:String = "http://" + SERVER + "/playergetdata.php";
-		public static const URL_USER_INFO:String = "http://" + SERVER + "/playergetdata.php";
-		public static const URL_STATUS:String = "http://" + SERVER + "/checklogged.php";
+		public static var URL_LOGIN:String = "http://" + SERVER + "/loginplayer.php";
+		public static var URL_LOGOUT:String = "http://" + SERVER + "/logout.php";
+		public static var URL_PLAYER_LIST:String = "http://" + SERVER + "/playergetdata.php";
+		public static var URL_USER_INFO:String = "http://" + SERVER + "/playergetdata.php";
+		public static var URL_STATUS:String = "http://" + SERVER + "/checklogged.php";
 
-		public static const URL_MEDIA:String = "http://media1.s3mer.com/";
-		public static const URL_HEARTBEAT:String = "http://" + SERVER + "/heartbeat.php";
-		public static const URL_CONFIG:String = "http://" + SERVER + "/getxml.php";
-		public static const URL_UPDATE:String = "http://" + SERVER + "/checkversion.php";
+		public static var URL_MEDIA:String = "http://media1.s3mer.com/";
+		public static var URL_HEARTBEAT:String = "http://" + SERVER + "/heartbeat.php";
+		public static var URL_CONFIG:String = "http://" + SERVER + "/getxml.php";
+		public static var URL_UPDATE:String = "http://" + SERVER + "/checkversion.php";
 
 		private static const SETTINGS_KEY:String = "oewiur0830nf,mnv098-39n kchj098-932n,mcn-09";
 
