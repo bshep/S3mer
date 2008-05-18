@@ -125,7 +125,9 @@ package com.msgid.S3mer
 			_loader.addEventListener(IOErrorEvent.IO_ERROR,OnIOError,false,0,true);
 			_loader.dataFormat = URLLoaderDataFormat.TEXT;
 			try {
-				_loaderReq = new URLRequest(_hearbeatURL + ApplicationSettings.getValue("channel.id",""));
+				var screenId:int = S3merWindow(this._container).screenId;
+				
+				_loaderReq = new URLRequest(_hearbeatURL + ApplicationSettings.getValue("screen"+ screenId +".channel.id",""));
 //				_loaderReq.setLoginCredentials("development","mils0ft");
 				
 				_loader.load(_loaderReq);

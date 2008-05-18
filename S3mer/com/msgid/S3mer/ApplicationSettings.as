@@ -11,7 +11,8 @@ package com.msgid.S3mer
 	public class ApplicationSettings
 	{
 		private static var _AppSettingsInstance:ApplicationSettings;	
-		public static var SERVER:String = "localhost/s3mer/app";
+//		public static var SERVER:String = "localhost/s3mer/app";
+		public static var SERVER:String = "www.s3mer.com/app";
 		//Static Vars
 		public static var URL_LOGIN:String = "http://" + SERVER + "/loginplayer.php";
 		public static var URL_LOGOUT:String = "http://" + SERVER + "/logout.php";

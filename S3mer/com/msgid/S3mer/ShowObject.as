@@ -143,10 +143,17 @@ package com.msgid.S3mer
 			this.resize();
 		}
 
+		private var currImage:Image = new Image();
+		private var prevImage:Image = new Image();
 
 
  		private function configure_image(objectXML:XML):void {
-			var newImage:Image = new Image();
+ 			
+ 			
+			var newImage:Image = prevImage;
+			prevImage = currImage;
+			currImage = newImage;
+ 
 			
 			newImage.scaleContent = true;
 			newImage.opaqueBackground = null;
