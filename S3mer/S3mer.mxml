@@ -204,10 +204,17 @@
 				storePath.resolvePath("Utilities").createDirectory();
 				
 				try {
-					NativeApplication.nativeApplication.startAtLogin = true;				
+					if( ApplicationSettings.getValue("ui.autoStartEnabled","true") == "true" ) {
+						NativeApplication.nativeApplication.startAtLogin = true;
+					} else {
+						NativeApplication.nativeApplication.startAtLogin = false;
+					}
+										
 				} catch( e:IllegalOperationError) {
 					Logger.addEvent("could not set to startup");
 				}
+				
+				return true;
 				
 				switch( FileIO.getOs() ) {
 					case 'WINDOWS':

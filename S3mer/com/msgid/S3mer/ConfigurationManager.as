@@ -321,7 +321,7 @@ package com.msgid.S3mer
 				// Ensure the new configuration file is valid before we replace the copy in memory
 				config = new XML(configReader.readUTFBytes(configReader.bytesAvailable));
 				
-				//config = decryptConfig(config);
+				config = decryptConfig(config);
 				
 				var newConfigUrl:String = config.config.configurl;
 				if (newConfigUrl != "" && newConfigUrl != this._configURL) {

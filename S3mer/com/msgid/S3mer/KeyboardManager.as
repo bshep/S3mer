@@ -1,7 +1,9 @@
 package com.msgid.S3mer
 {
+	import flash.desktop.NativeApplication;
 	import flash.display.Stage;
 	import flash.display.StageDisplayState;
+	import flash.errors.IllegalOperationError;
 	import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;
 	import flash.events.KeyboardEvent;
@@ -150,6 +152,30 @@ package com.msgid.S3mer
 						statusDisplay("Updates ON", target);
 					}
 					ApplicationSettings.save();
+					break;
+				case "M": //Enable/Disable Autostartup
+					var autoStart:String;
+					
+					autoStart = ApplicationSettings.getValue("ui.autoStartEnabled","true");
+					if (autoStart == "true") {
+						ApplicationSettings.setValue("ui.autoStartEnabled","false");
+						statusDisplay("AutoStart OFF", target);
+					} else {
+						ApplicationSettings.setValue("ui.autoStartEnabled","true");
+						statusDisplay("AutoStart ON", target);
+					}
+					ApplicationSettings.save();
+					
+//					try {
+						if( ApplicationSettings.getValue("ui.autoStartEnabled","true") == "true" ) {
+							NativeApplication.nativeApplication.startAtLogin = true;
+						} else {
+							NativeApplication.nativeApplication.startAtLogin = false;
+						}
+											
+//					} catch( e:IllegalOperationError) {
+//						Logger.addEvent("could not set to startup");
+//					}
 					break;
 				case "Q": //Quit
 					statusDisplay("Quit", target);

@@ -49,9 +49,9 @@ package com.msgid.S3mer
 			var b64enc:Base64Encoder = new Base64Encoder();
 			
 			settings = this._settings.toXMLString();
-//			settings = FileIO.simpleCrypt(settings,ApplicationSettings.SETTINGS_KEY);
-//			b64enc.encode(settings);
-//			settings = b64enc.toString();
+			settings = FileIO.simpleCrypt(settings,ApplicationSettings.SETTINGS_KEY);
+			b64enc.encode(settings);
+			settings = b64enc.toString();
 			
 			try {
 				settingsRW.open(this._settingsFile,FileMode.WRITE);
