@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="446" height="172" title="Welcome to s3mer">
+	<mx:Button x="248" y="46" label="Start Demo" width="140" height="39" fontSize="15"/>
+	<mx:Button x="34" y="46" label="Login" width="140" height="39" fontSize="15"/>
+	<mx:VRule x="208.5" y="10" width="9" height="112"/>
+	
+</mx:Panel>

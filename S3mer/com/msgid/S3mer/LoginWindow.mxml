@@ -312,9 +312,9 @@
 			}
 		]]>
 	</mx:Script>
-	<mx:Panel id="pnlMode" title="Choose mode:" layout="absolute" fontSize="14" backgroundColor="#FFFFFF" top="0" bottom="0" left="0" right="0" horizontalScrollPolicy="off" verticalScrollPolicy="off">
-		<mx:Button label="Demo Mode" horizontalCenter="0" verticalCenter="-24" width="157" click="onDemoMode(event)" toolTip="Click here to enable demo mode which uses default settings."/>
-		<mx:Button label="Registered Mode" horizontalCenter="0" verticalCenter="24" width="157" click="onRegisteredMode(event)" toolTip="Click here to login with your username and password which you setup in our website."/>
+	<mx:Panel id="pnlMode" title="Welcome to s3mer" layout="absolute" fontSize="14" backgroundColor="#FFFFFF" top="0" bottom="0" left="0" right="0" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+		<mx:Button label="Start Demo" horizontalCenter="0" verticalCenter="-23" width="157" click="onDemoMode(event)" toolTip="Click here to enable demo mode which uses default settings." height="40"/>
+		<mx:Button label="Log In" horizontalCenter="0" verticalCenter="24" width="157" click="onRegisteredMode(event)" toolTip="Click here to login with your username and password which you setup in our website." height="40"/>
 		
 	</mx:Panel>
 	
