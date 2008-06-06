@@ -5,7 +5,7 @@
 	<mx:Label x="52" y="57" text="Username" fontSize="10" fontWeight="bold"/>
 	<mx:Label x="52" y="125" text="Password" fontSize="10" fontWeight="bold"/>
 	<mx:Label x="327.5" y="10" text="Demo" fontSize="20" fontWeight="bold"/>
-	<mx:Button x="394" y="123" label="Start Demo" width="140" height="39" fontSize="15"/>
+	<mx:Button x="400" y="123" label="Start Demo" width="140" height="39" fontSize="15"/>
 	<mx:Button x="52" y="209" label="Login" width="140" height="39" fontSize="15"/>
 	<mx:TextInput x="52" y="77" width="210" height="31"/>
 	<mx:TextInput x="52" y="142" width="210" height="31"/>
