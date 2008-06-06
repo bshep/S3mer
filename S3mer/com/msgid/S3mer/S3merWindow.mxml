@@ -285,7 +285,12 @@
 			}
 			
 			public function doReset(loginWindow:LoginWindow):void {
-				this._show.reset();
+				try {
+					this._show.reset();
+				} catch(e:Error) {
+					
+				}
+				
 				this._show.removeAllChildren();
 				this.removeChild(this._show);
 				this.setStyle("backgroundColor","#FFFFFF");				
@@ -316,6 +321,7 @@
 			public function cleanMediaDirectory():void {
 				this._owner.cleanMediaDirectory();	
 			}
+			
 		]]>
 	</mx:Script>
 	

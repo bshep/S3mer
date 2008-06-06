@@ -15,7 +15,6 @@ package com.msgid.S3mer
 	import flash.utils.Timer;
 	
 	import mx.collections.ArrayCollection;
-	import mx.controls.Image;
 	import mx.core.Container;
 	import mx.events.EffectEvent;
 	import mx.utils.Base64Decoder;
@@ -259,13 +258,13 @@ package com.msgid.S3mer
 			
 		}
 		
-		private var showNotConnnected:Image;
+		private var showNotConnnected:SmoothImage;
 		
 		private function showNotConnected():void {
 			var myAppObject:Container = this._container;
 			
 			if( showNotConnnected == null ) {
-				showNotConnnected = new Image();
+				showNotConnnected = new SmoothImage();
 				showNotConnnected.source = new File(FileIO.assetsPath()).resolvePath("internetConnection.swf").nativePath;
 				showNotConnnected.x = 0;
 				showNotConnnected.y = 0;
@@ -282,7 +281,7 @@ package com.msgid.S3mer
 			var myAppObject:Container = this._container;
 			
 			if( showNotConnnected == null ) {
-				showNotConnnected = new Image();
+				showNotConnnected = new SmoothImage();
 				showNotConnnected.source = new File(FileIO.assetsPath()).resolvePath("internetConnection.swf").nativePath;
 				showNotConnnected.x = 0;
 				showNotConnnected.y = 0;
@@ -750,6 +749,16 @@ package com.msgid.S3mer
 				show.resize();
 			}
 		}
+
+		public function muteAudio(mute:Boolean):void {
+			for each( var _showObj:DisplayObject in this._container.getChildren()) {
+				if ( _showObj is Show) {
+					(_showObj as Show).muteAudio(mute);
+				}
+
+			}
+		}
+
 
 	}
 }

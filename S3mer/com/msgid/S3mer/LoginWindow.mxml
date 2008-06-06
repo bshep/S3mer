@@ -294,10 +294,31 @@
 			private function OnComboChanged(e:ListEvent):void {
 				trace("Selected ID: " + this.cmbPlayers.selectedItem.data[0]);
 			}
+			
+			private function onDemoMode(e:Event):void {
+				this.password.displayAsPassword = true;
+				this.username.text = "demo@s3mer.com";
+				this.password.text = "thisisthedemoacctpassword";
+				
+				pnlMode.visible = false;
+				pnlRegister.visible = true;
+
+				OnLoginClick(e);			
+			}
+			
+			private function onRegisteredMode(e:Event):void {
+				pnlMode.visible = false;
+				pnlRegister.visible = true;
+			}
 		]]>
 	</mx:Script>
-
-	<mx:Panel layout="absolute" title="Please register this player" fontSize="14" backgroundColor="#FFFFFF" top="0" bottom="0" left="0" right="0" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+	<mx:Panel id="pnlMode" title="Choose mode:" layout="absolute" fontSize="14" backgroundColor="#FFFFFF" top="0" bottom="0" left="0" right="0" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+		<mx:Button label="Demo Mode" horizontalCenter="0" verticalCenter="-24" width="157" click="onDemoMode(event)" toolTip="Click here to enable demo mode which uses default settings."/>
+		<mx:Button label="Registered Mode" horizontalCenter="0" verticalCenter="24" width="157" click="onRegisteredMode(event)" toolTip="Click here to login with your username and password which you setup in our website."/>
+		
+	</mx:Panel>
+	
+	<mx:Panel id="pnlRegister" layout="absolute" title="Please register this player" fontSize="14" backgroundColor="#FFFFFF" top="0" bottom="0" left="0" right="0" horizontalScrollPolicy="off" verticalScrollPolicy="off" visible="false">
 		<mx:TextInput text="e-mail" id="username" enter="password.setFocus()" focusIn="if(username.text == 'e-mail') this.username.text=''" toolTip="Enter your e-mail or username" top="14" height="27" left="39" right="40" borderStyle="solid"/>
 		<mx:TextInput text="password" id="password" enter="OnLoginClick(event)" focusIn="if(password.text == 'password') {this.password.text=''; this.password.displayAsPassword = true};" toolTip="Enter your password here" borderStyle="solid" top="49" right="40" left="39"/>
 		<mx:Button label="Log In" right="39.950005" click="OnLoginClick(event)" toolTip="Click here to log-in" id="btnTune" bottom="16" height="27" width="87.99999"/>

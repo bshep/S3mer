@@ -10,7 +10,6 @@ package com.msgid.S3mer
 	
 	import mx.collections.ArrayCollection;
 	import mx.controls.HTML;
-	import mx.controls.Image;
 	import mx.controls.Label;
 	import mx.effects.Fade;
 	import mx.events.EffectEvent;
@@ -143,14 +142,14 @@ package com.msgid.S3mer
 			this.resize();
 		}
 
-		private var currImage:Image = new Image();
-		private var prevImage:Image = new Image();
+		private var currImage:SmoothImage = new SmoothImage();
+		private var prevImage:SmoothImage = new SmoothImage();
 
 
  		private function configure_image(objectXML:XML):void {
  			
  			
-			var newImage:Image = prevImage;
+			var newImage:SmoothImage = prevImage;
 			prevImage = currImage;
 			currImage = newImage;
  
@@ -199,6 +198,9 @@ package com.msgid.S3mer
 				newVideo.volume = 0;				
 			}
 			
+			if (ApplicationSettings.getValue("video.mute","false") == "true") {
+				newVideo.volume = 0;
+			}
 			
 			newVideo.addEventListener(VideoEvent.COMPLETE,videoComplete,false,0,true);
 			
@@ -351,7 +353,7 @@ package com.msgid.S3mer
 		private var cleancutFade:Fade ;
 		
 		private function isImage2Image(obj1:DisplayObject, obj2:DisplayObject):Boolean {
-			if (obj1 is Image && obj2 is Image) {
+			if (obj1 is SmoothImage && obj2 is SmoothImage) {
 				return true;
 			} else {
 				return false;
@@ -402,7 +404,7 @@ package com.msgid.S3mer
 				}
 				
 				//Start Fade for images
-				if (nextObj is Image && currentObj is Image) {
+				if (nextObj is SmoothImage && currentObj is SmoothImage) {
 					if (cleancutFade == null) {
 						cleancutFade = new Fade();
 					}
@@ -424,7 +426,7 @@ package com.msgid.S3mer
 						cleancut_stage2(null);
 					}
 				} else {
-					if (nextObj is Image && currentObj is Image) {
+					if (nextObj is SmoothImage && currentObj is SmoothImage) {
 						// This will be done after the fade...
 					} else {
 						if (currentObj.parent == this._parent) {
@@ -724,7 +726,7 @@ package com.msgid.S3mer
 			
 			this._prevObject = this._realObject;
 			this.configure_image(this._configXML);
-			Image(this._realObject).load(FileIO.mediaPath(_playlist.current.file));
+			SmoothImage(this._realObject).load(FileIO.mediaPath(_playlist.current.file));
 			
 			cleancut(this._prevObject,this._realObject);
 

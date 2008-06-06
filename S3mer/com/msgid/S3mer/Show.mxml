@@ -119,6 +119,18 @@
 				}
 			}
 			
+			public function muteAudio(mute:Boolean):void {
+				for each( var _showObject:ShowObject in _showObjects) {
+					if ( _showObject.object is SmoothVideoDisplay ) {
+						if (mute) {
+							(_showObject.object as SmoothVideoDisplay).volume = 0;
+						} else {
+							(_showObject.object as SmoothVideoDisplay).volume = 1;							
+						}
+					}
+				}				
+			}
+			
 			public function setSmoothing(active:Boolean):void {
 				for each( var _showObject:ShowObject in _showObjects) {
 					if (_showObject.object is SmoothVideoDisplay) {

@@ -3,7 +3,6 @@ package com.msgid.S3mer
 	import flash.desktop.NativeApplication;
 	import flash.display.Stage;
 	import flash.display.StageDisplayState;
-	import flash.errors.IllegalOperationError;
 	import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;
 	import flash.events.KeyboardEvent;
@@ -98,23 +97,41 @@ package com.msgid.S3mer
 					(target as S3merWindow).stopped = true;
 					break;
 				case "S":
-					//Toggle smoothing
-					var smoothing:String;
+					var mute:String;
 					
-					smoothing = ApplicationSettings.getValue("video.smoothing");
+					mute = ApplicationSettings.getValue("video.mute","false");
 					
-					if (smoothing == "false") {
-						target._configuration.setSmoothing(true);
-						ApplicationSettings.setValue("video.smoothing","true");
-						statusDisplay("Smoothing ON", target);
+					if (mute == "false") {
+						target.configuration.muteAudio(true);
+						ApplicationSettings.setValue("video.mute","true");
+						statusDisplay("Mute ON", target);
 					} else {
-						target._configuration.setSmoothing(false);
-						ApplicationSettings.setValue("video.smoothing","false");
-						statusDisplay("Smoothing OFF", target);
+						target.configuration.muteAudio(false);
+						ApplicationSettings.setValue("video.mute","false");
+						statusDisplay("Mute OFF", target);
+
 					}
 					
 					ApplicationSettings.save();
+				
 					break;
+//					//Toggle smoothing
+//					var smoothing:String;
+//					
+//					smoothing = ApplicationSettings.getValue("video.smoothing");
+//					
+//					if (smoothing == "false") {
+//						target._configuration.setSmoothing(true);
+//						ApplicationSettings.setValue("video.smoothing","true");
+//						statusDisplay("Smoothing ON", target);
+//					} else {
+//						target._configuration.setSmoothing(false);
+//						ApplicationSettings.setValue("video.smoothing","false");
+//						statusDisplay("Smoothing OFF", target);
+//					}
+//					
+//					ApplicationSettings.save();
+//					break;
 				case "H":
 					var showcursor:String;
 					
