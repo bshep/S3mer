@@ -26,8 +26,11 @@ package com.msgid.S3mer {
         override mx_internal function contentLoaderInfo_completeEventHandler(event:Event):void {
             var smoothLoader:Loader = event.target.loader as Loader;
             var smoothImage:Bitmap = smoothLoader.content as Bitmap;
-            smoothImage.smoothing = true;
             
+            if(smoothImage != null) {
+	            smoothImage.smoothing = true;
+           	}
+	                   
             super.contentLoaderInfo_completeEventHandler(event);
         }
     }
