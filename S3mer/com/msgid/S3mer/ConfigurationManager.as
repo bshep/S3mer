@@ -449,6 +449,10 @@ package com.msgid.S3mer
 
 		}
 		
+		public function stopDownloads():void {
+			_downloadQueue.stop();
+		}
+		
 		public function setSmoothing(active:Boolean):void {
 			var myShowObject:Show;
 			

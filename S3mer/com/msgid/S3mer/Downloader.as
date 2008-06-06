@@ -111,6 +111,10 @@ package com.msgid.S3mer
 			return FileIO.fileExists(this._filename, this._hash);
 		}
 		
+		public function stop():void {
+			this._loader.close();
+		}
+		
 		private function OnDownloadComplete(e:Event):void {
 			var myStorageDir:File;
 			var myStorageFile:File;

@@ -68,6 +68,20 @@ package com.msgid.S3mer
 			}
 		}
 		
+		public function stop():void {
+			if(this._started) {
+				this._started = false;
+				for each (var mydownloader:Downloader in this._downloaders) {
+					if (mydownloader.started) {
+						mydownloader.stop();
+					}
+				}
+				
+				this._downloaders.removeAll();
+				
+			}
+		}
+		
 		private function get active():int {
 			var count:int = 0;
 			
@@ -81,7 +95,7 @@ package com.msgid.S3mer
 		}
 		
 		private function startNext():void {
-			if (this.active < this._maxdownloads) {
+			if (this.active < this._maxdownloads && this._started) {
 				for each (var mydownloader:Downloader in this._downloaders) {
 					if (!mydownloader.complete && !mydownloader.started) {
 						mydownloader.download();

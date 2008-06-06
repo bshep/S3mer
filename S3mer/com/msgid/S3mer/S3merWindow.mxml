@@ -286,13 +286,23 @@
 			
 			public function doReset(loginWindow:LoginWindow):void {
 				try {
-					this._show.reset();
 				} catch(e:Error) {
 					
 				}
+
+				if( this._show != null ) {				
+					try {
+						this._show.reset();
+						this._show.removeAllChildren();
+						this.removeChild(this._show);
+					} catch(e:Error) {
+						
+					}
+				}
 				
-				this._show.removeAllChildren();
-				this.removeChild(this._show);
+				this._configuration.stopDownloads();
+				this.LoadingCanvas.visible = false;
+				
 				this.setStyle("backgroundColor","#FFFFFF");				
 										
 				if( this._screenNumber == 0 ) {

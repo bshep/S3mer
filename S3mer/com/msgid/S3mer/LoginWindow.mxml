@@ -20,6 +20,9 @@
 			[Embed(source="assets/spinner.swf")]
 			[Bindable]
 			public static var SpinnerSwf:Class;
+			
+			
+			public var isDemoMode = false;
 
 			
 			private function doRemoteCommand(command:String, listener:Function):void {
@@ -134,7 +137,11 @@
 				var result:XML;
 				
 				this.btnTune.label = "Tune In";
-				this.showPlayerPanel();
+				
+				if (!isDemoMode) {
+					this.showPlayerPanel();
+				}
+				
 				this.spinner.visible = false;
 				
 				result = new XML(URLLoader(e.target).data);
@@ -150,6 +157,10 @@
 					rbExistingPlayer.selected = true;
 				} else {
 					rbNewPlayer.selected = true;
+				}
+				
+				if (this.isDemoMode) {
+					this.onDemoMode_stage2();
 				}
 				
 				
@@ -300,10 +311,17 @@
 				this.username.text = "demo@s3mer.com";
 				this.password.text = "thisisthedemoacctpassword";
 				
-				pnlMode.visible = false;
-				pnlRegister.visible = true;
+//				pnlMode.visible = false;
+//				pnlRegister.visible = true;
 
+				this.isDemoMode = true;
+				
 				OnLoginClick(e);			
+			}
+			
+			private function onDemoMode_stage2():void {
+				this.saveInfo();
+				this.hide();
 			}
 			
 			private function onRegisteredMode(e:Event):void {
