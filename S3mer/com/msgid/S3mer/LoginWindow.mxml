@@ -315,6 +315,7 @@
 	<mx:Panel id="pnlMode" title="Welcome to s3mer" layout="absolute" fontSize="14" backgroundColor="#FFFFFF" top="0" bottom="0" left="0" right="0" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 		<mx:Button label="Start Demo" horizontalCenter="64" click="onDemoMode(event)" toolTip="Click here to enable demo mode which uses default settings." top="43" height="40"/>
 		<mx:Button label="Log In" horizontalCenter="-65" click="onRegisteredMode(event)" toolTip="Click here to login with your username and password which you setup in our website." width="112" top="43" height="40"/>
+		<mx:VRule x="157" top="10" bottom="10"/>
 		
 	</mx:Panel>
 	
