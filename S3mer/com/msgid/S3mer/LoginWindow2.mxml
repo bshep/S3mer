@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="648" height="320" title="Welcome to s3mer">
+	<mx:VRule x="308.5" y="10" width="11" height="260"/>
+	<mx:Label x="10" y="10" text="Login" fontSize="20" fontWeight="bold"/>
+	<mx:Label x="51" y="62" text="Username" fontSize="10" fontWeight="bold"/>
+	<mx:Label x="51" y="130" text="Password" fontSize="10" fontWeight="bold"/>
+	<mx:Label x="327.5" y="10" text="Demo" fontSize="20" fontWeight="bold"/>
+	<mx:Button x="394" y="123" label="Start Demo" width="140" height="39" fontSize="15"/>
+	<mx:Button x="51" y="192" label="Login" width="140" height="39" fontSize="15"/>
+	<mx:TextInput x="51" y="82" width="210" height="31"/>
+	<mx:TextInput x="51" y="147" width="210" height="31"/>
+	
+</mx:Panel>
