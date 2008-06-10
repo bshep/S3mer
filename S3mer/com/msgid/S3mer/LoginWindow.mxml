@@ -22,7 +22,7 @@
 			public static var SpinnerSwf:Class;
 			
 			
-			public var isDemoMode = false;
+			public var isDemoMode:Boolean = false;
 
 			
 			private function doRemoteCommand(command:String, listener:Function):void {
@@ -293,6 +293,11 @@
 					
 				this.username.text = ApplicationSettings.getValue("user.username","");
 				this.password.text = ApplicationSettings.getValue("user.password","");
+				
+				if( this.username.text == "demo@s3mer.com" ) {
+					this.username.text = "";
+					this.password.text = "";
+				}
 				
 				if (this.username.text == "" || this.password.text == "") {
 					listener(null);
