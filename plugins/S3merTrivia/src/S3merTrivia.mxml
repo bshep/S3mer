@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" currentState="step_1" width="800" height="600">
-
+	<mx:Image right="0" left="0" top="0" bottom="0" source="assets/trivia1.jpg" scaleContent="true"/>
 	<mx:states>
 		<mx:State name="step_1">
 			<mx:SetEventHandler target="{button1}" name="click" handler="currentState='step_2'"/>

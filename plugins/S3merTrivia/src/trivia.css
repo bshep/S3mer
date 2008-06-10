@@ -2,7 +2,7 @@
 
 TextArea.txtQuestionBkg
 {
-	backgroundAlpha: 0.6;
+	backgroundAlpha: 0.7;
 	backgroundColor: #000000;
 	borderColor: #CBCBCB;
 	borderStyle: solid;
@@ -34,4 +34,6 @@ TextArea.txtQuestion
 	paddingTop: 8;
 	paddingBottom: 8;
 	backgroundDisabledColor: #FFFFFF;
+	fontFamily:Helvetica;
+	fontWeight:bold;
 }
