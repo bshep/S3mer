@@ -1,0 +1,19 @@
+/* CSS file */
+
+TextArea
+{
+	backgroundAlpha: 0.6;
+	backgroundColor: #000000;
+	borderColor: #CBCBCB;
+	borderStyle: solid;
+	borderThickness: 4;
+	color: #E0E0E0;
+	cornerRadius: 14;
+	fontSize: 24;
+	textAlign: left;
+	leading: 4;
+	paddingLeft: 4;
+	paddingRight: 4;
+	paddingTop: 4;
+	paddingBottom: 4;
+}

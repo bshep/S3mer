@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" currentState="step_1" width="800" height="600">
+
+	<mx:states>
+		<mx:State name="step_1">
+			<mx:SetEventHandler target="{button1}" name="click" handler="currentState='step_2'"/>
+			<mx:SetProperty target="{txtQuestion}" name="y" value="-1000"/>
+			<mx:SetProperty target="{canvas1}" name="x" value="-1000"/>
+			<mx:SetProperty target="{canvas2}" name="x" value="-1000"/>
+			<mx:SetProperty target="{canvas3}" name="x" value="-1000"/>
+			<mx:SetProperty target="{canvas0}" name="x" value="-1000"/>
+		</mx:State>
+		
+		<mx:State name="step_2">
+			<mx:SetEventHandler target="{button1}" name="click" handler="currentState='step_1'"/>
+			<mx:SetProperty target="{txtQuestion}" name="y" value="39"/>
+			<mx:SetProperty target="{canvas1}" name="x" value="90"/>
+			<mx:SetProperty target="{canvas2}" name="x" value="90"/>
+			<mx:SetProperty target="{canvas3}" name="x" value="90"/>
+			<mx:SetProperty target="{canvas0}" name="x" value="90"/>
+		</mx:State>
+	</mx:states>
+	
+	<mx:transitions>
+		<mx:Transition fromState="" toState="*">	
+		</mx:Transition>
+    	<mx:Transition id="myTransition" fromState="*" toState="*">
+	    	<mx:Parallel>
+	    		<mx:Move duration="500" targets="{[txtQuestion]}"/>
+			    <mx:Move duration="800" targets="{[canvas0]}" startDelay="0"/>
+			    <mx:Move duration="800" targets="{[canvas1]}" startDelay="200"/>
+			    <mx:Move duration="800" targets="{[canvas2]}" startDelay="400"/>
+			    <mx:Move duration="800" targets="{[canvas3]}" startDelay="600"/>
+			</mx:Parallel>
+    	</mx:Transition>
+    </mx:transitions>
+    
+	<mx:Canvas x="90" y="275" width="672" height="62" id="canvas1">
+		<mx:Text id="txtLabel1" x="10" y="10" text="B) Ipsum Lorem" fontSize="24" color="#FFFFFF" fontFamily="Helvetica" fontWeight="bold"/>
+	</mx:Canvas>
+	<mx:Canvas x="90" y="205" width="672" height="62" id="canvas0">
+		<mx:Text id="txtLabel0" x="10" y="10" text="A) Lorem Ipsum" fontSize="24" color="#FFFFFF" fontFamily="Helvetica" fontWeight="bold"/>
+	</mx:Canvas>
+	<mx:Canvas x="90" y="345" width="672" height="62" id="canvas2">
+		<mx:Text id="txtLabel2" x="10" y="10" text="C) Dolor Lorem" fontSize="24" color="#FFFFFF" fontFamily="Helvetica" fontWeight="bold"/>
+	</mx:Canvas>
+	<mx:Canvas x="90" y="415" width="672" height="62" id="canvas3">
+		<mx:Text id="txtLabel3" x="10" y="10" text="D) Remol Ipsum" fontSize="24" color="#FFFFFF" fontFamily="Helvetica" fontWeight="bold"/>
+	</mx:Canvas>
+	<mx:Button x="65" y="510" label="Button" id="button1" click="currentState='step_1'"/>
+	<mx:TextArea  styleName="txtQuestion" x="39" y="39" width="722" height="141" alpha="0.56" text="Lorem Ipsum" id="txtQuestion"/>
+	<mx:Style source="trivia.css"/>
+	
+	<mx:Script>
+		<![CDATA[
+			
+			
+			private static var nextQuestionTimer:Timer =new Timer(2*1000);
+			
+			nextQuestionTimer.addEventListener(TimerEvent.TIMER,nextQuestion);
+			nextQuestionTimer.start();
+			
+			
+			
+			private static function nextQuestion(e:Event):void {
+				
+				if (application.currentState == 'step_1' ) {
+					application.currentState = 'step_2';
+				} else {
+					application.currentState = 'step_1';					
+				}
+			}
+			
+		]]>
+	</mx:Script>
+
+</mx:Application>
