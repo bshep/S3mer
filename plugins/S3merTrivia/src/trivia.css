@@ -1,6 +1,6 @@
 /* CSS file */
 
-TextArea
+TextArea.txtQuestionBkg
 {
 	backgroundAlpha: 0.6;
 	backgroundColor: #000000;
@@ -16,4 +16,22 @@ TextArea
 	paddingRight: 4;
 	paddingTop: 4;
 	paddingBottom: 4;
+}
+
+TextArea.txtQuestion
+{
+	backgroundAlpha: 0.0;
+	borderColor: #CBCBCB;
+	borderStyle: none;
+	borderThickness: 4;
+	color: #E0E0E0;
+	cornerRadius: 14;
+	fontSize: 24;
+	textAlign: left;
+	leading: 4;
+	paddingLeft: 8;
+	paddingRight: 8;
+	paddingTop: 8;
+	paddingBottom: 8;
+	backgroundDisabledColor: #FFFFFF;
 }

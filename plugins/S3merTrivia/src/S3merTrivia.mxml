@@ -4,7 +4,7 @@
 	<mx:states>
 		<mx:State name="step_1">
 			<mx:SetEventHandler target="{button1}" name="click" handler="currentState='step_2'"/>
-			<mx:SetProperty target="{txtQuestion}" name="y" value="-1000"/>
+			<mx:SetProperty target="{canvas_q}" name="y" value="-1000"/>
 			<mx:SetProperty target="{canvas1}" name="x" value="-1000"/>
 			<mx:SetProperty target="{canvas2}" name="x" value="-1000"/>
 			<mx:SetProperty target="{canvas3}" name="x" value="-1000"/>
@@ -13,7 +13,7 @@
 		
 		<mx:State name="step_2">
 			<mx:SetEventHandler target="{button1}" name="click" handler="currentState='step_1'"/>
-			<mx:SetProperty target="{txtQuestion}" name="y" value="39"/>
+			<mx:SetProperty target="{canvas_q}" name="y" value="19"/>
 			<mx:SetProperty target="{canvas1}" name="x" value="90"/>
 			<mx:SetProperty target="{canvas2}" name="x" value="90"/>
 			<mx:SetProperty target="{canvas3}" name="x" value="90"/>
@@ -26,7 +26,7 @@
 		</mx:Transition>
     	<mx:Transition id="myTransition" fromState="*" toState="*">
 	    	<mx:Parallel>
-	    		<mx:Move duration="500" targets="{[txtQuestion]}"/>
+	    		<mx:Move duration="500" targets="{[canvas_q]}"/>
 			    <mx:Move duration="800" targets="{[canvas0]}" startDelay="0"/>
 			    <mx:Move duration="800" targets="{[canvas1]}" startDelay="200"/>
 			    <mx:Move duration="800" targets="{[canvas2]}" startDelay="400"/>
@@ -72,8 +72,6 @@
 		</mx:Text>
 	</mx:Canvas>
 	<mx:Button x="65" y="510" label="Button" id="button1" click="currentState='step_1'"/>
-	<mx:TextArea  styleName="txtQuestion" x="39" y="39" width="722" height="141" alpha="0.56" text="Lorem Ipsum" id="txtQuestion"/>
-	<mx:Style source="trivia.css"/>
 	
 	<mx:Script>
 		<![CDATA[
@@ -88,14 +86,28 @@
 			
 			private static function nextQuestion(e:Event):void {
 				
-				if (application.currentState == 'step_1' ) {
-					application.currentState = 'step_2';
-				} else {
-					application.currentState = 'step_1';					
+				switch(application.currentState) {
+					case 'step_1':
+						application.currentState = 'step_2';
+						break;
+					case 'step_2':
+						application.currentState = 'step_1';
+						break;
 				}
 			}
 			
 		]]>
 	</mx:Script>
+	<mx:Canvas x="10" y="19" width="780" height="178" id="canvas_q">
+		<mx:TextArea styleName="txtQuestionBkg" x="29" y="20" width="722" height="141" alpha="0.56" id="txtQuestionBkg"/>
+		<mx:TextArea x="29" y="20" width="722" height="141" text="Lorem Ipsum" id="txtQuestion" styleName="txtQuestion">
+			<mx:filters>
+				<mx:DropShadowFilter>
+					<mx:alpha>0.7</mx:alpha>
+				</mx:DropShadowFilter>
+			</mx:filters>
+		</mx:TextArea>
+	</mx:Canvas>
+	<mx:Style source="trivia.css"/>
 
 </mx:Application>
