@@ -36,16 +36,40 @@
     </mx:transitions>
     
 	<mx:Canvas x="90" y="275" width="672" height="62" id="canvas1">
-		<mx:Text id="txtLabel1" x="10" y="10" text="B) Ipsum Lorem" fontSize="24" color="#FFFFFF" fontFamily="Helvetica" fontWeight="bold"/>
+		<mx:Text id="txtLabel1" x="10" y="10" text="B) Ipsum Lorem" fontSize="24" color="#FFFFFF" fontFamily="Helvetica" fontWeight="bold">
+			<mx:filters>
+				<mx:DropShadowFilter>
+					<mx:alpha>0.7</mx:alpha>
+				</mx:DropShadowFilter>
+			</mx:filters>
+		</mx:Text>
 	</mx:Canvas>
 	<mx:Canvas x="90" y="205" width="672" height="62" id="canvas0">
-		<mx:Text id="txtLabel0" x="10" y="10" text="A) Lorem Ipsum" fontSize="24" color="#FFFFFF" fontFamily="Helvetica" fontWeight="bold"/>
+		<mx:Text id="txtLabel0" x="10" y="10" text="A) Lorem Ipsum" fontSize="24" color="#FFFFFF" fontFamily="Helvetica" fontWeight="bold">
+			<mx:filters>
+				<mx:DropShadowFilter>
+					<mx:alpha>0.7</mx:alpha>
+				</mx:DropShadowFilter>
+			</mx:filters>
+		</mx:Text>
 	</mx:Canvas>
 	<mx:Canvas x="90" y="345" width="672" height="62" id="canvas2">
-		<mx:Text id="txtLabel2" x="10" y="10" text="C) Dolor Lorem" fontSize="24" color="#FFFFFF" fontFamily="Helvetica" fontWeight="bold"/>
+		<mx:Text id="txtLabel2" x="10" y="10" text="C) Dolor Lorem" fontSize="24" color="#FFFFFF" fontFamily="Helvetica" fontWeight="bold">
+			<mx:filters>
+				<mx:DropShadowFilter>
+					<mx:alpha>0.7</mx:alpha>
+				</mx:DropShadowFilter>
+			</mx:filters>
+		</mx:Text>
 	</mx:Canvas>
 	<mx:Canvas x="90" y="415" width="672" height="62" id="canvas3">
-		<mx:Text id="txtLabel3" x="10" y="10" text="D) Remol Ipsum" fontSize="24" color="#FFFFFF" fontFamily="Helvetica" fontWeight="bold"/>
+		<mx:Text id="txtLabel3" x="10" y="10" text="D) Remol Ipsum" fontSize="24" color="#FFFFFF" fontFamily="Helvetica" fontWeight="bold">
+			<mx:filters>
+				<mx:DropShadowFilter>
+					<mx:alpha>0.7</mx:alpha>
+				</mx:DropShadowFilter>
+			</mx:filters>
+		</mx:Text>
 	</mx:Canvas>
 	<mx:Button x="65" y="510" label="Button" id="button1" click="currentState='step_1'"/>
 	<mx:TextArea  styleName="txtQuestion" x="39" y="39" width="722" height="141" alpha="0.56" text="Lorem Ipsum" id="txtQuestion"/>
