@@ -56,9 +56,15 @@
 	<mx:transitions>
 		<mx:Transition fromState="" toState="*">	
 		</mx:Transition>
+		<mx:Transition fromState="step_2" toState="*">	
+		</mx:Transition>
     	<mx:Transition id="myTransition" fromState="*" toState="*">
 	    	<mx:Parallel effectEnd="onStateTransitionComplete(event)">
-	    		<mx:Move duration="500" targets="{[canvas_q]}"/>
+	    		<mx:Sequence>
+				    <mx:Blur duration="0" blurYTo="8" blurXTo="0" targets="{[canvas_q]}"/>
+		    		<mx:Move duration="1000" targets="{[canvas_q]}"/>
+				    <mx:Blur duration="0" blurXTo="0" blurYTo="0" targets="{[canvas_q]}"/>    			
+	    		</mx:Sequence>
 	    		<mx:Sequence>
 				    <mx:Blur duration="0" blurXTo="8" blurYTo="0" targets="{[canvas0]}"/>
 				    <mx:Move duration="1200" targets="{[canvas0]}" startDelay="0"/>
