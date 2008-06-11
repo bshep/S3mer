@@ -61,27 +61,27 @@
     	<mx:Transition id="myTransition" fromState="*" toState="*">
 	    	<mx:Parallel effectEnd="onStateTransitionComplete(event)">
 	    		<mx:Sequence>
-				    <mx:Blur duration="0" blurYTo="8" blurXTo="0" targets="{[canvas_q]}"/>
+				    <mx:Blur duration="0" blurYTo="16" blurXTo="0" targets="{[canvas_q]}"/>
 		    		<mx:Move duration="1000" targets="{[canvas_q]}"/>
 				    <mx:Blur duration="0" blurXTo="0" blurYTo="0" targets="{[canvas_q]}"/>    			
 	    		</mx:Sequence>
 	    		<mx:Sequence>
-				    <mx:Blur duration="0" blurXTo="8" blurYTo="0" targets="{[canvas0]}"/>
+				    <mx:Blur duration="0" blurXTo="16" blurYTo="0" targets="{[canvas0]}"/>
 				    <mx:Move duration="1200" targets="{[canvas0]}" startDelay="0"/>
 				    <mx:Blur duration="0" blurXTo="0" blurYTo="0" targets="{[canvas0]}"/>    			
 	    		</mx:Sequence>
 	    		<mx:Sequence>
-				    <mx:Blur duration="0" blurXTo="8" blurYTo="0" targets="{[canvas1]}"/>
+				    <mx:Blur duration="0" blurXTo="16" blurYTo="0" targets="{[canvas1]}"/>
 				    <mx:Move duration="1200" targets="{[canvas1]}" startDelay="200"/>
 				    <mx:Blur duration="0" blurXTo="0" blurYTo="0" targets="{[canvas1]}"/>    			
 	    		</mx:Sequence>
 	    		<mx:Sequence>
-				    <mx:Blur duration="0" blurXTo="8" blurYTo="0" targets="{[canvas2]}"/>
+				    <mx:Blur duration="0" blurXTo="16" blurYTo="0" targets="{[canvas2]}"/>
 				    <mx:Move duration="1200" targets="{[canvas2]}" startDelay="400"/>
 				    <mx:Blur duration="0" blurXTo="0" blurYTo="0" targets="{[canvas2]}"/>    			
 	    		</mx:Sequence>
 	    		<mx:Sequence>
-				    <mx:Blur duration="0" blurXTo="8" blurYTo="0" targets="{[canvas3]}"/>
+				    <mx:Blur duration="0" blurXTo="16" blurYTo="0" targets="{[canvas3]}"/>
 				    <mx:Move duration="1200" targets="{[canvas3]}" startDelay="600"/>
 				    <mx:Blur duration="0" blurXTo="0" blurYTo="0" targets="{[canvas3]}"/>    			
 	    		</mx:Sequence>
