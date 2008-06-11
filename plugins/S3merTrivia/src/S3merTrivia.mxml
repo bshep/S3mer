@@ -18,38 +18,55 @@
 			<mx:SetProperty target="{canvas0}" name="x" value="90"/>
 		</mx:State>
 		<mx:State name="step_2a" basedOn="step_2">
-			<mx:SetStyle target="{txtLabel1}" name="color" value="#777777"/>
-			<mx:SetStyle target="{txtLabel2}" name="color" value="#777777"/>
-			<mx:SetStyle target="{txtLabel3}" name="color" value="#777777"/>
 			<mx:SetProperty target="{txtLabel1}" name="filters" value="{[dropShadowFilter,blurFilter]}"/>
 			<mx:SetProperty target="{txtLabel2}" name="filters" value="{[dropShadowFilter,blurFilter]}"/>
 			<mx:SetProperty target="{txtLabel3}" name="filters" value="{[dropShadowFilter,blurFilter]}"/>
+			<mx:SetProperty target="{canvas1}" name="alpha" value="0.4"/>
+			<mx:SetProperty target="{canvas2}" name="alpha" value="0.4"/>
+			<mx:SetProperty target="{canvas3}" name="alpha" value="0.4"/>
+			<mx:SetStyle target="{txtLabel1}" name="color" value="#808080"/>
+			<mx:SetStyle target="{txtLabel2}" name="color" value="#808080"/>
+			<mx:SetStyle target="{txtLabel3}" name="color" value="#808080"/>
+			<mx:SetStyle target="{txtLabel0}" name="fontSize" value="30"/>
+			<mx:SetStyle target="{txtQuestion}" name="fontSize" value="24"/>
 		</mx:State>
 		<mx:State name="step_2b" basedOn="step_2">
-			<mx:SetStyle target="{txtLabel0}" name="color" value="#777777"/>
-			<mx:SetStyle target="{txtLabel2}" name="color" value="#777777"/>
-			<mx:SetStyle target="{txtLabel3}" name="color" value="#777777"/>
 			<mx:SetProperty target="{txtLabel0}" name="filters" value="{[dropShadowFilter,blurFilter]}"/>
 			<mx:SetProperty target="{txtLabel2}" name="filters" value="{[dropShadowFilter,blurFilter]}"/>
 			<mx:SetProperty target="{txtLabel3}" name="filters" value="{[dropShadowFilter,blurFilter]}"/>
+			<mx:SetProperty target="{canvas0}" name="alpha" value="0.4"/>
+			<mx:SetProperty target="{canvas2}" name="alpha" value="0.4"/>
+			<mx:SetProperty target="{canvas3}" name="alpha" value="0.4"/>
+			<mx:SetStyle target="{txtLabel3}" name="color" value="#808080"/>
+			<mx:SetStyle target="{txtLabel2}" name="color" value="#808080"/>
+			<mx:SetStyle target="{txtLabel0}" name="color" value="#808080"/>
+			<mx:SetStyle target="{txtLabel1}" name="fontSize" value="30"/>
 		</mx:State>
 		
 		<mx:State name="step_2c" basedOn="step_2">
-			<mx:SetStyle target="{txtLabel1}" name="color" value="#777777"/>
-			<mx:SetStyle target="{txtLabel0}" name="color" value="#777777"/>
-			<mx:SetStyle target="{txtLabel3}" name="color" value="#777777"/>
 			<mx:SetProperty target="{txtLabel1}" name="filters" value="{[dropShadowFilter,blurFilter]}"/>
 			<mx:SetProperty target="{txtLabel0}" name="filters" value="{[dropShadowFilter,blurFilter]}"/>
 			<mx:SetProperty target="{txtLabel3}" name="filters" value="{[dropShadowFilter,blurFilter]}"/>
+			<mx:SetProperty target="{canvas0}" name="alpha" value="0.4"/>
+			<mx:SetProperty target="{canvas1}" name="alpha" value="0.4"/>
+			<mx:SetProperty target="{canvas3}" name="alpha" value="0.4"/>
+			<mx:SetStyle target="{txtLabel3}" name="color" value="#808080"/>
+			<mx:SetStyle target="{txtLabel1}" name="color" value="#808080"/>
+			<mx:SetStyle target="{txtLabel0}" name="color" value="#808080"/>
+			<mx:SetStyle target="{txtLabel2}" name="fontSize" value="30"/>
 		</mx:State>
 		
 		<mx:State name="step_2d" basedOn="step_2">
-			<mx:SetStyle target="{txtLabel1}" name="color" value="#777777"/>
-			<mx:SetStyle target="{txtLabel2}" name="color" value="#777777"/>
-			<mx:SetStyle target="{txtLabel0}" name="color" value="#777777"/>
 			<mx:SetProperty target="{txtLabel1}" name="filters" value="{[dropShadowFilter,blurFilter]}"/>
 			<mx:SetProperty target="{txtLabel2}" name="filters" value="{[dropShadowFilter,blurFilter]}"/>
 			<mx:SetProperty target="{txtLabel0}" name="filters" value="{[dropShadowFilter,blurFilter]}"/>
+			<mx:SetProperty target="{canvas2}" name="alpha" value="0.4"/>
+			<mx:SetProperty target="{canvas1}" name="alpha" value="0.4"/>
+			<mx:SetProperty target="{canvas0}" name="alpha" value="0.4"/>
+			<mx:SetStyle target="{txtLabel2}" name="color" value="#808080"/>
+			<mx:SetStyle target="{txtLabel1}" name="color" value="#808080"/>
+			<mx:SetStyle target="{txtLabel0}" name="color" value="#808080"/>
+			<mx:SetStyle target="{txtLabel3}" name="fontSize" value="30"/>
 		</mx:State>
 	</mx:states>
 	
@@ -104,7 +121,13 @@
 	
 	<mx:Canvas x="10" y="19" width="780" height="178" id="canvas_q">
 		<mx:TextArea styleName="txtQuestionBkg" x="29" y="20" width="722" height="141" alpha="0.56" id="txtQuestionBkg" visible="false"/>
-		<mx:TextArea x="29" y="20" width="722" height="141" text="Lorem Ipsum" id="txtQuestion" styleName="txtQuestion"/>
+		<mx:TextArea x="29" y="13" width="721" height="143" text="Lorem Ipsum" id="txtQuestion" styleName="txtQuestion" editable="false" color="#FFFFFF" fontSize="30">
+			<mx:filters>
+				<mx:DropShadowFilter>
+					<mx:alpha>0.5</mx:alpha>
+				</mx:DropShadowFilter>
+			</mx:filters>
+		</mx:TextArea>
 	</mx:Canvas>
 	
 	<mx:BlurFilter id="blurFilter">
