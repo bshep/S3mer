@@ -17,6 +17,40 @@
 			<mx:SetProperty target="{canvas3}" name="x" value="90"/>
 			<mx:SetProperty target="{canvas0}" name="x" value="90"/>
 		</mx:State>
+		<mx:State name="step_2a" basedOn="step_2">
+			<mx:SetProperty target="{txtLabel1}" name="alpha" value="1.0"/>
+			<mx:SetStyle target="{txtLabel1}" name="color" value="#777777"/>
+			<mx:SetProperty target="{txtLabel2}" name="alpha" value="1.0"/>
+			<mx:SetStyle target="{txtLabel2}" name="color" value="#777777"/>
+			<mx:SetProperty target="{txtLabel3}" name="alpha" value="1.0"/>
+			<mx:SetStyle target="{txtLabel3}" name="color" value="#777777"/>
+		</mx:State>
+		<mx:State name="step_2b" basedOn="step_2">
+			<mx:SetProperty target="{txtLabel0}" name="alpha" value="1.0"/>
+			<mx:SetStyle target="{txtLabel0}" name="color" value="#777777"/>
+			<mx:SetProperty target="{txtLabel2}" name="alpha" value="1.0"/>
+			<mx:SetStyle target="{txtLabel2}" name="color" value="#777777"/>
+			<mx:SetProperty target="{txtLabel3}" name="alpha" value="1.0"/>
+			<mx:SetStyle target="{txtLabel3}" name="color" value="#777777"/>
+		</mx:State>
+		
+		<mx:State name="step_2c" basedOn="step_2">
+			<mx:SetProperty target="{txtLabel1}" name="alpha" value="1.0"/>
+			<mx:SetStyle target="{txtLabel1}" name="color" value="#777777"/>
+			<mx:SetProperty target="{txtLabel0}" name="alpha" value="1.0"/>
+			<mx:SetStyle target="{txtLabel0}" name="color" value="#777777"/>
+			<mx:SetProperty target="{txtLabel3}" name="alpha" value="1.0"/>
+			<mx:SetStyle target="{txtLabel3}" name="color" value="#777777"/>
+		</mx:State>
+		
+		<mx:State name="step_2d" basedOn="step_2">
+			<mx:SetProperty target="{txtLabel1}" name="alpha" value="1.0"/>
+			<mx:SetStyle target="{txtLabel1}" name="color" value="#777777"/>
+			<mx:SetProperty target="{txtLabel2}" name="alpha" value="1.0"/>
+			<mx:SetStyle target="{txtLabel2}" name="color" value="#777777"/>
+			<mx:SetProperty target="{txtLabel0}" name="alpha" value="1.0"/>
+			<mx:SetStyle target="{txtLabel0}" name="color" value="#777777"/>
+		</mx:State>
 	</mx:states>
 	
 	<mx:transitions>

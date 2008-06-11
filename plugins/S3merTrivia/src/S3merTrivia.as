@@ -1,13 +1,19 @@
 // ActionScript file
 import flash.events.Event;
-
-import mx.controls.Text;
+import flash.utils.Timer;
 
 private function onAppLoad(e:Event):void {
 	nextQuestionTimer.addEventListener(TimerEvent.TIMER,nextQuestion);
-	nextQuestionTimer.start();
+	showAnswerTimer.addEventListener(TimerEvent.TIMER,showAnswer);
+
+	
+
 	nextQuestion(null);
 }
+
+private var nextQuestionTimer:Timer = new Timer(4*1000,1);
+private var showAnswerTimer:Timer = new Timer(10*1000,1);
+private var correctAnswer:int;
 
 private static var questionsXML:XML = 
 	<questions>
@@ -28,7 +34,6 @@ private static var questionsXML:XML =
 	</questions>;
 
 
-private var nextQuestionTimer:Timer = new Timer(10*1000);
 
 private function getRandomQuestion(questionList:XML):XML {
 	var list:XMLList = new XMLList(questionList.question);
@@ -39,7 +44,7 @@ private function getRandomQuestion(questionList:XML):XML {
 }
 
 
-private var correctAnswer:int;
+
 
 private function onStateTransitionComplete(e:Event):void {
 	if(this.currentState == 'step_1') {
@@ -51,6 +56,8 @@ private function onStateTransitionComplete(e:Event):void {
 		this.shuffleAnswers(question);
 		
 		this.currentState = 'step_2';
+	} else {
+		showAnswerTimer.start();
 	}
 }
 
@@ -74,16 +81,16 @@ private function shuffleAnswers(question:XML):void {
 		
 		switch(a) {
 			case 0:
-				this.txtLabel0.text = getAnswer(index,question);
+				this.txtLabel0.text = "A) " + getAnswer(index,question);
 				break;
 			case 1:
-				this.txtLabel1.text = getAnswer(index,question);
+				this.txtLabel1.text = "B) " + getAnswer(index,question);
 				break;
 			case 2:
-				this.txtLabel2.text = getAnswer(index,question);
+				this.txtLabel2.text = "C) " + getAnswer(index,question);
 				break;
 			case 3:
-				this.txtLabel3.text = getAnswer(index,question);
+				this.txtLabel3.text = "D) " + getAnswer(index,question);
 				break;
 		}
 		
@@ -116,6 +123,25 @@ private function getAnswer(num:int,question:XML):String {
 	}
 	
 	return answer;
+}
+
+private function showAnswer(e:Event):void {
+	switch(this.correctAnswer) {
+		case 0:
+			this.currentState = "step_2a";
+			break;
+		case 1:
+			this.currentState = "step_2b";
+			break;
+		case 2:
+			this.currentState = "step_2c";
+			break;
+		case 3:
+			this.currentState = "step_2d";
+			break;
+	}
+	
+	this.nextQuestionTimer.start();
 }
 
 private function getRandomInt(min:int = 0, max:int = 100):int {
