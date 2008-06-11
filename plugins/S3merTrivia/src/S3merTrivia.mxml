@@ -67,6 +67,26 @@
 			<mx:SetStyle target="{txtLabel0}" name="color" value="#808080"/>
 			<mx:SetStyle target="{txtLabel3}" name="fontSize" value="30"/>
 		</mx:State>
+		<mx:State name="step_1_error" basedOn="step_1">
+			<mx:AddChild relativeTo="{canvas1}" position="before">
+				<mx:TextArea x="39" y="75.3" width="721" height="99.58333" text="Data Load Error" id="txtError" styleName="txtQuestion" editable="false" color="#FFFFFF" fontSize="30" textAlign="center">
+					<mx:filters>
+						<mx:DropShadowFilter>
+							<mx:alpha>0.5</mx:alpha>
+						</mx:DropShadowFilter>
+					</mx:filters>
+				</mx:TextArea>
+			</mx:AddChild>
+			<mx:AddChild relativeTo="{canvas1}" position="before">
+				<mx:TextArea x="39" y="181.45" width="721" height="408.5833" id="txtErrorDetail" styleName="txtQuestion" editable="false" color="#FFFFFF" fontSize="30">
+					<mx:filters>
+						<mx:DropShadowFilter>
+							<mx:alpha>0.5</mx:alpha>
+						</mx:DropShadowFilter>
+					</mx:filters>
+				</mx:TextArea>
+			</mx:AddChild>
+		</mx:State>
 	</mx:states>
 	
 	<mx:transitions>

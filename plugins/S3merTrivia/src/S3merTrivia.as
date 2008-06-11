@@ -1,37 +1,52 @@
 // ActionScript file
 import flash.events.Event;
+import flash.events.IOErrorEvent;
+import flash.net.URLLoader;
+import flash.net.URLRequest;
 import flash.utils.Timer;
 
 private function onAppLoad(e:Event):void {
 	nextQuestionTimer.addEventListener(TimerEvent.TIMER,nextQuestion);
 	showAnswerTimer.addEventListener(TimerEvent.TIMER,showAnswer);
 
+	this.dataUrl = this.parameters.dataUrl;
 	
+	if( this.dataUrl == null ) {
+		this.dataUrl = "getTriviaDataStatic.php";
+	}
+	
+	this.dataLoad();
+}
+
+
+private function dataLoadComplete(e:Event):void {
+	this.questionsXML = new XML(e.target.data);
 
 	nextQuestion(null);
+}
+
+private function dataLoadError(e:IOErrorEvent):void {
+	this.currentState = "step_1_error";
+	this.txtErrorDetail.text = e.text;
+	
+}
+
+private function dataLoad():void {
+	var loader:URLLoader = new URLLoader();
+	
+	loader.addEventListener(Event.COMPLETE, dataLoadComplete);
+	loader.addEventListener(IOErrorEvent.IO_ERROR, dataLoadError);
+	
+	loader.load(new URLRequest(this.dataUrl));
 }
 
 private var nextQuestionTimer:Timer = new Timer(4*1000,1);
 private var showAnswerTimer:Timer = new Timer(5*1000,1);
 private var correctAnswer:int;
 
-private static var questionsXML:XML = 
-	<questions>
-		<question id="1">
-			<text>Which actor plays John McClane in the "Die Hard" movies?</text>
-			<correct>Bruce Willis</correct>
-			<wa1>Tom Cruise</wa1>
-			<wa2>Billy Bob Thornton</wa2>
-			<wa3>Harrison Ford</wa3>
-		</question>
-		<question id="2">
-			<text>What is the name of Jerry Springer's head security guy?</text>
-			<correct>Steve</correct>
-			<wa1>Rob</wa1>
-			<wa2>Al</wa2>
-			<wa3>Jim</wa3>
-		</question>
-	</questions>;
+private var dataUrl:String;
+
+private var questionsXML:XML;
 
 
 
@@ -42,8 +57,6 @@ private function getRandomQuestion(questionList:XML):XML {
 	trace("Random Index = " + randomIndex);
 	return list[randomIndex];
 }
-
-
 
 
 private function onStateTransitionComplete(e:Event):void {
