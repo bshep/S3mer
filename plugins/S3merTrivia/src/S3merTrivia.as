@@ -12,7 +12,7 @@ private function onAppLoad(e:Event):void {
 }
 
 private var nextQuestionTimer:Timer = new Timer(4*1000,1);
-private var showAnswerTimer:Timer = new Timer(10*1000,1);
+private var showAnswerTimer:Timer = new Timer(5*1000,1);
 private var correctAnswer:int;
 
 private static var questionsXML:XML = 
