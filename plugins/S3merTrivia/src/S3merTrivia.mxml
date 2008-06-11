@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" currentState="step_1" width="100%" height="100%" creationComplete="onAppLoad(event)">
-	<mx:Image right="0" left="0" top="0" bottom="0" scaleContent="true" source="assets/trivia1.jpg"/>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" currentState="step_1" width="800" height="600" creationComplete="onAppLoad(event)" initialize="systemManager.stage.scaleMode=StageScaleMode.EXACT_FIT" backgroundGradientAlphas="[1.0, 1.0]" backgroundGradientColors="[#000000, #000000]">
+	<mx:Image left="0" top="0" bottom="0" source="assets/trivia2.jpg" scaleContent="true" right="0"/>
 	<mx:states>
 		<mx:State name="step_1">
 			<mx:SetProperty target="{canvas_q}" name="y" value="-1000"/>
