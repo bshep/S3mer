@@ -1,4 +1,5 @@
 // ActionScript file
+import flash.display.StageScaleMode;
 import flash.events.Event;
 import flash.events.IOErrorEvent;
 import flash.net.URLLoader;
@@ -16,6 +17,7 @@ private function onAppLoad(e:Event):void {
 	}
 	
 	this.dataLoad();
+	this.systemManager.stage.scaleMode = StageScaleMode.SHOW_ALL;
 }
 
 
