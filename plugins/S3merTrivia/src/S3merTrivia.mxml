@@ -18,38 +18,38 @@
 			<mx:SetProperty target="{canvas0}" name="x" value="90"/>
 		</mx:State>
 		<mx:State name="step_2a" basedOn="step_2">
-			<mx:SetProperty target="{txtLabel1}" name="alpha" value="1.0"/>
 			<mx:SetStyle target="{txtLabel1}" name="color" value="#777777"/>
-			<mx:SetProperty target="{txtLabel2}" name="alpha" value="1.0"/>
 			<mx:SetStyle target="{txtLabel2}" name="color" value="#777777"/>
-			<mx:SetProperty target="{txtLabel3}" name="alpha" value="1.0"/>
 			<mx:SetStyle target="{txtLabel3}" name="color" value="#777777"/>
+			<mx:SetProperty target="{txtLabel1}" name="filters" value="{[dropShadowFilter,blurFilter]}"/>
+			<mx:SetProperty target="{txtLabel2}" name="filters" value="{[dropShadowFilter,blurFilter]}"/>
+			<mx:SetProperty target="{txtLabel3}" name="filters" value="{[dropShadowFilter,blurFilter]}"/>
 		</mx:State>
 		<mx:State name="step_2b" basedOn="step_2">
-			<mx:SetProperty target="{txtLabel0}" name="alpha" value="1.0"/>
 			<mx:SetStyle target="{txtLabel0}" name="color" value="#777777"/>
-			<mx:SetProperty target="{txtLabel2}" name="alpha" value="1.0"/>
 			<mx:SetStyle target="{txtLabel2}" name="color" value="#777777"/>
-			<mx:SetProperty target="{txtLabel3}" name="alpha" value="1.0"/>
 			<mx:SetStyle target="{txtLabel3}" name="color" value="#777777"/>
+			<mx:SetProperty target="{txtLabel0}" name="filters" value="{[dropShadowFilter,blurFilter]}"/>
+			<mx:SetProperty target="{txtLabel2}" name="filters" value="{[dropShadowFilter,blurFilter]}"/>
+			<mx:SetProperty target="{txtLabel3}" name="filters" value="{[dropShadowFilter,blurFilter]}"/>
 		</mx:State>
 		
 		<mx:State name="step_2c" basedOn="step_2">
-			<mx:SetProperty target="{txtLabel1}" name="alpha" value="1.0"/>
 			<mx:SetStyle target="{txtLabel1}" name="color" value="#777777"/>
-			<mx:SetProperty target="{txtLabel0}" name="alpha" value="1.0"/>
 			<mx:SetStyle target="{txtLabel0}" name="color" value="#777777"/>
-			<mx:SetProperty target="{txtLabel3}" name="alpha" value="1.0"/>
 			<mx:SetStyle target="{txtLabel3}" name="color" value="#777777"/>
+			<mx:SetProperty target="{txtLabel1}" name="filters" value="{[dropShadowFilter,blurFilter]}"/>
+			<mx:SetProperty target="{txtLabel0}" name="filters" value="{[dropShadowFilter,blurFilter]}"/>
+			<mx:SetProperty target="{txtLabel3}" name="filters" value="{[dropShadowFilter,blurFilter]}"/>
 		</mx:State>
 		
 		<mx:State name="step_2d" basedOn="step_2">
-			<mx:SetProperty target="{txtLabel1}" name="alpha" value="1.0"/>
 			<mx:SetStyle target="{txtLabel1}" name="color" value="#777777"/>
-			<mx:SetProperty target="{txtLabel2}" name="alpha" value="1.0"/>
 			<mx:SetStyle target="{txtLabel2}" name="color" value="#777777"/>
-			<mx:SetProperty target="{txtLabel0}" name="alpha" value="1.0"/>
 			<mx:SetStyle target="{txtLabel0}" name="color" value="#777777"/>
+			<mx:SetProperty target="{txtLabel1}" name="filters" value="{[dropShadowFilter,blurFilter]}"/>
+			<mx:SetProperty target="{txtLabel2}" name="filters" value="{[dropShadowFilter,blurFilter]}"/>
+			<mx:SetProperty target="{txtLabel0}" name="filters" value="{[dropShadowFilter,blurFilter]}"/>
 		</mx:State>
 	</mx:states>
 	
@@ -68,52 +68,31 @@
     </mx:transitions>
     
 	<mx:Canvas x="90" y="275" width="672" height="62" id="canvas1">
-		<mx:Text id="txtLabel1" x="10" y="10" text="B) Ipsum Lorem" fontSize="24" color="#FFFFFF" fontFamily="Helvetica" fontWeight="bold">
-			<mx:filters>
-				<mx:DropShadowFilter>
-					<mx:alpha>0.7</mx:alpha>
-				</mx:DropShadowFilter>
-			</mx:filters>
-		</mx:Text>
+		<mx:Text id="txtLabel1" x="10" y="10" text="B) Ipsum Lorem" fontSize="24" color="#FFFFFF" fontFamily="Helvetica" fontWeight="bold" filters="{[dropShadowFilter]}"/>
 	</mx:Canvas>
 	<mx:Canvas x="90" y="205" width="672" height="62" id="canvas0">
-		<mx:Text id="txtLabel0" x="10" y="10" text="A) Lorem Ipsum" fontSize="24" color="#FFFFFF" fontFamily="Helvetica" fontWeight="bold">
-			<mx:filters>
-				<mx:DropShadowFilter>
-					<mx:alpha>0.7</mx:alpha>
-				</mx:DropShadowFilter>
-			</mx:filters>
-		</mx:Text>
+		<mx:Text id="txtLabel0" x="10" y="10" text="A) Lorem Ipsum" fontSize="24" color="#FFFFFF" fontFamily="Helvetica" fontWeight="bold" filters="{[dropShadowFilter]}"/>
 	</mx:Canvas>
 	<mx:Canvas x="90" y="345" width="672" height="62" id="canvas2">
-		<mx:Text id="txtLabel2" x="10" y="10" text="C) Dolor Lorem" fontSize="24" color="#FFFFFF" fontFamily="Helvetica" fontWeight="bold">
-			<mx:filters>
-				<mx:DropShadowFilter>
-					<mx:alpha>0.7</mx:alpha>
-				</mx:DropShadowFilter>
-			</mx:filters>
-		</mx:Text>
+		<mx:Text id="txtLabel2" x="10" y="10" text="C) Dolor Lorem" fontSize="24" color="#FFFFFF" fontFamily="Helvetica" fontWeight="bold" filters="{[dropShadowFilter]}"/>
 	</mx:Canvas>
 	<mx:Canvas x="90" y="415" width="672" height="62" id="canvas3">
-		<mx:Text id="txtLabel3" x="10" y="10" text="D) Remol Ipsum" fontSize="24" color="#FFFFFF" fontFamily="Helvetica" fontWeight="bold">
-			<mx:filters>
-				<mx:DropShadowFilter>
-					<mx:alpha>0.7</mx:alpha>
-				</mx:DropShadowFilter>
-			</mx:filters>
-		</mx:Text>
+		<mx:Text id="txtLabel3" x="10" y="10" text="D) Remol Ipsum" fontSize="24" color="#FFFFFF" fontFamily="Helvetica" fontWeight="bold" filters="{[dropShadowFilter]}"/>
 	</mx:Canvas>
 	
 	<mx:Canvas x="10" y="19" width="780" height="178" id="canvas_q">
 		<mx:TextArea styleName="txtQuestionBkg" x="29" y="20" width="722" height="141" alpha="0.56" id="txtQuestionBkg" visible="false"/>
-		<mx:TextArea x="29" y="20" width="722" height="141" text="Lorem Ipsum" id="txtQuestion" styleName="txtQuestion">
-			<mx:filters>
-				<mx:DropShadowFilter>
-					<mx:alpha>0.7</mx:alpha>
-				</mx:DropShadowFilter>
-			</mx:filters>
-		</mx:TextArea>
+		<mx:TextArea x="29" y="20" width="722" height="141" text="Lorem Ipsum" id="txtQuestion" styleName="txtQuestion"/>
 	</mx:Canvas>
+	
+	<mx:BlurFilter id="blurFilter">
+		<mx:blurX>3</mx:blurX>
+		<mx:blurY>3</mx:blurY>
+	</mx:BlurFilter> 
+	
+	<mx:DropShadowFilter id="dropShadowFilter">
+		<mx:alpha>0.7</mx:alpha>
+	</mx:DropShadowFilter>
 	
 	<mx:Style source="trivia.css"/>
 	<mx:Script source="S3merTrivia.as"/>
