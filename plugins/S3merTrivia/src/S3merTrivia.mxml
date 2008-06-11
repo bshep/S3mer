@@ -28,7 +28,6 @@
 			<mx:SetStyle target="{txtLabel2}" name="color" value="#808080"/>
 			<mx:SetStyle target="{txtLabel3}" name="color" value="#808080"/>
 			<mx:SetStyle target="{txtLabel0}" name="fontSize" value="30"/>
-			<mx:SetStyle target="{txtQuestion}" name="fontSize" value="24"/>
 		</mx:State>
 		<mx:State name="step_2b" basedOn="step_2">
 			<mx:SetProperty target="{txtLabel0}" name="filters" value="{[dropShadowFilter,blurFilter]}"/>
