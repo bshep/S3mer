@@ -17,7 +17,7 @@ private function onAppLoad(e:Event):void {
 	}
 	
 	this.dataLoad();
-	this.systemManager.stage.scaleMode = StageScaleMode.SHOW_ALL;
+	this.systemManager.stage.scaleMode = StageScaleMode.EXACT_FIT;
 }
 
 
