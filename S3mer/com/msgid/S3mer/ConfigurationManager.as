@@ -71,9 +71,10 @@ package com.msgid.S3mer
 				PodcastManager.setQueue(_downloadQueue);
 			}
 			
-			_downloadQueue.addEventListener(DownloaderEvent.PROGRESS,OnDownloadProgress,false,0,true);
-			_downloadQueue.addEventListener(DownloaderEvent.PARTIAL_COMPLETE,OnDownloadFileComplete,false,0,true);
-			_downloadQueue.addEventListener(DownloaderEvent.COMPLETE,OnDownloadComplete,false,0,true);
+			_downloadQueue.addEventListener(DownloaderEvent.PROGRESS,OnDownloadProgress);
+			_downloadQueue.addEventListener(DownloaderEvent.PARTIAL_COMPLETE,OnDownloadFileComplete);
+			_downloadQueue.addEventListener(DownloaderEvent.COMPLETE,OnDownloadComplete);
+			_downloadQueue.addEventListener(DownloaderEvent.ERROR, OnDownloadError);
 
 			if (_heartbeatTimer == null && S3merWindow(this._container).screenId == 0) {
 				_heartbeatTimer = new Timer(1000);
@@ -148,6 +149,47 @@ package com.msgid.S3mer
 			}
 		}
 		 
+		 
+		private var tmrRestartDownloads:Timer;
+		private var tmrRestartDownloads_delay:int;
+		
+		private function OnDownloadError(e:Event):void {
+			
+			if( tmrRestartDownloads == null ) {
+				tmrRestartDownloads = new Timer(1000);
+				tmrRestartDownloads.addEventListener(TimerEvent.TIMER, OnTimerRestartEvent);
+				
+				tmrRestartDownloads_delay = 30;
+				
+				OnTimerRestartEvent_updateLabel();
+				
+				tmrRestartDownloads.start();
+				
+			}
+			
+		}
+		
+		private function OnTimerRestartEvent(e:TimerEvent):void {
+			
+			if( tmrRestartDownloads_delay == 0 ) {
+				OnTimerRestartEvent_hidelabel();
+				_downloadQueue.start();
+			} else {
+				tmrRestartDownloads_delay--;
+				OnTimerRestartEvent_updateLabel();
+			}
+			
+			
+		}
+
+		private function OnTimerRestartEvent_updateLabel():void {
+			(this._container as S3merWindow).lblStatus.visible = true;
+			(this._container as S3merWindow).lblStatus.text = "Error downloading file... Resuming in " + this.tmrRestartDownloads_delay + " secs";
+		}
+
+		private function OnTimerRestartEvent_hidelabel():void {
+			(this._container as S3merWindow).lblStatus.visible = false;
+		}
 		
 		private function OnHeartbeat_stage2(e:Event):void {
 			var response:String;

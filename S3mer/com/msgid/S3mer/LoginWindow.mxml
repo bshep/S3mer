@@ -62,7 +62,13 @@
 			
 			private function RemoteCommand_error(e:IOErrorEvent):void {
 				resetFields();
-				hidePlayerPanel();
+				
+				if( this.isDemoMode == true ) {
+					this.btnDemo.enabled = true;
+					this.btnLogin1.enabled = true;
+				} else {
+					hidePlayerPanel();
+				}
 			}
 			
 		
@@ -111,6 +117,11 @@
 					highlightTextbox(this.username);
 					highlightTextbox(this.password);
 					this.spinner.visible = false;
+					
+					if( this.isDemoMode == true ) {
+						this.btnDemo.enabled = true;
+						this.btnLogin1.enabled = true;
+					}
 				}
 				
 			}
@@ -316,6 +327,9 @@
 				this.username.text = "demo@s3mer.com";
 				this.password.text = "thisisthedemoacctpassword";
 				
+				this.btnDemo.enabled = false;
+				this.btnLogin1.enabled = false;
+				
 //				pnlMode.visible = false;
 //				pnlRegister.visible = true;
 
@@ -336,8 +350,8 @@
 		]]>
 	</mx:Script>
 	<mx:Panel id="pnlMode" title="Welcome to s3mer" layout="absolute" fontSize="14" backgroundColor="#FFFFFF" top="0" bottom="0" left="0" right="0" horizontalScrollPolicy="off" verticalScrollPolicy="off">
-		<mx:Button label="Start Demo" horizontalCenter="80" click="onDemoMode(event)" toolTip="Click here to enable demo mode which uses default settings." top="41" height="40"/>
-		<mx:Button label="Log In" horizontalCenter="-80" click="onRegisteredMode(event)" toolTip="Click here to login with your username and password which you setup in our website." width="112" top="41" height="40"/>
+		<mx:Button id="btnDemo" label="Start Demo" horizontalCenter="80" click="onDemoMode(event)" toolTip="Click here to enable demo mode which uses default settings." top="41" height="40"/>
+		<mx:Button id="btnLogin1" label="Log In" horizontalCenter="-80" click="onRegisteredMode(event)" toolTip="Click here to login with your username and password which you setup in our website." width="112" top="41" height="40"/>
 		<mx:VRule x="156.5" top="10" bottom="10"/>
 		
 	</mx:Panel>

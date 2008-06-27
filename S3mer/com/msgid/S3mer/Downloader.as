@@ -87,12 +87,13 @@ package com.msgid.S3mer
 
 				_loader.load(_loaderReq);
 			} catch(e:Error) {
-				Logger.addEvent("Net connection error, using old config");
+				Logger.addEvent("Net connection error");
+				this.dispatchEvent(new DownloaderEvent(DownloaderEvent.ERROR, this));			
 			}
 		}
 		
 		private function OnIOError(e:IOErrorEvent):void {
-			Logger.addEvent("Net connection error, using old config");
+			Logger.addEvent("Net connection error");
 			this._complete = true;
 			this.dispatchEvent(new DownloaderEvent(DownloaderEvent.ERROR, this));			
 		}

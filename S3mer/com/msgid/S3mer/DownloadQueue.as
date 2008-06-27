@@ -44,7 +44,6 @@ package com.msgid.S3mer
 			return true;
 		}
 		
-		
 		public function addItem(url:String, hash:String ="", filename:String = null, autostart:Boolean = true, forceUpdate:Boolean = false):void {
 			var myDL:Downloader
 

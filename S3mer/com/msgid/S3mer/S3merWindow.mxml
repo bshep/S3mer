@@ -353,9 +353,9 @@
 	<mx:TextArea visible="false" height="116" wordWrap="true" editable="false" enabled="true" id="appLog" color="#000000" cornerRadius="0" alpha="0.5" borderStyle="none" borderThickness="8" left="13" right="12" bottom="10"/>
 	<mx:Canvas left="WindowedApplication1_col3:0" right="WindowedApplication1_col3:0" top="WindowedApplication1_row3:0" bottom="WindowedApplication1_row3:0" id="LoadingCanvas" verticalScrollPolicy="off" horizontalScrollPolicy="off" visible="true">
 		<mx:constraintRows>
-			<mx:ConstraintRow id="Canvas11_row3" height="90%"/>
+			<mx:ConstraintRow id="Canvas11_row3" height="85%"/>
 			<mx:ConstraintRow id="Canvas14_row1" height="5%"/>
-			<mx:ConstraintRow id="Canvas14_row2" height="5%"/>
+			<mx:ConstraintRow id="Canvas14_row2" height="10%"/>
 		</mx:constraintRows>
 		<mx:constraintColumns>
 			<mx:ConstraintColumn id="Canvas14_col1" width="10%"/>
@@ -364,7 +364,10 @@
 		</mx:constraintColumns>
 		<mx:SWFLoader left="Canvas14_col3:0" top="0" right="Canvas14_col3:0" bottom="Canvas14_row1:0" id="myLoadingImage"/>
 		<mx:ProgressBar left="0" bottom="Canvas14_row1:0" right="0" top="Canvas14_row1:0" labelPlacement="bottom" id="myFileProgress" enabled="true" mode="manual" label=" " visible="false"/>
-		<mx:ProgressBar  left="0" bottom="0" right="0" top="Canvas14_row2:0" labelPlacement="bottom" id="myTotalProgress" enabled="true" mode="manual" label=" "/>
+		<mx:ProgressBar  left="0" bottom="0" right="0" top="Canvas14_row1:0" labelPlacement="bottom" id="myTotalProgress" enabled="true" mode="manual" label=" "/>
+		<mx:Label id="lblStatus" visible="false" left="0" right="0" top="Canvas14_row2:0" color="#BDBDBD">
+			
+		</mx:Label>
 	</mx:Canvas>
 	<mx:SWFLoader  top="0" left="0" right="0" bottom="0" id="myLoadingStatic"/>
 
