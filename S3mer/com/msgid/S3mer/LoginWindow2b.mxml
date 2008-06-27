@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="400" height="254" title="Player setup">
-	<mx:ComboBox x="64.5" y="75" width="251" height="31"></mx:ComboBox>
-	<mx:Label x="10" y="10" text="Select your player" fontSize="20" fontWeight="bold"/>
-	<mx:Button x="175.5" y="125" label="Tune in" width="140" height="39" fontSize="15"/>
-	<mx:LinkButton x="64.5" y="131" label="Back" fontSize="15" textDecoration="underline"/>
-	
-</mx:Panel>

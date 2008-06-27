@@ -20,7 +20,7 @@ package com.msgid.S3mer
 		public static var URL_USER_INFO:String = "http://" + SERVER + "/playergetdata.php";
 		public static var URL_STATUS:String = "http://" + SERVER + "/checklogged.php";
 
-		public static var URL_MEDIA:String = "http://media1.s3mer.com/";
+		public static var URL_MEDIA:String = "http://media1.s3mer.com.s3.amazonaws.com/";
 		public static var URL_HEARTBEAT:String = "http://" + SERVER + "/heartbeat.php";
 		public static var URL_CONFIG:String = "http://" + SERVER + "/getxml.php";
 		public static var URL_UPDATE:String = "http://" + SERVER + "/checkversion.php";
