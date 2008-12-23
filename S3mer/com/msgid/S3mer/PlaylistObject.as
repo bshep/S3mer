@@ -54,7 +54,7 @@ package com.msgid.S3mer
 			this.hash = "";
 		}
 
-		public function get avaiable():Boolean {
+		public function get available():Boolean {
 			return FileIO.fileExists(this._file, this.hash);
 		}
 	}

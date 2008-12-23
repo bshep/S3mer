@@ -63,6 +63,8 @@
 			
 			private var _color:String;
 			
+			private var _stopped:Boolean = false;
+			
 			public function play():void {
 				trace("RSS URL: " +this.source);
 				trace("Logo URL: " +this.logoUrl);
@@ -99,12 +101,15 @@
 					this.bodytext.setStyle("color","#" + this._color);
 				}
 				
+				this._stopped = false;
+				
 				_reloadTimer.start();
 			}
 			
 			public function stop():void {
 				this._timer.stop();
 				this._reloadTimer.stop();
+				this._stopped = true;
 			}
 			
 			public function pause():void {
@@ -112,8 +117,10 @@
 			}
 			
 			public function resume():void {
+				this._stopped = false;
 				this._timer.start();
 				this._reloadTimer.start();
+				
 			}
 			
 			public function next():void {
@@ -204,6 +211,10 @@
 
 			
 			private function OnReloadTimer(e:TimerEvent):void {
+				if ( this._stopped == true ) {
+					return;
+				}
+
 				RSSLoadBegin();
 			}
 			
@@ -258,6 +269,10 @@
 			}
 			
 			private function OnTimer(e:TimerEvent):void {
+				if ( this._stopped == true ) {
+					return;
+				}
+
 				this._timer.stop();
 				
 				play_next();
@@ -281,6 +296,14 @@
 			private function next_headline():void {
 				var headlineIndex:int = this._currentHeadline;
 				
+				if ( this._stopped == true ) {
+					return;
+				}
+				
+				if(new XMLList(this._RSSXML.channel.item).length() == 0) {
+					return;
+				}
+
 				do {
 					this._currentHeadline += 1;
 					if (this._currentHeadline > new XMLList(this._RSSXML.channel.item).length() - 1) {
@@ -292,6 +315,14 @@
 			
 			private function prev_headline():void {
 				var headlineIndex:int = this._currentHeadline;
+				
+				if ( this._stopped == true ) {
+					return;
+				}
+
+				if(new XMLList(this._RSSXML.channel.item).length() == 0) {
+					return;
+				}
 				
 				do {
 					this._currentHeadline -= 1;

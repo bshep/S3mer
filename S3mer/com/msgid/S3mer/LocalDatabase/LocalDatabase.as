@@ -10,25 +10,41 @@ package com.msgid.S3mer.LocalDatabase
 	import flash.events.Event;
 	import flash.events.SQLErrorEvent;
 	import flash.events.SQLEvent;
+	import flash.events.TimerEvent;
 	import flash.filesystem.File;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.net.URLRequestMethod;
-	import flash.net.URLVariables; 
+	import flash.net.URLVariables;
+	import flash.utils.Timer; 
 
 	public class LocalDatabase
 	{
-		private var conn:SQLConnection = null;
-		private static var dbFile:File;
-//		private static var inited:Boolean = false;
+		private static var instance:LocalDatabase;
+		
+//		private var conn:SQLConnection = null;
+		private var tmrPostData:Timer;
 		
 		public function LocalDatabase()
 		{
-			conn = LocalDatabase.getConnection();
+//			conn = LocalDatabase.getConnection();
+			tmrPostData = new Timer(1000*60*60);// Fire every hour
+//			tmrPostData.delay = 1000*5*1; 
+			tmrPostData.addEventListener(TimerEvent.TIMER, postData_timer);
+			tmrPostData.start();
+		}
+		
+		public static function init():void {
+			if(instance == null) {
+				instance = new LocalDatabase();
+			}
 		}
 		
 		public static function getConnection():SQLConnection {
+			init();
+			
 			var ret:SQLConnection;
+			var dbFile:File;
 						
 			ret = new SQLConnection(); 
 			ret.addEventListener(SQLEvent.OPEN, openHandler); 
@@ -39,7 +55,7 @@ package com.msgid.S3mer.LocalDatabase
 			return ret;
 		}
 		
-		public static function openHandler(event:SQLEvent):void 
+		private static function openHandler(event:SQLEvent):void 
 		{ 			
 			var sql:String;
 			
@@ -51,6 +67,7 @@ package com.msgid.S3mer.LocalDatabase
 						"	file TEXT, " +
 						"	time_start INTEGER, " +
 						"	time_end INTEGER," +
+						"	screen_id INTEGER," +
 						"   uploaded INTEGER" +
 						")";
 						
@@ -61,13 +78,13 @@ package com.msgid.S3mer.LocalDatabase
 		    
 		}
 		
-		public static function errorHandler(event:SQLErrorEvent):void 
+		private static function errorHandler(event:SQLErrorEvent):void 
 		{ 
 		    trace("Error message:", event.error.message); 
 		    trace("Details:", event.error.details); 
 		}
 		
-		public static function execute(sql:String, conn:SQLConnection):void {
+		private static function execute(sql:String, conn:SQLConnection):void {
 			
 			var sqlStmt:SQLStatement = new SQLStatement();
 			sqlStmt.sqlConnection = conn;		
@@ -90,6 +107,7 @@ package com.msgid.S3mer.LocalDatabase
 						"	file_type, " +
 						"	time_start, " +
 						"	time_end," +
+						"	screen_id," +
 						"	uploaded" +
 						") VALUES ( " + 
 						"	" + event.file_id + ", " +
@@ -98,15 +116,25 @@ package com.msgid.S3mer.LocalDatabase
 						"	'" + event.file_type + "', " +
 						"	'" + event.time_start.valueOf() + "', " +
 						"	'" + event.time_end.valueOf() + "', " +
+						"	" + event.screen_id + ", " +
 						"	0" +
 						")";
 						
 			execute(sql, getConnection());
 			
-			postDataToServer();
+			postDataToServer(50); // Make sure at least 50 items are in the list before uploading
 		}
 		
-		public static function postDataToServer():void {
+		private function postData_timer(e:TimerEvent):void {
+			this.tmrPostData.stop();
+			
+			try {
+				LocalDatabase.postDataToServer(0);
+			} finally {
+			}
+		}
+		
+		public static function postDataToServer(minItems:int):void {
 			var sql:String = "SELECT * FROM playback_log WHERE uploaded = '0' LIMIT 1000";
 			var sqlStmt:SQLStatement = new SQLStatement();
 			var sqlResult:SQLResult;
@@ -122,7 +150,11 @@ package com.msgid.S3mer.LocalDatabase
 			sqlStmt.execute();
 			sqlResult = sqlStmt.getResult();
 			
-			if (sqlResult.data.length < 20) {
+			if(sqlResult.data == null ) {
+				return;
+			}
+			
+			if (sqlResult.data.length < minItems) {
 				return;
 			}
 			
@@ -135,7 +167,7 @@ package com.msgid.S3mer.LocalDatabase
 			
 			ret = phpSerialize(sqlResult);
 			
-			urlReq.url = ApplicationSettings.URL_RUNLOG + "?playerid=" + ApplicationSettings.getValue("screen"+ 0 +".channel.id","");
+			urlReq.url = ApplicationSettings.URL_RUNLOG + "?playerid=" + ApplicationSettings.getValue("screen"+ sqlResult.data[0].screen_id +".channel.id","");
 			urlVars.data = ret;
 			urlReq.data = urlVars;
 			
@@ -151,7 +183,7 @@ package com.msgid.S3mer.LocalDatabase
 			
 		}
 		
-		public static function postDataToServer_complete(e:Event):void {
+		private static function postDataToServer_complete(e:Event):void {
 			var sql:String;
 			var sqlStmt:SQLStatement = new SQLStatement();
 
@@ -162,7 +194,9 @@ package com.msgid.S3mer.LocalDatabase
 			}
 			sqlStmt.sqlConnection = getConnection();
 			sqlStmt.text = sql;
-			sqlStmt.execute();		
+			sqlStmt.execute();
+			
+			instance.tmrPostData.start();
 		}
 		
 		public static function phpSerialize(res:SQLResult):String {

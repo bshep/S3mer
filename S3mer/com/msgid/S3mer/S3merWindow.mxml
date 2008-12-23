@@ -95,7 +95,7 @@
 				this.title = "Screen #" + this._screenNumber;
 				this.screenNumber.text = "Screen #" + this._screenNumber;
 				this.stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
-
+//				this.stage.scaleMode = StageScaleMode.SHOW_ALL;
 
 				this.LoadingCanvas.visible = false;
 				this.myLoadingStatic.source = StaticSwf;

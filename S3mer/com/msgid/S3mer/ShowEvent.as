@@ -7,6 +7,7 @@ package com.msgid.S3mer
 		public static const STOPPED:String = "STOPPED";
 		public static const STARTED:String = "STARTED";
 		public static const NEXT_ITEM:String = "NEXT_ITEM";
+		public static const NEXT_SHOW:String = "NEXT_SHOW";
 		public static const INVALID_PLAYLIST_ITEM:String = "INVALID_PLAYLIST_ITEM";
 		
 		public var _type:String;

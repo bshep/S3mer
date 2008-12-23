@@ -609,6 +609,8 @@ package com.msgid.S3mer
 							
 				newShow.resizeX = newShow.width/newShow.configuredWidth;
 				newShow.resizeY = newShow.height/newShow.configuredHeight;
+				
+				newShow.addEventListener(ShowEvent.NEXT_SHOW, show_play_next);
 
 				try {
 					for each (var regionXML:XML in showXML.region) {
@@ -631,6 +633,19 @@ package com.msgid.S3mer
 				
 				this._showsNew.addItem(newShow);
 			}
+		}
+		
+		private function show_play_next(e:ShowEvent):void {
+			trace("Show finished! Time to play next");
+			
+			var currShowIndex:int = this._showsCur.getItemIndex(Show(this._container.getChildByName("currentShow")));
+			
+			if( currShowIndex == this._showsCur.length - 1 ) {
+				switchShow((this._showsCur.getItemAt(0) as Show).id);
+			} else {
+				switchShow((this._showsCur.getItemAt(currShowIndex + 1) as Show).id);
+			}
+			
 		}
 
 		private function parseShow_addSchedules(regionXML:XML, show:Show):void {

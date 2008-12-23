@@ -11,8 +11,10 @@ package com.msgid.S3mer
 	import flash.utils.Timer;
 	
 	import mx.collections.ArrayCollection;
+	import mx.containers.Canvas;
 	import mx.controls.HTML;
 	import mx.controls.Label;
+	import mx.controls.VideoDisplay;
 	import mx.effects.Fade;
 	import mx.events.EffectEvent;
 	import mx.events.VideoEvent;
@@ -46,6 +48,8 @@ package com.msgid.S3mer
 		private var _item_file_id:String;
 		private var _item_file:String;
 		private var _item_type:String;
+		
+		private var _mainMediaRegion:String;
 		
 		
 		public function ShowObject() {
@@ -95,11 +99,18 @@ package com.msgid.S3mer
 			// This does one full loop through all the playlists, stopping when one is found to be available
 			for ( var a:int = 0; a < this._playlists.length; a++ ) {
 				
+				if( this._mainMediaRegion == "1" && (a+currIndex) >= this._playlists.length - 1 ) {
+					// This is the main media region, when we reach the end of the playlist, throw an event to move to the next show.
+					this._parent.dispatchEvent(new ShowEvent(ShowEvent.NEXT_SHOW));
+					return;
+				}
+
 				//Starts at the next playlist index (a+currIndex+1), then do modular division to loop to the begining
-				if (this._playlists.getItemAt((a + currIndex + 1) % this._playlists.length).avaiable) {
+				if ((this._playlists.getItemAt((a + currIndex + 1) % this._playlists.length) as Playlist).available) {
 					this._currentPlaylist = this._playlists.getItemAt(a) as Playlist;
 					return;
 				}
+				
 			}
 			
 
@@ -108,25 +119,28 @@ package com.msgid.S3mer
 		public function configure(objectXML:XML):void {
 			this._configXML = objectXML;
 			
-			switch(objectXML.@type.toString()) {
-				case 'text':
-					configure_text(objectXML);
-					break;
-  				case 'image':
+			
+//			switch(objectXML.@type.toString()) {
+//				case 'text':
+//					configure_text(objectXML);
+//					break;
+//  				case 'image':
+//					configure_image(objectXML);
+//					break;
+//  				case 'video':
+//					configure_video(objectXML);
+//					break;
+//  				case 'rss':
+//					configure_rss(objectXML);
+//					break;
+//				case 'condition':
+//					break;
+//				default:
 					configure_image(objectXML);
-					break;
-  				case 'video':
-					configure_video(objectXML);
-					break;
-  				case 'rss':
-					configure_rss(objectXML);
-					break;
-				case 'condition':
-					break;
-				default:
-					configure_image(objectXML);
-					break;
-			}
+					
+					this._mainMediaRegion = this._configXML.@mainmedia;
+//					break;
+//			}
 			
 //			this.parent.addChild(this._realObject);
 		}
@@ -246,6 +260,11 @@ package com.msgid.S3mer
 		public function play():void {
 			this._stopped = false;
 
+			if( this._configXML.@id == "rg439" ) {
+				trace("here");
+			}
+
+
 			play_next();
 		}
 		
@@ -304,7 +323,8 @@ package com.msgid.S3mer
 						this._item_type,
 						this._item_start_time,
 						this._item_end_time,
-						this._parent.id.slice(2)));
+						this._parent.id.slice(2),
+						(this._parent.parent as S3merWindow).screenId));
 			}
 			
 			this._item_start_time = new Date();
@@ -538,6 +558,8 @@ package com.msgid.S3mer
 			var liveTimer:TimerId = getTimerById("live_video_done");
 			var videocheckTimer:TimerId = getTimerById("video_check");
 			var tmpDuration:String = _playlist.current.configXML.@duration;
+			
+			var videoObj:SmoothVideoDisplay;
 			// For live video we need to setup the live_video_done timer 
 			// which fires when we are done playing the video.
 			
@@ -570,18 +592,34 @@ package com.msgid.S3mer
 			this._prevObject = this._realObject;
 			this.configure_live(this._configXML);
 			
-			var cam:Camera = getPreferedCaptureDevice();
+			videoObj = this._realObject as SmoothVideoDisplay;
 			
+			var cam:Camera = getPreferedCaptureDevice();
+			var vidCanvas:Canvas = new Canvas;
+			
+			vidCanvas.x = videoObj.x;
+			vidCanvas.y = videoObj.y;
+			vidCanvas.width = videoObj.width;
+			vidCanvas.height = videoObj.height;
+			
+			videoObj.x = 0;
+			videoObj.y = 0;
 
-			SmoothVideoDisplay(this._realObject).scaleX = SmoothVideoDisplay(this._realObject).width / 10;
-			SmoothVideoDisplay(this._realObject).scaleY = SmoothVideoDisplay(this._realObject).height / 10;
-			SmoothVideoDisplay(this._realObject).width = 10;
-			SmoothVideoDisplay(this._realObject).height = 10;
+			vidCanvas.addChild(videoObj);
+//			vidCanvas.setStyle(
+			
+//			videoObj.scaleX = videoObj.width / 10;
+//			videoObj.scaleY = videoObj.height / 10;
+			
+			this._realObject = vidCanvas;
+
+//			VideoDisplay(this._realObject).scaleX = VideoDisplay(this._realObject).width / 10;
+//			VideoDisplay(this._realObject).scaleY = VideoDisplay(this._realObject).height / 10;
 			
 				
 			if (cam != null) {
 				cam.setMode(720,480,30);
-				SmoothVideoDisplay(this._realObject).attachCamera(cam);
+				videoObj.attachCamera(cam);
 			} else {
 				_errorplaying = true;
 				videocheckTimer.start();
@@ -591,9 +629,9 @@ package com.msgid.S3mer
 			cleancut(this._prevObject, this._realObject);
 			
 			if (ApplicationSettings.getValue("video.smoothing") == "false") {
-				SmoothVideoDisplay(this._realObject).smoothing = false;
+				videoObj.smoothing = false;
 			} else {
-				SmoothVideoDisplay(this._realObject).smoothing = true;
+				videoObj.smoothing = true;
 			}
 			
 			Logger.addEvent("Play live video");
@@ -930,6 +968,8 @@ package com.msgid.S3mer
 					return Camera.getCamera(a.toString())
 				}
 			}
+			
+			return Camera.getCamera();
 			
 			return null;
 		}

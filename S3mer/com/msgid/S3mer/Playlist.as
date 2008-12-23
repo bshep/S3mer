@@ -109,14 +109,14 @@ package com.msgid.S3mer
 			return PlaylistObject(this._items.getItemAt(this._position));
 		}
 
-		public function get avaiable():Boolean {
+		public function get available():Boolean {
 			var _itemType:String
 			
 			for each (var item:PlaylistObject in this._items) {
 				_itemType = (item.configXML.@type).toString();
 				
-				if( _itemType != "podcast" &&  _itemType != "rss" &&  _itemType != "url" ) {
-					if(!item.avaiable) {
+				if( _itemType != "podcast" &&  _itemType != "rss" &&  _itemType != "url" &&  _itemType != "livevideo" ) {
+					if(!item.available) {
 						return false;
 					}
 				}
@@ -133,7 +133,7 @@ package com.msgid.S3mer
 					case "video":
 					case "image":
 					case "swf":
-						if(!item.avaiable) {
+						if(!item.available) {
 							pending.addItem(item);
 						}
 						break;
