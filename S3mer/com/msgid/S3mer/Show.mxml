@@ -26,6 +26,8 @@
 			private var _hasAudio:Boolean;
 			private var _audioPan:String;
 			
+
+			
 			private function OnCreated(e:Event):void {
 //				this.initFader();
 				

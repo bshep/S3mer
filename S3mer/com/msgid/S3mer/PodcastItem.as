@@ -68,7 +68,15 @@ package com.msgid.S3mer
 		}
 	
 		public function available():Boolean {
+			if(_errored == true) {
+				return true;
+			}
+			
 			return FileIO.fileExists(FileIO.Url2Filename(_currentItemURL));
+		}
+		
+		public function errored():Boolean {
+			return this._errored;
 		}
 		
 		public function checkRSS():void {

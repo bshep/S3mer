@@ -208,7 +208,7 @@
 			}
 			
 			private function OnRSSLoadComplete(e:Event):void {
-				_reloadTimer.delay = 10*60*1000;
+				_reloadTimer.delay = 1*60*1000;
 				_reloadTimer.start();
 				this.visible = true;
 				this.logo.source = this.logoUrl;

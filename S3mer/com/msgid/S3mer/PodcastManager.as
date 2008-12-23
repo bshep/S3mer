@@ -75,7 +75,9 @@ package com.msgid.S3mer
 		}
 		
 		public static function loadError(e:Event):void {
-			//TODO: do something useful here
+			//TODO: log the error to ASRun Log
+			
+			loadComplete(e);
 			
 		}
 		

@@ -6,6 +6,7 @@ package com.msgid.S3mer
 	{
 		private var _url:String;
 		private var _file:String;
+		private var _file_id:String;
 		private var _type:String;
 		private var _configXML:XML;
 		
@@ -26,6 +27,14 @@ package com.msgid.S3mer
 			return this._file;
 		}
 		
+		public function get id():String {
+			if(this._file_id == "") {
+				return "0";
+			}
+			
+			return this._file_id;
+		}
+		
 		public function get type():String {
 			return this._type;
 		}
@@ -38,6 +47,7 @@ package com.msgid.S3mer
 			this._configXML = playlistItemXML;
 			this._url = playlistItemXML.toString();
 			this._type = playlistItemXML.@type;
+			this._file_id = playlistItemXML.@mediaid;
 			this._file = this._url.substr(this._url.lastIndexOf("/")+1);
 			this.conditions = new ArrayCollection;
 			this.conditionMatchAll = false;

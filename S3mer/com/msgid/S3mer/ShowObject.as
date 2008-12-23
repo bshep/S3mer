@@ -1,5 +1,7 @@
 package com.msgid.S3mer
 {
+	import com.msgid.S3mer.LocalDatabase.LocalDatabase;
+	
 	import flash.display.DisplayObject;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
@@ -38,6 +40,13 @@ package com.msgid.S3mer
 		private var _videoRepeatTimeCode2:int;
 		
 		private var _parent:Show;
+		
+		private var _item_start_time:Date = null;
+		private var _item_end_time:Date = null;
+		private var _item_file_id:String;
+		private var _item_file:String;
+		private var _item_type:String;
+		
 		
 		public function ShowObject() {
 			this._schedules = new ArrayCollection();
@@ -245,7 +254,6 @@ package com.msgid.S3mer
 			var currType:String;
 			var nextType:String;
 
-			
 			//If the stop flag is set, then make sure the video is stopped and return since we wont need to play the next item.
 			if ( this._stopped == true ) {
 				this.stop_stage2();
@@ -287,6 +295,24 @@ package com.msgid.S3mer
 			// we read the current value because the playlist item was moved to the next item
 			currType = (_playlist.current as PlaylistObject).type; 
 			
+			this._item_end_time = new Date();
+			
+			if(this._item_start_time != null ) {
+				LocalDatabase.insertPlaybackEvent(
+					new LoggerPlaybackEvent(this._item_file,
+						this._item_file_id,
+						this._item_type,
+						this._item_start_time,
+						this._item_end_time,
+						this._parent.id.slice(2)));
+			}
+			
+			this._item_start_time = new Date();
+			this._item_type = (_playlist.current as PlaylistObject).type;
+
+			
+			this._item_file_id = (_playlist.current as PlaylistObject).id;
+			
 
 //			if (currType != nextType ) { //|| _playlist.BOL != true
 //				var parentShow:Show = this._realObject.parent as Show;
@@ -315,25 +341,31 @@ package com.msgid.S3mer
 
 			switch(currType) {
 				case "video":
+					this._item_file = (_playlist.current as PlaylistObject).file;
 					play_next_video();
 					break;
 				case "swf":
 				case "image":
+					this._item_file = (_playlist.current as PlaylistObject).file;
 					play_next_image();
 					break;	
 				case "rss":
+					this._item_file = (_playlist.current as PlaylistObject).url;
 					play_next_rss();
 					break;	
 				case "podcast":
+					this._item_file = (_playlist.current as PlaylistObject).url;
 					play_next_podcast();
 					break;	
-				case "live":
+				case "livevideo":
+					this._item_file = "live";
 					play_next_live();
 					break;	
 				case "timedate":
 					play_next_timedate();
 					break;
 				case "url":
+					this._item_file = (_playlist.current as PlaylistObject).url;
 					play_next_url();
 					break;
 				default:
@@ -489,9 +521,13 @@ package com.msgid.S3mer
 				this._currVideoDisplay = this._realObject as SmoothVideoDisplay;
 				this._lastVideoDisplay = tmpVideoDisplay;
 				if( this._lastVideoDisplay != null && this._lastVideoDisplay.cameraAttached != true ) {
-					this._lastVideoDisplay.stop();
-					this._lastVideoDisplay.close();
-					this._lastVideoDisplay.source = null;
+					try {
+						this._lastVideoDisplay.stop();
+						this._lastVideoDisplay.close();
+						this._lastVideoDisplay.source = null;
+					} catch(e:Error) {
+						this._lastVideoDisplay.source = null;
+					}
 				}
 			}
 
@@ -694,7 +730,7 @@ package com.msgid.S3mer
 			if(this.currentPlaylist.current.file != "") {
 				play_next_video();
 			} else {
-//				play_next();
+				play_next();
 			}
 			
 		}

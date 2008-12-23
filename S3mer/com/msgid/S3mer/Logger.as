@@ -2,10 +2,10 @@ package com.msgid.S3mer
 {
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
-	
-	
+		
 	public class Logger extends EventDispatcher
 	{
+
 		private static var _log:String = "";
 		private static var _instanceLog:Logger;
 		
