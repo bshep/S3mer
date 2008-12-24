@@ -83,7 +83,7 @@ package com.msgid.S3mer
 			}
 			
 			if (_reloadConfigTimer == null ) {
-				_reloadConfigTimer = new Timer(5*60*1000);
+				_reloadConfigTimer = new Timer(1*60*1000);
 				_reloadConfigTimer.addEventListener(TimerEvent.TIMER, OnReloadTimer);
 			}
 			
@@ -364,6 +364,14 @@ package com.msgid.S3mer
 				
 				config = decryptConfig(config);
 				
+				config.timestamp = "";
+
+				if( this._config == config ) {
+					this._updatingConfigguration = false;
+					this._reloadConfigTimer.start();
+					return;
+				}
+				
 				var newConfigUrl:String = config.config.configurl;
 				if (newConfigUrl != "" && newConfigUrl != this._configURL) {
 					Logger.addEvent("config.channel.config.configurl: " + config.config.configurl)
@@ -450,7 +458,7 @@ package com.msgid.S3mer
 			
 			//Set config reload to 1 hr
 			this._updatingConfigguration = false;
-			this._reloadConfigTimer.delay = 60*60*1000;
+			this._reloadConfigTimer.delay = 1*60*1000;
 			this._reloadConfigTimer.start();
 		}
 		
@@ -637,6 +645,10 @@ package com.msgid.S3mer
 		
 		private function show_play_next(e:ShowEvent):void {
 			trace("Show finished! Time to play next");
+			
+			if( this._showsCur.length <= 1 ) {
+				return; //Only one show, no need to switch shows.
+			}
 			
 			var currShowIndex:int = this._showsCur.getItemIndex(Show(this._container.getChildByName("currentShow")));
 			

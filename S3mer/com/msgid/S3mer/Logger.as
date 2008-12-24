@@ -1,5 +1,7 @@
 package com.msgid.S3mer
 {
+	import com.msgid.S3mer.LocalDatabase.LocalDatabase;
+	
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 		
@@ -27,6 +29,7 @@ package com.msgid.S3mer
 //				_instanceLog = new Logger();
 //			}
 //			
+			LocalDatabase.insertStatusEvent(str);
 			trace(str);
 //			_log = str + "\n" + _log;
 //			

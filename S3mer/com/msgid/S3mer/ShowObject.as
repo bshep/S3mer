@@ -102,7 +102,7 @@ package com.msgid.S3mer
 				if( this._mainMediaRegion == "1" && (a+currIndex) >= this._playlists.length - 1 ) {
 					// This is the main media region, when we reach the end of the playlist, throw an event to move to the next show.
 					this._parent.dispatchEvent(new ShowEvent(ShowEvent.NEXT_SHOW));
-					return;
+//					return;
 				}
 
 				//Starts at the next playlist index (a+currIndex+1), then do modular division to loop to the begining

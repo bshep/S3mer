@@ -148,15 +148,15 @@ package com.msgid.S3mer
 					}
 					ApplicationSettings.save();
 					break;
-				case "J": //Previous
-					statusDisplay("Previous", target);
-					break;
-				case "K": //Pause/Resume
-					statusDisplay("Play/Pause", target);
-					break;
-				case "L": //Next
-					statusDisplay("Next", target);
-					break;
+//				case "J": //Previous
+//					statusDisplay("Previous", target);
+//					break;
+//				case "K": //Pause/Resume
+//					statusDisplay("Play/Pause", target);
+//					break;
+//				case "L": //Next
+//					statusDisplay("Next", target);
+//					break;
 				case "U": //Enable/Disable Updates
 					var updatesEnabled:String;
 					

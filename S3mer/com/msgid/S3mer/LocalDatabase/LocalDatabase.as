@@ -72,6 +72,13 @@ package com.msgid.S3mer.LocalDatabase
 						")";
 						
 			execute(sql, event.currentTarget as SQLConnection);
+			
+			sql = "CREATE TABLE IF NOT EXISTS event_log(" +
+						"	id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+						"	data TEXT " +
+						")";
+						
+			execute(sql, event.currentTarget as SQLConnection);
 
 //		    trace("the database was created successfully");
 		    
@@ -125,6 +132,18 @@ package com.msgid.S3mer.LocalDatabase
 			postDataToServer(50); // Make sure at least 50 items are in the list before uploading
 		}
 		
+		public static function insertStatusEvent(data:String):void {
+			var sql:String;
+			
+			sql = "INSERT INTO event_log(" + 
+				"	data" + 
+				") VALUES (" + 
+				"	'" + data + "'" + 
+				")";
+				
+			execute(sql, getConnection());
+		}
+		
 		private function postData_timer(e:TimerEvent):void {
 			this.tmrPostData.stop();
 			
@@ -165,7 +184,7 @@ package com.msgid.S3mer.LocalDatabase
 				
 			}		
 			
-			ret = phpSerialize(sqlResult);
+			ret = phpSerialize_runlog(sqlResult);
 			
 			urlReq.url = ApplicationSettings.URL_RUNLOG + "?playerid=" + ApplicationSettings.getValue("screen"+ sqlResult.data[0].screen_id +".channel.id","");
 			urlVars.data = ret;
@@ -199,7 +218,7 @@ package com.msgid.S3mer.LocalDatabase
 			instance.tmrPostData.start();
 		}
 		
-		public static function phpSerialize(res:SQLResult):String {
+		public static function phpSerialize_runlog(res:SQLResult):String {
 			var ret:String;
 			var rownum:int = 0;
 			ret = "a:" + res.data.length + ":{";
