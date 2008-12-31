@@ -92,7 +92,7 @@ package com.msgid.S3mer
 
 		private function performUpdate_stage2(e:Event):void {
 			var myStorageStream:FileStream = new FileStream();
-			var myStorageFile:File = new File(FileIO.storePath()).resolvePath("update.air");
+			var myStorageFile:File = new File(FileIO.storePath("update.air"));
 
 			myStorageStream.open(myStorageFile,FileMode.WRITE);
 			

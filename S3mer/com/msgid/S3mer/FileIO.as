@@ -3,10 +3,7 @@ package com.msgid.S3mer
 //	import com.adobe.crypto.SHA1;
 	
 	import flash.filesystem.File;
-	import flash.filesystem.FileMode;
-	import flash.filesystem.FileStream;
 	import flash.system.Capabilities;
-	import flash.utils.ByteArray;
 	
 	
 	public class FileIO
@@ -49,8 +46,16 @@ package com.msgid.S3mer
 			}
 		}
 		
-		public static function storePath():String {
-			return File.applicationStorageDirectory.nativePath;
+		public static function storePath(fileName:String = ""):String {
+			var tmpPath:File;
+			
+			tmpPath = File.applicationStorageDirectory;
+			
+			if(fileName != "") {
+				tmpPath = tmpPath.resolvePath(fileName);
+			}
+			
+			return tmpPath.nativePath;
 		}
 		
 		public static function appPath():String {
@@ -72,8 +77,14 @@ package com.msgid.S3mer
 			return null;
 		}
 		
-		public static function mediaPath(fileName:String):String {
-			var tmpFile:File = File.applicationStorageDirectory.resolvePath("media").resolvePath(fileName);
+		public static function mediaPath(screenId:String, fileName:String):String {
+			var tmpFile:File = File.applicationStorageDirectory.resolvePath("media");
+			
+			tmpFile = tmpFile.resolvePath("screen" + screenId);
+			
+			if(fileName != "") {
+				tmpFile = tmpFile.resolvePath(fileName);
+			}
 			
 			var realPath:String = tmpFile.nativePath;
 			
@@ -95,18 +106,12 @@ package com.msgid.S3mer
 
 		
 		
-		public  static function fileExists(fileName:String, md5:String = ""):Boolean {
-			var myStorageDir:File = File.applicationStorageDirectory;
+		public  static function fileExists(fileName:String, screenId:String):Boolean {
+			var myFile:File;
 			
-			if (!myStorageDir.exists) {
-				return false;
-			}
-			
-			if (!myStorageDir.resolvePath("media").exists) {
-				return false;
-			}
-			
-			if (!myStorageDir.resolvePath("media").resolvePath(fileName).exists) {
+			myFile = new File(mediaPath(screenId,fileName));
+						
+			if (!myFile.exists) {
 				return false;
 			}
 			

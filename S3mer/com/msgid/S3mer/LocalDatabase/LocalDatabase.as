@@ -138,8 +138,9 @@ package com.msgid.S3mer.LocalDatabase
 			sql = "INSERT INTO event_log(" + 
 				"	data" + 
 				") VALUES (" + 
-				"	'" + data + "'" + 
-				")";
+				"	'" 
+			sql = sql.concat(data);
+			sql = sql.concat("')");
 				
 			execute(sql, getConnection());
 		}

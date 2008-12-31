@@ -9,6 +9,8 @@ package com.msgid.S3mer
 		
 		public var id:String;
 		
+		private var _screenId:String;
+		
 		
 		private var _EOL:Boolean = false; //End of list reached during playback	
 		private var _BOL:Boolean = false; //Begining of list reached during playback	
@@ -20,9 +22,10 @@ package com.msgid.S3mer
 			return this._BOL;
 		}
 		
-		public function Playlist() {
+		public function Playlist(screenId:String) {
 			this._items = new ArrayCollection();
 			this._position = 0;
+			this._screenId =screenId;
 		}
 		
 /* 		public function add(url:String):void {
@@ -138,7 +141,7 @@ package com.msgid.S3mer
 						}
 						break;
 					case "podcast":
-						PodcastManager.addPodcast(item)
+						PodcastManager.addPodcast(item, this._screenId)
 						break;
 					
 				}

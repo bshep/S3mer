@@ -40,6 +40,17 @@
 				this.appLog.visible = false;
 			}
 			
+			private function isMultiscreen():Boolean {
+				var multiScreen:Boolean;
+				
+				if(this._playerWindows.length > 1) {
+					multiScreen = true;
+				} else {
+					multiScreen = false;
+				}
+				
+				return multiScreen;
+			}
 			
 			private function onReloadPlayerWindows(e:TimerEvent):void {
 				var tmpScreen:int;
@@ -54,7 +65,7 @@
 					_window.setScreen(tmpScreen);
 					_window.open(false);
 					_window.showWindow();
-					_window.loadConfiguration();
+					_window.loadConfiguration(isMultiscreen());
 					
 					tmpArray.addItem(_window);
 				}
@@ -92,7 +103,7 @@
 						_window.addChild(myLoginWindow);
 					}
 					screenNumber++;
-					break; // Only show 1 window
+//					break; // Only show 1 window
 				}
 
 
@@ -183,7 +194,7 @@
 //				this.setStyle("backgroundColor","#FFFFFF");
 				
 				for each( var _window:S3merWindow in this._playerWindows) {
-					_window.loadConfiguration();
+					_window.loadConfiguration(isMultiscreen());
 					_window.enableKeyHandler();
 				}
 				this.stage.removeEventListener(Event.CLOSE,onAppClose);

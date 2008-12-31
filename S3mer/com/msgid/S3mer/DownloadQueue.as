@@ -44,10 +44,10 @@ package com.msgid.S3mer
 			return true;
 		}
 		
-		public function addItem(url:String, hash:String ="", filename:String = null, autostart:Boolean = true, forceUpdate:Boolean = false):void {
+		public function addItem(url:String,screenId:String, hash:String ="", filename:String = null, autostart:Boolean = true, forceUpdate:Boolean = false):void {
 			var myDL:Downloader
 
-			myDL = new Downloader(url, hash, filename, forceUpdate);
+			myDL = new Downloader(url, hash, filename, forceUpdate, screenId.toString());
 			this._downloaders.addItem(myDL);
 		
 			myDL.addEventListener(DownloaderEvent.PROGRESS,OnProgress);

@@ -40,7 +40,7 @@ package com.msgid.S3mer
 		}
 		
 		public function ApplicationSettings() {
-			this._settingsFile = new File(FileIO.mediaPath("settings.xml"));
+			this._settingsFile = new File(FileIO.storePath("settings.xml"));
 			this._loaded = false;
 		}
 		

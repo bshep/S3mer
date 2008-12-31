@@ -97,19 +97,25 @@ package com.msgid.S3mer
 					(target as S3merWindow).stopped = true;
 					break;
 				case "S":
-					var mute:String;
+					var pan:String;
 					
-					mute = ApplicationSettings.getValue("video.mute","false");
+					pan = ApplicationSettings.getValue("video.pan","0");
 					
-					if (mute == "false") {
-						target.configuration.muteAudio(true);
-						ApplicationSettings.setValue("video.mute","true");
-						statusDisplay("Mute ON", target);
+					if (pan == "0") {
+						pan = "1";
+						target.configuration.pan = new Number(pan);
+						ApplicationSettings.setValue("video.pan",pan);
+						statusDisplay("Pan Left", target);
+					} else if(pan == "1") {
+						pan = "-1";
+						target.configuration.pan = new Number(pan);
+						ApplicationSettings.setValue("video.pan",pan);
+						statusDisplay("Pan Right", target);
 					} else {
-						target.configuration.muteAudio(false);
-						ApplicationSettings.setValue("video.mute","false");
-						statusDisplay("Mute OFF", target);
-
+						pan = "0";
+						target.configuration.pan = new Number(pan);
+						ApplicationSettings.setValue("video.pan",pan);
+						statusDisplay("Pan Center", target);
 					}
 					
 					ApplicationSettings.save();

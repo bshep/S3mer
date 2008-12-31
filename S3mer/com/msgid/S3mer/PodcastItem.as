@@ -13,11 +13,14 @@ package com.msgid.S3mer
 		public var _feedRSS:XML;
 		public var _errored:Boolean;
 		
+		public var _screenId:String;
+		
 		public var _currentItemURL:String;
 		
-		public function PodcastItem(item:PlaylistObject)
+		public function PodcastItem(item:PlaylistObject, screenId:String)
 		{
 			this._item = item;
+			this._screenId = screenId;
 			
 			this._item.file = "";
 			super();
@@ -47,11 +50,11 @@ package com.msgid.S3mer
 		}
 		
 		public function queueDownload():void {
-			if(FileIO.fileExists(FileIO.Url2Filename(_currentItemURL))) {
+			if(FileIO.fileExists(FileIO.Url2Filename(_currentItemURL),this._screenId)) {
 				Logger.addEvent("Already Downloaded File:"+ FileIO.Url2Filename(_currentItemURL));
 			} else {
 				Logger.addEvent("Downloading File:"+ FileIO.Url2Filename(_currentItemURL));
-				PodcastManager._queue.addItem(_currentItemURL,"",null,false,false);
+				PodcastManager._queue.addItem(_currentItemURL,_screenId,"",null,false,false);
 			}
 			
 			_item.file = FileIO.Url2Filename(_currentItemURL);
@@ -72,7 +75,7 @@ package com.msgid.S3mer
 				return true;
 			}
 			
-			return FileIO.fileExists(FileIO.Url2Filename(_currentItemURL));
+			return FileIO.fileExists(FileIO.Url2Filename(_currentItemURL),this._screenId);
 		}
 		
 		public function errored():Boolean {
@@ -97,20 +100,20 @@ package com.msgid.S3mer
 		public function checkRSS_complete(e:Event):void {
 			extractFeedData((e.target as URLLoader).data);
 			
-			if(FileIO.fileExists(FileIO.Url2Filename(_currentItemURL))) {
+			if(FileIO.fileExists(FileIO.Url2Filename(_currentItemURL),this._screenId)) {
 				Logger.addEvent("Already Downloaded File:"+ FileIO.Url2Filename(_currentItemURL));
 				_item.file = FileIO.Url2Filename(_currentItemURL);
 			} else {
 				Logger.addEvent("Downloading File:"+ FileIO.Url2Filename(_currentItemURL));
 				
 				PodcastManager._queue.addEventListener(DownloaderEvent.PARTIAL_COMPLETE,checkRSS_loadmedia_complete);
-				PodcastManager._queue.addItem(_currentItemURL);
+				PodcastManager._queue.addItem(_currentItemURL, _screenId);
 			}
 						
 		}
 		
 		public function checkRSS_loadmedia_complete(e:DownloaderEvent):void {
-			if(FileIO.fileExists(FileIO.Url2Filename(_currentItemURL))) {
+			if(FileIO.fileExists(FileIO.Url2Filename(_currentItemURL),this._screenId)) {
 				Logger.addEvent("Media for RSS updated: " + this._item.url);
 				_item.file = FileIO.Url2Filename(_currentItemURL);
 			}			

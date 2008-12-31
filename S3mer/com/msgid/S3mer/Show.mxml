@@ -24,12 +24,14 @@
 			private var _showObjects:ArrayCollection = new ArrayCollection();
 			
 			private var _hasAudio:Boolean;
-			private var _audioPan:String;
+			private var _audioPan:Number;
+			private var _schedule:Schedule = null;
 			
 
 			
 			private function OnCreated(e:Event):void {
 //				this.initFader();
+//				this._schedule = null;
 				
 			}
 			
@@ -37,10 +39,22 @@
 				return this._hasAudio;
 			}
 			
-			public function get audioPan():String {
+			public function get audioPan():Number {
 				return this._audioPan;
 			}
+
+			public function get schedule():Schedule {
+				return this._schedule;
+			}			
+
+			public function setSchedule(obj:Schedule):void {
+				this._schedule = obj;
+			}
 			
+			public function removeSchedule():void {
+				this._schedule = null
+			}
+
 			public function resize():void {
 				this.resizeX = this.width/this.configuredWidth;
 				this.resizeY = this.height/this.configuredHeight;
@@ -59,7 +73,7 @@
 			
 			// Content related functions
 //			public function addObject(id:String,object:DisplayObject):void {
-			public function addObject(objectXML:XML, hasAudio:String, audioPan:String):void {
+			public function addObject(objectXML:XML, hasAudio:String, audioPan:Number):void {
 				var showObject:ShowObject;
 				
 				showObject = getObjectById(objectXML.@id);
@@ -133,6 +147,15 @@
 				}				
 			}
 			
+			public function set pan(value:Number):void {
+				for each( var _showObject:ShowObject in _showObjects) {
+					if ( _showObject.object is SmoothVideoDisplay ) {
+						(_showObject.object as SmoothVideoDisplay).pan = value;
+					}
+				}				
+			}
+
+			
 			public function setSmoothing(active:Boolean):void {
 				for each( var _showObject:ShowObject in _showObjects) {
 					if (_showObject.object is SmoothVideoDisplay) {
@@ -181,7 +204,7 @@
 			
 			public function reset():void {
 				for each (var obj:ShowObject in this._showObjects ) {
-					obj.reset();
+					obj.stop();
 				}
 			}
 		]]>

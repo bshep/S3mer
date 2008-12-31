@@ -21,6 +21,7 @@ package com.msgid.S3mer
 		private var _started:Boolean;
 		private var _hash:String;
 		private var _forceUpdate:Boolean;
+		private var _screenId:String;
 		
 
 		public function get percent():int {
@@ -47,13 +48,14 @@ package com.msgid.S3mer
 			return this._url;
 		}
 		
-		public function Downloader(url:String, hash:String, destination:String, forceUpdate:Boolean) {
+		public function Downloader(url:String, hash:String, destination:String, forceUpdate:Boolean, screenId:String) {
 			this._lastPercentage = 0;
 			this._url = url;
 			this._complete = false;
 			this._started = false;
 			this._hash = hash;
 			this._forceUpdate = forceUpdate;
+			this._screenId = screenId;
 			
 			if (destination == null) {
 				this._filename = FileIO.Url2Filename(this._url);
@@ -109,7 +111,7 @@ package com.msgid.S3mer
 		}
 		
 		private function isAlreadyDownloaded():Boolean {
-			return FileIO.fileExists(this._filename, this._hash);
+			return FileIO.fileExists(this._filename, this._screenId);
 		}
 		
 		public function stop():void {
@@ -124,7 +126,7 @@ package com.msgid.S3mer
 			this._complete = true;
 			this._lastPercentage = 100;
 
-			myStorageDir = new File(FileIO.mediaPath(""));
+			myStorageDir = new File(FileIO.mediaPath(this._screenId,""));
 			myStorageDir.createDirectory();
 			
 			myStorageFile = myStorageDir.resolvePath(this._filename);

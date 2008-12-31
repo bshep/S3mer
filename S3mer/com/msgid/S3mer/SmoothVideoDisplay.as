@@ -1,9 +1,11 @@
 package com.msgid.S3mer
 {
 	import flash.media.Camera;
+	import flash.media.SoundTransform;
 	
 	import mx.controls.VideoDisplay;
 	import mx.core.mx_internal;
+	import mx.events.VideoEvent;
 	
 	use namespace mx_internal;
 
@@ -11,7 +13,7 @@ package com.msgid.S3mer
 	{
 		
 		private var _smoothing:Boolean = false;
-		private var _pan:String = "C";
+		private var _pan:Number = 0;
 		public var cameraAttached:Boolean;
 		
 		public function SmoothVideoDisplay()
@@ -19,6 +21,7 @@ package com.msgid.S3mer
 			super();
 //			this.smoothing = true;
 			this.cameraAttached = false;
+			this.addEventListener(VideoEvent.STATE_CHANGE, videoStateChanged);
 		}
 		
 		[Bindable]
@@ -32,13 +35,15 @@ package com.msgid.S3mer
 			return _smoothing;
 		}
 		
-		public function set pan(value:String):void {
-			this._pan = value;
+		public function set pan(value:Number):void {
+			if(_pan != value) {
+				_pan = value;
+			}			
 			
 			doPan();
 		}
 		
-		public function get pan():String {
+		public function get pan():Number {
 			return this._pan;
 		}
 		
@@ -68,29 +73,26 @@ package com.msgid.S3mer
 	    }
 	    
 	    private function doPan():void {
-			switch(this._pan) {
-				case 'L':
-					this.soundTransform.leftToRight = 0;
-					this.soundTransform.leftToLeft = 1;
-					this.soundTransform.rightToLeft = 1;
-					this.soundTransform.rightToRight = 0;
-					
-					break;
-				case 'R':
-					this.soundTransform.leftToRight = 1;
-					this.soundTransform.leftToLeft = 0;
-					this.soundTransform.rightToLeft = 0;
-					this.soundTransform.rightToRight = 1;
-
-					break;
-				case 'C':
-					this.soundTransform.leftToRight = 0;
-					this.soundTransform.leftToLeft = 1;
-					this.soundTransform.rightToLeft = 0;
-					this.soundTransform.rightToRight = 1;
-
-					break;
+			if(videoPlayer) {
+				var newTransform:SoundTransform = new SoundTransform();
+				
+				newTransform.pan = this._pan;
+				if( videoPlayer.soundTransform != null ) {
+					newTransform.volume = videoPlayer.volume;
+				}
+				
+				try {
+					videoPlayer.soundTransform = newTransform;
+				} catch(e:Error) {
+					Logger.addEvent(e.errorID + " could not se sound transform, probably a null ns object");
+				}
 			}
 	    }
+	    
+		private function videoStateChanged(e:VideoEvent):void {
+			if(e.state == "buffering") {
+				doPan();
+			}
+		}
 	}
 }

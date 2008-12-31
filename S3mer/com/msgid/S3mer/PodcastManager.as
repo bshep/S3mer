@@ -49,8 +49,8 @@ package com.msgid.S3mer
 			}
 		}
 		
-		public static function addPodcast(playlistItem:PlaylistObject):void {
-			var newPodcast:PodcastItem = new PodcastItem(playlistItem);
+		public static function addPodcast(playlistItem:PlaylistObject, screenId:String):void {
+			var newPodcast:PodcastItem = new PodcastItem(playlistItem, screenId);
 			init();
 			
 			Logger.addEvent("New Podcast:"+ playlistItem.url);

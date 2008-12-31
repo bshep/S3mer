@@ -27,6 +27,7 @@
 			private var _loaderShown:Boolean = false;
 			private var _stopped:Boolean = true;
 			private var _owner:S3mer;
+			private var _multiScreen:Boolean;
 			
 			[Embed(source="assets/logo.swf")]
 			[Bindable]
@@ -140,10 +141,11 @@
 				this.appLog.visible = false;
 			}
 			
-			public function loadConfiguration():void {
+			public function loadConfiguration(multiScreen:Boolean):void {
 				this.myLoadingStatic.visible = false;
 				this.LoadingCanvas.visible = true;
 				this.screenNumber.visible = false;
+				this._multiScreen = multiScreen;
 
 				this.setStyle("backgroundColor","#FFFFFF");				
 				
@@ -152,7 +154,7 @@
 
 				LoadingCanvas.visible = true;
 
-				this._configuration = new ConfigurationManager(this);
+				this._configuration = new ConfigurationManager(this, multiScreen);
 				
 				this._configuration.addEventListener(ConfigurationEvent.UPDATED, OnConfigurationUpdate,false,0,true);
 				this._configuration.addEventListener(DownloaderEvent.PARTIAL_COMPLETE, OnDownloadProgress,false,0,true);
@@ -180,7 +182,7 @@
 					_fader.setup(this);
 					_fader.addEventListener(EffectEvent.EFFECT_END, OnFadeComplete);
 	
-					_fader.fadeOut(1000);
+					_fader.fadeOut(250);
 					_loaderShown = true;
 				} else {
 					this.setStyle("backgroundColor","#000000");
@@ -231,8 +233,12 @@
 			
 			private function OnFadeComplete_stage2(e:EffectEvent):void {
 				_fader.removeEventListener(EffectEvent.EFFECT_END, OnFadeComplete_stage2);
-				this.removeChild(_fader);
-				
+				try {
+					this.removeChild(_fader);
+				} catch(e:Error) {
+					
+				}
+							
 				if (this._stopped == true) {
 					this._stopped = false;
 					this.play();
@@ -268,7 +274,7 @@
 				this.removeChild(this._show);
 				this.setStyle("backgroundColor","#FFFFFF");				
 										
-				this.loadConfiguration();
+				this.loadConfiguration(this._multiScreen);
 			}
 			
 			public function clean_stage1():void {
@@ -281,7 +287,7 @@
 			}
 			
 			public function clean_stage2():void {
-				this.loadConfiguration();
+				this.loadConfiguration(this._multiScreen);
 			}
 			
 			public function doReset(loginWindow:LoginWindow):void {

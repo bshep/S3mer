@@ -7,14 +7,12 @@ package com.msgid.S3mer
 	import flash.events.EventDispatcher;
 	import flash.events.TimerEvent;
 	import flash.media.Camera;
-	import flash.media.SoundTransform;
 	import flash.utils.Timer;
 	
 	import mx.collections.ArrayCollection;
 	import mx.containers.Canvas;
 	import mx.controls.HTML;
 	import mx.controls.Label;
-	import mx.controls.VideoDisplay;
 	import mx.effects.Fade;
 	import mx.events.EffectEvent;
 	import mx.events.VideoEvent;
@@ -29,7 +27,6 @@ package com.msgid.S3mer
 		private var _realObject:DisplayObject;
 		private var _prevObject:DisplayObject;
 		
-		private var _schedules:ArrayCollection;
 		private var _playlists:ArrayCollection;
 		private var _timers:ArrayCollection;
 		
@@ -50,10 +47,10 @@ package com.msgid.S3mer
 		private var _item_type:String;
 		
 		private var _mainMediaRegion:String;
+		private var _atShowEnd:Boolean = false;
 		
 		
 		public function ShowObject() {
-			this._schedules = new ArrayCollection();
 			this._playlists = new ArrayCollection();
 			this._timers = new ArrayCollection();
 			
@@ -86,13 +83,13 @@ package com.msgid.S3mer
 			return _parent;
 		}
 		
+
+		
 		public function set parent(val:Show):void {
 			this._parent = val;
 		}
 		
 		public function nextPlaylist():void {
-			//TODO: Go through conditions to see which playlist can be played
-			
 			//Find the current playlist in the array...
 			var currIndex:int = this._playlists.getItemIndex(this._currentPlaylist);
 			
@@ -102,6 +99,7 @@ package com.msgid.S3mer
 				if( this._mainMediaRegion == "1" && (a+currIndex) >= this._playlists.length - 1 ) {
 					// This is the main media region, when we reach the end of the playlist, throw an event to move to the next show.
 					this._parent.dispatchEvent(new ShowEvent(ShowEvent.NEXT_SHOW));
+					this._atShowEnd = true;
 //					return;
 				}
 
@@ -118,31 +116,9 @@ package com.msgid.S3mer
 		
 		public function configure(objectXML:XML):void {
 			this._configXML = objectXML;
+			configure_image(objectXML);
 			
-			
-//			switch(objectXML.@type.toString()) {
-//				case 'text':
-//					configure_text(objectXML);
-//					break;
-//  				case 'image':
-//					configure_image(objectXML);
-//					break;
-//  				case 'video':
-//					configure_video(objectXML);
-//					break;
-//  				case 'rss':
-//					configure_rss(objectXML);
-//					break;
-//				case 'condition':
-//					break;
-//				default:
-					configure_image(objectXML);
-					
-					this._mainMediaRegion = this._configXML.@mainmedia;
-//					break;
-//			}
-			
-//			this.parent.addChild(this._realObject);
+			this._mainMediaRegion = this._configXML.@mainmedia;
 		}
 		
 		private function configure_text(objectXML:XML):void {
@@ -210,7 +186,7 @@ package com.msgid.S3mer
 			newVideo.name = objectXML.@id;
 			
 			if (this._parent.hasAudio==true) {
-				var newSoundTransform:SoundTransform = newVideo.soundTransform;
+//				var newSoundTransform:SoundTransform = newVideo.soundTransform;
 				
 				newVideo.volume = 1;			
 			
@@ -260,11 +236,6 @@ package com.msgid.S3mer
 		public function play():void {
 			this._stopped = false;
 
-			if( this._configXML.@id == "rg439" ) {
-				trace("here");
-			}
-
-
 			play_next();
 		}
 		
@@ -308,7 +279,12 @@ package com.msgid.S3mer
 			if ( _playlist.EOL == true ) {
 				this.nextPlaylist();
 				_playlist = this.currentPlaylist;
+				
 				_playlist.first();
+				
+				if(this._atShowEnd) {
+					return;
+				}
 			}
 			
 			// we read the current value because the playlist item was moved to the next item
@@ -317,14 +293,18 @@ package com.msgid.S3mer
 			this._item_end_time = new Date();
 			
 			if(this._item_start_time != null ) {
-				LocalDatabase.insertPlaybackEvent(
-					new LoggerPlaybackEvent(this._item_file,
-						this._item_file_id,
-						this._item_type,
-						this._item_start_time,
-						this._item_end_time,
-						this._parent.id.slice(2),
-						(this._parent.parent as S3merWindow).screenId));
+				try {
+					LocalDatabase.insertPlaybackEvent(
+						new LoggerPlaybackEvent(this._item_file,
+							this._item_file_id,
+							this._item_type,
+							this._item_start_time,
+							this._item_end_time,
+							this._parent.id.slice(2),
+							(this._parent.parent as S3merWindow).screenId));
+				} catch(e:Error) {
+					Logger.addEvent("ShowObject/play_next(): Could not store item in as run log due to and error, probably null pointer exception");
+				}
 			}
 			
 			this._item_start_time = new Date();
@@ -332,32 +312,10 @@ package com.msgid.S3mer
 
 			
 			this._item_file_id = (_playlist.current as PlaylistObject).id;
-			
 
-//			if (currType != nextType ) { //|| _playlist.BOL != true
-//				var parentShow:Show = this._realObject.parent as Show;
-//				var tmpObject:DisplayObject = this._realObject;
-//				
-//				switch(nextType) {
-//					case "video":
-//						this.configure_video(this._configXML);
-//						break;
-//					case "image":
-//						this.configure_image(this._configXML);
-//						break;
-//					default:
-//						Logger.addEvent(this.toString() + ": bad playlist item type. Value = " + (this._currentPlaylist.current as PlaylistObject).type);
-//						
-//						this.dispatchEvent(new ShowEvent("INVALID_PLAYLIST_ITEM"));
-//						return;
-//				}
-//				
-////				parentShow.addChild(this._realObject);
-////				parentShow.removeChild(tmpObject);
-//				
-//				currType = nextType;
+//			if(this._mainMediaRegion == "1"){
+//				trace("here");
 //			}
-//			
 
 			switch(currType) {
 				case "video":
@@ -442,11 +400,11 @@ package com.msgid.S3mer
 				} 
 					
 				if (currentObj.parent == this._parent) {
-					if (isImage2Image(currentObj,nextObj)) {
-						this._parent.addChild(nextObj);
-					} else {
-						this._parent.addChildAt(nextObj,this._parent.getChildIndex(currentObj));						
-					}
+//					if (isImage2Image(currentObj,nextObj)) {
+//						this._parent.addChild(nextObj);
+//					} else {
+					this._parent.addChildAt(nextObj,this._parent.getChildIndex(currentObj));						
+//					}
 				} else {
 					try {
 						this._parent.addChild(nextObj);
@@ -714,7 +672,7 @@ package com.msgid.S3mer
 			this._prevObject = this._realObject;
 			this.configure_video(this._configXML);
 			
-			SmoothVideoDisplay(this._realObject).source = FileIO.mediaPath(_playlist.current.file);
+			SmoothVideoDisplay(this._realObject).source = FileIO.mediaPath(getScreenId(),_playlist.current.file);
 //			SmoothVideoDisplay(this._realObject).play();
 			cleancut(this._prevObject, this._realObject);
 			
@@ -724,7 +682,7 @@ package com.msgid.S3mer
 				SmoothVideoDisplay(this._realObject).smoothing = true;
 			}
 			
-			Logger.addEvent("Play next: " + FileIO.mediaPath(_playlist.current.file));
+			Logger.addEvent("Play next: " + FileIO.mediaPath(getScreenId(),_playlist.current.file));
 			
 			getTimerById("video_check").start();
 		}
@@ -800,40 +758,58 @@ package com.msgid.S3mer
 			
 			this._prevObject = this._realObject;
 			this.configure_image(this._configXML);
-			SmoothImage(this._realObject).load(FileIO.mediaPath(_playlist.current.file));
+			SmoothImage(this._realObject).load(FileIO.mediaPath(getScreenId(),_playlist.current.file));
 			
 			cleancut(this._prevObject,this._realObject);
 
 			Logger.addEvent("New timer duration: " +tmpTimer.delay);
 
-			Logger.addEvent("Play next: " + FileIO.mediaPath(_playlist.current.file));
+			Logger.addEvent("Play next: " + FileIO.mediaPath(getScreenId(),_playlist.current.file));
 		
 			if (tmpDuration != "0") {
 				tmpTimer.start();
 			}
 		}
 		
+		private function getScreenId():String {
+			return (this._parent.parent as S3merWindow).screenId.toString();
+		}
 
 		public function image_check(e:TimerEvent):void {
 			Timer(e.target).stop();
-
-			this.play_next();
+			
+			if(!this._stopped) {
+				this.play_next();
+			} else {
+				stop_stage2();
+			}
 		}
 		
 		public function videoComplete(e:VideoEvent):void {
-			videoNext();
+			if(!this._stopped) {
+				isVideoPlayingOK();
+			} else {
+				stop_stage2();
+			}
 		}
 
 		public function video_check(e:TimerEvent):void {
 			Timer(e.target).stop();
-			if ( videoNext() == true ) { // Only restart the timer if we didnt move to another video
+			if ( isVideoPlayingOK() ) { // Only restart the timer if we didnt move to another video
 				Timer(e.target).start();			
+			} else {
+				if(!this._stopped) {
+					this.play_next();
+				} else {
+					stop_stage2();
+				}
 			}
 		}
 		
 		private var handlingVideoEvent:Boolean = false;
 		
-		private function videoNext():Boolean {
+		private function isVideoPlayingOK():Boolean {
+			var _isVideoPlayingOK:Boolean = true;
 			
 			if (handlingVideoEvent == false) {
 				handlingVideoEvent = true; 
@@ -841,25 +817,19 @@ package com.msgid.S3mer
 					
 					if(this._realObject is SmoothVideoDisplay) {
 						if (SmoothVideoDisplay(this._realObject).state == VideoEvent.STOPPED ) {
-							this.play_next();
-							handlingVideoEvent = false; 
-							return false;					
+							_isVideoPlayingOK = false;
 						}
 						
 						if (this._errorplaying == true) {
-							this.play_next();
-							handlingVideoEvent = false;
+							_isVideoPlayingOK = false;
 							this._errorplaying = false;
-							return false;
 						}
 						
 						if (SmoothVideoDisplay(this._realObject).videoHeight == 0 ||
 							SmoothVideoDisplay(this._realObject).videoWidth == 0 ) {
 							
 							if(_videoRepeatTimeCode2 >= 10) {				
-								this.play_next();
-								handlingVideoEvent = false; 
-								return false;					
+								_isVideoPlayingOK = false;
 							} else {
 								_videoRepeatTimeCode2++;
 							}
@@ -877,10 +847,7 @@ package com.msgid.S3mer
 						
 						if (_videoRepeatTimeCode >= 10) {
 							_videoRepeatTimeCode = 0;
-							this.play_next();
-							handlingVideoEvent = false; 
-							
-							return false;					
+							_isVideoPlayingOK = false;
 						}
 						
 						_videoLastTimeCode = SmoothVideoDisplay(this._realObject).playheadTime;
@@ -888,16 +855,18 @@ package com.msgid.S3mer
 				} catch(e:TypeError) {
 					Logger.addEvent(e.message + e.getStackTrace());
 				}
+				
 				handlingVideoEvent = false; 
 					
 			}
 			
-			return true;
+			return _isVideoPlayingOK;
 		}
 		
 		//This sets the stopped flag to true.  When the current item ends, then stop_stage2 will be called to cleanup
 		public function stop(force:Boolean = true):void {
 			if (force == true) {
+				this._atShowEnd = false;
 				stop_stage2();
 			}
 			this._stopped = true;
@@ -905,6 +874,8 @@ package com.msgid.S3mer
 		
 		//Called when stop has been called and the current item has finished.
 		private function stop_stage2():void {
+			this.stopTimers();
+
 			if (this._realObject is SmoothVideoDisplay) {
 				//VideoDisplay(this._realObject).removeEventListener(VideoEvent.COMPLETE, stop_stage2);
 				SmoothVideoDisplay(this._realObject).stop();
@@ -912,6 +883,10 @@ package com.msgid.S3mer
 			
 			if (this._realObject is RSSFeedPanel) {
 				RSSFeedPanel(this._realObject).stop();
+			}
+			
+			if(this._realObject.parent) {
+				this._realObject.parent.removeChild(this._realObject);
 			}
 
 			this.dispatchEvent(new ShowEvent(ShowEvent.STOPPED));
@@ -933,22 +908,8 @@ package com.msgid.S3mer
 			this._playlists.removeAll();
 		}
 
-		public function addSchedule(list:Schedule):void {
-			this._schedules.addItem(list);
-		}
-		
-		public function removeSchedule(list:Schedule):void {
-			var index:int = this._schedules.getItemIndex(list);
-			
-			if ( index >= 0 ) {
-				this._schedules.removeItemAt(index);		
-			}
-		}
 
-		public function clearSchedule(list:Playlist):void {
-			this._schedules.removeAll();
-		}
-		
+
 		private function getTimerById(id:String):TimerId {
 			for each (var _each:TimerId in this._timers) {
 				if( _each.id == id ) {
@@ -974,14 +935,12 @@ package com.msgid.S3mer
 			return null;
 		}
 		
-		
-		public function reset():void {
-			this.stop(true);
+		private function stopTimers():void {
 			for each (var _timer:Timer in this._timers ) {
 				_timer.stop();
 			}
 			
-			this._timers.removeAll();
+			this._timers.removeAll();			
 		}
 	}
 }

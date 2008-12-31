@@ -1,6 +1,9 @@
 package com.msgid.S3mer
 {
+	import com.msgid.S3mer.LocalDatabase.LocalDatabase;
+	
 	import flash.display.DisplayObject;
+	import flash.display.DisplayObjectContainer;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.IOErrorEvent;
@@ -33,10 +36,12 @@ package com.msgid.S3mer
 
 		private var _reloadConfigTimer:Timer;
 		private var _heartbeatTimer:Timer;
+		private var _isPro:Boolean;
 		private var _expirationDate:Date;
 		private var _expired:Boolean;
 		private var _updatingConfigguration:Boolean;
 		
+		private var _multiScreen:Boolean;
 		
 		private var _config:XML;
 		
@@ -51,8 +56,9 @@ package com.msgid.S3mer
 		private var _configURL:String = ApplicationSettings.URL_CONFIG;
 	
 		private var _stopped:Boolean;
+		
 			
-		public function ConfigurationManager(container:Container) {
+		public function ConfigurationManager(container:Container, multiScreen:Boolean) {
 			this._showsNew = new ArrayCollection();
 			this._schedulesNew = new ArrayCollection();
 			this._playlistsNew = new ArrayCollection();
@@ -64,6 +70,7 @@ package com.msgid.S3mer
 			this._container = container;
 			this._expired = false;
 			this._updatingConfigguration = false;
+			this._multiScreen = multiScreen;
 			
 			if (_downloadQueue == null) {
 				_downloadQueue = new DownloadQueue();
@@ -102,7 +109,7 @@ package com.msgid.S3mer
 		private function isExpired():Boolean {
 			var expirationDate:Date;
 			var dateNow:Date = new Date();
-			var gracePeriod:Number = new Number(3); //3 days grace period... will read this from config eventually.
+			var gracePeriod:int = 3; //3 days grace period... will read this from config eventually.
 			
 			expirationDate = new Date(this._expirationDate.valueOf() + 1000*60*60*24*gracePeriod);
 			
@@ -118,8 +125,6 @@ package com.msgid.S3mer
 			var _loader:URLLoader = new URLLoader();
 			var _loaderReq:URLRequest;
 			_heartbeatTimer.stop();
-			
-			
 			
 			_loader.addEventListener(Event.COMPLETE,OnHeartbeat_stage2,false,0,true);
 			_loader.addEventListener(IOErrorEvent.IO_ERROR,OnIOError,false,0,true);
@@ -244,6 +249,10 @@ package com.msgid.S3mer
 		// Called whenever the configuration file was updated
 		public function updateConfiguration():void {
 			
+			if(this._expired) {
+				trace("here");
+			}
+			
 			if (this._updatingConfigguration) {
 				return;
 			}
@@ -257,7 +266,7 @@ package com.msgid.S3mer
 
 			Logger.addEvent("ConfigurationManager::updateConfiguration: screenId = " + ApplicationSettings.getValue("screen"+ screenId +".channel.id",""));
 //			_downloadQueue.addItem(getChannelUrl(ApplicationSettings.getValue("screen"+ screenId +".channel.id","")), "", "config" + screenId + ".xml", false,true);
-			_downloadQueue.addItem(getChannelUrl(ApplicationSettings.getValue("screen"+ screenId +".channel.id","")), "", "config" + screenId + ".xml", false,true);
+			_downloadQueue.addItem(getChannelUrl(ApplicationSettings.getValue("screen"+ screenId +".channel.id","")),getScreenId(), "", "config" + screenId + ".xml", false,true);
 
 			_downloadQueue.start();
 		}
@@ -275,7 +284,7 @@ package com.msgid.S3mer
 				showNotConnected();
 				
 				// Set the reload timer to 1 min intervals
-				this._reloadConfigTimer.delay = 60*1000;
+//				this._reloadConfigTimer.delay = 60*1000;
 				this._reloadConfigTimer.start();
 				this._updatingConfigguration = false;
 				return;				
@@ -284,7 +293,7 @@ package com.msgid.S3mer
 			//Check if we already have a config file, if so then do what it says
 			// otherwise, display not comm-error message
 			
-			if (new File(FileIO.mediaPath("config" + S3merWindow(this._container).screenId + ".xml")).exists) {
+			if (new File(FileIO.mediaPath(getScreenId(),"config" + getScreenId() + ".xml")).exists) {
 				updateConfiguration_step2_5();
 			} else {
 				this.stop();
@@ -292,7 +301,7 @@ package com.msgid.S3mer
 				showNotConnected();
 				
 				// Set the reload timer to 1 min intervals
-				this._reloadConfigTimer.delay = 60*1000;
+//				this._reloadConfigTimer.delay = 60*1000;
 				this._reloadConfigTimer.start();
 				this._updatingConfigguration = false;
 			}
@@ -300,39 +309,72 @@ package com.msgid.S3mer
 			
 		}
 		
-		private var showNotConnnected:SmoothImage;
+		[Embed(source="assets/internetConnection.swf")]
+		[Bindable]
+		public static var NotConnectedSWF:Class;
+
+		private var _showNotConnected:SmoothImage;
+		
+		private function initNotConnected():void {
+			var myAppObject:Container = this._container;
+
+			if( _showNotConnected == null ) {
+				_showNotConnected = new SmoothImage();
+//				_showNotConnected.setStyle("top",0);
+//				_showNotConnected.setStyle("bottom",0);
+//				_showNotConnected.setStyle("left",0);
+//				_showNotConnected.setStyle("right",0);
+				_showNotConnected.maintainAspectRatio = true;
+				_showNotConnected.scaleContent = false;
+				_showNotConnected.x = 0;
+				_showNotConnected.y = 0;
+				_showNotConnected.width = myAppObject.width;
+				_showNotConnected.height = myAppObject.height;
+				_showNotConnected.source = NotConnectedSWF;
+			}			
+		}
 		
 		private function showNotConnected():void {
 			var myAppObject:Container = this._container;
-			
-			if( showNotConnnected == null ) {
-				showNotConnnected = new SmoothImage();
-				showNotConnnected.source = new File(FileIO.assetsPath()).resolvePath("internetConnection.swf").nativePath;
-				showNotConnnected.x = 0;
-				showNotConnnected.y = 0;
-				showNotConnnected.width = myAppObject.width;
-				showNotConnnected.height = myAppObject.height;
-			}
+						
+			initNotConnected();
 
-			if (showNotConnnected.parent != myAppObject) {
-				myAppObject.addChild(showNotConnnected);
+			if (_showNotConnected.parent != myAppObject) {
+				myAppObject.addChild(_showNotConnected);
 			}
+			
+			makeTopmostItem(_showNotConnected);
+		}
+		
+		private function makeTopmostItem(obj:DisplayObject):void {
+			var maxIndex:int;
+			var curIndex:int;
+			var parentObj:DisplayObjectContainer;
+			
+			if(obj) {
+				parentObj = obj.parent;
+				
+				if(parentObj) {
+					curIndex = parentObj.getChildIndex(obj);
+					maxIndex = parentObj.numChildren - 1;
+					
+					if(curIndex < maxIndex) {
+						parentObj.removeChild(obj);
+						parentObj.addChild(obj);
+					}
+				}
+			}
+			
+			
 		}
 		
 		private function hideNotConnected():void {
 			var myAppObject:Container = this._container;
 			
-			if( showNotConnnected == null ) {
-				showNotConnnected = new SmoothImage();
-				showNotConnnected.source = new File(FileIO.assetsPath()).resolvePath("internetConnection.swf").nativePath;
-				showNotConnnected.x = 0;
-				showNotConnnected.y = 0;
-				showNotConnnected.width = myAppObject.width;
-				showNotConnnected.height = myAppObject.height;
-			}
+			initNotConnected();
 
-			if (showNotConnnected.parent == myAppObject) {
-				myAppObject.removeChild(showNotConnnected);
+			if (_showNotConnected.parent == myAppObject) {
+				myAppObject.removeChild(_showNotConnected);
 			}
 		}
 
@@ -342,7 +384,7 @@ package com.msgid.S3mer
 
 		
 		private function updateConfiguration_step2_5():void {
-			var configFile:File = new File(FileIO.mediaPath("config" + S3merWindow(this._container).screenId + ".xml"));
+			var configFile:File = new File(FileIO.mediaPath(getScreenId(),"config" + getScreenId() + ".xml"));
 			var configReader:FileStream;
 			var config:XML;
 			
@@ -369,6 +411,12 @@ package com.msgid.S3mer
 				if( this._config == config ) {
 					this._updatingConfigguration = false;
 					this._reloadConfigTimer.start();
+					
+					if(this._expired && isExpired()) { // IF both these are true when we get here it means the player expired and the current configuration is still expired.
+						this.stop();
+						this.showNotConnected();
+					}
+					
 					return;
 				}
 				
@@ -392,13 +440,26 @@ package com.msgid.S3mer
 				}
 				
 				
-				var expirationDate:String = config.config.expirationDate;
-				if (expirationDate != "") {
-					this._expirationDate = new Date(Number(expirationDate)*1000);
-					ApplicationSettings.setValue("config.expiration",this._expirationDate.valueOf().toString());
+				var expirationDate:String = config.config.proexpirationDate;
+				this._isPro = new Boolean(config.config.@isPro.toString());
+				
+				if(this._isPro) {
+					if (expirationDate != "") {
+						this._expirationDate = new Date(Number(expirationDate)*1000);
+						ApplicationSettings.setValue("config.expiration",this._expirationDate.valueOf().toString());
+					} else {
+						this._expirationDate = new Date(0);
+						ApplicationSettings.setValue("config.expiration",this._expirationDate.valueOf().toString());
+					}
 				}
 				
 				ApplicationSettings.save();
+				
+				if(this._expired && isExpired()) { // IF both these are true when we get here it means the player expired and the current configuration is still expired.
+					this.stop();
+					this.showNotConnected();
+					return;
+				}
 				
 				this._config = config;
 				
@@ -456,31 +517,43 @@ package com.msgid.S3mer
 			this.dispatchEvent(new ConfigurationEvent(ConfigurationEvent.UPDATED));
 			cleanupMedia();
 			
-			//Set config reload to 1 hr
 			this._updatingConfigguration = false;
-			this._reloadConfigTimer.delay = 1*60*1000;
+//			this._reloadConfigTimer.delay = 1*60*1000;
 			this._reloadConfigTimer.start();
 		}
 		
 		public function play():void {
+			if(this._expired) {
+				return;
+			}
+			
 			this._stopped = false;
-			this.switchShow("");		
+			
+			this._showsCur = this._showsNew;
+			this._schedulesCur = this._schedulesNew;
+			this._playlistsCur = this._playlistsNew;
+			
+			
+			this.show_play_next(null);		
 		}
 		
 		public function stop():void {
 			var myShowObject:Show;
 
 			myShowObject = Show(this._container.getChildByName("currentShow"));
+
+			if (myShowObject != null) {
+				myShowObject.stop(true);
+			}
 			
 			for each( var _showObj:DisplayObject in this._container.getChildren()) {
-				this._container.removeChild(_showObj);
+				if(_showObj != this._showNotConnected) {
+					this._container.removeChild(_showObj);
+				}
 			}
 			
 			this._stopped = true;
 			
-			if (myShowObject != null) {
-				myShowObject.stop(true);
-			}
 		}
 		
 		public function reset():void {
@@ -520,7 +593,7 @@ package com.msgid.S3mer
 				//Run through all playlist items and determine which ones we need to download,
 				//this also creates all podcast items.
 				for each( var _playlistObj:PlaylistObject in _playlist.pendingFiles ) {
-					_downloadQueue.addItem(_playlistObj.url, _playlistObj.hash);
+					_downloadQueue.addItem(_playlistObj.url,getScreenId(), _playlistObj.hash);
 				}
 			}
 			
@@ -533,8 +606,14 @@ package com.msgid.S3mer
 		}
 		
 		private function cleanupMedia():void {
-			var mediaFolder:File = new File(FileIO.storePath()).resolvePath("media");
+			var mediaFolder:File;
 			var configReg:RegExp = /config[0-9]\.xml/;
+			
+			if(this._container) {
+				mediaFolder = new File(FileIO.mediaPath(getScreenId(), ""))
+			} else {
+				return;
+			}		
 			
 			for each( var _file:File in mediaFolder.getDirectoryListing() ) {
 				if (_file.name != "settings.xml" && _file.name.search(configReg) == -1) {
@@ -545,6 +624,11 @@ package com.msgid.S3mer
 			}
 
 		}
+		
+		private function getScreenId():String {
+			return S3merWindow(this._container).screenId.toString();
+		}
+
 		
 		private function fileExistsInPlaylist(myFile:File):Boolean {
 			
@@ -570,7 +654,7 @@ package com.msgid.S3mer
 			var newPlaylistObj:PlaylistObject;
 			
 			for each (var playlistXML:XML in _config.playlist) {
-				newPlaylist = new Playlist();
+				newPlaylist = new Playlist(getScreenId());
 				
 				Logger.addEvent("Playlist id: " + playlistXML.@id);
 				newPlaylist.id = playlistXML.@id;
@@ -578,19 +662,19 @@ package com.msgid.S3mer
 				for each (var playlistitemXML:XML in playlistXML.playlistitem) {
 					Logger.addEvent("- element url: " + playlistitemXML);
 					
-					newPlaylistObj = new PlaylistObject(playlistitemXML);
+					newPlaylistObj = new PlaylistObject(playlistitemXML, getScreenId());
 					
-					if (playlistitemXML.@conditionmatch.toString() == "all") {
-						newPlaylistObj.conditionMatchAll = true;
-					} else {
-						newPlaylistObj.conditionMatchAll = false;
-					}
+//					if (playlistitemXML.@conditionmatch.toString() == "all") {
+//						newPlaylistObj.conditionMatchAll = true;
+//					} else {
+//						newPlaylistObj.conditionMatchAll = false;
+//					}
 					
 					newPlaylistObj.hash = playlistitemXML.@hash;
 					
-					for each (var conditionXML:XML in playlistitemXML.@condition) {
-						newPlaylistObj.conditions.addItem(conditionXML);
-					}
+//					for each (var conditionXML:XML in playlistitemXML.@condition) {
+//						newPlaylistObj.conditions.addItem(conditionXML);
+//					}
 					
 					newPlaylist.addObj(newPlaylistObj);
 				}
@@ -619,49 +703,106 @@ package com.msgid.S3mer
 				newShow.resizeY = newShow.height/newShow.configuredHeight;
 				
 				newShow.addEventListener(ShowEvent.NEXT_SHOW, show_play_next);
+				
 
 				try {
 					for each (var regionXML:XML in showXML.region) {
 						var hasAudio:String;
-						var audioPan:String;
+						var audioPan:Number;
 						
 						hasAudio = ApplicationSettings.getValue("screen"+ S3merWindow(this._container).screenId +".audio.enabled","");
-						audioPan = ApplicationSettings.getValue("screen"+ S3merWindow(this._container).screenId +".audio.pan","C");
+						
+						if(this._multiScreen) {
+							if(getScreenId() == "0") {
+								audioPan = -1
+							} else if(getScreenId() == "1") {
+								audioPan = 1
+							}
+						} else {
+							audioPan = 0;
+						}
 						
 						Logger.addEvent("- region id: " + regionXML.@id + " type: " + regionXML.@type);
 						
 						newShow.addObject(regionXML, hasAudio, audioPan);
 						
 						parseShow_addPlaylists(regionXML, newShow);
-						parseShow_addSchedules(regionXML, newShow);
 					}
 				} catch (e:Error) {
 					Logger.addEvent("Error @ " + e.message + e.getStackTrace());
 				}		
 				
+				parseShow_addSchedules(newShow);
 				this._showsNew.addItem(newShow);
 			}
 		}
 		
 		private function show_play_next(e:ShowEvent):void {
+			var nextShow:Show;
+			var currShow:Show;
+			
 			trace("Show finished! Time to play next");
 			
-			if( this._showsCur.length <= 1 ) {
+						
+			currShow = Show(this._container.getChildByName("currentShow"));
+			
+			if(currShow != null) {
+				var tmpDate:Date = new Date();
+				LocalDatabase.insertPlaybackEvent(new LoggerPlaybackEvent(
+					"",
+					"0",
+					"show_end", 
+					tmpDate,
+					tmpDate,
+					currShow.id.slice(2),
+					S3merWindow(this._container).screenId));
+			}
+			
+			if( this._showsCur.length == 0 ) {
+				//TODO: WTF?
+				return;
+			}
+			
+			if( this._showsCur.length == 1 ) {
+				if( currShow == null ) {
+					switchShow((this._showsCur.getItemAt(0) as Show).id);
+				}
 				return; //Only one show, no need to switch shows.
+			} 
+			
+			var currShowIndex:int = this._showsCur.getItemIndex(currShow);
+			
+			do {
+				if( currShowIndex == this._showsCur.length - 1 ) {
+					nextShow = (this._showsCur.getItemAt(0) as Show);
+					currShowIndex = -1;
+				} else {
+					nextShow = (this._showsCur.getItemAt(currShowIndex + 1) as Show);
+					currShowIndex++;
+				}
+			} while( !nextShow.schedule.isPlayable && nextShow != currShow)	
+			
+			
+			
+			if( nextShow != currShow ) {
+				switchShow(nextShow.id);
 			}
-			
-			var currShowIndex:int = this._showsCur.getItemIndex(Show(this._container.getChildByName("currentShow")));
-			
-			if( currShowIndex == this._showsCur.length - 1 ) {
-				switchShow((this._showsCur.getItemAt(0) as Show).id);
-			} else {
-				switchShow((this._showsCur.getItemAt(currShowIndex + 1) as Show).id);
-			}
-			
 		}
 
-		private function parseShow_addSchedules(regionXML:XML, show:Show):void {
-			// TODO: Do something useful
+		private function parseShow_addSchedules(show:Show):void {
+			for each (var scheduleXML:XML in _config.timeconditions) {
+				if( scheduleXML.@show_id.toString() == show.id ) {
+					var tmpSchedule:Schedule = this.getScheduleById(this._schedulesNew, scheduleXML.@id);
+					
+					if (tmpSchedule == null) {
+						Logger.addEvent("ERROR: no schedule defined with id = " + scheduleXML.@id);
+						continue;
+					}
+					
+					Logger.addEvent("- adding reference to schedule id = " + scheduleXML.@id);
+					show.setSchedule(tmpSchedule);
+				}
+			}
 		}
 
 		private function parseShow_addPlaylists(regionXML:XML, show:Show):void {
@@ -688,12 +829,11 @@ package com.msgid.S3mer
 
 		}
 	
-		
 		public function switchShow(newShowId:String):void {
 			//TODO: Check this and make sure it works properly
 			
 			var newShowObject:Show
-			var oldShowObject:Show;
+			var oldShowObject:Show;			
 			
 			if( this._stopped == true ) {
 				return;
@@ -716,6 +856,16 @@ package com.msgid.S3mer
 			}
 
 			if (newShowObject != null) {
+				var tmpDate:Date = new Date();
+				LocalDatabase.insertPlaybackEvent(new LoggerPlaybackEvent(
+						"",
+						"0",
+						"show_start", 
+						tmpDate,
+						tmpDate,
+						newShowObject.id.slice(2),
+						S3merWindow(this._container).screenId));
+
 				oldShowObject = Show(this._container.getChildByName("currentShow"));
 				newShowObject.fadeOut(0);
 				newShowObject.name = "currentShow";
@@ -725,7 +875,7 @@ package com.msgid.S3mer
 				if (oldShowObject != null) {
 					oldShowObject.name = "oldShow";
 					oldShowObject.addEventListener(EffectEvent.EFFECT_END,switchShow_stage2,false,0,true);
-					oldShowObject.fadeOut(1000);
+					oldShowObject.fadeOut(250);
 				} else {
 					newShowObject.addEventListener(EffectEvent.EFFECT_END,switchShow_stage3,false,0,true);
 					newShowObject.play();			
@@ -741,18 +891,24 @@ package com.msgid.S3mer
 		private function switchShow_stage2(e:EffectEvent):void {
 			var oldShowObject:Show = Show(this._container.getChildByName("oldShow"));
 			var currShowObject:Show = Show(this._container.getChildByName("currentShow"));
-			oldShowObject.stop(true);
-			oldShowObject.removeEventListener(EffectEvent.EFFECT_END,switchShow_stage2);
-			currShowObject.addEventListener(EffectEvent.EFFECT_END,switchShow_stage3,false,0,true);
-			this._container.removeChild(oldShowObject);
 			
-						
-			if( this._stopped == true ) {
-				this._container.removeChild(currShowObject);
-			} else {
-				currShowObject.play();			
-				currShowObject.fadeIn();
+			if(oldShowObject) {
+				oldShowObject.stop(true);
+				oldShowObject.removeEventListener(EffectEvent.EFFECT_END,switchShow_stage2);
+				this._container.removeChild(oldShowObject);
+			}
+			
+			if(currShowObject) {
+				currShowObject.addEventListener(EffectEvent.EFFECT_END,switchShow_stage3,false,0,true);
 				
+							
+				if( this._stopped == true ) {
+					this._container.removeChild(currShowObject);
+				} else {
+					currShowObject.play();			
+					currShowObject.fadeIn(250);
+					
+				}
 			}
 
 		}
@@ -810,7 +966,16 @@ package com.msgid.S3mer
 		}
 
 		private function parseSchedules():void {
+			var newSchedule:Schedule;
+//			var newPlaylistObj:PlaylistObject;
 			
+			for each (var scheduleXML:XML in _config.timeconditions) {
+				newSchedule = new Schedule(scheduleXML);
+				
+				if(newSchedule.valid ) {
+					this._schedulesNew.addItem(newSchedule);
+				}
+			}			
 		}
 
 		public function resize( newHeight:int, newWidth:int):void {
@@ -832,6 +997,13 @@ package com.msgid.S3mer
 			}
 		}
 
+		public function set pan(val:Number):void {
+			for each( var _showObj:DisplayObject in this._container.getChildren()) {
+				if ( _showObj is Show) {
+					(_showObj as Show).pan = val;
+				}
 
+			}
+		}
 	}
 }
