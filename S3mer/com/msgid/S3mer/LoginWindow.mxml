@@ -16,24 +16,39 @@
 					<mx:SWFLoader visible="true" id="spinner" verticalAlign="middle" horizontalAlign="center" top="19" left="280" width="16" height="16"/>
 				</mx:Panel>
 			</mx:AddChild>
+			<mx:SetProperty target="{pnlMode}" name="alpha" value="0"/>
 		</mx:State>
 		<mx:State name="register_choosePlayer" basedOn="register">
 			<mx:AddChild relativeTo="{pnlRegister}" position="lastChild">
-				<mx:Canvas id="playerPanel" right="40" left="39" top="84" height="84" verticalScrollPolicy="off" horizontalScrollPolicy="off">
-					<mx:RadioButton y="36" label="New Player" x="10" id="rbNewPlayer"/>
-					<mx:RadioButton y="12" x="10" id="rbExistingPlayer" />
-					<mx:ComboBox id="cmbPlayers" y="10" height="21" dataProvider="Player list" width="182" x="31" focusIn="rbExistingPlayer.selected = true" change="OnComboChanged(event)"></mx:ComboBox>
-					<mx:LinkButton label="Different user?" width="126" fontFamily="Verdana" textDecoration="underline" color="#0042FF" fontSize="11" bottom="0" left="0" textAlign="left">
+				<mx:Canvas id="playerPanel" right="40" left="39" top="84" height="59" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+					<mx:ComboBox id="cmbPlayers0" y="10" height="21" dataProvider="Player list" width="182" x="31" change="OnComboChanged(event)"></mx:ComboBox>
+					<mx:LinkButton label="Different user?" width="126" fontFamily="Verdana" textDecoration="underline" color="#0042FF" fontSize="11" bottom="0" left="0" textAlign="left" id="linkbutton2">
 						<mx:click>doLogout()</mx:click>
 					</mx:LinkButton>
 				</mx:Canvas>
 			</mx:AddChild>
-			<mx:SetProperty name="height" value="252"/>
+			<mx:SetProperty name="height" value="222"/>
 			<mx:RemoveChild target="{btnTune}"/>
 			<mx:AddChild relativeTo="{pnlRegister}" position="lastChild">
 				<mx:Button label="Tune In" click="OnTuneInClick(event)" toolTip="Click here to tune-in" id="btnTune0" height="27" width="87.99999" fontSize="13" bottom="16" right="39.950005"/>
 			</mx:AddChild>
 			<mx:RemoveChild target="{linkbutton1}"/>
+			<mx:RemoveChild target="{pnlMode}"/>
+		</mx:State>
+		<mx:State name="register_multiPlayer" basedOn="register_choosePlayer">
+			<mx:SetProperty name="height" value="302"/>
+			<mx:SetProperty target="{playerPanel}" name="height" value="137"/>
+			<mx:AddChild relativeTo="{playerPanel}" position="lastChild">
+				<mx:Label x="10" text="This Screen:" top="10"/>
+			</mx:AddChild>
+			<mx:SetProperty target="{cmbPlayers0}" name="y"/>
+			<mx:SetStyle target="{cmbPlayers0}" name="top" value="30"/>
+			<mx:AddChild relativeTo="{linkbutton2}" position="before">
+				<mx:ComboBox id="cmbPlayers1" height="21" dataProvider="Player list" width="182" x="31" change="OnComboChanged(event)" top="79"></mx:ComboBox>
+			</mx:AddChild>
+			<mx:AddChild relativeTo="{linkbutton2}" position="before">
+				<mx:Label x="10" text="Second Screen:" top="59"/>
+			</mx:AddChild>
 		</mx:State>
 	</mx:states>
 
@@ -73,10 +88,20 @@
 			
 			
 			public var isDemoMode:Boolean = false;
+			private var _isMultiScreen:Boolean = false;
+			private var _isPro:Boolean = false;
+			
 			
 			private var _username:String;
 			private var _password:String;
-
+			
+			public function set isMultiScreen(val:Boolean):void {
+				this._isMultiScreen = val;
+			}
+			
+			public function get isPro():Boolean {
+				return this._isPro;
+			}
 			
 			private function doRemoteCommand(command:String, listener:Function):void {
 				var _loader:URLLoader = new URLLoader;
@@ -192,29 +217,34 @@
 			
 			private function playerListLoaded(e:Event):void {
 				var result:XML;
-				
-				this.btnTune.label = "Tune In";
-				
-				if (!isDemoMode) {
-					this.showPlayerPanel();
-				}
-				
+								
 				this.spinner.visible = false;
 				
 				result = new XML(URLLoader(e.target).data);
 				
-				(cmbPlayers.dataProvider as ListCollectionView).removeAll();
-				for each( var _player:XML in result.player ) {
-					(cmbPlayers.dataProvider as ListCollectionView).addItem({label:_player.@name, data:_player.id});
-					Logger.addEvent("Player ID: " + _player.@name );
+				if(!result) {
+					Logger.addEvent("Error loading player list, Invalid XML returned");
 				}
 				
-				if ((cmbPlayers.dataProvider as ListCollectionView).length > 0) {
-					cmbPlayers.selectedIndex = 0;
-					rbExistingPlayer.selected = true;
-				} else {
-					rbNewPlayer.selected = true;
+				if (!isDemoMode) {
+//					if(1) {
+					if(result.user.@isPro == "true") {
+						this._isPro	= true;
+					} else {
+						this._isPro = false;
+					}
+
+					if(this._isMultiScreen && this._isPro) {
+						this.currentState = "register_multiPlayer";
+					} else {
+						this.currentState = "register_choosePlayer";
+					}
 				}
+
+				
+				populatePlayerList(result, this.cmbPlayers0);
+				populatePlayerList(result, this.cmbPlayers1);
+				
 				
 				if (this.isDemoMode) {
 					this.onDemoMode_stage2();
@@ -222,13 +252,24 @@
 				
 				
 			}
+			
+			public function populatePlayerList(playersXML:XML, cmbTarget:ComboBox):void {
+				if(cmbTarget && playersXML) {
+					
+					(cmbTarget.dataProvider as ListCollectionView).removeAll();
+					for each( var _player:XML in playersXML.player ) {
+						(cmbTarget.dataProvider as ListCollectionView).addItem({label:_player.@name, data:_player.id});
+						Logger.addEvent("Player ID: " + _player.@name );
+					}
+					
+					if ((cmbTarget.dataProvider as ListCollectionView).length > 0) {
+						cmbTarget.selectedIndex = 0;
+					}				
+				}
+			}
 					
 			public function hide_complete(e:EffectEvent):void {
 				this.OnClosed(e);
-			}
-			
-			public function showPlayerPanel():void {
-				this.currentState = "register_choosePlayer";
 			}
 			
 			private function resetFields():void {
@@ -269,10 +310,12 @@
 									
 				ApplicationSettings.setValue("user.username",this._username);
 				ApplicationSettings.setValue("user.password",this._password);
-				ApplicationSettings.setValue("screen0.channel.id",this.cmbPlayers.selectedItem.data[0]);
-				ApplicationSettings.setValue("screen0.audio.enabled","1");
-				ApplicationSettings.setValue("screen0.audio.pad","C");
-
+				ApplicationSettings.setValue("screen0.channel.id",this.cmbPlayers0.selectedItem.data[0]);
+				
+				if(this.currentState == "register_multiPlayer") {
+					ApplicationSettings.setValue("screen1.channel.id",this.cmbPlayers1.selectedItem.data[0]);
+				}
+				
 				ApplicationSettings.save();
 			}
 			
@@ -298,7 +341,7 @@
 			}
 			
 			private function OnComboChanged(e:ListEvent):void {
-				trace("Selected ID: " + this.cmbPlayers.selectedItem.data[0]);
+				trace("Selected ID: " + this.cmbPlayers0.selectedItem.data[0]);
 			}
 			
 			private function onDemoMode(e:Event):void {

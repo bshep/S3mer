@@ -188,13 +188,8 @@ package com.msgid.S3mer
 			newVideo.name = objectXML.@id;
 			
 			if (this._parent.hasAudio==true) {
-//				var newSoundTransform:SoundTransform = newVideo.soundTransform;
-				
 				newVideo.volume = 1;			
-			
 				newVideo.pan = this._parent.audioPan;
-//				newVideo.soundTransform = newSoundTransform;
-									
 			} else {
 				newVideo.volume = 0;				
 			}

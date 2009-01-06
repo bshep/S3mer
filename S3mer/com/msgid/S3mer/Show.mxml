@@ -73,7 +73,7 @@
 			
 			// Content related functions
 //			public function addObject(id:String,object:DisplayObject):void {
-			public function addObject(objectXML:XML, hasAudio:String, audioPan:Number):void {
+			public function addObject(objectXML:XML, hasAudio:Boolean, audioPan:Number):void {
 				var showObject:ShowObject;
 				
 				showObject = getObjectById(objectXML.@id);
@@ -93,11 +93,7 @@
 				showObject.parent = this;
 				showObject.configure(objectXML);
 				
-				if( hasAudio == "1" ) {
-					this._hasAudio = true;
-				} else {
-					this._hasAudio = false;
-				}
+				this._hasAudio = hasAudio;
 				
 				this._audioPan = audioPan;
 			}

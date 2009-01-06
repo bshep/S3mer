@@ -29,6 +29,8 @@
 			private var _updater:ApplicationUpdater;
 			private var myLoginWindow:LoginWindow;
 			private var _playerWindows:ArrayCollection = new ArrayCollection;
+			private var _isPro:Boolean = false;
+			
 			
 			private function reAquireFocus():void {
 				this.activate();
@@ -73,21 +75,23 @@
 				this._playerWindows = tmpArray;
 			}
 			
+			private function createLoginWindow():void {
+				myLoginWindow = new LoginWindow();
+				myLoginWindow.visible = false;
+				
+				if( Screen.screens.length > 1 ) {
+					myLoginWindow.isMultiScreen = true;
+				} else {
+					myLoginWindow.isMultiScreen = false;
+				}
+			}
+			
 			
 			private function onAppLoad(e:FlexEvent):void {
 				this.frameRate = 30;
 				this._log.addEventListener(Event.ADDED, onLogUpdate,false,0,true);
-//				this._reloadPlayerTimer = new Timer(5*60*1000);
-//				this._reloadPlayerTimer.addEventListener(TimerEvent.TIMER, onReloadPlayerWindows);
-//				this._reloadPlayerTimer.start();
 				
-				//URLRequestDefaults.setLoginCredentialsForHost("www.s3mer.com","development","mils0ft");
-				
-				myLoginWindow = new LoginWindow();
-				myLoginWindow.visible = false;
-//				this.addChild(myLoginWindow);
-
-				
+				createLoginWindow();
 				
 				var screenNumber:int = 0;
 				var _window:S3merWindow;
@@ -121,8 +125,7 @@
 			}
 			
 			public function resetApp():void {
-				myLoginWindow = new LoginWindow;
-				myLoginWindow.visible = false;
+				createLoginWindow();
 				
 				for each( var _window:S3merWindow in this._playerWindows ) {
 					_window.doReset(myLoginWindow);
@@ -161,6 +164,8 @@
 			}
 			
 			private function onAppLoad_stage2(e:Event):void {
+				this._isPro = this.myLoginWindow.isPro;
+				
 				myLoginWindow.parent.removeChild(this.myLoginWindow);
 
 				systemManager.stage.addEventListener(KeyboardEvent.KEY_UP,HandleKeyUp,false,0,true);
@@ -182,8 +187,10 @@
 //				this.setStyle("backgroundColor","#FFFFFF");
 				
 				for each( var _window:S3merWindow in this._playerWindows) {
-					_window.loadConfiguration(isMultiscreen());
-					_window.enableKeyHandler();
+					if( this._isPro || _window.screenId == 0) {
+						_window.loadConfiguration(isMultiscreen());
+						_window.enableKeyHandler();
+					}
 				}
 				this.stage.removeEventListener(Event.CLOSE,onAppClose);
 				Window(this._playerWindows.getItemAt(0)).activate();

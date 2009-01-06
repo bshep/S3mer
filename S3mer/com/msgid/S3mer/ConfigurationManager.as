@@ -731,19 +731,22 @@ package com.msgid.S3mer
 
 				try {
 					for each (var regionXML:XML in showXML.region) {
-						var hasAudio:String;
+						var hasAudio:Boolean;
 						var audioPan:Number;
-						
-						hasAudio = ApplicationSettings.getValue("screen"+ S3merWindow(this._container).screenId +".audio.enabled","");
 						
 						if(this._multiScreen) {
 							if(getScreenId() == "0") {
 								audioPan = -1
+								hasAudio = true;
 							} else if(getScreenId() == "1") {
 								audioPan = 1
+								hasAudio = true;
+							} else {
+								hasAudio = false;
 							}
 						} else {
 							audioPan = 0;
+							hasAudio = true;
 						}
 						
 						Logger.addEvent("- region id: " + regionXML.@id + " type: " + regionXML.@type);
