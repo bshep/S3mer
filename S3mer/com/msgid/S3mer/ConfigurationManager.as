@@ -608,6 +608,7 @@ package com.msgid.S3mer
 		private function cleanupMedia():void {
 			var mediaFolder:File;
 			var configReg:RegExp = /config[0-9]\.xml/;
+			var filesInDir:Array;
 			
 			if(this._container) {
 				mediaFolder = new File(FileIO.mediaPath(getScreenId(), ""))
@@ -615,15 +616,38 @@ package com.msgid.S3mer
 				return;
 			}		
 			
-			for each( var _file:File in mediaFolder.getDirectoryListing() ) {
-				if (_file.name != "settings.xml" && _file.name.search(configReg) == -1) {
+			try {
+				mediaFolder.addEventListener(IOErrorEvent.IO_ERROR, cleanupMedia_ioError);
+				
+				filesInDir = mediaFolder.getDirectoryListing().filter(isFile_filter);
+			} catch (e:Error) {
+				trace("cleanupMedia: error");
+				
+			}
+			
+			for each( var _file:File in filesInDir ) {
+					if (_file.name != "settings.xml" && _file.name.search(configReg) == -1) {
 					if (!fileExistsInPlaylist(_file)) {
+						_file.addEventListener(IOErrorEvent.IO_ERROR,cleanupMedia_ioError);
 						_file.deleteFileAsync();
 					}
 				}
 			}
 
 		}
+		
+		private function cleanupMedia_ioError(e:IOErrorEvent):void {
+				Logger.addEvent("cleanupMedia: IO error");			
+		}
+		
+		private function isFile_filter(element:*, index:int, arr:Array):Boolean {
+			if( element is File && (element as File).isDirectory == false ) {
+				return true;
+			} else {
+				return false;
+			}
+        }
+
 		
 		private function getScreenId():String {
 			return S3merWindow(this._container).screenId.toString();
