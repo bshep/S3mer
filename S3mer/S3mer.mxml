@@ -145,20 +145,10 @@
 			}
 			
 			private function doLogin():void {				
-//				var tmpWidth:Number = myLoginWindow.width + 30;
-//				var tmpHeight:Number = myLoginWindow.height + 30;
-				
-//				this.move((Capabilities.screenResolutionX - tmpWidth)/2,(Capabilities.screenResolutionY - tmpHeight)/2);
-//				systemManager.topLevelSystemManager.screen.x = (Capabilities.screenResolutionX - this.width)/2;
-//				systemManager.topLevelSystemManager.screen.y = (Capabilities.screenResolutionY - this.height)/2;
-				
 				myLoginWindow.setStyle("horizontalCenter",0);
 				myLoginWindow.setStyle("verticalCenter",0);
 				myLoginWindow.addEventListener("WINDOW_CLOSED",onAppLoad_stage2,false,0,true);
-				myLoginWindow.setup();
-				myLoginWindow.visible = true;
 				this.setStyle("backgroundColor","#FFFFFF");
-//				this.setChildIndex(myLoginWindow,this.numChildren-1);
 
 				if ( stage.nativeWindow.closed != true ) { 
 					stage.nativeWindow.visible = true;
@@ -167,9 +157,7 @@
 					
 				cursorManager.removeBusyCursor();
 				
-				myLoginWindow.show();	
-//				this.width = tmpWidth;			
-//				this.height = tmpHeight;		
+				myLoginWindow.visible = true;	
 			}
 			
 			private function onAppLoad_stage2(e:Event):void {
