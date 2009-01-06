@@ -1,6 +1,7 @@
 package com.msgid.S3mer.LocalDatabase
 {
 	import com.msgid.S3mer.ApplicationSettings;
+	import com.msgid.S3mer.Logger;
 	import com.msgid.S3mer.LoggerPlaybackEvent;
 	
 	import flash.data.SQLConnection;
@@ -8,6 +9,7 @@ package com.msgid.S3mer.LocalDatabase
 	import flash.data.SQLStatement;
 	import flash.errors.SQLError;
 	import flash.events.Event;
+	import flash.events.IOErrorEvent;
 	import flash.events.SQLErrorEvent;
 	import flash.events.SQLEvent;
 	import flash.events.TimerEvent;
@@ -195,12 +197,17 @@ package com.msgid.S3mer.LocalDatabase
 			
 			urlLoad = new URLLoader();
 			urlLoad.addEventListener(Event.COMPLETE, postDataToServer_complete);
+			urlLoad.addEventListener(IOErrorEvent.IO_ERROR, postDataToServer_ioError);
 			
 			urlLoad.load(urlReq);
 			
 			
 			//trace(ret);
 			
+		}
+		
+		private static function postDataToServer_ioError(e:IOErrorEvent):void {
+			Logger.addEvent("LocalDatabase: Error posting data back to server. Details: " + e.text);
 		}
 		
 		private static function postDataToServer_complete(e:Event):void {
