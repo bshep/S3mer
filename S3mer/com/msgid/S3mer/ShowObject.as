@@ -3,6 +3,7 @@ package com.msgid.S3mer
 	import com.msgid.S3mer.LocalDatabase.LocalDatabase;
 	
 	import flash.display.DisplayObject;
+	import flash.display.DisplayObjectContainer;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.TimerEvent;
@@ -13,6 +14,7 @@ package com.msgid.S3mer
 	import mx.containers.Canvas;
 	import mx.controls.HTML;
 	import mx.controls.Label;
+	import mx.controls.videoClasses.VideoError;
 	import mx.effects.Fade;
 	import mx.events.EffectEvent;
 	import mx.events.VideoEvent;
@@ -274,9 +276,31 @@ package com.msgid.S3mer
 				_playlist.next();
 			}
 			
+			if(currType == "livevideo") {
+				var tmpVD:SmoothVideoDisplay;
+				var tmpNewVideoDisplay:SmoothVideoDisplay;
+				var tmpParent:DisplayObjectContainer;
+				
+				tmpVD = ((this._realObject as Canvas).getChildAt(0) as SmoothVideoDisplay);
+				
+				if(tmpVD) {
+					tmpVD.detachCamera();
+					tmpVD.attachCamera(null);
+				}
+				
+				tmpParent = (this._realObject as Canvas).parent;
+				
+				tmpNewVideoDisplay = new SmoothVideoDisplay;
+				tmpParent.addChildAt(tmpNewVideoDisplay,tmpParent.getChildIndex(this._realObject))
+				tmpParent.removeChild(this._realObject);
+				this._realObject = tmpNewVideoDisplay;
+				
+			}
+			
 
 			//Check if we have reached the end of the current playlist, if so then move to the next playlist
 			if ( _playlist.EOL == true ) {
+				_playlist.first();
 				this.nextPlaylist();
 				_playlist = this.currentPlaylist;
 				
@@ -428,6 +452,11 @@ package com.msgid.S3mer
 				
 				this.resize();
 				
+				
+				if ( currentObj is Canvas ) {
+					trace("here");
+				}
+				
 				if (nextObj is SmoothVideoDisplay) {
 					if ((nextObj as SmoothVideoDisplay).cameraAttached != true && (nextObj as SmoothVideoDisplay).source != null ) {
 						(nextObj as SmoothVideoDisplay).addEventListener(VideoEvent.READY,cleancut_stage2,false,0,true);
@@ -444,39 +473,6 @@ package com.msgid.S3mer
 						}
 					}
 				}
-				
-//				if (cleancutFade == null ) {
-//					cleancutFade = new Fade();
-//				
-//					cleancutFade.duration = 100;
-//					cleancutFade.alphaFrom = 0.0;
-//					cleancutFade.alphaTo = 1.0;
-//					
-//					cleancutFade.addEventListener(EffectEvent.EFFECT_END,cleancut_COMPLETE,false,0,true);
-//									
-//				} else {
-//					if (cleancutFade.isPlaying) {
-//						cleancutFade.end();
-//					}
-//				}
-				
-//				if (cleancutFadeR == null ) {
-//					cleancutFadeR = new Fade();
-//				
-//					cleancutFadeR.duration = 100;
-//					cleancutFadeR.alphaFrom = 0.0;
-//					cleancutFadeR.alphaTo = 1.0;
-//					
-//									
-//				} else {
-//					if (cleancutFade.isPlaying) {
-//						cleancutFadeR.end();
-//					}
-//				}
-				
-//				cleancutFade.play([nextObj]);
-//				cleancutFadeR.play([nextObj]);
-
 			}
 		} 
 
@@ -878,7 +874,11 @@ package com.msgid.S3mer
 
 			if (this._realObject is SmoothVideoDisplay) {
 				//VideoDisplay(this._realObject).removeEventListener(VideoEvent.COMPLETE, stop_stage2);
-				SmoothVideoDisplay(this._realObject).stop();
+				try {
+					SmoothVideoDisplay(this._realObject).stop();
+				} catch(e:VideoError) {
+					
+				}
 			} 
 			
 			if (this._realObject is RSSFeedPanel) {

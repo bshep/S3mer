@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<application xmlns="http://ns.adobe.com/air/application/1.0">
+<application xmlns="http://ns.adobe.com/air/application/1.5">
 
 <!-- Adobe AIR Application Descriptor File Template.
 
 	Specifies parameters for identifying, installing, and launching AIR applications.
-	See http://www.adobe.com/go/air_1.0_application_descriptor for complete documentation.
 
-	xmlns - The Adobe AIR namespace: http://ns.adobe.com/air/application/1.0.M6 
+	xmlns - The Adobe AIR namespace: http://ns.adobe.com/air/application/1.5 
 			The last segment of the namespace specifies the version 
 			of the AIR runtime required for this application to run.
 			
@@ -20,20 +19,21 @@
 	<!-- Used as the filename for the application. Required. -->
 	<filename>S3mer</filename>
 
-	<!-- The name that is displayed in the AIR application installer. Optional. -->
+	<!-- The name that is displayed in the AIR application installer. 
+	     May have multiple values for each language. See samples or xsd schema file. Optional. -->
     <name>S3mer</name>
 
 	<!-- An application version designator (such as "v1", "2.5", or "Alpha 1"). Required. -->
 	<version>0.91</version>
 
-	<!-- Description, displayed in the AIR application installer. Optional. -->
+	<!-- Description, displayed in the AIR application installer.
+	     May have multiple values for each language. See samples or xsd schema file. Optional. -->
 	<description>Multimedia Streamer</description>
 
 	<!-- Copyright information. Optional -->
 	<!-- <copyright></copyright> -->
 
 	<!-- Settings for the application's initial window. Required. -->
-
 	<initialWindow>
 		<!-- The main SWF or HTML file of the application. Required. -->
 		<!-- Note: In Flex Builder, the SWF reference is set automatically. -->
@@ -78,7 +78,6 @@
 		<!-- The window's initial maximum size, specified as a width/height pair, such as "1600 1200". Optional. -->
 		<!-- <maxSize></maxSize> -->
 	</initialWindow> 
- 
     
 	<!-- The subpath of the standard default installation location to use. Optional. -->
 	<!-- <installFolder></installFolder> -->
@@ -94,6 +93,7 @@
 		<image48x48>icons/gIcon48.png</image48x48>    
 		<image128x128>icons/gIcon128.png</image128x128>
     </icon>
+    
 	<!-- Whether the application handles the update when a user double-clicks an update version
 	of the AIR file (true), or the default AIR application installer handles the update (false).
 	Optional. Default false. -->
@@ -131,4 +131,5 @@
 			
 		<!-- </fileType> -->
 	<!-- </fileTypes> -->
+	
 </application>

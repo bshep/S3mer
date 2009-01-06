@@ -72,6 +72,13 @@ package com.msgid.S3mer
 	    	
 	    }
 	    
+	    public function detachCamera():void {
+	    	videoPlayer.clear();
+	    	videoPlayer.close();
+	    	
+	    	this.cameraAttached = false;
+	    }
+	    
 	    private function doPan():void {
 			if(videoPlayer) {
 				var newTransform:SoundTransform = new SoundTransform();

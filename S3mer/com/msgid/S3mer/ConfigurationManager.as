@@ -780,6 +780,10 @@ package com.msgid.S3mer
 					nextShow = (this._showsCur.getItemAt(currShowIndex + 1) as Show);
 					currShowIndex++;
 				}
+				
+				if(nextShow.id == "sh1044") {
+					trace("here");
+				}
 			} while( !nextShow.schedule.isPlayable && nextShow != currShow)	
 			
 			
