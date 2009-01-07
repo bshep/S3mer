@@ -109,8 +109,11 @@
 			}
 			
 			public function enableKeyHandler():void {
-				if ( !this.stage.willTrigger(KeyboardEvent.KEY_UP) ) {
-					this.stage.addEventListener(KeyboardEvent.KEY_UP,HandleKeyUp,false,0,true);
+				
+				if(this.stage) {
+					if ( !this.stage.willTrigger(KeyboardEvent.KEY_UP) ) {
+						this.stage.addEventListener(KeyboardEvent.KEY_UP,HandleKeyUp,false,0,true);
+					}
 				}
 			}
 			

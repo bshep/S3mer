@@ -228,7 +228,7 @@ package com.msgid.S3mer
 				
 					break;
 				default:
-					Logger.addEvent("KEY_UP: charcode = " + e.charCode + " str: " + String.fromCharCode(e.charCode).toUpperCase());
+//					Logger.addEvent("KEY_UP: charcode = " + e.charCode + " str: " + String.fromCharCode(e.charCode).toUpperCase());
 					break;
 			}				
 		}

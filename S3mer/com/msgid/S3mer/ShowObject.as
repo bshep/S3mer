@@ -449,7 +449,7 @@ package com.msgid.S3mer
 				
 				
 				if ( currentObj is Canvas ) {
-					trace("here");
+					trace("objcanvas here");
 				}
 				
 				if (nextObj is SmoothVideoDisplay) {

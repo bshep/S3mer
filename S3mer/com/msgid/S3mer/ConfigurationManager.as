@@ -253,7 +253,7 @@ package com.msgid.S3mer
 		// Called whenever the configuration file was updated
 		public function updateConfiguration():void {
 			if(this._expired) {
-				trace("here");
+				trace("expired here");
 			}
 			
 			if (this._updatingConfigguration) {
@@ -450,7 +450,14 @@ package com.msgid.S3mer
 				
 				
 				var expirationDate:String = config.config.proexpirationDate;
-				this._isPro = new Boolean(config.config.@isPro.toString());
+				var isProStr:String = config.config.@isPro.toString();
+				
+				if(isProStr == "0") {
+					this._isPro = false;
+				} else {
+					this._isPro = true;
+				}
+
 				
 				if(this._isPro) {
 					if (expirationDate != "") {
@@ -460,6 +467,9 @@ package com.msgid.S3mer
 						this._expirationDate = new Date(0);
 						ApplicationSettings.setValue("config.expiration",this._expirationDate.valueOf().toString());
 					}
+				} else { //if its not pro then set the expiration date to tomorrow
+					this._expirationDate = new Date(new Date().valueOf() + 24*60*60*1000);
+					ApplicationSettings.setValue("config.expiration",this._expirationDate.valueOf().toString());					
 				}
 				
 				ApplicationSettings.save();
@@ -820,7 +830,7 @@ package com.msgid.S3mer
 				}
 				
 				if(nextShow.id == "sh1044") {
-					trace("here");
+					trace("sh1044 here");
 				}
 			} while( !nextShow.schedule.isPlayable && nextShow != currShow)	
 			
