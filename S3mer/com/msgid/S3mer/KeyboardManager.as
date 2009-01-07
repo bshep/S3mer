@@ -27,8 +27,6 @@ package com.msgid.S3mer
 			} else {
 				if (target is S3merWindow) {
 					S3merWindow(target)._notificationPanel.showNotification(text);
-				} else if(target is S3mer) {
-					S3mer(target)._notificationPanel.showNotification(text);
 				}
 			}
 		}
@@ -86,8 +84,6 @@ package com.msgid.S3mer
 					ApplicationSettings.save();
 					
 					(target as S3merWindow).resetApp();
-					
-					(target as S3merWindow).stopped = true;
 					break;
 				case "R": //Reloads config from disk
 					statusDisplay("Reload Config", target);

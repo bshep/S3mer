@@ -3,9 +3,7 @@
 	layout="absolute" 
 	applicationComplete="onAppLoad(event)"
 	invoke="onInvoke(event)"
-	resize="onAppResize(event)" 
 	borderStyle="none" showStatusBar="false" 
-	applicationDeactivate="reAquireFocus()"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off" backgroundColor="#000000"
      xmlns:ns1="com.msgid.S3mer.*">
 	
@@ -25,22 +23,12 @@
 			import mx.events.FlexEvent;
 			import mx.events.TweenEvent;
 			
-			private var _log:Logger = Logger.instance;
+//			private var _log:Logger = Logger.instance;
 			private var _updater:ApplicationUpdater;
 			private var myLoginWindow:LoginWindow;
 			private var _playerWindows:ArrayCollection = new ArrayCollection;
 			private var _isPro:Boolean = false;
-			
-			
-			private function reAquireFocus():void {
-				this.activate();
-				systemManager.stage.nativeWindow.orderToFront();
-			}
-			
-			private function OnHideLogComplete(e:TweenEvent):void {
-				e.target.removeEventListener(TweenEvent.TWEEN_END,OnHideLogComplete);
-				this.appLog.visible = false;
-			}
+			private var _isDemo:Boolean = false;
 			
 			private function isMultiscreen():Boolean {
 				var multiScreen:Boolean;
@@ -52,27 +40,6 @@
 				}
 				
 				return multiScreen;
-			}
-			
-			private function onReloadPlayerWindows(e:TimerEvent):void {
-				var tmpScreen:int;
-				var tmpArray:ArrayCollection = new ArrayCollection();
-				
-				for each( var _window:S3merWindow in this._playerWindows ) {
-					tmpScreen = _window.getScreen();
-					_window.stop();
-					_window.close();
-					
-					_window = new S3merWindow();
-					_window.setScreen(tmpScreen);
-					_window.open(false);
-					_window.showWindow();
-					_window.loadConfiguration(isMultiscreen());
-					
-					tmpArray.addItem(_window);
-				}
-				this._playerWindows.removeAll();
-				this._playerWindows = tmpArray;
 			}
 			
 			private function createLoginWindow():void {
@@ -89,10 +56,16 @@
 			
 			private function onAppLoad(e:FlexEvent):void {
 				this.frameRate = 30;
-				this._log.addEventListener(Event.ADDED, onLogUpdate,false,0,true);
 				
 				createLoginWindow();
 				
+				createPlayerWindows();
+
+				this.stage.addEventListener(Event.CLOSE,onAppClose, false, 0, true);
+				myLoginWindow.checkCredentials(onAppLoad_postLogin);
+			}
+			
+			private function createPlayerWindows():void {
 				var screenNumber:int = 0;
 				var _window:S3merWindow;
 				for each( var _screen:Screen in Screen.screens ) {
@@ -109,11 +82,6 @@
 					screenNumber++;
 //					break; // Only show 1 window
 				}
-
-
-				this.stage.addEventListener(Event.CLOSE,onAppClose, false, 0, true);
-				myLoginWindow.checkCredentials(onAppLoad_postLogin);
-//				this.close();
 			}
 			
 			private function HandleKeyUp(e:KeyboardEvent):void {
@@ -125,11 +93,18 @@
 			}
 			
 			public function resetApp():void {
-				createLoginWindow();
+				var _window:S3merWindow;
 				
-				for each( var _window:S3merWindow in this._playerWindows ) {
-					_window.doReset(myLoginWindow);
+				createLoginWindow();
+
+				for each( _window in this._playerWindows ) {
+					_window.stop();
+					_window.close();
 				}				
+				this._playerWindows.removeAll();
+				
+				createPlayerWindows();
+				
 				myLoginWindow.checkCredentials(onAppLoad_postLogin);
 			}
 			
@@ -165,6 +140,7 @@
 			
 			private function onAppLoad_stage2(e:Event):void {
 				this._isPro = this.myLoginWindow.isPro;
+				this._isDemo = this.myLoginWindow.isDemoMode;
 				
 				myLoginWindow.parent.removeChild(this.myLoginWindow);
 
@@ -173,27 +149,46 @@
 					this.cursorManager.setBusyCursor();
 					this.cursorManager.hideCursor();
 				}
-//				systemManager.stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
-				
-//				this.move(-100-this.width,this.y);
-//				systemManager.stage.nativeWindow.alwaysInFront = true;
-//				stage.nativeWindow.visible = true;
+
 				this._updater.start();
 				
 				if( doInitialSetup() == false ) {
 					return;
 				}
 				
-//				this.setStyle("backgroundColor","#FFFFFF");
-				
 				for each( var _window:S3merWindow in this._playerWindows) {
 					if( this._isPro || _window.screenId == 0) {
 						_window.loadConfiguration(isMultiscreen());
-						_window.enableKeyHandler();
+						if(_window.channelId == "-1") {
+							_window.close();
+							this._playerWindows.removeItemAt(this._playerWindows.getItemIndex(_window));
+						} else {
+							_window.enableKeyHandler();
+						}
+					}
+					
+					if(this._isDemo && _window.screenId != 0) {
+						_window.close();
+						this._playerWindows.removeItemAt(this._playerWindows.getItemIndex(_window));
 					}
 				}
 				this.stage.removeEventListener(Event.CLOSE,onAppClose);
-				Window(this._playerWindows.getItemAt(0)).activate();
+				
+				
+				for each(  _window in this._playerWindows) {
+					if( _window.visible == true ) {
+						_window.activate();
+						break;
+					}
+				}
+				
+				if(this._playerWindows.length == 0) {
+					ApplicationSettings.setValue("user.username","");
+					ApplicationSettings.setValue("user.password","");
+					ApplicationSettings.save();
+					this.resetApp()
+				}
+				
 				this.close();
 			}
 			
@@ -304,41 +299,15 @@
 				this._updater = new ApplicationUpdater();
 			}
 			
-			private function onLogUpdate(e:Event):void {
-				this.appLog.text = Logger.log;
-			}
-			
-			private function onAppResize(e:ResizeEvent):void {
-//				if ( _configuration != null) {
-//					this._configuration.resize(DisplayObject(e.target).height,DisplayObject(e.target).width);
-//				}
-			}
-			
 			private function play():void {
 				for each( var _window:S3merWindow in this._playerWindows) {
-					_window.play();
-				}
-				
-			}
-			
-			public function cleanMediaDirectory():void {
-				var curMedia:File = new File(FileIO.storePath()).resolvePath("media");
-
-				for each( var _file:File in curMedia.getDirectoryListing()) {
-					try {
-						if (_file.name != "settings.xml" ) {
-							_file.deleteFileAsync();
-						}
-					} catch (e:Error) {
-						Logger.addEvent(e.message);
+					if(_window.visible) {
+						_window.play();
 					}
 				}
-				Application.application.exit();							
 			}
+			
 		]]>
 	</mx:Script>
-	<mx:TextArea id="appLog" visible="false" height="116" wordWrap="true" editable="false" enabled="true"  color="#000000" cornerRadius="0" alpha="0.5" borderStyle="none" borderThickness="8" left="13" right="12" bottom="10"/>
-	<ns1:NotificationPanel id="_notificationPanel" right="10" top="10" visible="false">
-	</ns1:NotificationPanel>
 		
 </mx:WindowedApplication>

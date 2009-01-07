@@ -40,6 +40,7 @@ package com.msgid.S3mer
 		private var _expirationDate:Date;
 		private var _expired:Boolean;
 		private var _updatingConfigguration:Boolean;
+		private var _channelId:String;
 		
 		private var _multiScreen:Boolean;
 		
@@ -57,6 +58,9 @@ package com.msgid.S3mer
 	
 		private var _stopped:Boolean;
 		
+		public function get channelId():String {
+			return this._channelId;		
+		}
 			
 		public function ConfigurationManager(container:Container, multiScreen:Boolean) {
 			this._showsNew = new ArrayCollection();
@@ -248,7 +252,6 @@ package com.msgid.S3mer
 		
 		// Called whenever the configuration file was updated
 		public function updateConfiguration():void {
-			
 			if(this._expired) {
 				trace("here");
 			}
@@ -259,14 +262,20 @@ package com.msgid.S3mer
 			
 			this._updatingConfigguration = true;
 			
-			var screenId:int = S3merWindow(this._container).screenId;
+			this._channelId = ApplicationSettings.getValue("screen"+ getScreenId() +".channel.id","-1")
+
+			if(this._channelId == "-1") {
+				(this._container as S3merWindow).visible = false;
+				this._updatingConfigguration = false;
+				return;
+			}
 
 			_downloadQueue.addEventListener(DownloaderEvent.COMPLETE,updateConfiguration_step2,false,0,true)
 			_downloadQueue.addEventListener(DownloaderEvent.ERROR,onDownloadError,false,0,true)
 
-			Logger.addEvent("ConfigurationManager::updateConfiguration: screenId = " + ApplicationSettings.getValue("screen"+ screenId +".channel.id",""));
-//			_downloadQueue.addItem(getChannelUrl(ApplicationSettings.getValue("screen"+ screenId +".channel.id","")), "", "config" + screenId + ".xml", false,true);
-			_downloadQueue.addItem(getChannelUrl(ApplicationSettings.getValue("screen"+ screenId +".channel.id","")),getScreenId(), "", "config" + screenId + ".xml", false,true);
+
+			Logger.addEvent("ConfigurationManager::updateConfiguration: screenId = " + this._channelId );
+			_downloadQueue.addItem(getChannelUrl(this._channelId),getScreenId(), "", "config" + getScreenId() + ".xml", false,true);
 
 			_downloadQueue.start();
 		}
@@ -553,6 +562,8 @@ package com.msgid.S3mer
 			}
 			
 			this._stopped = true;
+			this._heartbeatTimer.stop();
+			this._reloadConfigTimer.stop();
 			
 		}
 		
@@ -605,7 +616,7 @@ package com.msgid.S3mer
 			
 		}
 		
-		private function cleanupMedia():void {
+		public function cleanupMedia():void {
 			var mediaFolder:File;
 			var configReg:RegExp = /config[0-9]\.xml/;
 			var filesInDir:Array;

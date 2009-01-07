@@ -87,7 +87,7 @@
 			public static var SpinnerSwf:Class;
 			
 			
-			public var isDemoMode:Boolean = false;
+			private var _isDemoMode:Boolean = false;
 			private var _isMultiScreen:Boolean = false;
 			private var _isPro:Boolean = false;
 			
@@ -101,6 +101,10 @@
 			
 			public function get isPro():Boolean {
 				return this._isPro;
+			}
+
+			public function get isDemoMode():Boolean {
+				return this._isDemoMode;
 			}
 			
 			private function doRemoteCommand(command:String, listener:Function):void {
@@ -140,7 +144,7 @@
 			private function RemoteCommand_error(e:IOErrorEvent):void {
 				resetFields();
 				
-				if( this.isDemoMode == true ) {
+				if( this._isDemoMode == true ) {
 					this.btnDemo.enabled = true;
 					this.btnLogin1.enabled = true;
 				} else {
@@ -189,7 +193,7 @@
 					highlightTextbox(this.txtPassword);
 					this.spinner.visible = false;
 					
-					if( this.isDemoMode == true ) {
+					if( this._isDemoMode == true ) {
 						this.btnDemo.enabled = true;
 						this.btnLogin1.enabled = true;
 					}
@@ -226,7 +230,7 @@
 					Logger.addEvent("Error loading player list, Invalid XML returned");
 				}
 				
-				if (!isDemoMode) {
+				if (!_isDemoMode) {
 //					if(1) {
 					if(result.user.@isPro == "true") {
 						this._isPro	= true;
@@ -246,23 +250,32 @@
 				populatePlayerList(result, this.cmbPlayers1);
 				
 				
-				if (this.isDemoMode) {
+				if (this._isDemoMode) {
 					this.onDemoMode_stage2();
 				}
 				
 				
 			}
 			
-			public function populatePlayerList(playersXML:XML, cmbTarget:ComboBox):void {
+			private function populatePlayerList(playersXML:XML, cmbTarget:ComboBox):void {
+				var dataProvider:ListCollectionView;
+				
 				if(cmbTarget && playersXML) {
 					
-					(cmbTarget.dataProvider as ListCollectionView).removeAll();
+					dataProvider = (cmbTarget.dataProvider as ListCollectionView)
+					dataProvider.removeAll();
+					
+//					if(1) {
+					if(this._isMultiScreen && this._isPro && !_isDemoMode) {
+						dataProvider.addItem({label:"<none>", data:new XML("<id>-1</id>")});
+					}
+					
 					for each( var _player:XML in playersXML.player ) {
-						(cmbTarget.dataProvider as ListCollectionView).addItem({label:_player.@name, data:_player.id});
+						dataProvider.addItem({label:_player.@name, data:_player.id});
 						Logger.addEvent("Player ID: " + _player.@name );
 					}
 					
-					if ((cmbTarget.dataProvider as ListCollectionView).length > 0) {
+					if (dataProvider.length > 0) {
 						cmbTarget.selectedIndex = 0;
 					}				
 				}
@@ -312,8 +325,10 @@
 				ApplicationSettings.setValue("user.password",this._password);
 				ApplicationSettings.setValue("screen0.channel.id",this.cmbPlayers0.selectedItem.data[0]);
 				
-				if(this.currentState == "register_multiPlayer") {
+				if(this.currentState == "register_multiPlayer" && !_isDemoMode) {
 					ApplicationSettings.setValue("screen1.channel.id",this.cmbPlayers1.selectedItem.data[0]);
+				} else {
+					ApplicationSettings.setValue("screen1.channel.id","-1");					
 				}
 				
 				ApplicationSettings.save();
@@ -354,7 +369,7 @@
 				this.btnDemo.enabled = false;
 				this.btnLogin1.enabled = false;
 
-				this.isDemoMode = true;
+				this._isDemoMode = true;
 				
 				OnLoginClick(e);			
 			}

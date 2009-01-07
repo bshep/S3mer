@@ -4,9 +4,23 @@
 	horizontalScrollPolicy="off" 
 	visible="true" horizontalAlign="center" 
 	verticalAlign="middle" cornerRadius="0" layout="absolute"
-	backgroundColor="#000000"
+	backgroundColor="#FFFFFF"
 	resize="onWindowResize(event)"
 	 xmlns:ns1="com.msgid.S3mer.*">
+	<mx:states>
+		<mx:State name="loading">
+			<mx:AddChild position="lastChild">
+				<mx:Canvas id="LoadingCanvas" verticalScrollPolicy="off" horizontalScrollPolicy="off" visible="true" horizontalCenter="0" verticalCenter="0" width="320" height="240">
+					<mx:SWFLoader id="myLoadingImage" source="assets/logo.swf" x="0" top="0"/>
+					<mx:ProgressBar labelPlacement="bottom" id="myFileProgress" enabled="true" mode="manual" label=" " visible="false" bottom="10" right="10" left="10"/>
+					<mx:ProgressBar labelPlacement="bottom" id="myTotalProgress" enabled="true" mode="manual" label=" " bottom="20" right="10" left="10"/>
+					<mx:Label id="lblStatus" visible="false" left="0" right="0" color="#BDBDBD">
+					</mx:Label>
+				</mx:Canvas>
+			</mx:AddChild>
+		</mx:State>
+		<mx:State name="playing"/>
+	</mx:states>
 	
 	<mx:Script>
 		<![CDATA[
@@ -24,19 +38,9 @@
 			private var _log:Logger = Logger.instance;
 			private var _configuration:ConfigurationManager;
 			private var _fader:FadePanel;
-			private var _loaderShown:Boolean = false;
 			private var _stopped:Boolean = true;
 			private var _owner:S3mer;
 			private var _multiScreen:Boolean;
-			
-			[Embed(source="assets/logo.swf")]
-			[Bindable]
-			public static var LogoSwf:Class;
-
-			[Embed(source="assets/register.png")]
-			[Bindable]
-			public static var StaticSwf:Class;
-			
 			
 			public function set show(myShow:Show):void {
 				this._show = myShow;
@@ -62,6 +66,11 @@
 			public function set stopped(value:Boolean):void {
 				_stopped = value;
 			}
+			
+			public function get channelId():String {
+				return this._configuration.channelId;		
+			}
+
 			
 			//Receives screenNumber in which to display this screen, returns screenNumber or -1
 			public function setScreen(screenNumber:int):int {
@@ -91,18 +100,12 @@
 
 				this.move(_screen.bounds.x,_screen.bounds.y);
 				
-				this._log.addEventListener(Event.ADDED, onLogUpdate,false,0,true);
-				
 				this.title = "Screen #" + this._screenNumber;
-				this.screenNumber.text = "Screen #" + this._screenNumber;
+//				this.screenNumber.text = "Screen #" + this._screenNumber;
 				this.stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
 //				this.stage.scaleMode = StageScaleMode.SHOW_ALL;
 
-				this.LoadingCanvas.visible = false;
-				this.myLoadingStatic.source = StaticSwf;
-				this.myLoadingStatic.maintainAspectRatio = false;
-				this.myLoadingStatic.visible = false;
-				this.setChildIndex(this.myLoadingStatic,this.numChildren-1);
+				this.currentState = "";
 			}
 			
 			public function enableKeyHandler():void {
@@ -132,24 +135,13 @@
 				}
 			}
 			
-			private function onLogUpdate(e:Event):void {
-				this.appLog.text = Logger.log;
-			}
-
-			public function OnHideLogComplete(e:TweenEvent):void {
-				e.target.removeEventListener(TweenEvent.TWEEN_END,OnHideLogComplete);
-				this.appLog.visible = false;
-			}
-			
 			public function loadConfiguration(multiScreen:Boolean):void {
-				this.myLoadingStatic.visible = false;
-				this.LoadingCanvas.visible = true;
-				this.screenNumber.visible = false;
+				this.currentState = "loading";
+
 				this._multiScreen = multiScreen;
 
 				this.setStyle("backgroundColor","#FFFFFF");				
 				
-				myLoadingImage.source = LogoSwf;
 				myLoadingImage.maintainAspectRatio = true;
 
 				LoadingCanvas.visible = true;
@@ -165,15 +157,18 @@
 			}
 			
 			public function play():void {
-				this.myLoadingStatic.visible = false;
-				this.LoadingCanvas.visible = false;
+				this.currentState = "playing";
 				this._stopped = false;
 				this._configuration.play();
 			}
+			
+			public function stop():void {
+				this._configuration.stop();
+			}
 
 			private function OnConfigurationUpdate(e:ConfigurationEvent):void {
-				
-				if (_loaderShown == false) {
+				if (this.currentState == "loading") {
+					this.currentState = "playing";
 					myFileProgress.setProgress(100,100);
 					myTotalProgress.setProgress(100,100);
 					
@@ -183,10 +178,8 @@
 					_fader.addEventListener(EffectEvent.EFFECT_END, OnFadeComplete);
 	
 					_fader.fadeOut(250);
-					_loaderShown = true;
 				} else {
 					this.setStyle("backgroundColor","#000000");
-					this.LoadingCanvas.visible = false;
 					this.play();
 				}
 				
@@ -226,7 +219,7 @@
 				Logger.addEvent("Current BKG Color : " + this.getStyle("backgroundColor"));
 				this.setStyle("backgroundColor","#000000");
 				Logger.addEvent("Current BKG Color : " + this.getStyle("backgroundColor"));
-				this.LoadingCanvas.visible = false;
+				this.currentState = "";
 				
 				_fader.fadeIn(100);
 			}
@@ -252,13 +245,6 @@
 			private function OnDownloadProgress(e:DownloaderEvent):void {
 				this.myTotalProgress.setProgress(DownloadQueue(e._downloader).percent,100);
 			}
-			
-			public function stop():void {
-				this._configuration.stop();
-				this._show = null;
-				this._configuration = null;
-				this._fader = null;
-			}
 
 			public function reloadApp():void {
 				this._owner.reloadApp();
@@ -277,25 +263,7 @@
 				this.loadConfiguration(this._multiScreen);
 			}
 			
-			public function clean_stage1():void {
-				this._show.reset();
-				this._show.removeAllChildren();
-				if (this._show.parent == this ) {
-					this.removeChild(this._show);
-				}
-				this.setStyle("backgroundColor","#FFFFFF");				
-			}
-			
-			public function clean_stage2():void {
-				this.loadConfiguration(this._multiScreen);
-			}
-			
 			public function doReset(loginWindow:LoginWindow):void {
-				try {
-				} catch(e:Error) {
-					
-				}
-
 				if( this._show != null ) {				
 					try {
 						this._show.reset();
@@ -307,8 +275,8 @@
 				}
 				
 				this._configuration.stopDownloads();
-				this.LoadingCanvas.visible = false;
-				
+				this.currentState = "";
+								
 				this.setStyle("backgroundColor","#FFFFFF");				
 										
 				if( this._screenNumber == 0 ) {
@@ -319,62 +287,13 @@
 			public function redoInitialSetup():void {
 				this._owner.doInitialSetup(true);
 			}
-		
-			public function displayImage(img:File):void {
-				var _img:Image = new Image();
-
-				_img.x = 0;
-				_img.y = 0;
-				_img.width = this.width;
-				_img.height = this.height
-				_img.maintainAspectRatio = false;
-				_img.source = img.url;
-				
-				this.addChild(_img);
-				
-			}
 			
 			public function cleanMediaDirectory():void {
-				this._owner.cleanMediaDirectory();	
+				this._configuration.cleanupMedia();	
 			}
 			
 		]]>
 	</mx:Script>
 	
-	<mx:constraintRows>
-		<mx:ConstraintRow id="WindowedApplication1_row1" height="40%"/>
-		<mx:ConstraintRow id="WindowedApplication1_row3" height="20%"/>
-		<mx:ConstraintRow id="WindowedApplication1_row2" height="39.0%"/>
-	</mx:constraintRows>
-	<mx:constraintColumns>
-		<mx:ConstraintColumn id="WindowedApplication1_col1" width="40%"/>
-		<mx:ConstraintColumn id="WindowedApplication1_col3" width="20%"/>
-		<mx:ConstraintColumn id="WindowedApplication1_col2" width="38.1%"/>
-	</mx:constraintColumns>
-
-	
-	<mx:Label visible="false" id="screenNumber" text="Screen #" fontSize="36" fontFamily="Georgia" fontWeight="bold" horizontalCenter="0" verticalCenter="0"/>
-	<ns1:NotificationPanel id="_notificationPanel" right="10" top="10" visible="false">
-	</ns1:NotificationPanel>
-	<mx:TextArea visible="false" height="116" wordWrap="true" editable="false" enabled="true" id="appLog" color="#000000" cornerRadius="0" alpha="0.5" borderStyle="none" borderThickness="8" left="13" right="12" bottom="10"/>
-	<mx:Canvas left="WindowedApplication1_col3:0" right="WindowedApplication1_col3:0" top="WindowedApplication1_row3:0" bottom="WindowedApplication1_row3:0" id="LoadingCanvas" verticalScrollPolicy="off" horizontalScrollPolicy="off" visible="true">
-		<mx:constraintRows>
-			<mx:ConstraintRow id="Canvas11_row3" height="85%"/>
-			<mx:ConstraintRow id="Canvas14_row1" height="5%"/>
-			<mx:ConstraintRow id="Canvas14_row2" height="10%"/>
-		</mx:constraintRows>
-		<mx:constraintColumns>
-			<mx:ConstraintColumn id="Canvas14_col1" width="10%"/>
-			<mx:ConstraintColumn id="Canvas14_col3" width="80%"/>
-			<mx:ConstraintColumn id="Canvas14_col2" width="10%"/>
-		</mx:constraintColumns>
-		<mx:SWFLoader left="Canvas14_col3:0" top="0" right="Canvas14_col3:0" bottom="Canvas14_row1:0" id="myLoadingImage"/>
-		<mx:ProgressBar left="0" bottom="Canvas14_row1:0" right="0" top="Canvas14_row1:0" labelPlacement="bottom" id="myFileProgress" enabled="true" mode="manual" label=" " visible="false"/>
-		<mx:ProgressBar  left="0" bottom="0" right="0" top="Canvas14_row1:0" labelPlacement="bottom" id="myTotalProgress" enabled="true" mode="manual" label=" "/>
-		<mx:Label id="lblStatus" visible="false" left="0" right="0" top="Canvas14_row2:0" color="#BDBDBD">
-			
-		</mx:Label>
-	</mx:Canvas>
-	<mx:SWFLoader  top="0" left="0" right="0" bottom="0" id="myLoadingStatic"/>
-
+	<ns1:NotificationPanel id="_notificationPanel" right="10" top="10" visible="false" />
 </mx:Window>
