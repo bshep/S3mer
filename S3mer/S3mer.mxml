@@ -136,7 +136,7 @@
 			}
 			
 			private function onAppLoad_postLogin(e:Event):void {
-				if((e.target as URLLoader) == null) {
+				if(e != null && (e.target as URLLoader) == null) {
 					onAppLoad_stage2(e);
 				} else {
 				

@@ -25,8 +25,9 @@ package com.msgid.S3mer
 		}
 		
 		[Bindable]
+		[Inspectable(defaultValue="false")]
 		public function set smoothing(val:Boolean):void{
-			if (val == _smoothing && videoPlayer == null) return;
+			if (val == _smoothing || videoPlayer == null) return;
 			_smoothing = val;
 			videoPlayer.smoothing = _smoothing;
 		}

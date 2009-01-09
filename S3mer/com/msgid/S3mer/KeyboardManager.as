@@ -33,31 +33,31 @@ package com.msgid.S3mer
 		
 		public static function HandleKeyUp(e:KeyboardEvent, target:Object):void {
 			switch(String.fromCharCode(e.charCode).toUpperCase()){
-				case "D":
-					//this.appLog.alpha = 0
-					var myTween:Move = new Move();
-					myTween.duration = 1000;
-						
-					
-					if (!target.appLog.visible == true) {
-						myTween.yFrom = -target.appLog.height;
-						myTween.yTo = target.appLog.y;
-						
-					} else {
-						myTween.yTo = -target.appLog.height;
-						myTween.yFrom = target.appLog.y;
-					}
-					myTween.play([target.appLog]);
-					
-					if (!target.appLog.visible == true) {
-						statusDisplay("Debug ON", target);
-						target.appLog.visible = true;
-					} else {
-						statusDisplay("Debug Off", target);
-						myTween.addEventListener(TweenEvent.TWEEN_END,target.OnHideLogComplete,false,0,true);
-					}
-					
-					break;
+//				case "D":
+//					//this.appLog.alpha = 0
+//					var myTween:Move = new Move();
+//					myTween.duration = 1000;
+//						
+//					
+//					if (!target.appLog.visible == true) {
+//						myTween.yFrom = -target.appLog.height;
+//						myTween.yTo = target.appLog.y;
+//						
+//					} else {
+//						myTween.yTo = -target.appLog.height;
+//						myTween.yFrom = target.appLog.y;
+//					}
+//					myTween.play([target.appLog]);
+//					
+//					if (!target.appLog.visible == true) {
+//						statusDisplay("Debug ON", target);
+//						target.appLog.visible = true;
+//					} else {
+//						statusDisplay("Debug Off", target);
+//						myTween.addEventListener(TweenEvent.TWEEN_END,target.OnHideLogComplete,false,0,true);
+//					}
+//					
+//					break;
 				case "F":
 					if ( target.systemManager.stage.displayState == StageDisplayState.FULL_SCREEN_INTERACTIVE ) {
 						statusDisplay("Fullscreen OFF", target);

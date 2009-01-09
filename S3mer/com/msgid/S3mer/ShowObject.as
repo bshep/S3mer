@@ -3,7 +3,6 @@ package com.msgid.S3mer
 	import com.msgid.S3mer.LocalDatabase.LocalDatabase;
 	
 	import flash.display.DisplayObject;
-	import flash.display.DisplayObjectContainer;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.TimerEvent;
@@ -205,7 +204,14 @@ package com.msgid.S3mer
 		}
 		
 		private function configure_live(objectXML:XML):void {
-			var newVideo:SmoothVideoDisplay = new SmoothVideoDisplay();
+			var newVideo:LiveVideoDisplay = new LiveVideoDisplay();
+			
+			newVideo.visible = false;
+			
+			this._parent.addChild(newVideo);
+			this._parent.removeChild(newVideo);
+			
+			newVideo.visible = true;
 			
 			newVideo.maintainAspectRatio = false;
 			newVideo.id	= objectXML.@id;
@@ -232,6 +238,9 @@ package com.msgid.S3mer
 		
 		public function play():void {
 			this._stopped = false;
+			this._atShowEnd = false;
+			
+			this._currentPlaylist = null;
 
 			play_next();
 		}
@@ -272,24 +281,13 @@ package com.msgid.S3mer
 			}
 			
 			if(currType == "livevideo") {
-				var tmpVD:SmoothVideoDisplay;
-				var tmpNewVideoDisplay:SmoothVideoDisplay;
-				var tmpParent:DisplayObjectContainer;
+				var tmpVD:LiveVideoDisplay;
 				
-				tmpVD = ((this._realObject as Canvas).getChildAt(0) as SmoothVideoDisplay);
+				tmpVD = (this._realObject as LiveVideoDisplay);
 				
 				if(tmpVD) {
-					tmpVD.detachCamera();
-					tmpVD.attachCamera(null);
+					stop();
 				}
-				
-				tmpParent = (this._realObject as Canvas).parent;
-				
-				tmpNewVideoDisplay = new SmoothVideoDisplay;
-				tmpParent.addChildAt(tmpNewVideoDisplay,tmpParent.getChildIndex(this._realObject))
-				tmpParent.removeChild(this._realObject);
-				this._realObject = tmpNewVideoDisplay;
-				
 			}
 			
 
@@ -448,12 +446,12 @@ package com.msgid.S3mer
 				this.resize();
 				
 				
-				if ( currentObj is Canvas ) {
-					trace("objcanvas here");
-				}
+//				if ( currentObj is Canvas ) {
+//					trace("objcanvas here");
+//				}
 				
 				if (nextObj is SmoothVideoDisplay) {
-					if ((nextObj as SmoothVideoDisplay).cameraAttached != true && (nextObj as SmoothVideoDisplay).source != null ) {
+					if ((nextObj as SmoothVideoDisplay).source != null ) {
 						(nextObj as SmoothVideoDisplay).addEventListener(VideoEvent.READY,cleancut_stage2,false,0,true);
 						(nextObj as SmoothVideoDisplay).play();
 					} else {
@@ -508,7 +506,7 @@ package com.msgid.S3mer
 			var videocheckTimer:TimerId = getTimerById("video_check");
 			var tmpDuration:String = _playlist.current.configXML.@duration;
 			
-			var videoObj:SmoothVideoDisplay;
+			var videoObj:LiveVideoDisplay;
 			// For live video we need to setup the live_video_done timer 
 			// which fires when we are done playing the video.
 			
@@ -541,35 +539,9 @@ package com.msgid.S3mer
 			this._prevObject = this._realObject;
 			this.configure_live(this._configXML);
 			
-			videoObj = this._realObject as SmoothVideoDisplay;
+			videoObj = this._realObject as LiveVideoDisplay;
 			
-			var cam:Camera = getPreferedCaptureDevice();
-			var vidCanvas:Canvas = new Canvas;
-			
-			vidCanvas.x = videoObj.x;
-			vidCanvas.y = videoObj.y;
-			vidCanvas.width = videoObj.width;
-			vidCanvas.height = videoObj.height;
-			
-			videoObj.x = 0;
-			videoObj.y = 0;
-
-			vidCanvas.addChild(videoObj);
-//			vidCanvas.setStyle(
-			
-//			videoObj.scaleX = videoObj.width / 10;
-//			videoObj.scaleY = videoObj.height / 10;
-			
-			this._realObject = vidCanvas;
-
-//			VideoDisplay(this._realObject).scaleX = VideoDisplay(this._realObject).width / 10;
-//			VideoDisplay(this._realObject).scaleY = VideoDisplay(this._realObject).height / 10;
-			
-				
-			if (cam != null) {
-				cam.setMode(720,480,30);
-				videoObj.attachCamera(cam);
-			} else {
+			if (videoObj.start() == false) {
 				_errorplaying = true;
 				videocheckTimer.start();
 			}
@@ -585,7 +557,7 @@ package com.msgid.S3mer
 			
 			Logger.addEvent("Play live video");
 			
-			if ((tmpDuration != "0") && cam != null) {
+			if ((tmpDuration != "0") && videoObj.cameraAttached == true) {
 				liveTimer.start();
 			}		
 		}
@@ -911,21 +883,6 @@ package com.msgid.S3mer
 					return _each;
 				}
 			}
-			
-			return null;
-		}
-		
-		private function getPreferedCaptureDevice():Camera {
-			var camlist:Array = Camera.names;
-			
-			
-			for( var a:int; a< camlist.length; a++ ){
-				if( camlist[a] == "DV Video" ) {
-					return Camera.getCamera(a.toString())
-				}
-			}
-			
-			return Camera.getCamera();
 			
 			return null;
 		}
