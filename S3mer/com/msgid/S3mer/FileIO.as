@@ -31,7 +31,11 @@ package com.msgid.S3mer
 		
 		public static function isLinux():Boolean {
 //			Logger.addEvent("OS is: " + Capabilities.os);
-			return false;
+			if (Capabilities.os.search("Linux") >= 0) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 		
 		public static function getOs():String {
@@ -89,6 +93,10 @@ package com.msgid.S3mer
 			var realPath:String = tmpFile.nativePath;
 			
 			if(isMacOs()) {
+				realPath = "file://" + realPath;
+			}
+			
+			if(isLinux()) {
 				realPath = "file://" + realPath;
 			}
 			

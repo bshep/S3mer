@@ -61,10 +61,10 @@
 		<resizable>true</resizable>
 
 		<!-- The window's initial width. Optional. -->
-		<width>640</width>
+		<width>1</width>
 
 		<!-- The window's initial height. Optional. -->
-		<height>480</height>
+		<height>1</height>
 
 		<!-- The window's initial x position. Optional. -->
 		<!-- <x></x> -->
@@ -131,5 +131,5 @@
 			
 		<!-- </fileType> -->
 	<!-- </fileTypes> -->
-	
 </application>
+
