@@ -590,6 +590,8 @@ package com.msgid.S3mer
 					_screen.removeChild(myShowObject);
 				}
 			}
+			
+			stopDownloads();
 
 		}
 		

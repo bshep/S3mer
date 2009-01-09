@@ -96,7 +96,7 @@
 					_window.showWindow();
 					this._playerWindows.addItem(_window);
 					if( screenNumber == 0 ) {
-						_window._loginWindow.visible = true;
+						_window._loginWindow.show();
 					}
 					screenNumber++;
 //					break; // Only show 1 window
@@ -136,11 +136,17 @@
 			}
 			
 			private function onAppLoad_postLogin(e:Event):void {
-				if (e == null || URLLoader(e.target).data != "OK") {
-					this.doLogin();
-				} else {
+				if((e.target as URLLoader) == null) {
 					onAppLoad_stage2(e);
-				}	
+				} else {
+				
+					if (e == null || (e.target as URLLoader).data != "OK") {
+						this.doLogin();
+					} else {
+						onAppLoad_stage2(e);
+					}	
+				}
+
 			}
 			
 			private function doLogin():void {

@@ -2,6 +2,7 @@ package com.msgid.S3mer
 {
 	import flash.desktop.Updater;
 	import flash.events.Event;
+	import flash.events.IOErrorEvent;
 	import flash.events.TimerEvent;
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;
@@ -39,10 +40,15 @@ package com.msgid.S3mer
 		public function checkupdate():void {
 			var _loader:URLLoader = new URLLoader();
 			
-			_loader.addEventListener(Event.COMPLETE,checkupdate_stage2,false,0,true);
+			_loader.addEventListener(Event.COMPLETE,checkupdate_stage2);
+			_loader.addEventListener(IOErrorEvent.IO_ERROR, checkupdate_IOError);
 			_loader.dataFormat = URLLoaderDataFormat.TEXT;
 			
 			_loader.load(new URLRequest(ApplicationSettings.URL_UPDATE));
+		}
+		
+		private function checkupdate_IOError(e:IOErrorEvent):void {
+			Logger.addEvent("ApplicationUpdater::checkupdate -> Error while connecting, is internet down?");
 		}
 		
 		private function checkupdate_stage2(e:Event):void {

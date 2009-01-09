@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="335" height="168" alpha="1" 
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="335" height="168" alpha="0" 
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
- backgroundAlpha="0" showEffect="{TVEffect_Show}" hideEffect="{TVEffect_Hide}" visible="true">
+ backgroundAlpha="0" showEffect="{TVEffect_Show}" hideEffect="{TVEffect_Hide}" visible="false">
 	<mx:states>
 		<mx:State name="register">
 			<mx:AddChild position="lastChild">
@@ -59,6 +59,7 @@
 	</mx:Sequence>	
 	
 	<mx:Sequence id="TVEffect_Show">
+		<mx:AnimateProperty property="alpha" fromValue="0.0" toValue="1.0" duration="500"/>
 		<mx:AnimateProperty property="scaleX" toValue="1.0" fromValue=".02" duration="500"/>
 		<mx:AnimateProperty property="scaleY" toValue="1.0" fromValue=".02" duration="500"/>
 	</mx:Sequence>
@@ -107,14 +108,21 @@
 				return this._isDemoMode;
 			}
 			
+			public function show():void {
+				this.alpha = 1.0;
+//				this.visible = true;
+//				this.TVEffect_Show.play([this]);
+			}
+			
 			private function doRemoteCommand(command:String, listener:Function):void {
 				var _loader:URLLoader = new URLLoader;
 				var _loaderReq:URLRequest;
 				var _url:String;
 				
 				_loader.dataFormat = URLLoaderDataFormat.TEXT;
-				_loader.addEventListener(Event.COMPLETE, listener,false,0,true);
-				_loader.addEventListener(IOErrorEvent.IO_ERROR, RemoteCommand_error,false,0,true);
+				_loader.addEventListener(Event.COMPLETE, listener);
+				_loader.addEventListener(IOErrorEvent.IO_ERROR, RemoteCommand_error);
+				this.addEventListener("CONNECTION_ERROR", listener);
 				
 				switch(command) {
 					case "login":
@@ -150,6 +158,8 @@
 				} else {
 					this.currentState = "register";
 				}
+				
+				dispatchEvent(new Event("CONNECTION_ERROR"));
 			}
 			
 			private function OnLoginClick(e:Event):void {

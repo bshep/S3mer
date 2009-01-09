@@ -11,7 +11,7 @@
 		<mx:State name="loading">
 			<mx:AddChild position="lastChild">
 				<mx:Canvas id="LoadingCanvas" verticalScrollPolicy="off" horizontalScrollPolicy="off" visible="true" horizontalCenter="0" verticalCenter="0" width="320" height="240">
-					<mx:SWFLoader id="myLoadingImage" source="assets/logo.swf" x="0" top="0"/>
+					<mx:SWFLoader id="myLoadingImage" source="assets/logo.swf" x="0" top="0" maintainAspectRatio="true"/>
 					<mx:ProgressBar labelPlacement="bottom" id="myFileProgress" enabled="true" mode="manual" label=" " visible="false" bottom="10" right="10" left="10"/>
 					<mx:ProgressBar labelPlacement="bottom" id="myTotalProgress" enabled="true" mode="manual" label=" " bottom="20" right="10" left="10"/>
 					<mx:Label id="lblStatus" visible="false" left="0" right="0" color="#BDBDBD">
@@ -148,9 +148,9 @@
 
 				this.setStyle("backgroundColor","#FFFFFF");				
 				
-				myLoadingImage.maintainAspectRatio = true;
+//				myLoadingImage.maintainAspectRatio = true;
 
-				LoadingCanvas.visible = true;
+//				LoadingCanvas.visible = true;
 
 				this._configuration = new ConfigurationManager(this, multiScreen);
 				
@@ -269,26 +269,23 @@
 				this.loadConfiguration(this._multiScreen);
 			}
 			
-			public function doReset(loginWindow:LoginWindow):void {
-				if( this._show != null ) {				
-					try {
-						this._show.reset();
-						this._show.removeAllChildren();
-						this.removeChild(this._show);
-					} catch(e:Error) {
-						
-					}
-				}
-				
-				this._configuration.stopDownloads();
-				this.currentState = "";
-								
-				this.setStyle("backgroundColor","#FFFFFF");				
-										
-				if( this._screenNumber == 0 ) {
-					this.addChild(loginWindow);
-				}
-			}
+//			public function doReset22():void {
+//				if( this._show != null ) {				
+//					try {
+//						this._show.reset();
+//						this._show.removeAllChildren();
+//						this.removeChild(this._show);
+//					} catch(e:Error) {
+//						
+//					}
+//				}
+//				
+//				this._configuration.stopDownloads();
+//				this.currentState = "";
+//								
+//				this.setStyle("backgroundColor","#FFFFFF");				
+//										
+//			}
 
 			public function redoInitialSetup():void {
 				this._owner.doInitialSetup(true);
@@ -302,5 +299,5 @@
 	</mx:Script>
 	
 	<ns1:NotificationPanel id="_notificationPanel" right="10" top="10" visible="false" />
-	<ns1:LoginWindow id="_loginWindow" horizontalCenter="0" verticalCenter="0" visible="true" />
+	<ns1:LoginWindow id="_loginWindow" alpha="0.0" horizontalCenter="0" verticalCenter="0" visible="false" />
 </mx:Window>
