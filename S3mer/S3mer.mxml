@@ -25,7 +25,7 @@
 			
 //			private var _log:Logger = Logger.instance;
 			private var _updater:ApplicationUpdater;
-			private var myLoginWindow:LoginWindow;
+			private var _loginWindow:LoginWindow;
 			private var _playerWindows:ArrayCollection = new ArrayCollection;
 			private var _isPro:Boolean = false;
 			private var _isDemo:Boolean = false;
@@ -42,14 +42,31 @@
 				return multiScreen;
 			}
 			
-			private function createLoginWindow():void {
-				myLoginWindow = new LoginWindow();
-				myLoginWindow.visible = false;
+			private function getScreenById(screenId:Number):S3merWindow {
+				for each( var _screen:S3merWindow in this._playerWindows ) {
+					if( screenId == _screen.getScreen() ) {
+						return _screen;
+					}
+				}
 				
-				if( Screen.screens.length > 1 ) {
-					myLoginWindow.isMultiScreen = true;
+				return null;			
+			}
+			
+			private function createLoginWindow():void {
+				var mainScreen:S3merWindow = getScreenById(0);
+				
+				if(mainScreen) {
+				
+					this._loginWindow = getScreenById(0)._loginWindow;
+					this._loginWindow.visible = false;
+					
+					if( Screen.screens.length > 1 ) {
+						this._loginWindow.isMultiScreen = true;
+					} else {
+						this._loginWindow.isMultiScreen = false;
+					}
 				} else {
-					myLoginWindow.isMultiScreen = false;
+					this._loginWindow = null;
 				}
 			}
 			
@@ -57,12 +74,14 @@
 			private function onAppLoad(e:FlexEvent):void {
 				this.frameRate = 30;
 				
+				createPlayerWindows();
 				createLoginWindow();
 				
-				createPlayerWindows();
+				if( this._loginWindow ) {
+					this.stage.addEventListener(Event.CLOSE,onAppClose, false, 0, true);
+					this._loginWindow.checkCredentials(onAppLoad_postLogin);
+				}
 
-				this.stage.addEventListener(Event.CLOSE,onAppClose, false, 0, true);
-				myLoginWindow.checkCredentials(onAppLoad_postLogin);
 			}
 			
 			private function createPlayerWindows():void {
@@ -77,7 +96,7 @@
 					_window.showWindow();
 					this._playerWindows.addItem(_window);
 					if( screenNumber == 0 ) {
-						_window.addChild(myLoginWindow);
+						_window._loginWindow.visible = true;
 					}
 					screenNumber++;
 //					break; // Only show 1 window
@@ -95,7 +114,6 @@
 			public function resetApp():void {
 				var _window:S3merWindow;
 				
-				createLoginWindow();
 
 				for each( _window in this._playerWindows ) {
 					_window.stop();
@@ -104,8 +122,11 @@
 				this._playerWindows.removeAll();
 				
 				createPlayerWindows();
+				createLoginWindow();
 				
-				myLoginWindow.checkCredentials(onAppLoad_postLogin);
+				if( this._loginWindow ) {
+					this._loginWindow.checkCredentials(onAppLoad_postLogin);
+				}
 			}
 			
 			public function reloadApp():void {
@@ -122,10 +143,8 @@
 				}	
 			}
 			
-			private function doLogin():void {				
-				myLoginWindow.setStyle("horizontalCenter",0);
-				myLoginWindow.setStyle("verticalCenter",0);
-				myLoginWindow.addEventListener("WINDOW_CLOSED",onAppLoad_stage2,false,0,true);
+			private function doLogin():void {
+				this._loginWindow.addEventListener("WINDOW_CLOSED",onAppLoad_stage2,false,0,true);
 				this.setStyle("backgroundColor","#FFFFFF");
 
 				if ( stage.nativeWindow.closed != true ) { 
@@ -135,14 +154,14 @@
 					
 				cursorManager.removeBusyCursor();
 				
-				myLoginWindow.visible = true;	
+				this._loginWindow.visible = true;	
 			}
 			
 			private function onAppLoad_stage2(e:Event):void {
-				this._isPro = this.myLoginWindow.isPro;
-				this._isDemo = this.myLoginWindow.isDemoMode;
+				this._isPro = this._loginWindow.isPro;
+				this._isDemo = this._loginWindow.isDemoMode;
 				
-				myLoginWindow.parent.removeChild(this.myLoginWindow);
+				this._loginWindow.visible = false;
 
 				systemManager.stage.addEventListener(KeyboardEvent.KEY_UP,HandleKeyUp,false,0,true);
 				if (ApplicationSettings.getValue("ui.showcursor") != "true") {
@@ -161,7 +180,7 @@
 						_window.loadConfiguration(isMultiscreen());
 						if(_window.channelId == "-1") {
 							_window.close();
-							this._playerWindows.removeItemAt(this._playerWindows.getItemIndex(_window));
+//							this._playerWindows.removeItemAt(this._playerWindows.getItemIndex(_window));
 						} else {
 							_window.enableKeyHandler();
 						}
@@ -169,11 +188,18 @@
 					
 					if(this._isDemo && _window.screenId != 0) {
 						_window.close();
-						this._playerWindows.removeItemAt(this._playerWindows.getItemIndex(_window));
+//						this._playerWindows.removeItemAt(this._playerWindows.getItemIndex(_window));
 					}
 				}
 				this.stage.removeEventListener(Event.CLOSE,onAppClose);
 				
+				for each(  _window in this._playerWindows) {
+					if( _window.closed == true ) {
+						this._playerWindows.removeItemAt(this._playerWindows.getItemIndex(_window));
+						break;
+					}
+				}
+
 				
 				for each(  _window in this._playerWindows) {
 					if( _window.visible == true ) {

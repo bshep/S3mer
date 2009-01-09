@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:S3mer="com.msgid.S3mer.*">
+	<S3mer:SmoothVideoDisplay top="0" bottom="0" left="0" right="0"/>
+	
+	<mx:Script>
+		<![CDATA[
+		
+		
+			
+		]]>
+	</mx:Script>
+</mx:Canvas>

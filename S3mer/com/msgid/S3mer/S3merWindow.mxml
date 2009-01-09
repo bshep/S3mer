@@ -18,8 +18,11 @@
 					</mx:Label>
 				</mx:Canvas>
 			</mx:AddChild>
+			<mx:RemoveChild target="{_loginWindow}"/>
 		</mx:State>
-		<mx:State name="playing"/>
+		<mx:State name="playing">
+			<mx:RemoveChild target="{_loginWindow}"/>
+		</mx:State>
 	</mx:states>
 	
 	<mx:Script>
@@ -299,4 +302,5 @@
 	</mx:Script>
 	
 	<ns1:NotificationPanel id="_notificationPanel" right="10" top="10" visible="false" />
+	<ns1:LoginWindow id="_loginWindow" horizontalCenter="0" verticalCenter="0" visible="true" />
 </mx:Window>
