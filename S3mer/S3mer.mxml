@@ -3,7 +3,7 @@
 	layout="absolute" 
 	applicationComplete="onAppLoad(event)"
 	invoke="onInvoke(event)"
-	borderStyle="none" showStatusBar="false" 
+	borderStyle="none" showStatusBar="false" width="1" height="1" visible="false"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off" backgroundColor="#000000"
      xmlns:ns1="com.msgid.S3mer.*">
 	

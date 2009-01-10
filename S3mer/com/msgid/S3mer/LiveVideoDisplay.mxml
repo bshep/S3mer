@@ -47,6 +47,8 @@
 				
 				if(mic) {
 					mic.setLoopBack(true);
+					mic.setUseEchoSuppression(false);
+//					mic.
 				}
 				
 				return true;
@@ -72,10 +74,17 @@
 			
 			private function getPreferedMicrophone():Microphone {
 				var miclist:Array = Microphone.names;
+				var a:int;
 				
 				
-				for( var a:int; a< miclist.length; a++ ){
-					if( miclist[a] == "DV Video" ) {
+				for( a = 0; a< miclist.length; a++ ){
+					if( miclist[a] == "Built-in Input" ) {
+						return Microphone.getMicrophone(a)
+					}
+				}
+				
+				for( a = 0; a< miclist.length; a++ ){
+					if( miclist[a] == "Built-in Microphone" ) {
 						return Microphone.getMicrophone(a)
 					}
 				}
