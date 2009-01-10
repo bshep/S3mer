@@ -98,12 +98,12 @@ package com.msgid.S3mer
 					pan = ApplicationSettings.getValue("video.pan","0");
 					
 					if (pan == "0") {
-						pan = "1";
+						pan = "-1";
 						target.configuration.pan = new Number(pan);
 						ApplicationSettings.setValue("video.pan",pan);
 						statusDisplay("Pan Left", target);
-					} else if(pan == "1") {
-						pan = "-1";
+					} else if(pan == "-1") {
+						pan = "1";
 						target.configuration.pan = new Number(pan);
 						ApplicationSettings.setValue("video.pan",pan);
 						statusDisplay("Pan Right", target);
