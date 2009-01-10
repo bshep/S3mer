@@ -4,6 +4,8 @@
 	
 	<mx:Script>
 		<![CDATA[
+//			private var _ns:NetStream;
+		
 			public function set smoothing(val:Boolean):void {
 				this._video.smoothing = val;
 			}
@@ -34,14 +36,20 @@
 		
 			public function start():Boolean {
 				var cam:Camera = getPreferedCaptureDevice();
+				var mic:Microphone = getPreferedMicrophone();
 				
 				if(cam) {
 					cam.setMode(720,480,30);
 					this._video.attachCamera(cam);
-					return true;
 				} else {
 					return false;
 				}
+				
+				if(mic) {
+					mic.setLoopBack(true);
+				}
+				
+				return true;
 			}
 			
 			public function stop():void {
@@ -59,6 +67,20 @@
 				}
 				
 				return Camera.getCamera();
+//				return null;
+			}
+			
+			private function getPreferedMicrophone():Microphone {
+				var miclist:Array = Microphone.names;
+				
+				
+				for( var a:int; a< miclist.length; a++ ){
+					if( miclist[a] == "DV Video" ) {
+						return Microphone.getMicrophone(a)
+					}
+				}
+				
+				return Microphone.getMicrophone();
 //				return null;
 			}
 			
