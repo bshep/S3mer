@@ -43,7 +43,7 @@
 		<!-- <title></title> -->
 
 		<!-- The type of system chrome to use (either "standard" or "none"). Optional. Default standard. -->
-		<systemChrome>none</systemChrome>
+		<systemChrome>standard</systemChrome>
 
 		<!-- Whether the window is transparent. Only applicable when systemChrome is false. Optional. Default false. -->
 		<transparent>false</transparent>
@@ -67,10 +67,10 @@
 		<height>1</height>
 
 		<!-- The window's initial x position. Optional. -->
-		<!-- <x></x> -->
+		<x>0</x>
 
 		<!-- The window's initial y position. Optional. -->
-		<!-- <y></y> -->
+		<y>0</y>
 
 		<!-- The window's minimum size, specified as a width/height pair, such as "400 200". Optional. -->
 		<!-- <minSize></minSize> -->

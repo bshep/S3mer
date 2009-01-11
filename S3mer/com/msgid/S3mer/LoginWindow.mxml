@@ -11,7 +11,7 @@
 					<mx:TextInput text="password" id="txtPassword" enter="OnLoginClick(event)" focusIn="if(txtPassword.text == 'password') {this.txtPassword.text=''; this.txtPassword.displayAsPassword = true};" toolTip="Enter your password here" borderStyle="solid" top="49" right="40" left="39"/>
 					<mx:Button label="Log In" right="39.950005" click="OnLoginClick(event)" toolTip="Click here to log-in" id="btnTune" bottom="16" height="27" width="87.99999"/>
 					<mx:LinkButton label="Not Registered?" width="126" fontFamily="Verdana" textDecoration="underline" color="#0042FF" fontSize="11" bottom="16" left="39" textAlign="left" id="linkbutton1">
-						<mx:click>navigateToURL(new URLRequest('http://www.s3mer.com'), 'S3mer')</mx:click>
+						<mx:click>navigateToURL(new URLRequest('http://www.s3mer.com/register.php'), 'S3mer')</mx:click>
 					</mx:LinkButton>
 					<mx:SWFLoader visible="true" id="spinner" verticalAlign="middle" horizontalAlign="center" top="19" left="280" width="16" height="16"/>
 				</mx:Panel>
@@ -53,15 +53,15 @@
 	</mx:states>
 
 	<mx:Sequence id="TVEffect_Hide" effectEnd="hide_complete(event)">
-		<mx:AnimateProperty property="scaleY" fromValue="1.0" toValue=".02" duration="500"/>
-		<mx:AnimateProperty property="scaleX" fromValue="1.0" toValue=".02" duration="500"/>
-		<mx:AnimateProperty property="alpha" fromValue="1.0" toValue="0" duration="500"/>
+		<mx:AnimateProperty property="scaleY" fromValue="1.0" toValue=".02" duration="300"/>
+		<mx:AnimateProperty property="scaleX" fromValue="1.0" toValue=".02" duration="300"/>
+		<mx:AnimateProperty property="alpha" fromValue="1.0" toValue="0" duration="300"/>
 	</mx:Sequence>	
 	
 	<mx:Sequence id="TVEffect_Show">
-		<mx:AnimateProperty property="alpha" fromValue="0.0" toValue="1.0" duration="500"/>
-		<mx:AnimateProperty property="scaleX" toValue="1.0" fromValue=".02" duration="500"/>
-		<mx:AnimateProperty property="scaleY" toValue="1.0" fromValue=".02" duration="500"/>
+		<mx:AnimateProperty property="alpha" fromValue="0.0" toValue="1.0" duration="300"/>
+		<mx:AnimateProperty property="scaleX" toValue="1.0" fromValue=".02" duration="300"/>
+		<mx:AnimateProperty property="scaleY" toValue="1.0" fromValue=".02" duration="300"/>
 	</mx:Sequence>
  	
  	<mx:transitions>
@@ -370,14 +370,23 @@
 			}
 			
 			private function onDemoMode(e:Event):void {
-				this.currentState = "register_choosePlayer"
+
+				this.height = 0;
+				this.width = 0;
+				this.visible = false;
+				
+				this.currentState = "register_choosePlayer";
 				
 				this.txtPassword.displayAsPassword = true;
+				this.txtUsername.displayAsPassword = true;
 				this.txtUsername.text = "demo@s3mer.com";
 				this.txtPassword.text = "thisisthedemoacctpassword";
 				
 				this.btnDemo.enabled = false;
 				this.btnLogin1.enabled = false;
+				this.btnTune0.enabled = false;
+				this.linkbutton2.enabled = false;
+				this.cmbPlayers0.enabled = false;
 
 				this._isDemoMode = true;
 				
