@@ -6,11 +6,9 @@ package com.msgid.S3mer
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.TimerEvent;
-	import flash.media.Camera;
 	import flash.utils.Timer;
 	
 	import mx.collections.ArrayCollection;
-	import mx.containers.Canvas;
 	import mx.controls.HTML;
 	import mx.controls.Label;
 	import mx.controls.videoClasses.VideoError;
@@ -99,8 +97,10 @@ package com.msgid.S3mer
 				
 				if( this._mainMediaRegion == "1" && (a+currIndex) >= this._playlists.length - 1 ) {
 					// This is the main media region, when we reach the end of the playlist, throw an event to move to the next show.
-					this._parent.dispatchEvent(new ShowEvent(ShowEvent.NEXT_SHOW));
-					this._atShowEnd = true;
+					
+					// show_play_next finds the next show, if it returns false, we only have one show so dont need to set endofshow
+					this._atShowEnd = this._parent._configuration.show_play_next();
+//					this._parent.dispatchEvent(new ShowEvent(ShowEvent.NEXT_SHOW));
 //					return;
 				}
 
@@ -286,7 +286,7 @@ package com.msgid.S3mer
 				tmpVD = (this._realObject as LiveVideoDisplay);
 				
 				if(tmpVD) {
-					stop();
+					tmpVD.stop();
 				}
 			}
 			

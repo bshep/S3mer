@@ -553,7 +553,7 @@ package com.msgid.S3mer
 			this._playlistsCur = this._playlistsNew;
 			
 			
-			this.show_play_next(null);		
+			this.show_play_next();		
 		}
 		
 		public function stop():void {
@@ -735,6 +735,8 @@ package com.msgid.S3mer
 			for each (var showXML:XML in _config.show) {
 				var newShow:Show = new Show();
 				
+				newShow.setConfiguration(this);
+				
 				Logger.addEvent("Show id: " + showXML.@id);
 				newShow.id = showXML.@id;
 				newShow.visible = true;
@@ -749,7 +751,7 @@ package com.msgid.S3mer
 				newShow.resizeX = newShow.width/newShow.configuredWidth;
 				newShow.resizeY = newShow.height/newShow.configuredHeight;
 				
-				newShow.addEventListener(ShowEvent.NEXT_SHOW, show_play_next);
+//				newShow.addEventListener(ShowEvent.NEXT_SHOW, show_play_next);
 				
 
 				try {
@@ -787,7 +789,7 @@ package com.msgid.S3mer
 			}
 		}
 		
-		private function show_play_next(e:ShowEvent):void {
+		public function show_play_next():Boolean {
 			var nextShow:Show;
 			var currShow:Show;
 			
@@ -810,14 +812,14 @@ package com.msgid.S3mer
 			
 			if( this._showsCur.length == 0 ) {
 				//TODO: WTF?
-				return;
+				return false;
 			}
 			
 			if( this._showsCur.length == 1 ) {
 				if( currShow == null ) {
 					switchShow((this._showsCur.getItemAt(0) as Show).id);
 				}
-				return; //Only one show, no need to switch shows.
+				return false; //Only one show, no need to switch shows.
 			} 
 			
 			var currShowIndex:int = this._showsCur.getItemIndex(currShow);
@@ -841,6 +843,8 @@ package com.msgid.S3mer
 			if( nextShow != currShow ) {
 				switchShow(nextShow.id);
 			}
+			
+			return true;
 		}
 
 		private function parseShow_addSchedules(show:Show):void {

@@ -26,6 +26,7 @@
 			private var _hasAudio:Boolean;
 			private var _audioPan:Number;
 			private var _schedule:Schedule = null;
+			public var _configuration:ConfigurationManager;
 			
 
 			
@@ -45,7 +46,11 @@
 
 			public function get schedule():Schedule {
 				return this._schedule;
-			}			
+			}
+			
+			public function setConfiguration(obj:ConfigurationManager):void {
+				this._configuration = obj;
+			}
 
 			public function setSchedule(obj:Schedule):void {
 				this._schedule = obj;
