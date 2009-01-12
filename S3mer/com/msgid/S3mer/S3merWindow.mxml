@@ -111,6 +111,10 @@
 				this.currentState = "";
 			}
 			
+			public function hideWindow():void {
+				this.visible = false;
+			}
+			
 			public function enableKeyHandler():void {
 				
 				if(this.stage) {
@@ -293,6 +297,10 @@
 			
 			public function cleanMediaDirectory():void {
 				this._configuration.cleanupMedia();	
+			}
+			
+			public function muteAudio(val:Boolean):void {
+				this._configuration.muteAudio(val);
 			}
 			
 		]]>

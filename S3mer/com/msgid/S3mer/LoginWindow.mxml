@@ -27,10 +27,14 @@
 					</mx:LinkButton>
 				</mx:Canvas>
 			</mx:AddChild>
-			<mx:SetProperty name="height" value="222"/>
+			<mx:SetProperty name="height" value="250"/>
 			<mx:RemoveChild target="{btnTune}"/>
 			<mx:AddChild relativeTo="{pnlRegister}" position="lastChild">
 				<mx:Button label="Tune In" click="OnTuneInClick(event)" toolTip="Click here to tune-in" id="btnTune0" height="27" width="87.99999" fontSize="13" bottom="16" right="39.950005"/>
+			</mx:AddChild>
+			<mx:AddChild>
+				<!--Checkbox-->
+				<mx:CheckBox label="Screensaver Mode" id="chkScreensaver" fontSize="13" bottom="22" left="25"/>
 			</mx:AddChild>
 			<mx:RemoveChild target="{linkbutton1}"/>
 			<mx:RemoveChild target="{pnlMode}"/>
@@ -95,6 +99,7 @@
 			
 			private var _username:String;
 			private var _password:String;
+			private var _screensaver:String;
 			
 			public function set isMultiScreen(val:Boolean):void {
 				this._isMultiScreen = val;
@@ -334,6 +339,7 @@
 				ApplicationSettings.setValue("user.username",this._username);
 				ApplicationSettings.setValue("user.password",this._password);
 				ApplicationSettings.setValue("screen0.channel.id",this.cmbPlayers0.selectedItem.data[0]);
+				ApplicationSettings.setValue("screen0.screensaver",this.chkScreensaver.selected.toString());
 				
 				if(this.currentState == "register_multiPlayer" && !_isDemoMode) {
 					ApplicationSettings.setValue("screen1.channel.id",this.cmbPlayers1.selectedItem.data[0]);
