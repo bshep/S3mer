@@ -4,7 +4,7 @@
 	resize="resize()">
 	<mx:Style>
 		@font-face {
-		    src:url("assets/Helvetica Neue Condensed Black.ttf");
+		    src:url("/assets/Helvetica Neue Condensed Black.ttf");
 		    fontFamily: HelvNeueBlack;
 		}
 	</mx:Style>
@@ -16,12 +16,26 @@
 			private var _timer:Timer;
 			private const _origWidth:int = 251;
 			private const _origHeight:int = 81;
+
 			private var resizing:Boolean = false;
-			
+			private var _timeFormat:String = "12hr";
+						
 			public function play():void {
 				setupTimer();
 				update();
 				_timer.start();
+			}
+			
+			public function setFormat(val:String):void {
+				this._timeFormat = val;
+			}
+			
+			public function setTimeColor(timeColor:String):void {
+				this.txtTime.setStyle("color",timeColor);	
+			}
+			
+			public function setDateColor(dateColor:String):void {
+				this.txtDate.setStyle("color",dateColor);	
 			}
 			
 			public function resize():void {
@@ -90,7 +104,12 @@
 				
 				this.txtDate.text = df.format(datenow).toUpperCase();
 				
-				df.formatString = "L:NN A";
+				if( this._timeFormat == "24hr" ) { 
+					df.formatString = "J:NN";
+				} else {
+					df.formatString = "L:NN A";
+				}				
+				
 				this.txtTime.text = df.format(datenow).toUpperCase();
 				
 				this._timer.delay = (60 - datenow.getSeconds())*1000;

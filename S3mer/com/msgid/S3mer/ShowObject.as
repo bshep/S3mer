@@ -232,6 +232,20 @@ package com.msgid.S3mer
 		private function configure_timedate(objectXML:XML):void {
 			var newTimedate:TimeDateObject = new TimeDateObject();
 			
+			if(objectXML.@format == "24hr") {
+				newTimedate.setFormat("24hr");
+			} else {
+				newTimedate.setFormat("12hr");
+			}
+			
+			if(objectXML.@timeColor.toString() != "" ) {
+				newTimedate.setTimeColor(objectXML.@timeColor);
+			}
+			
+			if(objectXML.@dateColor.toString() != "" ) {
+				newTimedate.setDateColor(objectXML.@dateColor);
+			}
+			
 			this._realObject = newTimedate;
 			this.resize();
 		}
@@ -680,7 +694,7 @@ package com.msgid.S3mer
 		
 		private function play_next_timedate():void {
 			this._prevObject = this._realObject;
-			this.configure_timedate(this._configXML);
+			this.configure_timedate(this.currentPlaylist.current.configXML);
 			cleancut(this._prevObject, this._realObject);
 			TimeDateObject(this._realObject).play();
 		}

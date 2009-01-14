@@ -3,14 +3,13 @@ package com.msgid.S3mer
 	import flash.desktop.NativeApplication;
 	import flash.display.Stage;
 	import flash.display.StageDisplayState;
+	import flash.errors.IllegalOperationError;
 	import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;
 	import flash.events.KeyboardEvent;
 	import flash.system.Capabilities;
 	
 	import mx.core.Application;
-	import mx.effects.Move;
-	import mx.events.TweenEvent;
 
 	public class KeyboardManager extends EventDispatcher
 	{
@@ -185,16 +184,16 @@ package com.msgid.S3mer
 					}
 					ApplicationSettings.save();
 					
-//					try {
+					try {
 						if( ApplicationSettings.getValue("ui.autoStartEnabled","true") == "true" ) {
 							NativeApplication.nativeApplication.startAtLogin = true;
 						} else {
 							NativeApplication.nativeApplication.startAtLogin = false;
 						}
 											
-//					} catch( e:IllegalOperationError) {
-//						Logger.addEvent("could not set to startup");
-//					}
+					} catch( e:IllegalOperationError) {
+						Logger.addEvent("could not set to startup");
+					}
 					break;
 				case "Q": //Quit
 					statusDisplay("Quit", target);
