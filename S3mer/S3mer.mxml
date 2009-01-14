@@ -330,7 +330,11 @@
 				
 				this._updater = new ApplicationUpdater();
 				
-				resourceManager.localeChain = [ "pt_BR" ];
+				if( ApplicationSettings.getValue("ui.lang","") != "" ) {
+					resourceManager.localeChain = [ ApplicationSettings.getValue("ui.lang","en_US") ];
+				}
+				
+//				resourceManager.localeChain = [ "pt_BR" ];
 			}
 			
 			private function play():void {

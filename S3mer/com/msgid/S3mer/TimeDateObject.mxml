@@ -100,7 +100,18 @@
 				var datenow:Date = new Date();
 				var df:DateFormatter = new DateFormatter();
 				
-				df.formatString = "MMMM D";
+				switch ( resourceManager.localeChain[0] ) {
+					case "en_US":
+					default:
+						df.formatString = "MMMM D";
+						break;
+					case "pt_BR":
+						df.formatString = "D de MMMM";
+						break;
+					case "es_ES":
+						df.formatString = "D de MMMM";
+						break;
+				}
 				
 				this.txtDate.text = df.format(datenow).toUpperCase();
 				

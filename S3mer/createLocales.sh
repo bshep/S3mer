@@ -22,7 +22,6 @@ for locale in $LOCALES_LIST; do
 			pushd ${locale_dir} > /dev/null
 			
 			echo "-" "${locale_dir}"
-			
 			rm "${DEST}/${locale}/${locale_file}.swc"
 			zip -r "${DEST}/${locale}/${locale_file}.swc" * -x *.DS_Store *.svn*		
 			

@@ -10,6 +10,7 @@ package com.msgid.S3mer
 	import flash.system.Capabilities;
 	
 	import mx.core.Application;
+	import mx.resources.ResourceManager;
 
 	public class KeyboardManager extends EventDispatcher
 	{
@@ -149,15 +150,28 @@ package com.msgid.S3mer
 					}
 					ApplicationSettings.save();
 					break;
-//				case "J": //Previous
-//					statusDisplay("Previous", target);
-//					break;
-//				case "K": //Pause/Resume
-//					statusDisplay("Play/Pause", target);
-//					break;
-//				case "L": //Next
-//					statusDisplay("Next", target);
-//					break;
+				case "L": //Change Locale
+					var locales:Array = ResourceManager.getInstance().getLocales();
+					var currLocale:String;
+					var nextLocale:String;
+					var tmpNum:int;
+					
+					if( locales.length > 1 ) { // Only need to switch locales if there is more than one locale
+						currLocale = ResourceManager.getInstance().localeChain[0];
+						
+						tmpNum = locales.indexOf(currLocale);
+						tmpNum = (tmpNum + 1) % ( locales.length );
+						nextLocale = locales[tmpNum];
+						
+						ResourceManager.getInstance().localeChain = [ nextLocale ];
+						
+						statusDisplay("Lang: " + nextLocale, target);
+						
+						ApplicationSettings.setValue("ui.lang",nextLocale);
+						ApplicationSettings.save();
+					}
+				
+					break;
 				case "U": //Enable/Disable Updates
 					var updatesEnabled:String;
 					

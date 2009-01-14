@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding ="utf-8"?>
+<swc xmlns="http://www.adobe.com/flash/swccatalog/9">
+  <versions>
+    <swc version="1.2" />
+    <flex version="3.2.0" build="3958" />
+  </versions>
+  <features>
+    <feature-script-deps />
+    <feature-files />
+  </features>
+  <libraries>
+    <library path="library.swf">
+      <script name="mx/core/mx_internal" mod="1224183575371" signatureChecksum="2693670951" >
+        <def id="mx.core:mx_internal" /> 
+        <dep id="AS3" type="n" /> 
+      </script>
+      <script name="mx/resources/IResourceBundle" mod="1224183598497" signatureChecksum="1823165826" >
+        <def id="mx.resources:IResourceBundle" /> 
+        <dep id="Object" type="i" /> 
+        <dep id="AS3" type="n" /> 
+      </script>
+      <script name="mx/resources/ResourceBundle" mod="1224183598434" signatureChecksum="1380861473" >
+        <def id="mx.resources:ResourceBundle" /> 
+        <dep id="mx.resources:IResourceBundle" type="i" /> 
+        <dep id="Object" type="i" /> 
+        <dep id="mx.core:mx_internal" type="n" /> 
+        <dep id="AS3" type="n" /> 
+        <dep id="flash.system:ApplicationDomain" type="s" /> 
+        <dep id="Error" type="e" /> 
+        <dep id="flash.system:ApplicationDomain" type="e" /> 
+        <dep id="mx.utils:StringUtil" type="e" /> 
+      </script>
+      <script name="mx/utils/StringUtil" mod="1224183581324" signatureChecksum="1202948286" >
+        <def id="mx.utils:StringUtil" /> 
+        <dep id="Object" type="i" /> 
+        <dep id="mx.core:mx_internal" type="n" /> 
+        <dep id="AS3" type="n" /> 
+        <dep id="RegExp" type="e" /> 
+      </script>
+      <keep-as3-metadata>
+        <metadata name="Managed" />
+        <metadata name="ChangeEvent" />
+        <metadata name="Transient" />
+        <metadata name="NonCommittingChangeEvent" />
+        <metadata name="Bindable" />
+      </keep-as3-metadata>
+      <digests>
+        <digest type="SHA-256" signed="false" value="dabf7327519d5cf759a21ac3cab3ea845c1044126a434037d455c4251cb095d0"   />
+      </digests>
+    </library>
+  </libraries>
+  <files>
+    <file path="locale/es_ES/utils.properties" mod="1231958934000" />
+    <file path="locale/es_ES/skins.properties" mod="1231958934000" />
+    <file path="locale/es_ES/formatters.properties" mod="1231958934000" />
+    <file path="locale/es_ES/collections.properties" mod="1231958934000" />
+    <file path="locale/es_ES/validators.properties" mod="1231958934000" />
+    <file path="locale/es_ES/logging.properties" mod="1231958934000" />
+    <file path="locale/es_ES/styles.properties" mod="1231958934000" />
+    <file path="locale/es_ES/SharedResources.properties" mod="1231958934000" />
+    <file path="locale/es_ES/containers.properties" mod="1231958934000" />
+    <file path="locale/es_ES/controls.properties" mod="1231958934000" />
+    <file path="locale/es_ES/core.properties" mod="1231958934000" />
+    <file path="locale/es_ES/effects.properties" mod="1231958934000" />
+    <file path="locale/es_ES/states.properties" mod="1231958934000" />
+  </files>
+</swc>
