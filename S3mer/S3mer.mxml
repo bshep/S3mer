@@ -73,7 +73,7 @@
 			
 			private function onAppLoad(e:FlexEvent):void {
 				this.frameRate = 30;
-						
+				
 				createPlayerWindows();
 				createLoginWindow();
 				
@@ -82,31 +82,6 @@
 					this._loginWindow.checkCredentials(onAppLoad_postLogin);
 				}
 
-			}
-			
-			private function setScreensaverMode(time:int):void {
-				var nativeApp:NativeApplication = NativeApplication.nativeApplication;
-				
-				nativeApp.idleThreshold = time;
-				nativeApp.addEventListener(Event.USER_IDLE, userIdleHandler);
-				nativeApp.addEventListener(Event.USER_PRESENT, userActiveHandler);
-				Logger.addEvent("Screensaver mode ENABLED with a delay of: " + time + " SECONDS");
-			}
-			
-			private function userIdleHandler(e:Event):void {
-				trace("user idle");
-				for each( var _window:S3merWindow in this._playerWindows ) {
-					_window.open(false);
-					_window.showWindow();
-					_window._loginWindow.show();
-				}
-			}
-			
-			private function userActiveHandler(e:Event):void {
-				trace("user is back.");
-				for each( var _window:S3merWindow in this._playerWindows ) {
-					_window.hideWindow();
-				}
 			}
 			
 			private function createPlayerWindows():void {
@@ -123,15 +98,6 @@
 					if( screenNumber == 0 ) {
 						_window._loginWindow.show();
 					}
-					
-					// Check if screensver is enabled and act acordingly
-					ApplicationSettings.load();
-					if(ApplicationSettings.getValue("screen0.screensaver","false")=="true") {
-						setScreensaverMode(5);
-//						_window.configuration.muteAudio(true); // This is not working
-						_window.close();
-					}
-					
 					screenNumber++;
 //					break; // Only show 1 window
 				}
