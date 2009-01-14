@@ -5,7 +5,12 @@ DEST=/Applications/Adobe\ Flex\ Builder\ 3/sdks/3.2.0/frameworks/locale
 
 LOCALES_DIR=../locales
 
-LOCALES_LIST=`ls $LOCALES_DIR`
+pushd $LOCALES_DIR > /dev/null
+
+LOCALES_LIST=`ls -d [A-z][A-z]_[A-z][A-z]`
+
+popd > /dev/null
+
 LOCALES_FILES="airframework_rb automation_rb framework_rb rpc_rb"
 
 # echo $LOCALES_LIST
