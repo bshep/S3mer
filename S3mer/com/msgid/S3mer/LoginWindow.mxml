@@ -6,12 +6,15 @@
 	<mx:states>
 		<mx:State name="register">
 			<mx:AddChild position="lastChild">
-				<mx:Panel id="pnlRegister" layout="absolute" title="Please register this player" fontSize="14" backgroundColor="#FFFFFF" top="0" bottom="0" left="0" right="0" horizontalScrollPolicy="off" verticalScrollPolicy="off" visible="true">
-					<mx:TextInput text="e-mail" id="txtUsername" enter="txtPassword.setFocus()" focusIn="if(txtUsername.text == 'e-mail') this.txtUsername.text=''" toolTip="Enter your e-mail or username" top="14" height="27" left="39" right="40" borderStyle="solid"/>
-					<mx:TextInput text="password" id="txtPassword" enter="OnLoginClick(event)" focusIn="if(txtPassword.text == 'password') {this.txtPassword.text=''; this.txtPassword.displayAsPassword = true};" toolTip="Enter your password here" borderStyle="solid" top="49" right="40" left="39"/>
-					<mx:Button label="Log In" right="39.950005" click="OnLoginClick(event)" toolTip="Click here to log-in" id="btnTune" bottom="16" height="27" width="87.99999"/>
-					<mx:LinkButton label="Not Registered?" width="126" fontFamily="Verdana" textDecoration="underline" color="#0042FF" fontSize="11" bottom="16" left="39" textAlign="left" id="linkbutton1">
+				<mx:Panel id="pnlRegister" layout="absolute" title="{resourceManager.getString('application', 'PLEASE_REGISTER')}" fontSize="14" backgroundColor="#FFFFFF" top="0" bottom="0" left="0" right="0" horizontalScrollPolicy="off" verticalScrollPolicy="off" visible="true">
+					<mx:TextInput text="{resourceManager.getString('application', 'EMAIL')}" id="txtUsername" enter="txtPassword.setFocus()" focusIn="if(txtUsername.text == resourceManager.getString('application', 'EMAIL')) this.txtUsername.text=''" toolTip="Enter your e-mail or username" top="14" height="27" left="39" right="40" borderStyle="solid"/>
+					<mx:TextInput text="{resourceManager.getString('application', 'PASSWORD')}" id="txtPassword" enter="OnLoginClick(event)" focusIn="if(txtPassword.text == resourceManager.getString('application', 'PASSWORD')) {this.txtPassword.text=''; this.txtPassword.displayAsPassword = true};" toolTip="Enter your password here" borderStyle="solid" top="49" right="40" left="39"/>
+					<mx:Button label="{resourceManager.getString('application', 'LOGIN')}" right="22" click="OnLoginClick(event)" toolTip="Click here to log-in" id="btnTune" bottom="10" height="27" width="108.95"/>
+					<mx:LinkButton label="{resourceManager.getString('application', 'NOT_REGISTERED')}" width="162.05" fontFamily="Verdana" textDecoration="underline" color="#0042FF" fontSize="11" bottom="24" left="14" textAlign="left" id="linkbutton1">
 						<mx:click>navigateToURL(new URLRequest('http://www.s3mer.com/register.php'), 'S3mer')</mx:click>
+					</mx:LinkButton>
+					<mx:LinkButton label="{resourceManager.getString('application', 'BACK')}" width="162.05" fontFamily="Verdana" textDecoration="underline" color="#0042FF" fontSize="11" bottom="1" left="14" textAlign="left" id="linkbutton0">
+						<mx:click>this.currentState = ""; this.txtUsername.enabled = true; this.txtPassword.enabled = true</mx:click>
 					</mx:LinkButton>
 					<mx:SWFLoader visible="true" id="spinner" verticalAlign="middle" horizontalAlign="center" top="19" left="280" width="16" height="16"/>
 				</mx:Panel>
@@ -20,35 +23,39 @@
 		</mx:State>
 		<mx:State name="register_choosePlayer" basedOn="register">
 			<mx:AddChild relativeTo="{pnlRegister}" position="lastChild">
-				<mx:Canvas id="playerPanel" right="40" left="39" top="84" height="59" verticalScrollPolicy="off" horizontalScrollPolicy="off">
-					<mx:ComboBox id="cmbPlayers0" y="10" height="21" dataProvider="Player list" width="182" x="31" change="OnComboChanged(event)"></mx:ComboBox>
-					<mx:LinkButton label="Different user?" width="126" fontFamily="Verdana" textDecoration="underline" color="#0042FF" fontSize="11" bottom="0" left="0" textAlign="left" id="linkbutton2">
-						<mx:click>doLogout()</mx:click>
-					</mx:LinkButton>
+				<mx:Canvas id="playerPanel" right="40" left="39" top="75" height="42" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+					<mx:ComboBox id="cmbPlayers0" y="10" height="21" dataProvider="Player List" width="182" x="31" change="OnComboChanged(event)"></mx:ComboBox>
 				</mx:Canvas>
 			</mx:AddChild>
-			<mx:SetProperty name="height" value="222"/>
+			<mx:SetProperty name="height" value="202"/>
 			<mx:RemoveChild target="{btnTune}"/>
 			<mx:AddChild relativeTo="{pnlRegister}" position="lastChild">
 				<mx:Button label="Tune In" click="OnTuneInClick(event)" toolTip="Click here to tune-in" id="btnTune0" height="27" width="87.99999" fontSize="13" bottom="16" right="39.950005"/>
 			</mx:AddChild>
 			<mx:RemoveChild target="{linkbutton1}"/>
 			<mx:RemoveChild target="{pnlMode}"/>
+			<mx:AddChild relativeTo="{pnlRegister}" position="lastChild">
+				<mx:LinkButton label="{resourceManager.getString('application', 'DIFFERENT_USER')}" width="162.05" fontFamily="Verdana" textDecoration="underline" color="#0042FF" fontSize="11" textAlign="left" id="linkbutton2" bottom="1" left="14" >
+					<mx:click>this.currentState = "register"; this.txtUsername.enabled = true; this.txtPassword.enabled = true</mx:click>
+				</mx:LinkButton>
+			</mx:AddChild>
+			<mx:RemoveChild target="{linkbutton0}"/>
 		</mx:State>
 		<mx:State name="register_multiPlayer" basedOn="register_choosePlayer">
-			<mx:SetProperty name="height" value="302"/>
-			<mx:SetProperty target="{playerPanel}" name="height" value="137"/>
+			<mx:SetProperty name="height" value="282"/>
+			<mx:SetProperty target="{playerPanel}" name="height" value="122"/>
 			<mx:AddChild relativeTo="{playerPanel}" position="lastChild">
-				<mx:Label x="10" text="This Screen:" top="10"/>
+				<mx:Label x="10" text="{resourceManager.getString('application', 'THIS_SCREEN')}" top="10" id="label1"/>
 			</mx:AddChild>
 			<mx:SetProperty target="{cmbPlayers0}" name="y"/>
 			<mx:SetStyle target="{cmbPlayers0}" name="top" value="30"/>
-			<mx:AddChild relativeTo="{linkbutton2}" position="before">
-				<mx:ComboBox id="cmbPlayers1" height="21" dataProvider="Player list" width="182" x="31" change="OnComboChanged(event)" top="79"></mx:ComboBox>
+			<mx:AddChild relativeTo="{label1}" position="before">
+				<mx:ComboBox id="cmbPlayers1" height="21" dataProvider="Player List" width="182" x="31" change="OnComboChanged(event)" top="79"></mx:ComboBox>
 			</mx:AddChild>
-			<mx:AddChild relativeTo="{linkbutton2}" position="before">
-				<mx:Label x="10" text="Second Screen:" top="59"/>
+			<mx:AddChild relativeTo="{label1}" position="before">
+				<mx:Label x="10" text="{resourceManager.getString('application', 'SECOND_SCREEN')}" top="59"/>
 			</mx:AddChild>
+			<mx:SetProperty target="{linkbutton2}" name="y" value="229"/>
 		</mx:State>
 	</mx:states>
 
@@ -83,6 +90,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import mx.events.IndexChangedEvent;
 			import mx.resources.ResourceBundle;
 			import mx.events.EffectEvent;
 			import mx.collections.ListCollectionView;
@@ -116,10 +124,30 @@
 			
 			public function show():void {
 				this.alpha = 1.0;
-				this.cmbLanguage.selectedIndex = resourceManager.getLocales().indexOf(resourceManager.localeChain[0]);
-//				updateLocaleStrings();
+				this.cmbLanguage.selectedIndex = localeListIndex(resourceManager.localeChain[0]);
+
+
+				updateLocaleStrings();
 //				this.visible = true;
 //				this.TVEffect_Show.play([this]);
+			}
+			
+			private function localeListIndex(locale:String):int {
+				for( var a:int = 0; a < localesList.length; a++ ) {
+					if( localesList[a].data == locale ) {
+						return a;
+					}
+				}
+				
+				return 0;
+			}
+			
+			private function updateLocaleStrings():void {
+				pnlMode.title = resourceManager.getString('application', 'GREETING');
+				btnDemo.label = resourceManager.getString('application', 'START_DEMO');
+				btnLogin1.label = resourceManager.getString('application', 'LOGIN');
+				lblLanguage.text = resourceManager.getString('application', 'LANGUAGE');
+				
 			}
 			
 			private function doRemoteCommand(command:String, listener:Function):void {
@@ -422,16 +450,26 @@
 			}
 			
 			private function cmbLanguageChange(e:ListEvent):void {
-				 resourceManager.localeChain = [ cmbLanguage.selectedItem ];
+				resourceManager.localeChain = [ cmbLanguage.selectedItem.data ];
+				ApplicationSettings.setValue("ui.lang",cmbLanguage.selectedItem.data);
+				ApplicationSettings.save();
+				
+				updateLocaleStrings();
 			}
+			
+			[Bindable]
+			private var localesList:Array = [ {label:"English", data:"en_US"},
+											  {label:"Español", data:"es_ES"},
+											  {label:"Portuguese", data:"pt_BR"}];
+			
 		]]>
 	</mx:Script>
-	<mx:Panel id="pnlMode" title="{resourceManager.getString('application', 'GREETING')}" layout="absolute" fontSize="14" backgroundColor="#FFFFFF" top="0" bottom="0" left="0" right="0" horizontalScrollPolicy="off" verticalScrollPolicy="off">
-		<mx:Button id="btnDemo" label="{resourceManager.getString('application', 'START_DEMO')}" horizontalCenter="80" click="onDemoMode(event)" toolTip="Click here to enable demo mode which uses default settings." top="25" height="40"/>
-		<mx:Button id="btnLogin1" label="{resourceManager.getString('application', 'LOGIN')}" horizontalCenter="-80" click="onRegisteredMode(event)" toolTip="Click here to login with your username and password which you setup in our website." width="112" top="25" height="40"/>
+	<mx:Panel id="pnlMode" title="Welcome to s3mer" layout="absolute" fontSize="14" backgroundColor="#FFFFFF" top="0" bottom="0" left="0" right="0" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+		<mx:Button id="btnDemo" label="Demo" horizontalCenter="80" click="onDemoMode(event)" toolTip="Click here to enable demo mode which uses default settings." top="25" height="40"/>
+		<mx:Button id="btnLogin1" label="Log In" horizontalCenter="-80" click="onRegisteredMode(event)" toolTip="Click here to login with your username and password which you setup in our website." width="112" top="25" height="40"/>
 		<mx:VRule top="10" bottom="40" horizontalCenter="0"/>
-		<mx:ComboBox id="cmbLanguage" y="91" horizontalCenter="0" dataProvider="{resourceManager.getLocales()}" change="cmbLanguageChange(event)"></mx:ComboBox>
-		
+		<mx:ComboBox id="cmbLanguage" y="86" dataProvider="{localesList}" change="cmbLanguageChange(event)" left="103"></mx:ComboBox>
+		<mx:Label id="lblLanguage" text="Language" bottom="10" left="22"/>
 	</mx:Panel>
 	
 </mx:Canvas>
