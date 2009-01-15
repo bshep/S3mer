@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+	width="400" height="300" alpha="1.0" backgroundAlpha="1" backgroundColor="#000000" 
+	creationComplete="OnCreated(event)"
+	verticalScrollPolicy="off" horizontalScrollPolicy="off">
+	
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.events.VideoEvent;
+			import mx.events.ResizeEvent;
+			import mx.collections.ArrayCollection;
+			import mx.controls.Image;
+			import mx.events.EffectEvent;
+			
+			public var resizeX:Number;
+			public var resizeY:Number;
+			
+			public var configuredWidth:int;
+			public var configuredHeight:int;
+			
+			private var _fader:FadePanel;
+			
+			private var _showObjects:ArrayCollection = new ArrayCollection();
+			
+			private var _hasAudio:Boolean;
+			private var _audioPan:Number;
+			private var _schedule:Schedule = null;
+			public var _configuration:ConfigurationManager;
+			
+
+			
+			private function OnCreated(e:Event):void {
+//				this.initFader();
+//				this._schedule = null;
+				
+			}
+			
+			public function get hasAudio():Boolean {
+				return this._hasAudio;
+			}
+			
+			public function get audioPan():Number {
+				return this._audioPan;
+			}
+
+			public function get schedule():Schedule {
+				return this._schedule;
+			}
+			
+			public function setConfiguration(obj:ConfigurationManager):void {
+				this._configuration = obj;
+			}
+
+			public function setSchedule(obj:Schedule):void {
+				this._schedule = obj;
+			}
+			
+			public function removeSchedule():void {
+				this._schedule = null
+			}
+
+			public function resize():void {
+				this.resizeX = this.width/this.configuredWidth;
+				this.resizeY = this.height/this.configuredHeight;
+				
+				for each (var showObject:ShowObject in this._showObjects) {
+					showObject.resizeX = this.resizeX;
+					showObject.resizeY = this.resizeY;
+					showObject.resize();
+				}
+				
+				if (this._fader != null) {
+					this._fader.width = this.width;
+					this._fader.height = this.height;
+				}
+			}
+			
+			// Content related functions
+//			public function addObject(id:String,object:DisplayObject):void {
+			public function addObject(objectXML:XML, hasAudio:Boolean, audioPan:Number):void {
+				var showObject:ShowObject;
+				
+				showObject = getObjectById(objectXML.@id);
+				
+				if ( showObject == null ) {
+					showObject = new ShowObject();
+					showObject.id = objectXML.@id;
+					showObject.resizeX = this.resizeX;
+					showObject.resizeY = this.resizeY;
+					
+					this._showObjects.addItem(showObject);
+				}
+				
+				showObject.addEventListener(ShowEvent.INVALID_PLAYLIST_ITEM,onInvalidPlaylistItem,false,0,true);
+				
+//				tmpObject.object = object;	
+				showObject.parent = this;
+				showObject.configure(objectXML);
+				
+				this._hasAudio = hasAudio;
+				
+				this._audioPan = audioPan;
+			}
+			
+			public function onInvalidPlaylistItem(e:ShowEvent):void {
+				(e.target as ShowObject).play_next();
+			}
+			
+			public function getObjectById(id:String):ShowObject {
+				for each (var _each:ShowObject in this._showObjects) {
+					if( _each.id == id ) {
+						return _each;
+					}
+				}
+				
+				return null;
+			}
+
+			
+			public function play():void {
+				//Start all video, slideshows, etc
+				for each( var _showObject:ShowObject in this._showObjects) {
+					_showObject.parent = this;
+//					this.addChild(_showObject.object);	
+					_showObject.play();
+				}
+			}
+
+			public function stop(force:Boolean):void {
+				//Stop all video, slideshows, etc
+				for each( var _showObject:ShowObject in _showObjects) {
+					_showObject.stop(force);
+//					this.removeChild(_showObject.object);
+					_showObject.parent = this;
+				}
+			}
+			
+			public function muteAudio(mute:Boolean):void {
+				for each( var _showObject:ShowObject in _showObjects) {
+					if ( _showObject.object is SmoothVideoDisplay ) {
+						if (mute) {
+							(_showObject.object as SmoothVideoDisplay).volume = 0;
+						} else {
+							(_showObject.object as SmoothVideoDisplay).volume = 1;							
+						}
+					}
+				}				
+			}
+			
+			public function set pan(value:Number):void {
+				for each( var _showObject:ShowObject in _showObjects) {
+					if ( _showObject.object is SmoothVideoDisplay ) {
+						(_showObject.object as SmoothVideoDisplay).pan = value;
+					}
+				}				
+			}
+
+			
+			public function setSmoothing(active:Boolean):void {
+				for each( var _showObject:ShowObject in _showObjects) {
+					if (_showObject.object is SmoothVideoDisplay) {
+						//VideoDisplay(this._realObject).removeEventListener(VideoEvent.COMPLETE, stop_stage2);
+						SmoothVideoDisplay(_showObject.object).smoothing = active;
+					} 
+
+				}				
+			}
+			
+			// Fading related functions
+			private function initFader():void {
+				if (this._fader == null) {
+					_fader = new FadePanel()
+					_fader.setup(this);
+					_fader.addEventListener(EffectEvent.EFFECT_END, OnFadeComplete);
+				} else {
+					this.removeChild(this._fader);
+					this.addChild(this._fader);
+				}
+				
+				
+			}
+			
+			public function OnFadeComplete(e:EffectEvent):void {
+				this.removeChild(this._fader);
+				this.addChildAt(this._fader,0);
+				this.dispatchEvent(new EffectEvent(EffectEvent.EFFECT_END));
+			}
+				
+			public function fadeToggle(delay:int = 1000):void {
+				this.initFader();
+				
+				_fader.toggle(delay);
+			}
+			
+			public function fadeOut(delay:int = 1000):void {
+				this.initFader();
+				_fader.fadeOut(delay);
+			}
+
+			public function fadeIn(delay:int = 1000):void {
+				this.initFader();
+				_fader.fadeIn(delay);
+			}
+			
+			public function reset():void {
+				for each (var obj:ShowObject in this._showObjects ) {
+					obj.stop();
+				}
+			}
+		]]>
+	</mx:Script>
+</mx:Canvas>
