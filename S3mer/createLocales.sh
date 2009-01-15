@@ -16,6 +16,7 @@ LOCALES_FILES="airframework_rb automation_rb framework_rb rpc_rb"
 # echo $LOCALES_LIST
 
 for locale in $LOCALES_LIST; do
+		
 	pushd "$LOCALES_DIR/$locale" > /dev/null
 	
 	echo $locale
@@ -35,4 +36,11 @@ for locale in $LOCALES_LIST; do
 	done
 	
 	popd > /dev/null
+done
+
+for locale in "en_US$LOCALE_LIST"; do
+	if [[ ! -d "locale/$locale" ]]; then
+		mkdir -p "locale/$locale"
+		touch "locale/$locale/application.properties"
+	fi
 done

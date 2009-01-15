@@ -51,6 +51,8 @@ for locale in $LOCALES_LIST; do
 	COMPILER_ARGS="${COMPILER_ARGS} -locale ${locale}" 
 done
 
+# COMPILER_ARGS="${COMPILER_ARGS} -source-path=locale/{locale}"
+
 echo "Setting Compiler Arguments: ${COMPILER_ARGS}"
 sed "s/\(additionalCompilerArguments=\"\)\([^\"]*\)\(\"\)/\1${COMPILER_ARGS}\3/" .actionScriptProperties > .actionScriptProperties_new
 mv .actionScriptProperties_new .actionScriptProperties

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="335" height="168" alpha="0" 
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="335" height="168" alpha="1" 
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
- backgroundAlpha="0" showEffect="{TVEffect_Show}" hideEffect="{TVEffect_Hide}" visible="false">
+ backgroundAlpha="0" showEffect="{TVEffect_Show}" hideEffect="{TVEffect_Hide}" visible="true">
 	<mx:states>
 		<mx:State name="register">
 			<mx:AddChild position="lastChild">
@@ -77,11 +77,17 @@
  		</mx:Transition>
  	</mx:transitions>
  	
+ 	<mx:Metadata>
+		[ResourceBundle("application")]
+	</mx:Metadata>
+
 	<mx:Script>
 		<![CDATA[
+			import mx.resources.ResourceBundle;
 			import mx.events.EffectEvent;
 			import mx.collections.ListCollectionView;
 			import mx.events.ListEvent;
+			
 
 			[Embed(source="assets/spinner.swf")]
 			[Bindable]
@@ -110,6 +116,8 @@
 			
 			public function show():void {
 				this.alpha = 1.0;
+				this.cmbLanguage.selectedIndex = resourceManager.getLocales().indexOf(resourceManager.localeChain[0]);
+//				updateLocaleStrings();
 //				this.visible = true;
 //				this.TVEffect_Show.play([this]);
 			}
@@ -412,12 +420,17 @@
 			private function onRegisteredMode(e:Event):void {
 				this.currentState = "register";
 			}
+			
+			private function cmbLanguageChange(e:ListEvent):void {
+				 resourceManager.localeChain = [ cmbLanguage.selectedItem ];
+			}
 		]]>
 	</mx:Script>
-	<mx:Panel id="pnlMode" title="Welcome to s3mer" layout="absolute" fontSize="14" backgroundColor="#FFFFFF" top="0" bottom="0" left="0" right="0" horizontalScrollPolicy="off" verticalScrollPolicy="off">
-		<mx:Button id="btnDemo" label="Start Demo" horizontalCenter="80" click="onDemoMode(event)" toolTip="Click here to enable demo mode which uses default settings." top="41" height="40"/>
-		<mx:Button id="btnLogin1" label="Log In" horizontalCenter="-80" click="onRegisteredMode(event)" toolTip="Click here to login with your username and password which you setup in our website." width="112" top="41" height="40"/>
-		<mx:VRule x="156.5" top="10" bottom="10"/>
+	<mx:Panel id="pnlMode" title="{resourceManager.getString('application', 'GREETING')}" layout="absolute" fontSize="14" backgroundColor="#FFFFFF" top="0" bottom="0" left="0" right="0" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+		<mx:Button id="btnDemo" label="{resourceManager.getString('application', 'START_DEMO')}" horizontalCenter="80" click="onDemoMode(event)" toolTip="Click here to enable demo mode which uses default settings." top="25" height="40"/>
+		<mx:Button id="btnLogin1" label="{resourceManager.getString('application', 'LOGIN')}" horizontalCenter="-80" click="onRegisteredMode(event)" toolTip="Click here to login with your username and password which you setup in our website." width="112" top="25" height="40"/>
+		<mx:VRule top="10" bottom="40" horizontalCenter="0"/>
+		<mx:ComboBox id="cmbLanguage" y="91" horizontalCenter="0" dataProvider="{resourceManager.getLocales()}" change="cmbLanguageChange(event)"></mx:ComboBox>
 		
 	</mx:Panel>
 	

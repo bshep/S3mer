@@ -74,6 +74,11 @@
 			private function onAppLoad(e:FlexEvent):void {
 				this.frameRate = 30;
 				
+				ApplicationSettings.load();
+				if( ApplicationSettings.getValue("ui.lang","") != "" ) {
+					resourceManager.localeChain = [ ApplicationSettings.getValue("ui.lang","en_US") ];
+				}
+
 				createPlayerWindows();
 				createLoginWindow();
 				
@@ -331,9 +336,6 @@
 				
 				this._updater = new ApplicationUpdater();
 				
-				if( ApplicationSettings.getValue("ui.lang","") != "" ) {
-					resourceManager.localeChain = [ ApplicationSettings.getValue("ui.lang","en_US") ];
-				}
 				
 //				resourceManager.localeChain = [ "pt_BR" ];
 			}
