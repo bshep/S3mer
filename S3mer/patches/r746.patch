@@ -1,0 +1,2015 @@
+Index: S3mer.mxml
+===================================================================
+--- S3mer.mxml	(revision 746)
++++ S3mer.mxml	(working copy)
+@@ -40,6 +40,17 @@
+ 				this.appLog.visible = false;
+ 			}
+ 			
++			private function isMultiscreen():Boolean {
++				var multiScreen:Boolean;
++				
++				if(this._playerWindows.length > 1) {
++					multiScreen = true;
++				} else {
++					multiScreen = false;
++				}
++				
++				return multiScreen;
++			}
+ 			
+ 			private function onReloadPlayerWindows(e:TimerEvent):void {
+ 				var tmpScreen:int;
+@@ -54,7 +65,7 @@
+ 					_window.setScreen(tmpScreen);
+ 					_window.open(false);
+ 					_window.showWindow();
+-					_window.loadConfiguration();
++					_window.loadConfiguration(isMultiscreen());
+ 					
+ 					tmpArray.addItem(_window);
+ 				}
+@@ -92,7 +103,7 @@
+ 						_window.addChild(myLoginWindow);
+ 					}
+ 					screenNumber++;
+-					break; // Only show 1 window
++//					break; // Only show 1 window
+ 				}
+ 
+ 
+@@ -183,7 +194,7 @@
+ //				this.setStyle("backgroundColor","#FFFFFF");
+ 				
+ 				for each( var _window:S3merWindow in this._playerWindows) {
+-					_window.loadConfiguration();
++					_window.loadConfiguration(isMultiscreen());
+ 					_window.enableKeyHandler();
+ 				}
+ 				this.stage.removeEventListener(Event.CLOSE,onAppClose);
+Index: S3mer-app.xml
+===================================================================
+--- S3mer-app.xml	(revision 746)
++++ S3mer-app.xml	(working copy)
+@@ -24,7 +24,7 @@
+     <name>S3mer</name>
+ 
+ 	<!-- An application version designator (such as "v1", "2.5", or "Alpha 1"). Required. -->
+-	<version>0.89</version>
++	<version>0.91</version>
+ 
+ 	<!-- Description, displayed in the AIR application installer. Optional. -->
+ 	<description>Multimedia Streamer</description>
+Index: com/msgid/S3mer/LocalDatabase/LocalDatabase.as
+===================================================================
+--- com/msgid/S3mer/LocalDatabase/LocalDatabase.as	(revision 746)
++++ com/msgid/S3mer/LocalDatabase/LocalDatabase.as	(working copy)
+@@ -138,8 +138,9 @@
+ 			sql = "INSERT INTO event_log(" + 
+ 				"	data" + 
+ 				") VALUES (" + 
+-				"	'" + data + "'" + 
+-				")";
++				"	'" 
++			sql = sql.concat(data);
++			sql = sql.concat("')");
+ 				
+ 			execute(sql, getConnection());
+ 		}
+Index: com/msgid/S3mer/ApplicationSettings.as
+===================================================================
+--- com/msgid/S3mer/ApplicationSettings.as	(revision 746)
++++ com/msgid/S3mer/ApplicationSettings.as	(working copy)
+@@ -40,7 +40,7 @@
+ 		}
+ 		
+ 		public function ApplicationSettings() {
+-			this._settingsFile = new File(FileIO.mediaPath("settings.xml"));
++			this._settingsFile = new File(FileIO.storePath("settings.xml"));
+ 			this._loaded = false;
+ 		}
+ 		
+Index: com/msgid/S3mer/SmoothVideoDisplay.as
+===================================================================
+--- com/msgid/S3mer/SmoothVideoDisplay.as	(revision 746)
++++ com/msgid/S3mer/SmoothVideoDisplay.as	(working copy)
+@@ -1,9 +1,11 @@
+ package com.msgid.S3mer
+ {
+ 	import flash.media.Camera;
++	import flash.media.SoundTransform;
+ 	
+ 	import mx.controls.VideoDisplay;
+ 	import mx.core.mx_internal;
++	import mx.events.VideoEvent;
+ 	
+ 	use namespace mx_internal;
+ 
+@@ -11,7 +13,7 @@
+ 	{
+ 		
+ 		private var _smoothing:Boolean = false;
+-		private var _pan:String = "C";
++		private var _pan:Number = 0;
+ 		public var cameraAttached:Boolean;
+ 		
+ 		public function SmoothVideoDisplay()
+@@ -19,6 +21,7 @@
+ 			super();
+ //			this.smoothing = true;
+ 			this.cameraAttached = false;
++			this.addEventListener(VideoEvent.STATE_CHANGE, videoStateChanged);
+ 		}
+ 		
+ 		[Bindable]
+@@ -32,13 +35,15 @@
+ 			return _smoothing;
+ 		}
+ 		
+-		public function set pan(value:String):void {
+-			this._pan = value;
++		public function set pan(value:Number):void {
++			if(_pan != value) {
++				_pan = value;
++			}			
+ 			
+ 			doPan();
+ 		}
+ 		
+-		public function get pan():String {
++		public function get pan():Number {
+ 			return this._pan;
+ 		}
+ 		
+@@ -67,30 +72,34 @@
+ 	    	
+ 	    }
+ 	    
++	    public function detachCamera():void {
++	    	videoPlayer.clear();
++	    	videoPlayer.close();
++	    	
++	    	this.cameraAttached = false;
++	    }
++	    
+ 	    private function doPan():void {
+-			switch(this._pan) {
+-				case 'L':
+-					this.soundTransform.leftToRight = 0;
+-					this.soundTransform.leftToLeft = 1;
+-					this.soundTransform.rightToLeft = 1;
+-					this.soundTransform.rightToRight = 0;
+-					
+-					break;
+-				case 'R':
+-					this.soundTransform.leftToRight = 1;
+-					this.soundTransform.leftToLeft = 0;
+-					this.soundTransform.rightToLeft = 0;
+-					this.soundTransform.rightToRight = 1;
+-
+-					break;
+-				case 'C':
+-					this.soundTransform.leftToRight = 0;
+-					this.soundTransform.leftToLeft = 1;
+-					this.soundTransform.rightToLeft = 0;
+-					this.soundTransform.rightToRight = 1;
+-
+-					break;
++			if(videoPlayer) {
++				var newTransform:SoundTransform = new SoundTransform();
++				
++				newTransform.pan = this._pan;
++				if( videoPlayer.soundTransform != null ) {
++					newTransform.volume = videoPlayer.volume;
++				}
++				
++				try {
++					videoPlayer.soundTransform = newTransform;
++				} catch(e:Error) {
++					Logger.addEvent(e.errorID + " could not se sound transform, probably a null ns object");
++				}
+ 			}
+ 	    }
++	    
++		private function videoStateChanged(e:VideoEvent):void {
++			if(e.state == "buffering") {
++				doPan();
++			}
++		}
+ 	}
+ }
+\ No newline at end of file
+Index: com/msgid/S3mer/ApplicationUpdater.as
+===================================================================
+--- com/msgid/S3mer/ApplicationUpdater.as	(revision 746)
++++ com/msgid/S3mer/ApplicationUpdater.as	(working copy)
+@@ -92,7 +92,7 @@
+ 
+ 		private function performUpdate_stage2(e:Event):void {
+ 			var myStorageStream:FileStream = new FileStream();
+-			var myStorageFile:File = new File(FileIO.storePath()).resolvePath("update.air");
++			var myStorageFile:File = new File(FileIO.storePath("update.air"));
+ 
+ 			myStorageStream.open(myStorageFile,FileMode.WRITE);
+ 			
+Index: com/msgid/S3mer/PlaylistObject.as
+===================================================================
+--- com/msgid/S3mer/PlaylistObject.as	(revision 746)
++++ com/msgid/S3mer/PlaylistObject.as	(working copy)
+@@ -8,10 +8,11 @@
+ 		private var _file:String;
+ 		private var _file_id:String;
+ 		private var _type:String;
++		private var _screenId:String;
+ 		private var _configXML:XML;
+ 		
+-		public var conditions:ArrayCollection;
+-		public var conditionMatchAll:Boolean;
++//		public var conditions:ArrayCollection;
++//		public var conditionMatchAll:Boolean;
+ 		public var hash:String;
+ 		
+ 
+@@ -43,19 +44,20 @@
+ 			this._file = val;
+ 		}
+ 
+-		public function PlaylistObject(playlistItemXML:XML):void {
++		public function PlaylistObject(playlistItemXML:XML, screenId:String):void {
+ 			this._configXML = playlistItemXML;
+ 			this._url = playlistItemXML.toString();
+ 			this._type = playlistItemXML.@type;
+ 			this._file_id = playlistItemXML.@mediaid;
+ 			this._file = this._url.substr(this._url.lastIndexOf("/")+1);
+-			this.conditions = new ArrayCollection;
+-			this.conditionMatchAll = false;
++			this._screenId = screenId;
++//			this.conditions = new ArrayCollection;
++//			this.conditionMatchAll = false;
+ 			this.hash = "";
+ 		}
+ 
+ 		public function get available():Boolean {
+-			return FileIO.fileExists(this._file, this.hash);
++			return FileIO.fileExists(this._file, this._screenId);
+ 		}
+ 	}
+ }
+\ No newline at end of file
+Index: com/msgid/S3mer/PodcastManager.as
+===================================================================
+--- com/msgid/S3mer/PodcastManager.as	(revision 746)
++++ com/msgid/S3mer/PodcastManager.as	(working copy)
+@@ -49,8 +49,8 @@
+ 			}
+ 		}
+ 		
+-		public static function addPodcast(playlistItem:PlaylistObject):void {
+-			var newPodcast:PodcastItem = new PodcastItem(playlistItem);
++		public static function addPodcast(playlistItem:PlaylistObject, screenId:String):void {
++			var newPodcast:PodcastItem = new PodcastItem(playlistItem, screenId);
+ 			init();
+ 			
+ 			Logger.addEvent("New Podcast:"+ playlistItem.url);
+Index: com/msgid/S3mer/Show.mxml
+===================================================================
+--- com/msgid/S3mer/Show.mxml	(revision 746)
++++ com/msgid/S3mer/Show.mxml	(working copy)
+@@ -24,12 +24,14 @@
+ 			private var _showObjects:ArrayCollection = new ArrayCollection();
+ 			
+ 			private var _hasAudio:Boolean;
+-			private var _audioPan:String;
++			private var _audioPan:Number;
++			private var _schedule:Schedule = null;
+ 			
+ 
+ 			
+ 			private function OnCreated(e:Event):void {
+ //				this.initFader();
++//				this._schedule = null;
+ 				
+ 			}
+ 			
+@@ -37,10 +39,22 @@
+ 				return this._hasAudio;
+ 			}
+ 			
+-			public function get audioPan():String {
++			public function get audioPan():Number {
+ 				return this._audioPan;
+ 			}
++
++			public function get schedule():Schedule {
++				return this._schedule;
++			}			
++
++			public function setSchedule(obj:Schedule):void {
++				this._schedule = obj;
++			}
+ 			
++			public function removeSchedule():void {
++				this._schedule = null
++			}
++
+ 			public function resize():void {
+ 				this.resizeX = this.width/this.configuredWidth;
+ 				this.resizeY = this.height/this.configuredHeight;
+@@ -59,7 +73,7 @@
+ 			
+ 			// Content related functions
+ //			public function addObject(id:String,object:DisplayObject):void {
+-			public function addObject(objectXML:XML, hasAudio:String, audioPan:String):void {
++			public function addObject(objectXML:XML, hasAudio:String, audioPan:Number):void {
+ 				var showObject:ShowObject;
+ 				
+ 				showObject = getObjectById(objectXML.@id);
+@@ -133,6 +147,15 @@
+ 				}				
+ 			}
+ 			
++			public function set pan(value:Number):void {
++				for each( var _showObject:ShowObject in _showObjects) {
++					if ( _showObject.object is SmoothVideoDisplay ) {
++						(_showObject.object as SmoothVideoDisplay).pan = value;
++					}
++				}				
++			}
++
++			
+ 			public function setSmoothing(active:Boolean):void {
+ 				for each( var _showObject:ShowObject in _showObjects) {
+ 					if (_showObject.object is SmoothVideoDisplay) {
+@@ -181,7 +204,7 @@
+ 			
+ 			public function reset():void {
+ 				for each (var obj:ShowObject in this._showObjects ) {
+-					obj.reset();
++					obj.stop();
+ 				}
+ 			}
+ 		]]>
+Index: com/msgid/S3mer/KeyboardManager.as
+===================================================================
+--- com/msgid/S3mer/KeyboardManager.as	(revision 746)
++++ com/msgid/S3mer/KeyboardManager.as	(working copy)
+@@ -97,19 +97,25 @@
+ 					(target as S3merWindow).stopped = true;
+ 					break;
+ 				case "S":
+-					var mute:String;
++					var pan:String;
+ 					
+-					mute = ApplicationSettings.getValue("video.mute","false");
++					pan = ApplicationSettings.getValue("video.pan","0");
+ 					
+-					if (mute == "false") {
+-						target.configuration.muteAudio(true);
+-						ApplicationSettings.setValue("video.mute","true");
+-						statusDisplay("Mute ON", target);
++					if (pan == "0") {
++						pan = "1";
++						target.configuration.pan = new Number(pan);
++						ApplicationSettings.setValue("video.pan",pan);
++						statusDisplay("Pan Left", target);
++					} else if(pan == "1") {
++						pan = "-1";
++						target.configuration.pan = new Number(pan);
++						ApplicationSettings.setValue("video.pan",pan);
++						statusDisplay("Pan Right", target);
+ 					} else {
+-						target.configuration.muteAudio(false);
+-						ApplicationSettings.setValue("video.mute","false");
+-						statusDisplay("Mute OFF", target);
+-
++						pan = "0";
++						target.configuration.pan = new Number(pan);
++						ApplicationSettings.setValue("video.pan",pan);
++						statusDisplay("Pan Center", target);
+ 					}
+ 					
+ 					ApplicationSettings.save();
+Index: com/msgid/S3mer/S3merWindow.mxml
+===================================================================
+--- com/msgid/S3mer/S3merWindow.mxml	(revision 746)
++++ com/msgid/S3mer/S3merWindow.mxml	(working copy)
+@@ -27,6 +27,7 @@
+ 			private var _loaderShown:Boolean = false;
+ 			private var _stopped:Boolean = true;
+ 			private var _owner:S3mer;
++			private var _multiScreen:Boolean;
+ 			
+ 			[Embed(source="assets/logo.swf")]
+ 			[Bindable]
+@@ -140,10 +141,11 @@
+ 				this.appLog.visible = false;
+ 			}
+ 			
+-			public function loadConfiguration():void {
++			public function loadConfiguration(multiScreen:Boolean):void {
+ 				this.myLoadingStatic.visible = false;
+ 				this.LoadingCanvas.visible = true;
+ 				this.screenNumber.visible = false;
++				this._multiScreen = multiScreen;
+ 
+ 				this.setStyle("backgroundColor","#FFFFFF");				
+ 				
+@@ -152,7 +154,7 @@
+ 
+ 				LoadingCanvas.visible = true;
+ 
+-				this._configuration = new ConfigurationManager(this);
++				this._configuration = new ConfigurationManager(this, multiScreen);
+ 				
+ 				this._configuration.addEventListener(ConfigurationEvent.UPDATED, OnConfigurationUpdate,false,0,true);
+ 				this._configuration.addEventListener(DownloaderEvent.PARTIAL_COMPLETE, OnDownloadProgress,false,0,true);
+@@ -180,7 +182,7 @@
+ 					_fader.setup(this);
+ 					_fader.addEventListener(EffectEvent.EFFECT_END, OnFadeComplete);
+ 	
+-					_fader.fadeOut(1000);
++					_fader.fadeOut(250);
+ 					_loaderShown = true;
+ 				} else {
+ 					this.setStyle("backgroundColor","#000000");
+@@ -231,8 +233,12 @@
+ 			
+ 			private function OnFadeComplete_stage2(e:EffectEvent):void {
+ 				_fader.removeEventListener(EffectEvent.EFFECT_END, OnFadeComplete_stage2);
+-				this.removeChild(_fader);
+-				
++				try {
++					this.removeChild(_fader);
++				} catch(e:Error) {
++					
++				}
++							
+ 				if (this._stopped == true) {
+ 					this._stopped = false;
+ 					this.play();
+@@ -268,7 +274,7 @@
+ 				this.removeChild(this._show);
+ 				this.setStyle("backgroundColor","#FFFFFF");				
+ 										
+-				this.loadConfiguration();
++				this.loadConfiguration(this._multiScreen);
+ 			}
+ 			
+ 			public function clean_stage1():void {
+@@ -281,7 +287,7 @@
+ 			}
+ 			
+ 			public function clean_stage2():void {
+-				this.loadConfiguration();
++				this.loadConfiguration(this._multiScreen);
+ 			}
+ 			
+ 			public function doReset(loginWindow:LoginWindow):void {
+Index: com/msgid/S3mer/Schedule.as
+===================================================================
+--- com/msgid/S3mer/Schedule.as	(revision 746)
++++ com/msgid/S3mer/Schedule.as	(working copy)
+@@ -4,5 +4,172 @@
+ 	{
+ 		public var id:String;
+ 
++		private var dateStart:Date;
++		private var dateEnd:Date;
++		private var	timeStart:Date;
++		private var timeEnd:Date;
++		private var days:Array; // index into array is the day, sunday = 0, the value indicated wether it is active that day
++		private var ampm:Array; // indexes -> 0:AM 1:PM
++		
++
++		public function get valid():Boolean {
++			return true;
++		}
++		
++		public function get isPlayable():Boolean {
++			var nowDate:Date = new Date();
++			var tmpDate:Date = new Date();
++			
++			if(nowDate < dateStart) {
++				return false;				
++			}
++			
++			if(nowDate > dateEnd) {
++				return false;
++			}
++			
++			tmpDate.time = 0;
++			tmpDate.setHours(nowDate.hours, nowDate.minutes, nowDate.seconds,0);
++			
++			if( getTimePart(timeStart.toTimeString()) != "00:00:00" || getTimePart(timeEnd.toTimeString()) != "00:00:00" ) {
++				if(tmpDate < timeStart && getTimePart(timeStart.toTimeString()) != "00:00:00") {
++					return false;
++				}
++				
++				if(tmpDate > timeEnd && getTimePart(timeEnd.toTimeString()) != "00:00:00") {
++					return false;
++				}
++			}
++			
++			if( this.ampm[0] != this.ampm[1] ) {
++				if( this.ampm[0] == "0" && nowDate.getHours() < 12 ) {
++					return false;
++				}
++				
++				if( this.ampm[1] == "0" && nowDate.getHours() >= 12 ) {
++					return false;
++				}
++			}
++			
++			if( this.days[nowDate.getDay()] == "0" ) {
++				return false;
++			}
++			
++			return true;
++		}
++		
++		public function Schedule(scheduleXML:XML):void {
++			Logger.addEvent("Schedule id: " + scheduleXML.@id);
++			this.id = scheduleXML.@id;
++			
++			this.days = new Array(7);
++			this.ampm = new Array(2);
++							
++			for each (var conditionXML:XML in scheduleXML.condition) {
++				
++				switch(conditionXML.@type.toString()) {
++					case "daterange":
++						this.dateStart = new Date();
++						this.dateEnd = new Date();
++						
++						this.setDateFromString(this.dateStart, conditionXML.@startdate);
++						this.setDateFromString(this.dateEnd, conditionXML.@enddate);
++
++						Logger.addEvent("- Start: " + dateStart.toDateString() + " End: " + dateEnd.toDateString());
++						break;
++					case "timerange":
++						this.timeStart = new Date();
++						this.timeEnd = new Date();
++						
++						this.setTimeFromString(this.timeStart, conditionXML.@starttime);
++						this.setTimeFromString(this.timeEnd, conditionXML.@endtime);
++					
++						Logger.addEvent("- Start: " + timeStart.toTimeString() + " End: " + timeEnd.toTimeString());
++						break;							
++					case "dayweek":
++						this.days[getDayIndex(conditionXML.@day)] = conditionXML.@value.toString();
++						
++						Logger.addEvent(" - Day: " + getDayIndex(conditionXML.@day) + " Value: " + conditionXML.@value);
++						break;
++					case "ampm":
++					
++						this.ampm[0] = conditionXML.@AM.toString()
++						this.ampm[1] = conditionXML.@PM.toString()
++						Logger.addEvent(" - AM: " + conditionXML.@AM + " PM: " + conditionXML.@PM);
++						break;
++					default:
++						Logger.addEvent("- INVALID CONDITION DATA: " + conditionXML);
++						break;
++				}
++			}
++		}
++		
++		private function setTimeFromString(dateObj:Date, timeStr:String):void {
++			var sections:Array = timeStr.split(":");
++			
++			dateObj.time = 0;
++			
++			if(sections.length != 3) {
++				Logger.addEvent("- Invalid time specification: " + timeStr );
++				return;
++			}
++			
++			dateObj.setHours(sections[0],sections[1],sections[2],0);
++			
++		}
++		
++		private function setDateFromString(dateObj:Date, dateStr:String):void {
++			var sections:Array = dateStr.split("-");
++			
++			dateObj.time = 0;
++			
++			if(sections.length != 3) {
++				Logger.addEvent("- Invalid date specification: " + dateStr );
++				return;
++			}
++			
++			dateObj.setFullYear(sections[0],sections[1]-1,sections[2]);
++			
++		}
++		
++		private function getTimePart(timeStr:String):String {
++			//We dont care about time zones since times are always given in localtime
++			
++			return timeStr.split(" ")[0]; // Time will be in this format: 00:00:00 GMT-0400
++		}
++		
++		private function getDayIndex(dayStr:String):int {
++			var ret:int;
++			
++			switch(dayStr) {
++				case "Sun":
++					ret = 0;
++					break;
++				case "Mon":
++					ret = 1;
++					break;
++				case "Tue":
++					ret = 2;
++					break;
++				case "Wed":
++					ret = 3;
++					break;
++				case "Thu":
++					ret = 4;
++					break;
++				case "Fri":
++					ret = 5;
++					break;
++				case "Sat":
++					ret = 6;
++					break;				
++				default:
++					Logger.addEvent("Invalid day specification: '" + dayStr + "'");
++					ret  = 0;
++					break;
++			}
++
++			return ret;
++		}
+ 	}
+ }
+\ No newline at end of file
+Index: com/msgid/S3mer/Downloader.as
+===================================================================
+--- com/msgid/S3mer/Downloader.as	(revision 746)
++++ com/msgid/S3mer/Downloader.as	(working copy)
+@@ -21,6 +21,7 @@
+ 		private var _started:Boolean;
+ 		private var _hash:String;
+ 		private var _forceUpdate:Boolean;
++		private var _screenId:String;
+ 		
+ 
+ 		public function get percent():int {
+@@ -47,13 +48,14 @@
+ 			return this._url;
+ 		}
+ 		
+-		public function Downloader(url:String, hash:String, destination:String, forceUpdate:Boolean) {
++		public function Downloader(url:String, hash:String, destination:String, forceUpdate:Boolean, screenId:String) {
+ 			this._lastPercentage = 0;
+ 			this._url = url;
+ 			this._complete = false;
+ 			this._started = false;
+ 			this._hash = hash;
+ 			this._forceUpdate = forceUpdate;
++			this._screenId = screenId;
+ 			
+ 			if (destination == null) {
+ 				this._filename = FileIO.Url2Filename(this._url);
+@@ -109,7 +111,7 @@
+ 		}
+ 		
+ 		private function isAlreadyDownloaded():Boolean {
+-			return FileIO.fileExists(this._filename, this._hash);
++			return FileIO.fileExists(this._filename, this._screenId);
+ 		}
+ 		
+ 		public function stop():void {
+@@ -124,7 +126,7 @@
+ 			this._complete = true;
+ 			this._lastPercentage = 100;
+ 
+-			myStorageDir = new File(FileIO.mediaPath(""));
++			myStorageDir = new File(FileIO.mediaPath(this._screenId,""));
+ 			myStorageDir.createDirectory();
+ 			
+ 			myStorageFile = myStorageDir.resolvePath(this._filename);
+Index: com/msgid/S3mer/Playlist.as
+===================================================================
+--- com/msgid/S3mer/Playlist.as	(revision 746)
++++ com/msgid/S3mer/Playlist.as	(working copy)
+@@ -9,7 +9,9 @@
+ 		
+ 		public var id:String;
+ 		
++		private var _screenId:String;
+ 		
++		
+ 		private var _EOL:Boolean = false; //End of list reached during playback	
+ 		private var _BOL:Boolean = false; //Begining of list reached during playback	
+ 		public function get EOL():Boolean {
+@@ -20,9 +22,10 @@
+ 			return this._BOL;
+ 		}
+ 		
+-		public function Playlist() {
++		public function Playlist(screenId:String) {
+ 			this._items = new ArrayCollection();
+ 			this._position = 0;
++			this._screenId =screenId;
+ 		}
+ 		
+ /* 		public function add(url:String):void {
+@@ -138,7 +141,7 @@
+ 						}
+ 						break;
+ 					case "podcast":
+-						PodcastManager.addPodcast(item)
++						PodcastManager.addPodcast(item, this._screenId)
+ 						break;
+ 					
+ 				}
+Index: com/msgid/S3mer/ConfigurationManager.as
+===================================================================
+--- com/msgid/S3mer/ConfigurationManager.as	(revision 746)
++++ com/msgid/S3mer/ConfigurationManager.as	(working copy)
+@@ -1,6 +1,9 @@
+ package com.msgid.S3mer
+ {
++	import com.msgid.S3mer.LocalDatabase.LocalDatabase;
++	
+ 	import flash.display.DisplayObject;
++	import flash.display.DisplayObjectContainer;
+ 	import flash.events.Event;
+ 	import flash.events.EventDispatcher;
+ 	import flash.events.IOErrorEvent;
+@@ -33,10 +36,12 @@
+ 
+ 		private var _reloadConfigTimer:Timer;
+ 		private var _heartbeatTimer:Timer;
++		private var _isPro:Boolean;
+ 		private var _expirationDate:Date;
+ 		private var _expired:Boolean;
+ 		private var _updatingConfigguration:Boolean;
+ 		
++		private var _multiScreen:Boolean;
+ 		
+ 		private var _config:XML;
+ 		
+@@ -51,8 +56,9 @@
+ 		private var _configURL:String = ApplicationSettings.URL_CONFIG;
+ 	
+ 		private var _stopped:Boolean;
++		
+ 			
+-		public function ConfigurationManager(container:Container) {
++		public function ConfigurationManager(container:Container, multiScreen:Boolean) {
+ 			this._showsNew = new ArrayCollection();
+ 			this._schedulesNew = new ArrayCollection();
+ 			this._playlistsNew = new ArrayCollection();
+@@ -64,6 +70,7 @@
+ 			this._container = container;
+ 			this._expired = false;
+ 			this._updatingConfigguration = false;
++			this._multiScreen = multiScreen;
+ 			
+ 			if (_downloadQueue == null) {
+ 				_downloadQueue = new DownloadQueue();
+@@ -102,7 +109,7 @@
+ 		private function isExpired():Boolean {
+ 			var expirationDate:Date;
+ 			var dateNow:Date = new Date();
+-			var gracePeriod:Number = new Number(3); //3 days grace period... will read this from config eventually.
++			var gracePeriod:int = 3; //3 days grace period... will read this from config eventually.
+ 			
+ 			expirationDate = new Date(this._expirationDate.valueOf() + 1000*60*60*24*gracePeriod);
+ 			
+@@ -119,8 +126,6 @@
+ 			var _loaderReq:URLRequest;
+ 			_heartbeatTimer.stop();
+ 			
+-			
+-			
+ 			_loader.addEventListener(Event.COMPLETE,OnHeartbeat_stage2,false,0,true);
+ 			_loader.addEventListener(IOErrorEvent.IO_ERROR,OnIOError,false,0,true);
+ 			_loader.dataFormat = URLLoaderDataFormat.TEXT;
+@@ -244,6 +249,10 @@
+ 		// Called whenever the configuration file was updated
+ 		public function updateConfiguration():void {
+ 			
++			if(this._expired) {
++				trace("here");
++			}
++			
+ 			if (this._updatingConfigguration) {
+ 				return;
+ 			}
+@@ -257,7 +266,7 @@
+ 
+ 			Logger.addEvent("ConfigurationManager::updateConfiguration: screenId = " + ApplicationSettings.getValue("screen"+ screenId +".channel.id",""));
+ //			_downloadQueue.addItem(getChannelUrl(ApplicationSettings.getValue("screen"+ screenId +".channel.id","")), "", "config" + screenId + ".xml", false,true);
+-			_downloadQueue.addItem(getChannelUrl(ApplicationSettings.getValue("screen"+ screenId +".channel.id","")), "", "config" + screenId + ".xml", false,true);
++			_downloadQueue.addItem(getChannelUrl(ApplicationSettings.getValue("screen"+ screenId +".channel.id","")),getScreenId(), "", "config" + screenId + ".xml", false,true);
+ 
+ 			_downloadQueue.start();
+ 		}
+@@ -275,7 +284,7 @@
+ 				showNotConnected();
+ 				
+ 				// Set the reload timer to 1 min intervals
+-				this._reloadConfigTimer.delay = 60*1000;
++//				this._reloadConfigTimer.delay = 60*1000;
+ 				this._reloadConfigTimer.start();
+ 				this._updatingConfigguration = false;
+ 				return;				
+@@ -284,7 +293,7 @@
+ 			//Check if we already have a config file, if so then do what it says
+ 			// otherwise, display not comm-error message
+ 			
+-			if (new File(FileIO.mediaPath("config" + S3merWindow(this._container).screenId + ".xml")).exists) {
++			if (new File(FileIO.mediaPath(getScreenId(),"config" + getScreenId() + ".xml")).exists) {
+ 				updateConfiguration_step2_5();
+ 			} else {
+ 				this.stop();
+@@ -292,7 +301,7 @@
+ 				showNotConnected();
+ 				
+ 				// Set the reload timer to 1 min intervals
+-				this._reloadConfigTimer.delay = 60*1000;
++//				this._reloadConfigTimer.delay = 60*1000;
+ 				this._reloadConfigTimer.start();
+ 				this._updatingConfigguration = false;
+ 			}
+@@ -300,39 +309,72 @@
+ 			
+ 		}
+ 		
+-		private var showNotConnnected:SmoothImage;
++		[Embed(source="assets/internetConnection.swf")]
++		[Bindable]
++		public static var NotConnectedSWF:Class;
++
++		private var _showNotConnected:SmoothImage;
+ 		
++		private function initNotConnected():void {
++			var myAppObject:Container = this._container;
++
++			if( _showNotConnected == null ) {
++				_showNotConnected = new SmoothImage();
++//				_showNotConnected.setStyle("top",0);
++//				_showNotConnected.setStyle("bottom",0);
++//				_showNotConnected.setStyle("left",0);
++//				_showNotConnected.setStyle("right",0);
++				_showNotConnected.maintainAspectRatio = true;
++				_showNotConnected.scaleContent = false;
++				_showNotConnected.x = 0;
++				_showNotConnected.y = 0;
++				_showNotConnected.width = myAppObject.width;
++				_showNotConnected.height = myAppObject.height;
++				_showNotConnected.source = NotConnectedSWF;
++			}			
++		}
++		
+ 		private function showNotConnected():void {
+ 			var myAppObject:Container = this._container;
+-			
+-			if( showNotConnnected == null ) {
+-				showNotConnnected = new SmoothImage();
+-				showNotConnnected.source = new File(FileIO.assetsPath()).resolvePath("internetConnection.swf").nativePath;
+-				showNotConnnected.x = 0;
+-				showNotConnnected.y = 0;
+-				showNotConnnected.width = myAppObject.width;
+-				showNotConnnected.height = myAppObject.height;
+-			}
++						
++			initNotConnected();
+ 
+-			if (showNotConnnected.parent != myAppObject) {
+-				myAppObject.addChild(showNotConnnected);
++			if (_showNotConnected.parent != myAppObject) {
++				myAppObject.addChild(_showNotConnected);
+ 			}
++			
++			makeTopmostItem(_showNotConnected);
+ 		}
+ 		
++		private function makeTopmostItem(obj:DisplayObject):void {
++			var maxIndex:int;
++			var curIndex:int;
++			var parentObj:DisplayObjectContainer;
++			
++			if(obj) {
++				parentObj = obj.parent;
++				
++				if(parentObj) {
++					curIndex = parentObj.getChildIndex(obj);
++					maxIndex = parentObj.numChildren - 1;
++					
++					if(curIndex < maxIndex) {
++						parentObj.removeChild(obj);
++						parentObj.addChild(obj);
++					}
++				}
++			}
++			
++			
++		}
++		
+ 		private function hideNotConnected():void {
+ 			var myAppObject:Container = this._container;
+ 			
+-			if( showNotConnnected == null ) {
+-				showNotConnnected = new SmoothImage();
+-				showNotConnnected.source = new File(FileIO.assetsPath()).resolvePath("internetConnection.swf").nativePath;
+-				showNotConnnected.x = 0;
+-				showNotConnnected.y = 0;
+-				showNotConnnected.width = myAppObject.width;
+-				showNotConnnected.height = myAppObject.height;
+-			}
++			initNotConnected();
+ 
+-			if (showNotConnnected.parent == myAppObject) {
+-				myAppObject.removeChild(showNotConnnected);
++			if (_showNotConnected.parent == myAppObject) {
++				myAppObject.removeChild(_showNotConnected);
+ 			}
+ 		}
+ 
+@@ -342,7 +384,7 @@
+ 
+ 		
+ 		private function updateConfiguration_step2_5():void {
+-			var configFile:File = new File(FileIO.mediaPath("config" + S3merWindow(this._container).screenId + ".xml"));
++			var configFile:File = new File(FileIO.mediaPath(getScreenId(),"config" + getScreenId() + ".xml"));
+ 			var configReader:FileStream;
+ 			var config:XML;
+ 			
+@@ -369,6 +411,12 @@
+ 				if( this._config == config ) {
+ 					this._updatingConfigguration = false;
+ 					this._reloadConfigTimer.start();
++					
++					if(this._expired && isExpired()) { // IF both these are true when we get here it means the player expired and the current configuration is still expired.
++						this.stop();
++						this.showNotConnected();
++					}
++					
+ 					return;
+ 				}
+ 				
+@@ -392,14 +440,27 @@
+ 				}
+ 				
+ 				
+-				var expirationDate:String = config.config.expirationDate;
+-				if (expirationDate != "") {
+-					this._expirationDate = new Date(Number(expirationDate)*1000);
+-					ApplicationSettings.setValue("config.expiration",this._expirationDate.valueOf().toString());
++				var expirationDate:String = config.config.proexpirationDate;
++				this._isPro = new Boolean(config.config.@isPro.toString());
++				
++				if(this._isPro) {
++					if (expirationDate != "") {
++						this._expirationDate = new Date(Number(expirationDate)*1000);
++						ApplicationSettings.setValue("config.expiration",this._expirationDate.valueOf().toString());
++					} else {
++						this._expirationDate = new Date(0);
++						ApplicationSettings.setValue("config.expiration",this._expirationDate.valueOf().toString());
++					}
+ 				}
+ 				
+ 				ApplicationSettings.save();
+ 				
++				if(this._expired && isExpired()) { // IF both these are true when we get here it means the player expired and the current configuration is still expired.
++					this.stop();
++					this.showNotConnected();
++					return;
++				}
++				
+ 				this._config = config;
+ 				
+ 				this.hideNotConnected();
+@@ -456,31 +517,43 @@
+ 			this.dispatchEvent(new ConfigurationEvent(ConfigurationEvent.UPDATED));
+ 			cleanupMedia();
+ 			
+-			//Set config reload to 1 hr
+ 			this._updatingConfigguration = false;
+-			this._reloadConfigTimer.delay = 1*60*1000;
++//			this._reloadConfigTimer.delay = 1*60*1000;
+ 			this._reloadConfigTimer.start();
+ 		}
+ 		
+ 		public function play():void {
++			if(this._expired) {
++				return;
++			}
++			
+ 			this._stopped = false;
+-			this.switchShow("");		
++			
++			this._showsCur = this._showsNew;
++			this._schedulesCur = this._schedulesNew;
++			this._playlistsCur = this._playlistsNew;
++			
++			
++			this.show_play_next(null);		
+ 		}
+ 		
+ 		public function stop():void {
+ 			var myShowObject:Show;
+ 
+ 			myShowObject = Show(this._container.getChildByName("currentShow"));
++
++			if (myShowObject != null) {
++				myShowObject.stop(true);
++			}
+ 			
+ 			for each( var _showObj:DisplayObject in this._container.getChildren()) {
+-				this._container.removeChild(_showObj);
++				if(_showObj != this._showNotConnected) {
++					this._container.removeChild(_showObj);
++				}
+ 			}
+ 			
+ 			this._stopped = true;
+ 			
+-			if (myShowObject != null) {
+-				myShowObject.stop(true);
+-			}
+ 		}
+ 		
+ 		public function reset():void {
+@@ -520,7 +593,7 @@
+ 				//Run through all playlist items and determine which ones we need to download,
+ 				//this also creates all podcast items.
+ 				for each( var _playlistObj:PlaylistObject in _playlist.pendingFiles ) {
+-					_downloadQueue.addItem(_playlistObj.url, _playlistObj.hash);
++					_downloadQueue.addItem(_playlistObj.url,getScreenId(), _playlistObj.hash);
+ 				}
+ 			}
+ 			
+@@ -533,9 +606,15 @@
+ 		}
+ 		
+ 		private function cleanupMedia():void {
+-			var mediaFolder:File = new File(FileIO.storePath()).resolvePath("media");
++			var mediaFolder:File;
+ 			var configReg:RegExp = /config[0-9]\.xml/;
+ 			
++			if(this._container) {
++				mediaFolder = new File(FileIO.mediaPath(getScreenId(), ""))
++			} else {
++				return;
++			}		
++			
+ 			for each( var _file:File in mediaFolder.getDirectoryListing() ) {
+ 				if (_file.name != "settings.xml" && _file.name.search(configReg) == -1) {
+ 					if (!fileExistsInPlaylist(_file)) {
+@@ -546,6 +625,11 @@
+ 
+ 		}
+ 		
++		private function getScreenId():String {
++			return S3merWindow(this._container).screenId.toString();
++		}
++
++		
+ 		private function fileExistsInPlaylist(myFile:File):Boolean {
+ 			
+ 			for each ( var _pl:Playlist in this._playlistsNew ) {
+@@ -570,7 +654,7 @@
+ 			var newPlaylistObj:PlaylistObject;
+ 			
+ 			for each (var playlistXML:XML in _config.playlist) {
+-				newPlaylist = new Playlist();
++				newPlaylist = new Playlist(getScreenId());
+ 				
+ 				Logger.addEvent("Playlist id: " + playlistXML.@id);
+ 				newPlaylist.id = playlistXML.@id;
+@@ -578,19 +662,19 @@
+ 				for each (var playlistitemXML:XML in playlistXML.playlistitem) {
+ 					Logger.addEvent("- element url: " + playlistitemXML);
+ 					
+-					newPlaylistObj = new PlaylistObject(playlistitemXML);
++					newPlaylistObj = new PlaylistObject(playlistitemXML, getScreenId());
+ 					
+-					if (playlistitemXML.@conditionmatch.toString() == "all") {
+-						newPlaylistObj.conditionMatchAll = true;
+-					} else {
+-						newPlaylistObj.conditionMatchAll = false;
+-					}
++//					if (playlistitemXML.@conditionmatch.toString() == "all") {
++//						newPlaylistObj.conditionMatchAll = true;
++//					} else {
++//						newPlaylistObj.conditionMatchAll = false;
++//					}
+ 					
+ 					newPlaylistObj.hash = playlistitemXML.@hash;
+ 					
+-					for each (var conditionXML:XML in playlistitemXML.@condition) {
+-						newPlaylistObj.conditions.addItem(conditionXML);
+-					}
++//					for each (var conditionXML:XML in playlistitemXML.@condition) {
++//						newPlaylistObj.conditions.addItem(conditionXML);
++//					}
+ 					
+ 					newPlaylist.addObj(newPlaylistObj);
+ 				}
+@@ -619,49 +703,110 @@
+ 				newShow.resizeY = newShow.height/newShow.configuredHeight;
+ 				
+ 				newShow.addEventListener(ShowEvent.NEXT_SHOW, show_play_next);
++				
+ 
+ 				try {
+ 					for each (var regionXML:XML in showXML.region) {
+ 						var hasAudio:String;
+-						var audioPan:String;
++						var audioPan:Number;
+ 						
+ 						hasAudio = ApplicationSettings.getValue("screen"+ S3merWindow(this._container).screenId +".audio.enabled","");
+-						audioPan = ApplicationSettings.getValue("screen"+ S3merWindow(this._container).screenId +".audio.pan","C");
+ 						
++						if(this._multiScreen) {
++							if(getScreenId() == "0") {
++								audioPan = -1
++							} else if(getScreenId() == "1") {
++								audioPan = 1
++							}
++						} else {
++							audioPan = 0;
++						}
++						
+ 						Logger.addEvent("- region id: " + regionXML.@id + " type: " + regionXML.@type);
+ 						
+ 						newShow.addObject(regionXML, hasAudio, audioPan);
+ 						
+ 						parseShow_addPlaylists(regionXML, newShow);
+-						parseShow_addSchedules(regionXML, newShow);
+ 					}
+ 				} catch (e:Error) {
+ 					Logger.addEvent("Error @ " + e.message + e.getStackTrace());
+ 				}		
+ 				
++				parseShow_addSchedules(newShow);
+ 				this._showsNew.addItem(newShow);
+ 			}
+ 		}
+ 		
+ 		private function show_play_next(e:ShowEvent):void {
++			var nextShow:Show;
++			var currShow:Show;
++			
+ 			trace("Show finished! Time to play next");
+ 			
+-			if( this._showsCur.length <= 1 ) {
+-				return; //Only one show, no need to switch shows.
++						
++			currShow = Show(this._container.getChildByName("currentShow"));
++			
++			if(currShow != null) {
++				var tmpDate:Date = new Date();
++				LocalDatabase.insertPlaybackEvent(new LoggerPlaybackEvent(
++					"",
++					"0",
++					"show_end", 
++					tmpDate,
++					tmpDate,
++					currShow.id.slice(2),
++					S3merWindow(this._container).screenId));
+ 			}
+ 			
+-			var currShowIndex:int = this._showsCur.getItemIndex(Show(this._container.getChildByName("currentShow")));
++			if( this._showsCur.length == 0 ) {
++				//TODO: WTF?
++				return;
++			}
+ 			
+-			if( currShowIndex == this._showsCur.length - 1 ) {
+-				switchShow((this._showsCur.getItemAt(0) as Show).id);
+-			} else {
+-				switchShow((this._showsCur.getItemAt(currShowIndex + 1) as Show).id);
++			if( this._showsCur.length == 1 ) {
++				if( currShow == null ) {
++					switchShow((this._showsCur.getItemAt(0) as Show).id);
++				}
++				return; //Only one show, no need to switch shows.
++			} 
++			
++			var currShowIndex:int = this._showsCur.getItemIndex(currShow);
++			
++			do {
++				if( currShowIndex == this._showsCur.length - 1 ) {
++					nextShow = (this._showsCur.getItemAt(0) as Show);
++					currShowIndex = -1;
++				} else {
++					nextShow = (this._showsCur.getItemAt(currShowIndex + 1) as Show);
++					currShowIndex++;
++				}
++				
++				if(nextShow.id == "sh1044") {
++					trace("here");
++				}
++			} while( !nextShow.schedule.isPlayable && nextShow != currShow)	
++			
++			
++			
++			if( nextShow != currShow ) {
++				switchShow(nextShow.id);
+ 			}
+-			
+ 		}
+ 
+-		private function parseShow_addSchedules(regionXML:XML, show:Show):void {
+-			// TODO: Do something useful
++		private function parseShow_addSchedules(show:Show):void {
++			for each (var scheduleXML:XML in _config.timeconditions) {
++				if( scheduleXML.@show_id.toString() == show.id ) {
++					var tmpSchedule:Schedule = this.getScheduleById(this._schedulesNew, scheduleXML.@id);
++					
++					if (tmpSchedule == null) {
++						Logger.addEvent("ERROR: no schedule defined with id = " + scheduleXML.@id);
++						continue;
++					}
++					
++					Logger.addEvent("- adding reference to schedule id = " + scheduleXML.@id);
++					show.setSchedule(tmpSchedule);
++				}
++			}
+ 		}
+ 
+ 		private function parseShow_addPlaylists(regionXML:XML, show:Show):void {
+@@ -688,12 +833,11 @@
+ 
+ 		}
+ 	
+-		
+ 		public function switchShow(newShowId:String):void {
+ 			//TODO: Check this and make sure it works properly
+ 			
+ 			var newShowObject:Show
+-			var oldShowObject:Show;
++			var oldShowObject:Show;			
+ 			
+ 			if( this._stopped == true ) {
+ 				return;
+@@ -716,6 +860,16 @@
+ 			}
+ 
+ 			if (newShowObject != null) {
++				var tmpDate:Date = new Date();
++				LocalDatabase.insertPlaybackEvent(new LoggerPlaybackEvent(
++						"",
++						"0",
++						"show_start", 
++						tmpDate,
++						tmpDate,
++						newShowObject.id.slice(2),
++						S3merWindow(this._container).screenId));
++
+ 				oldShowObject = Show(this._container.getChildByName("currentShow"));
+ 				newShowObject.fadeOut(0);
+ 				newShowObject.name = "currentShow";
+@@ -725,7 +879,7 @@
+ 				if (oldShowObject != null) {
+ 					oldShowObject.name = "oldShow";
+ 					oldShowObject.addEventListener(EffectEvent.EFFECT_END,switchShow_stage2,false,0,true);
+-					oldShowObject.fadeOut(1000);
++					oldShowObject.fadeOut(250);
+ 				} else {
+ 					newShowObject.addEventListener(EffectEvent.EFFECT_END,switchShow_stage3,false,0,true);
+ 					newShowObject.play();			
+@@ -741,18 +895,24 @@
+ 		private function switchShow_stage2(e:EffectEvent):void {
+ 			var oldShowObject:Show = Show(this._container.getChildByName("oldShow"));
+ 			var currShowObject:Show = Show(this._container.getChildByName("currentShow"));
+-			oldShowObject.stop(true);
+-			oldShowObject.removeEventListener(EffectEvent.EFFECT_END,switchShow_stage2);
+-			currShowObject.addEventListener(EffectEvent.EFFECT_END,switchShow_stage3,false,0,true);
+-			this._container.removeChild(oldShowObject);
+ 			
+-						
+-			if( this._stopped == true ) {
+-				this._container.removeChild(currShowObject);
+-			} else {
+-				currShowObject.play();			
+-				currShowObject.fadeIn();
++			if(oldShowObject) {
++				oldShowObject.stop(true);
++				oldShowObject.removeEventListener(EffectEvent.EFFECT_END,switchShow_stage2);
++				this._container.removeChild(oldShowObject);
++			}
++			
++			if(currShowObject) {
++				currShowObject.addEventListener(EffectEvent.EFFECT_END,switchShow_stage3,false,0,true);
+ 				
++							
++				if( this._stopped == true ) {
++					this._container.removeChild(currShowObject);
++				} else {
++					currShowObject.play();			
++					currShowObject.fadeIn(250);
++					
++				}
+ 			}
+ 
+ 		}
+@@ -810,7 +970,16 @@
+ 		}
+ 
+ 		private function parseSchedules():void {
++			var newSchedule:Schedule;
++//			var newPlaylistObj:PlaylistObject;
+ 			
++			for each (var scheduleXML:XML in _config.timeconditions) {
++				newSchedule = new Schedule(scheduleXML);
++				
++				if(newSchedule.valid ) {
++					this._schedulesNew.addItem(newSchedule);
++				}
++			}			
+ 		}
+ 
+ 		public function resize( newHeight:int, newWidth:int):void {
+@@ -832,6 +1001,13 @@
+ 			}
+ 		}
+ 
++		public function set pan(val:Number):void {
++			for each( var _showObj:DisplayObject in this._container.getChildren()) {
++				if ( _showObj is Show) {
++					(_showObj as Show).pan = val;
++				}
+ 
++			}
++		}
+ 	}
+ }
+\ No newline at end of file
+Index: com/msgid/S3mer/FileIO.as
+===================================================================
+--- com/msgid/S3mer/FileIO.as	(revision 746)
++++ com/msgid/S3mer/FileIO.as	(working copy)
+@@ -3,10 +3,7 @@
+ //	import com.adobe.crypto.SHA1;
+ 	
+ 	import flash.filesystem.File;
+-	import flash.filesystem.FileMode;
+-	import flash.filesystem.FileStream;
+ 	import flash.system.Capabilities;
+-	import flash.utils.ByteArray;
+ 	
+ 	
+ 	public class FileIO
+@@ -49,8 +46,16 @@
+ 			}
+ 		}
+ 		
+-		public static function storePath():String {
+-			return File.applicationStorageDirectory.nativePath;
++		public static function storePath(fileName:String = ""):String {
++			var tmpPath:File;
++			
++			tmpPath = File.applicationStorageDirectory;
++			
++			if(fileName != "") {
++				tmpPath = tmpPath.resolvePath(fileName);
++			}
++			
++			return tmpPath.nativePath;
+ 		}
+ 		
+ 		public static function appPath():String {
+@@ -72,9 +77,15 @@
+ 			return null;
+ 		}
+ 		
+-		public static function mediaPath(fileName:String):String {
+-			var tmpFile:File = File.applicationStorageDirectory.resolvePath("media").resolvePath(fileName);
++		public static function mediaPath(screenId:String, fileName:String):String {
++			var tmpFile:File = File.applicationStorageDirectory.resolvePath("media");
+ 			
++			tmpFile = tmpFile.resolvePath("screen" + screenId);
++			
++			if(fileName != "") {
++				tmpFile = tmpFile.resolvePath(fileName);
++			}
++			
+ 			var realPath:String = tmpFile.nativePath;
+ 			
+ 			if(isMacOs()) {
+@@ -95,22 +106,16 @@
+ 
+ 		
+ 		
+-		public  static function fileExists(fileName:String, md5:String = ""):Boolean {
+-			var myStorageDir:File = File.applicationStorageDirectory;
++		public  static function fileExists(fileName:String, screenId:String):Boolean {
++			var myFile:File;
+ 			
+-			if (!myStorageDir.exists) {
++			myFile = new File(mediaPath(screenId,fileName));
++						
++			if (!myFile.exists) {
+ 				return false;
+ 			}
+ 			
+-			if (!myStorageDir.resolvePath("media").exists) {
+-				return false;
+-			}
+ 			
+-			if (!myStorageDir.resolvePath("media").resolvePath(fileName).exists) {
+-				return false;
+-			}
+-			
+-			
+ //			if (ENABLE_HASH) {
+ //				var myStream:FileStream = new FileStream()
+ //				var data:ByteArray;
+Index: com/msgid/S3mer/ShowObject.as
+===================================================================
+--- com/msgid/S3mer/ShowObject.as	(revision 746)
++++ com/msgid/S3mer/ShowObject.as	(working copy)
+@@ -3,18 +3,18 @@
+ 	import com.msgid.S3mer.LocalDatabase.LocalDatabase;
+ 	
+ 	import flash.display.DisplayObject;
++	import flash.display.DisplayObjectContainer;
+ 	import flash.events.Event;
+ 	import flash.events.EventDispatcher;
+ 	import flash.events.TimerEvent;
+ 	import flash.media.Camera;
+-	import flash.media.SoundTransform;
+ 	import flash.utils.Timer;
+ 	
+ 	import mx.collections.ArrayCollection;
+ 	import mx.containers.Canvas;
+ 	import mx.controls.HTML;
+ 	import mx.controls.Label;
+-	import mx.controls.VideoDisplay;
++	import mx.controls.videoClasses.VideoError;
+ 	import mx.effects.Fade;
+ 	import mx.events.EffectEvent;
+ 	import mx.events.VideoEvent;
+@@ -29,7 +29,6 @@
+ 		private var _realObject:DisplayObject;
+ 		private var _prevObject:DisplayObject;
+ 		
+-		private var _schedules:ArrayCollection;
+ 		private var _playlists:ArrayCollection;
+ 		private var _timers:ArrayCollection;
+ 		
+@@ -50,10 +49,10 @@
+ 		private var _item_type:String;
+ 		
+ 		private var _mainMediaRegion:String;
++		private var _atShowEnd:Boolean = false;
+ 		
+ 		
+ 		public function ShowObject() {
+-			this._schedules = new ArrayCollection();
+ 			this._playlists = new ArrayCollection();
+ 			this._timers = new ArrayCollection();
+ 			
+@@ -86,13 +85,13 @@
+ 			return _parent;
+ 		}
+ 		
++
++		
+ 		public function set parent(val:Show):void {
+ 			this._parent = val;
+ 		}
+ 		
+ 		public function nextPlaylist():void {
+-			//TODO: Go through conditions to see which playlist can be played
+-			
+ 			//Find the current playlist in the array...
+ 			var currIndex:int = this._playlists.getItemIndex(this._currentPlaylist);
+ 			
+@@ -102,6 +101,7 @@
+ 				if( this._mainMediaRegion == "1" && (a+currIndex) >= this._playlists.length - 1 ) {
+ 					// This is the main media region, when we reach the end of the playlist, throw an event to move to the next show.
+ 					this._parent.dispatchEvent(new ShowEvent(ShowEvent.NEXT_SHOW));
++					this._atShowEnd = true;
+ //					return;
+ 				}
+ 
+@@ -118,31 +118,9 @@
+ 		
+ 		public function configure(objectXML:XML):void {
+ 			this._configXML = objectXML;
++			configure_image(objectXML);
+ 			
+-			
+-//			switch(objectXML.@type.toString()) {
+-//				case 'text':
+-//					configure_text(objectXML);
+-//					break;
+-//  				case 'image':
+-//					configure_image(objectXML);
+-//					break;
+-//  				case 'video':
+-//					configure_video(objectXML);
+-//					break;
+-//  				case 'rss':
+-//					configure_rss(objectXML);
+-//					break;
+-//				case 'condition':
+-//					break;
+-//				default:
+-					configure_image(objectXML);
+-					
+-					this._mainMediaRegion = this._configXML.@mainmedia;
+-//					break;
+-//			}
+-			
+-//			this.parent.addChild(this._realObject);
++			this._mainMediaRegion = this._configXML.@mainmedia;
+ 		}
+ 		
+ 		private function configure_text(objectXML:XML):void {
+@@ -210,7 +188,7 @@
+ 			newVideo.name = objectXML.@id;
+ 			
+ 			if (this._parent.hasAudio==true) {
+-				var newSoundTransform:SoundTransform = newVideo.soundTransform;
++//				var newSoundTransform:SoundTransform = newVideo.soundTransform;
+ 				
+ 				newVideo.volume = 1;			
+ 			
+@@ -260,11 +238,6 @@
+ 		public function play():void {
+ 			this._stopped = false;
+ 
+-			if( this._configXML.@id == "rg439" ) {
+-				trace("here");
+-			}
+-
+-
+ 			play_next();
+ 		}
+ 		
+@@ -303,12 +276,38 @@
+ 				_playlist.next();
+ 			}
+ 			
++			if(currType == "livevideo") {
++				var tmpVD:SmoothVideoDisplay;
++				var tmpNewVideoDisplay:SmoothVideoDisplay;
++				var tmpParent:DisplayObjectContainer;
++				
++				tmpVD = ((this._realObject as Canvas).getChildAt(0) as SmoothVideoDisplay);
++				
++				if(tmpVD) {
++					tmpVD.detachCamera();
++					tmpVD.attachCamera(null);
++				}
++				
++				tmpParent = (this._realObject as Canvas).parent;
++				
++				tmpNewVideoDisplay = new SmoothVideoDisplay;
++				tmpParent.addChildAt(tmpNewVideoDisplay,tmpParent.getChildIndex(this._realObject))
++				tmpParent.removeChild(this._realObject);
++				this._realObject = tmpNewVideoDisplay;
++				
++			}
++			
+ 
+ 			//Check if we have reached the end of the current playlist, if so then move to the next playlist
+ 			if ( _playlist.EOL == true ) {
+ 				this.nextPlaylist();
+ 				_playlist = this.currentPlaylist;
++				
+ 				_playlist.first();
++				
++				if(this._atShowEnd) {
++					return;
++				}
+ 			}
+ 			
+ 			// we read the current value because the playlist item was moved to the next item
+@@ -317,14 +316,18 @@
+ 			this._item_end_time = new Date();
+ 			
+ 			if(this._item_start_time != null ) {
+-				LocalDatabase.insertPlaybackEvent(
+-					new LoggerPlaybackEvent(this._item_file,
+-						this._item_file_id,
+-						this._item_type,
+-						this._item_start_time,
+-						this._item_end_time,
+-						this._parent.id.slice(2),
+-						(this._parent.parent as S3merWindow).screenId));
++				try {
++					LocalDatabase.insertPlaybackEvent(
++						new LoggerPlaybackEvent(this._item_file,
++							this._item_file_id,
++							this._item_type,
++							this._item_start_time,
++							this._item_end_time,
++							this._parent.id.slice(2),
++							(this._parent.parent as S3merWindow).screenId));
++				} catch(e:Error) {
++					Logger.addEvent("ShowObject/play_next(): Could not store item in as run log due to and error, probably null pointer exception");
++				}
+ 			}
+ 			
+ 			this._item_start_time = new Date();
+@@ -332,32 +335,10 @@
+ 
+ 			
+ 			this._item_file_id = (_playlist.current as PlaylistObject).id;
+-			
+ 
+-//			if (currType != nextType ) { //|| _playlist.BOL != true
+-//				var parentShow:Show = this._realObject.parent as Show;
+-//				var tmpObject:DisplayObject = this._realObject;
+-//				
+-//				switch(nextType) {
+-//					case "video":
+-//						this.configure_video(this._configXML);
+-//						break;
+-//					case "image":
+-//						this.configure_image(this._configXML);
+-//						break;
+-//					default:
+-//						Logger.addEvent(this.toString() + ": bad playlist item type. Value = " + (this._currentPlaylist.current as PlaylistObject).type);
+-//						
+-//						this.dispatchEvent(new ShowEvent("INVALID_PLAYLIST_ITEM"));
+-//						return;
+-//				}
+-//				
+-////				parentShow.addChild(this._realObject);
+-////				parentShow.removeChild(tmpObject);
+-//				
+-//				currType = nextType;
++//			if(this._mainMediaRegion == "1"){
++//				trace("here");
+ //			}
+-//			
+ 
+ 			switch(currType) {
+ 				case "video":
+@@ -442,11 +423,11 @@
+ 				} 
+ 					
+ 				if (currentObj.parent == this._parent) {
+-					if (isImage2Image(currentObj,nextObj)) {
+-						this._parent.addChild(nextObj);
+-					} else {
+-						this._parent.addChildAt(nextObj,this._parent.getChildIndex(currentObj));						
+-					}
++//					if (isImage2Image(currentObj,nextObj)) {
++//						this._parent.addChild(nextObj);
++//					} else {
++					this._parent.addChildAt(nextObj,this._parent.getChildIndex(currentObj));						
++//					}
+ 				} else {
+ 					try {
+ 						this._parent.addChild(nextObj);
+@@ -470,6 +451,11 @@
+ 				
+ 				this.resize();
+ 				
++				
++				if ( currentObj is Canvas ) {
++					trace("here");
++				}
++				
+ 				if (nextObj is SmoothVideoDisplay) {
+ 					if ((nextObj as SmoothVideoDisplay).cameraAttached != true && (nextObj as SmoothVideoDisplay).source != null ) {
+ 						(nextObj as SmoothVideoDisplay).addEventListener(VideoEvent.READY,cleancut_stage2,false,0,true);
+@@ -486,39 +472,6 @@
+ 						}
+ 					}
+ 				}
+-				
+-//				if (cleancutFade == null ) {
+-//					cleancutFade = new Fade();
+-//				
+-//					cleancutFade.duration = 100;
+-//					cleancutFade.alphaFrom = 0.0;
+-//					cleancutFade.alphaTo = 1.0;
+-//					
+-//					cleancutFade.addEventListener(EffectEvent.EFFECT_END,cleancut_COMPLETE,false,0,true);
+-//									
+-//				} else {
+-//					if (cleancutFade.isPlaying) {
+-//						cleancutFade.end();
+-//					}
+-//				}
+-				
+-//				if (cleancutFadeR == null ) {
+-//					cleancutFadeR = new Fade();
+-//				
+-//					cleancutFadeR.duration = 100;
+-//					cleancutFadeR.alphaFrom = 0.0;
+-//					cleancutFadeR.alphaTo = 1.0;
+-//					
+-//									
+-//				} else {
+-//					if (cleancutFade.isPlaying) {
+-//						cleancutFadeR.end();
+-//					}
+-//				}
+-				
+-//				cleancutFade.play([nextObj]);
+-//				cleancutFadeR.play([nextObj]);
+-
+ 			}
+ 		} 
+ 
+@@ -714,7 +667,7 @@
+ 			this._prevObject = this._realObject;
+ 			this.configure_video(this._configXML);
+ 			
+-			SmoothVideoDisplay(this._realObject).source = FileIO.mediaPath(_playlist.current.file);
++			SmoothVideoDisplay(this._realObject).source = FileIO.mediaPath(getScreenId(),_playlist.current.file);
+ //			SmoothVideoDisplay(this._realObject).play();
+ 			cleancut(this._prevObject, this._realObject);
+ 			
+@@ -724,7 +677,7 @@
+ 				SmoothVideoDisplay(this._realObject).smoothing = true;
+ 			}
+ 			
+-			Logger.addEvent("Play next: " + FileIO.mediaPath(_playlist.current.file));
++			Logger.addEvent("Play next: " + FileIO.mediaPath(getScreenId(),_playlist.current.file));
+ 			
+ 			getTimerById("video_check").start();
+ 		}
+@@ -800,40 +753,58 @@
+ 			
+ 			this._prevObject = this._realObject;
+ 			this.configure_image(this._configXML);
+-			SmoothImage(this._realObject).load(FileIO.mediaPath(_playlist.current.file));
++			SmoothImage(this._realObject).load(FileIO.mediaPath(getScreenId(),_playlist.current.file));
+ 			
+ 			cleancut(this._prevObject,this._realObject);
+ 
+ 			Logger.addEvent("New timer duration: " +tmpTimer.delay);
+ 
+-			Logger.addEvent("Play next: " + FileIO.mediaPath(_playlist.current.file));
++			Logger.addEvent("Play next: " + FileIO.mediaPath(getScreenId(),_playlist.current.file));
+ 		
+ 			if (tmpDuration != "0") {
+ 				tmpTimer.start();
+ 			}
+ 		}
+ 		
++		private function getScreenId():String {
++			return (this._parent.parent as S3merWindow).screenId.toString();
++		}
+ 
+ 		public function image_check(e:TimerEvent):void {
+ 			Timer(e.target).stop();
+-
+-			this.play_next();
++			
++			if(!this._stopped) {
++				this.play_next();
++			} else {
++				stop_stage2();
++			}
+ 		}
+ 		
+ 		public function videoComplete(e:VideoEvent):void {
+-			videoNext();
++			if(!this._stopped) {
++				isVideoPlayingOK();
++			} else {
++				stop_stage2();
++			}
+ 		}
+ 
+ 		public function video_check(e:TimerEvent):void {
+ 			Timer(e.target).stop();
+-			if ( videoNext() == true ) { // Only restart the timer if we didnt move to another video
++			if ( isVideoPlayingOK() ) { // Only restart the timer if we didnt move to another video
+ 				Timer(e.target).start();			
++			} else {
++				if(!this._stopped) {
++					this.play_next();
++				} else {
++					stop_stage2();
++				}
+ 			}
+ 		}
+ 		
+ 		private var handlingVideoEvent:Boolean = false;
+ 		
+-		private function videoNext():Boolean {
++		private function isVideoPlayingOK():Boolean {
++			var _isVideoPlayingOK:Boolean = true;
+ 			
+ 			if (handlingVideoEvent == false) {
+ 				handlingVideoEvent = true; 
+@@ -841,25 +812,19 @@
+ 					
+ 					if(this._realObject is SmoothVideoDisplay) {
+ 						if (SmoothVideoDisplay(this._realObject).state == VideoEvent.STOPPED ) {
+-							this.play_next();
+-							handlingVideoEvent = false; 
+-							return false;					
++							_isVideoPlayingOK = false;
+ 						}
+ 						
+ 						if (this._errorplaying == true) {
+-							this.play_next();
+-							handlingVideoEvent = false;
++							_isVideoPlayingOK = false;
+ 							this._errorplaying = false;
+-							return false;
+ 						}
+ 						
+ 						if (SmoothVideoDisplay(this._realObject).videoHeight == 0 ||
+ 							SmoothVideoDisplay(this._realObject).videoWidth == 0 ) {
+ 							
+ 							if(_videoRepeatTimeCode2 >= 10) {				
+-								this.play_next();
+-								handlingVideoEvent = false; 
+-								return false;					
++								_isVideoPlayingOK = false;
+ 							} else {
+ 								_videoRepeatTimeCode2++;
+ 							}
+@@ -877,10 +842,7 @@
+ 						
+ 						if (_videoRepeatTimeCode >= 10) {
+ 							_videoRepeatTimeCode = 0;
+-							this.play_next();
+-							handlingVideoEvent = false; 
+-							
+-							return false;					
++							_isVideoPlayingOK = false;
+ 						}
+ 						
+ 						_videoLastTimeCode = SmoothVideoDisplay(this._realObject).playheadTime;
+@@ -888,16 +850,18 @@
+ 				} catch(e:TypeError) {
+ 					Logger.addEvent(e.message + e.getStackTrace());
+ 				}
++				
+ 				handlingVideoEvent = false; 
+ 					
+ 			}
+ 			
+-			return true;
++			return _isVideoPlayingOK;
+ 		}
+ 		
+ 		//This sets the stopped flag to true.  When the current item ends, then stop_stage2 will be called to cleanup
+ 		public function stop(force:Boolean = true):void {
+ 			if (force == true) {
++				this._atShowEnd = false;
+ 				stop_stage2();
+ 			}
+ 			this._stopped = true;
+@@ -905,14 +869,24 @@
+ 		
+ 		//Called when stop has been called and the current item has finished.
+ 		private function stop_stage2():void {
++			this.stopTimers();
++
+ 			if (this._realObject is SmoothVideoDisplay) {
+ 				//VideoDisplay(this._realObject).removeEventListener(VideoEvent.COMPLETE, stop_stage2);
+-				SmoothVideoDisplay(this._realObject).stop();
++				try {
++					SmoothVideoDisplay(this._realObject).stop();
++				} catch(e:VideoError) {
++					
++				}
+ 			} 
+ 			
+ 			if (this._realObject is RSSFeedPanel) {
+ 				RSSFeedPanel(this._realObject).stop();
+ 			}
++			
++			if(this._realObject.parent) {
++				this._realObject.parent.removeChild(this._realObject);
++			}
+ 
+ 			this.dispatchEvent(new ShowEvent(ShowEvent.STOPPED));
+ 		}
+@@ -933,22 +907,8 @@
+ 			this._playlists.removeAll();
+ 		}
+ 
+-		public function addSchedule(list:Schedule):void {
+-			this._schedules.addItem(list);
+-		}
+-		
+-		public function removeSchedule(list:Schedule):void {
+-			var index:int = this._schedules.getItemIndex(list);
+-			
+-			if ( index >= 0 ) {
+-				this._schedules.removeItemAt(index);		
+-			}
+-		}
+ 
+-		public function clearSchedule(list:Playlist):void {
+-			this._schedules.removeAll();
+-		}
+-		
++
+ 		private function getTimerById(id:String):TimerId {
+ 			for each (var _each:TimerId in this._timers) {
+ 				if( _each.id == id ) {
+@@ -974,14 +934,12 @@
+ 			return null;
+ 		}
+ 		
+-		
+-		public function reset():void {
+-			this.stop(true);
++		private function stopTimers():void {
+ 			for each (var _timer:Timer in this._timers ) {
+ 				_timer.stop();
+ 			}
+ 			
+-			this._timers.removeAll();
++			this._timers.removeAll();			
+ 		}
+ 	}
+ }
+\ No newline at end of file
+Index: com/msgid/S3mer/DownloadQueue.as
+===================================================================
+--- com/msgid/S3mer/DownloadQueue.as	(revision 746)
++++ com/msgid/S3mer/DownloadQueue.as	(working copy)
+@@ -44,10 +44,10 @@
+ 			return true;
+ 		}
+ 		
+-		public function addItem(url:String, hash:String ="", filename:String = null, autostart:Boolean = true, forceUpdate:Boolean = false):void {
++		public function addItem(url:String,screenId:String, hash:String ="", filename:String = null, autostart:Boolean = true, forceUpdate:Boolean = false):void {
+ 			var myDL:Downloader
+ 
+-			myDL = new Downloader(url, hash, filename, forceUpdate);
++			myDL = new Downloader(url, hash, filename, forceUpdate, screenId.toString());
+ 			this._downloaders.addItem(myDL);
+ 		
+ 			myDL.addEventListener(DownloaderEvent.PROGRESS,OnProgress);
+Index: com/msgid/S3mer/PodcastItem.as
+===================================================================
+--- com/msgid/S3mer/PodcastItem.as	(revision 746)
++++ com/msgid/S3mer/PodcastItem.as	(working copy)
+@@ -13,11 +13,14 @@
+ 		public var _feedRSS:XML;
+ 		public var _errored:Boolean;
+ 		
++		public var _screenId:String;
++		
+ 		public var _currentItemURL:String;
+ 		
+-		public function PodcastItem(item:PlaylistObject)
++		public function PodcastItem(item:PlaylistObject, screenId:String)
+ 		{
+ 			this._item = item;
++			this._screenId = screenId;
+ 			
+ 			this._item.file = "";
+ 			super();
+@@ -47,11 +50,11 @@
+ 		}
+ 		
+ 		public function queueDownload():void {
+-			if(FileIO.fileExists(FileIO.Url2Filename(_currentItemURL))) {
++			if(FileIO.fileExists(FileIO.Url2Filename(_currentItemURL),this._screenId)) {
+ 				Logger.addEvent("Already Downloaded File:"+ FileIO.Url2Filename(_currentItemURL));
+ 			} else {
+ 				Logger.addEvent("Downloading File:"+ FileIO.Url2Filename(_currentItemURL));
+-				PodcastManager._queue.addItem(_currentItemURL,"",null,false,false);
++				PodcastManager._queue.addItem(_currentItemURL,_screenId,"",null,false,false);
+ 			}
+ 			
+ 			_item.file = FileIO.Url2Filename(_currentItemURL);
+@@ -72,7 +75,7 @@
+ 				return true;
+ 			}
+ 			
+-			return FileIO.fileExists(FileIO.Url2Filename(_currentItemURL));
++			return FileIO.fileExists(FileIO.Url2Filename(_currentItemURL),this._screenId);
+ 		}
+ 		
+ 		public function errored():Boolean {
+@@ -97,20 +100,20 @@
+ 		public function checkRSS_complete(e:Event):void {
+ 			extractFeedData((e.target as URLLoader).data);
+ 			
+-			if(FileIO.fileExists(FileIO.Url2Filename(_currentItemURL))) {
++			if(FileIO.fileExists(FileIO.Url2Filename(_currentItemURL),this._screenId)) {
+ 				Logger.addEvent("Already Downloaded File:"+ FileIO.Url2Filename(_currentItemURL));
+ 				_item.file = FileIO.Url2Filename(_currentItemURL);
+ 			} else {
+ 				Logger.addEvent("Downloading File:"+ FileIO.Url2Filename(_currentItemURL));
+ 				
+ 				PodcastManager._queue.addEventListener(DownloaderEvent.PARTIAL_COMPLETE,checkRSS_loadmedia_complete);
+-				PodcastManager._queue.addItem(_currentItemURL);
++				PodcastManager._queue.addItem(_currentItemURL, _screenId);
+ 			}
+ 						
+ 		}
+ 		
+ 		public function checkRSS_loadmedia_complete(e:DownloaderEvent):void {
+-			if(FileIO.fileExists(FileIO.Url2Filename(_currentItemURL))) {
++			if(FileIO.fileExists(FileIO.Url2Filename(_currentItemURL),this._screenId)) {
+ 				Logger.addEvent("Media for RSS updated: " + this._item.url);
+ 				_item.file = FileIO.Url2Filename(_currentItemURL);
+ 			}			

@@ -1,0 +1,124 @@
+Index: S3mer.mxml
+===================================================================
+--- S3mer.mxml	(revision 902)
++++ S3mer.mxml	(working copy)
+@@ -73,7 +73,7 @@
+ 			
+ 			private function onAppLoad(e:FlexEvent):void {
+ 				this.frameRate = 30;
+-						
++				
+ 				createPlayerWindows();
+ 				createLoginWindow();
+ 				
+@@ -84,31 +84,6 @@
+ 
+ 			}
+ 			
+-			private function setScreensaverMode(time:int):void {
+-				var nativeApp:NativeApplication = NativeApplication.nativeApplication;
+-				
+-				nativeApp.idleThreshold = time;
+-				nativeApp.addEventListener(Event.USER_IDLE, userIdleHandler);
+-				nativeApp.addEventListener(Event.USER_PRESENT, userActiveHandler);
+-				Logger.addEvent("Screensaver mode ENABLED with a delay of: " + time + " SECONDS");
+-			}
+-			
+-			private function userIdleHandler(e:Event):void {
+-				trace("user idle");
+-				for each( var _window:S3merWindow in this._playerWindows ) {
+-					_window.open(false);
+-					_window.showWindow();
+-					_window._loginWindow.show();
+-				}
+-			}
+-			
+-			private function userActiveHandler(e:Event):void {
+-				trace("user is back.");
+-				for each( var _window:S3merWindow in this._playerWindows ) {
+-					_window.hideWindow();
+-				}
+-			}
+-			
+ 			private function createPlayerWindows():void {
+ 				var screenNumber:int = 0;
+ 				var _window:S3merWindow;
+@@ -123,15 +98,6 @@
+ 					if( screenNumber == 0 ) {
+ 						_window._loginWindow.show();
+ 					}
+-					
+-					// Check if screensver is enabled and act acordingly
+-					ApplicationSettings.load();
+-					if(ApplicationSettings.getValue("screen0.screensaver","false")=="true") {
+-						setScreensaverMode(5);
+-//						_window.configuration.muteAudio(true); // This is not working
+-						_window.close();
+-					}
+-					
+ 					screenNumber++;
+ //					break; // Only show 1 window
+ 				}
+Index: com/msgid/S3mer/S3merWindow.mxml
+===================================================================
+--- com/msgid/S3mer/S3merWindow.mxml	(revision 902)
++++ com/msgid/S3mer/S3merWindow.mxml	(working copy)
+@@ -111,10 +111,6 @@
+ 				this.currentState = "";
+ 			}
+ 			
+-			public function hideWindow():void {
+-				this.visible = false;
+-			}
+-			
+ 			public function enableKeyHandler():void {
+ 				
+ 				if(this.stage) {
+@@ -299,10 +295,6 @@
+ 				this._configuration.cleanupMedia();	
+ 			}
+ 			
+-			public function muteAudio(val:Boolean):void {
+-				this._configuration.muteAudio(val);
+-			}
+-			
+ 		]]>
+ 	</mx:Script>
+ 	
+Index: com/msgid/S3mer/LoginWindow.mxml
+===================================================================
+--- com/msgid/S3mer/LoginWindow.mxml	(revision 902)
++++ com/msgid/S3mer/LoginWindow.mxml	(working copy)
+@@ -27,15 +27,11 @@
+ 					</mx:LinkButton>
+ 				</mx:Canvas>
+ 			</mx:AddChild>
+-			<mx:SetProperty name="height" value="250"/>
++			<mx:SetProperty name="height" value="222"/>
+ 			<mx:RemoveChild target="{btnTune}"/>
+ 			<mx:AddChild relativeTo="{pnlRegister}" position="lastChild">
+ 				<mx:Button label="Tune In" click="OnTuneInClick(event)" toolTip="Click here to tune-in" id="btnTune0" height="27" width="87.99999" fontSize="13" bottom="16" right="39.950005"/>
+ 			</mx:AddChild>
+-			<mx:AddChild>
+-				<!--Checkbox-->
+-				<mx:CheckBox label="Screensaver Mode" id="chkScreensaver" fontSize="13" bottom="22" left="25"/>
+-			</mx:AddChild>
+ 			<mx:RemoveChild target="{linkbutton1}"/>
+ 			<mx:RemoveChild target="{pnlMode}"/>
+ 		</mx:State>
+@@ -99,7 +95,6 @@
+ 			
+ 			private var _username:String;
+ 			private var _password:String;
+-			private var _screensaver:String;
+ 			
+ 			public function set isMultiScreen(val:Boolean):void {
+ 				this._isMultiScreen = val;
+@@ -339,7 +334,6 @@
+ 				ApplicationSettings.setValue("user.username",this._username);
+ 				ApplicationSettings.setValue("user.password",this._password);
+ 				ApplicationSettings.setValue("screen0.channel.id",this.cmbPlayers0.selectedItem.data[0]);
+-				ApplicationSettings.setValue("screen0.screensaver",this.chkScreensaver.selected.toString());
+ 				
+ 				if(this.currentState == "register_multiPlayer" && !_isDemoMode) {
+ 					ApplicationSettings.setValue("screen1.channel.id",this.cmbPlayers1.selectedItem.data[0]);

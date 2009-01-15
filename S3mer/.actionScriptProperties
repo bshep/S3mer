@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <actionScriptProperties mainApplicationPath="S3mer.mxml" version="3">
-<compiler additionalCompilerArguments="-locale en_US es_ES pt_BR" copyDependentFiles="true" enableModuleDebug="true" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="false" htmlHistoryManagement="false" htmlPlayerVersion="9.0.28" htmlPlayerVersionCheck="true" outputFolderPath="bin" strict="true" useApolloConfig="true" verifyDigests="true" warn="true">
+<compiler additionalCompilerArguments="-locale en_US es_ES pt_BR" copyDependentFiles="true" enableModuleDebug="true" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="false" htmlHistoryManagement="false" htmlPlayerVersion="9.0.28" htmlPlayerVersionCheck="true" outputFolderPath="bin" sourceFolderPath="src" strict="true" useApolloConfig="true" verifyDigests="true" warn="true">
 <compilerSourcePath>
 <compilerSourcePathEntry kind="1" linkType="1" path="locale/{locale}"/>
 </compilerSourcePath>

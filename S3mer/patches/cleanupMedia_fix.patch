@@ -1,0 +1,58 @@
+Index: com/msgid/S3mer/ConfigurationManager.as
+===================================================================
+--- com/msgid/S3mer/ConfigurationManager.as	(revision 746)
++++ com/msgid/S3mer/ConfigurationManager.as	(working copy)
+@@ -535,10 +535,21 @@
+ 		private function cleanupMedia():void {
+ 			var mediaFolder:File = new File(FileIO.storePath()).resolvePath("media");
+ 			var configReg:RegExp = /config[0-9]\.xml/;
++			var filesInDir:Array;
+ 			
+-			for each( var _file:File in mediaFolder.getDirectoryListing() ) {
++			try {
++				mediaFolder.addEventListener(IOErrorEvent.IO_ERROR, cleanupMedia_ioError);
++				
++				filesInDir = mediaFolder.getDirectoryListing().filter(isFile_filter);
++			} catch (e:Error) {
++				trace("cleanupMedia: error");
++				
++			}
++			
++			for each( var _file:File in filesInDir ) {
+ 				if (_file.name != "settings.xml" && _file.name.search(configReg) == -1) {
+ 					if (!fileExistsInPlaylist(_file)) {
++						_file.addEventListener(IOErrorEvent.IO_ERROR,cleanupMedia_ioError);
+ 						_file.deleteFileAsync();
+ 					}
+ 				}
+@@ -546,6 +557,18 @@
+ 
+ 		}
+ 		
++		private function cleanupMedia_ioError(e:IOErrorEvent):void {
++				trace("cleanupMedia: IO error");			
++		}
++		
++		private function isFile_filter(element:*, index:int, arr:Array):Boolean {
++			if( element is File && (element as File).isDirectory == false ) {
++				return true;
++			} else {
++				return false;
++			}
++        }
++		
+ 		private function fileExistsInPlaylist(myFile:File):Boolean {
+ 			
+ 			for each ( var _pl:Playlist in this._playlistsNew ) {
+Index: com/msgid/S3mer/ShowObject.as
+===================================================================
+--- com/msgid/S3mer/ShowObject.as	(revision 746)
++++ com/msgid/S3mer/ShowObject.as	(working copy)
+@@ -306,6 +306,7 @@
+ 
+ 			//Check if we have reached the end of the current playlist, if so then move to the next playlist
+ 			if ( _playlist.EOL == true ) {
++				_playlist.first();
+ 				this.nextPlaylist();
+ 				_playlist = this.currentPlaylist;
+ 				_playlist.first();
