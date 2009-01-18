@@ -11,13 +11,13 @@
 					<mx:TextInput text="{resourceManager.getString('application', 'PASSWORD')}" id="txtPassword" enter="OnLoginClick(event)" focusIn="if(txtPassword.text == resourceManager.getString('application', 'PASSWORD')) {this.txtPassword.text=''; this.txtPassword.displayAsPassword = true};" toolTip="Enter your password here" borderStyle="solid" top="61" right="40" left="39"/>
 					<mx:SWFLoader visible="true" id="spinner" verticalAlign="middle" horizontalAlign="center" top="32" left="350" width="16" height="16"/>
 					<mx:ControlBar id="ctlBar" horizontalAlign="left">
-						<mx:LinkButton label="{resourceManager.getString('application', 'NOT_REGISTERED')}" fontFamily="Verdana" textDecoration="underline" color="#0042FF" fontSize="11" bottom="24" left="14" textAlign="left" id="linkbutton1">
+						<mx:LinkButton label="{resourceManager.getString('application', 'NOT_REGISTERED')}" fontFamily="Verdana" textDecoration="underline" color="#0042FF" fontSize="11" bottom="24" left="14" textAlign="left" id="lnkNotRegsitered">
 							<mx:click>navigateToURL(new URLRequest('http://www.s3mer.com/register.php'), 'S3mer')</mx:click>
 						</mx:LinkButton>
-						<mx:LinkButton label="{resourceManager.getString('application', 'BACK')}" fontFamily="Verdana" textDecoration="underline" color="#0042FF" fontSize="11" bottom="1" left="14" textAlign="left" id="linkbutton0">
+						<mx:LinkButton label="{resourceManager.getString('application', 'BACK')}" fontFamily="Verdana" textDecoration="underline" color="#0042FF" fontSize="11" bottom="1" left="14" textAlign="left" id="lnkBack">
 							<mx:click>this.currentState = ""; this.txtUsername.enabled = true; this.txtPassword.enabled = true</mx:click>
 						</mx:LinkButton>
-						<mx:Spacer width="100%"/>
+						<mx:Spacer width="100%" id="spacer1"/>
 						<mx:Button label="{resourceManager.getString('application', 'LOGIN')}" right="22" click="OnLoginClick(event)" toolTip="Click here to log-in" id="btnTune" bottom="10" height="27"/>
 					</mx:ControlBar>
 				</mx:Panel>
@@ -32,18 +32,17 @@
 			</mx:AddChild>
 			<mx:SetProperty name="height" value="230"/>
 			<mx:RemoveChild target="{btnTune}"/>
-			<mx:AddChild relativeTo="{pnlRegister}" position="lastChild">
-				<mx:ControlBar>
-					<mx:LinkButton label="{resourceManager.getString('application', 'DIFFERENT_USER')}" fontFamily="Verdana" textDecoration="underline" color="#0042FF" fontSize="11" textAlign="left" id="linkbutton2" bottom="1" left="14" >
-						<mx:click>this.currentState = "register"; this.txtUsername.enabled = true; this.txtPassword.enabled = true</mx:click>
-					</mx:LinkButton>
-					<mx:Spacer width="100%" />
-					<mx:Button label="Tune In" click="OnTuneInClick(event)" toolTip="Click here to tune-in" id="btnTune0" height="27" width="87.99999" fontSize="13" bottom="16" right="39.950005"/>
-				</mx:ControlBar>
+			<mx:AddChild relativeTo="{ctlBar}" position="lastChild">
+				<mx:Button label="Tune In" click="OnTuneInClick(event)" toolTip="Click here to tune-in" id="btnTune0" height="27" width="87.99999" fontSize="13" bottom="16" right="39.950005"/>
 			</mx:AddChild>
-			<mx:RemoveChild target="{linkbutton1}"/>
+			<mx:RemoveChild target="{lnkNotRegsitered}"/>
 			<mx:RemoveChild target="{pnlMode}"/>
-			<mx:RemoveChild target="{linkbutton0}"/>
+			<mx:RemoveChild target="{lnkBack}"/>
+			<mx:AddChild relativeTo="{spacer1}" position="before">
+				<mx:LinkButton label="{resourceManager.getString('application', 'DIFFERENT_USER')}" fontFamily="Verdana" textDecoration="underline" color="#0042FF" fontSize="11" textAlign="left" id="linkbutton2" bottom="1" left="14" >
+					<mx:click>this.currentState = "register"; this.txtUsername.enabled = true; this.txtPassword.enabled = true</mx:click>
+				</mx:LinkButton>
+			</mx:AddChild>
 		</mx:State>
 		<mx:State name="register_multiPlayer" basedOn="register_choosePlayer">
 			<mx:SetProperty name="height" value="290"/>
@@ -80,12 +79,17 @@
  			<mx:AnimateProperty property="height"  targets="{[this]}" duration="300"/>
  		</mx:Transition>
  		
+ 		<mx:Transition fromState="register_choosePlayer" toState="register">
+ 			<mx:AnimateProperty property="height"  targets="{[this]}" duration="300"/>
+ 		</mx:Transition>
+ 		
  		<mx:Transition fromState="" toState="register">
- 			<mx:Parallel>
+ 			<mx:Parallel effectEnd="txtUsername.setFocus()">
  				<mx:Fade alphaFrom="1.0" alphaTo="0.0" targets="{[pnlMode]}" duration="500" startDelay="200"/>
  				<mx:Fade alphaFrom="0.0" alphaTo="1.0" targets="{[pnlRegister]}" duration="500"/>
  			</mx:Parallel>
  		</mx:Transition>
+ 		
  	</mx:transitions>
  	
  	<mx:Metadata>
