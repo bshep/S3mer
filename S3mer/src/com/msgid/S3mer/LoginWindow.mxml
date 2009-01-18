@@ -4,13 +4,13 @@
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
  backgroundAlpha="0" showEffect="{TVEffect_Show}" hideEffect="{TVEffect_Hide}" visible="true">
 	<mx:states>
-		<mx:State name="register" basedOn="">
+		<mx:State name="register">
 			<mx:AddChild position="lastChild">
 				<mx:Panel id="pnlRegister" layout="absolute" title="{resourceManager.getString('application', 'PLEASE_REGISTER')}" fontSize="14" backgroundColor="#FFFFFF" top="0" bottom="0" left="0" right="0" horizontalScrollPolicy="off" verticalScrollPolicy="off" visible="true">
 					<mx:TextInput text="{resourceManager.getString('application', 'EMAIL')}" id="txtUsername" enter="txtPassword.setFocus()" focusIn="if(txtUsername.text == resourceManager.getString('application', 'EMAIL')) this.txtUsername.text=''" toolTip="Enter your e-mail or username" top="26" height="27" left="39" right="40" borderStyle="solid"/>
 					<mx:TextInput text="{resourceManager.getString('application', 'PASSWORD')}" id="txtPassword" enter="OnLoginClick(event)" focusIn="if(txtPassword.text == resourceManager.getString('application', 'PASSWORD')) {this.txtPassword.text=''; this.txtPassword.displayAsPassword = true};" toolTip="Enter your password here" borderStyle="solid" top="61" right="40" left="39"/>
 					<mx:SWFLoader visible="true" id="spinner" verticalAlign="middle" horizontalAlign="center" top="32" left="350" width="16" height="16"/>
-					<mx:ControlBar horizontalAlign="left">
+					<mx:ControlBar id="ctlBar" horizontalAlign="left">
 						<mx:LinkButton label="{resourceManager.getString('application', 'NOT_REGISTERED')}" fontFamily="Verdana" textDecoration="underline" color="#0042FF" fontSize="11" bottom="24" left="14" textAlign="left" id="linkbutton1">
 							<mx:click>navigateToURL(new URLRequest('http://www.s3mer.com/register.php'), 'S3mer')</mx:click>
 						</mx:LinkButton>
