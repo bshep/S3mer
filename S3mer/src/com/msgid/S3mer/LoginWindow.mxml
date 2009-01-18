@@ -46,7 +46,7 @@
 			<mx:RemoveChild target="{linkbutton0}"/>
 		</mx:State>
 		<mx:State name="register_multiPlayer" basedOn="register_choosePlayer">
-			<mx:SetProperty name="height" value="282"/>
+			<mx:SetProperty name="height" value="290"/>
 			<mx:SetProperty target="{playerPanel}" name="height" value="122"/>
 			<mx:AddChild relativeTo="{playerPanel}" position="lastChild">
 				<mx:Label x="10" text="{resourceManager.getString('application', 'THIS_SCREEN')}" top="10" id="label1"/>
