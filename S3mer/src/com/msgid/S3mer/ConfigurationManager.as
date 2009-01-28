@@ -842,6 +842,8 @@ package com.msgid.S3mer
 			
 			if( nextShow != currShow ) {
 				switchShow(nextShow.id);
+			} else {
+				return false; // This prevents the show from ending since we are not switching shows.
 			}
 			
 			return true;
