@@ -816,7 +816,7 @@ package com.msgid.S3mer
 			}
 			
 			if( this._showsCur.length == 1 ) {
-				if( currShow == null ) {
+				if( currShow == null || this._showsCur.getItemIndex(currShow) == -1 ) {
 					switchShow((this._showsCur.getItemAt(0) as Show).id);
 				}
 				return false; //Only one show, no need to switch shows.

@@ -21,10 +21,11 @@ package com.msgid.S3mer
 		public static var URL_STATUS:String = "http://" + SERVER + "/checklogged.php";
 
 		public static var URL_MEDIA:String = "http://media1.s3mer.com.s3.amazonaws.com/";
+//		public static var URL_MEDIA:String = "http://dhr770hhem8f8.cloudfront.net/";
 		public static var URL_HEARTBEAT:String = "http://" + SERVER + "/heartbeat.php";
 		public static var URL_CONFIG:String = "http://" + SERVER + "/getxmltest.php";
 		public static var URL_RUNLOG:String = "http://" + SERVER + "/asrunlog.php";
-		public static var URL_UPDATE:String = "http://" + SERVER + "/checkversion.php";
+		public static var URL_UPDATE:String = "http://" + SERVER + "/checkversion.php?version=1";
 
 		private static const SETTINGS_KEY:String = "oewiur0830nf,mnv098-39n kchj098-932n,mcn-09";
 
