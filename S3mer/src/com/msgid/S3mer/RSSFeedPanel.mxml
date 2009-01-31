@@ -425,8 +425,8 @@
 					headtext.htmlText = this.source;
 					bodytext.htmlText = "Actualizando..."
 				} else {
-					headtext.htmlText = this.headlineTitle;
-					bodytext.htmlText = this.headlineDescription;
+					headtext.htmlText = this.cleanupHTML(this.headlineTitle);
+					bodytext.htmlText = this.cleanupHTML(this.headlineDescription);
 				}
 				
 //				this.truncateText(headtext, this.headline.width);
@@ -436,6 +436,36 @@
 				next_headline();
 			}
 			
+			
+			private function cleanupHTML(htmlToClean:String):String {
+				var ret:String;
+				
+				ret = htmlToClean;
+				ret = keepFirstStringBeforeTag(ret,/<p>/i);
+				ret = keepFirstStringBeforeTag(ret,/<br>/i);
+				ret = ret.replace(/^\s/,"");
+				
+				
+				return ret;
+			}
+			
+			private function keepFirstStringBeforeTag(htmlStr:String,tag:RegExp):String {
+				var ret:String = "";
+				var retArr:Array;
+				var index:int = 0;
+				
+				retArr = htmlStr.split(tag);
+				
+				for(index = 0; index < retArr.length; index++ ) {
+					if(retArr[index].toString().replace(" ","") != "") {
+						ret = retArr[index];
+						break;
+					}
+				}
+				
+				
+				return ret;
+			}
 			
 			// This function truncates text in bodytext and headertext
 			private function truncateText(obj:Label, width:Number):void {
