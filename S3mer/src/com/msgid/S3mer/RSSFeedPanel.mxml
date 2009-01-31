@@ -4,13 +4,51 @@
 	 resize="onResize(event)"
 	  xmlns:display="flash.display.*"
 	   verticalScrollPolicy="off" horizontalScrollPolicy="off" backgroundAlpha="0.0">
-	<mx:constraintColumns>
-		<mx:ConstraintColumn id="Canvas1_col3" width="0.9%"/>
-		<mx:ConstraintColumn id="Canvas1_col1" width="11%"/>
-		<mx:ConstraintColumn id="Canvas1_col2" width="88.1%"/>
-	</mx:constraintColumns>
-	<mx:Image maintainAspectRatio="true" scaleContent="true" id="logo" autoLoad="true" top="0" bottom="0" right="Canvas1_col1:0" left="Canvas1_col1:0" verticalAlign="middle" horizontalAlign="center"/>
-	<mx:SWFLoader  scaleContent="true" id="logoSWF" top="0" bottom="0" right="Canvas1_col1:0" left="Canvas1_col1:0" verticalAlign="middle" horizontalAlign="center"/>
+	<mx:states>
+		<mx:State name="hidden_bottom">
+			<mx:SetProperty target="{headline}" name="y" value="82"/>
+		</mx:State>
+		<mx:State name="hidden_top">
+			<mx:SetProperty target="{headline}" name="y" value="-82"/>
+		</mx:State>
+	</mx:states>
+	
+	<mx:transitions>
+		<mx:Transition fromState="" toState="hidden_bottom">
+			<mx:Parallel effectEnd="play_next_stage2(event)">
+				<mx:Move target="{headline}"/>
+				<mx:AnimateProperty property="alpha" target="{headline}" fromValue="1.0" toValue="0.0"/>
+			</mx:Parallel>
+		</mx:Transition>
+		
+		<mx:Transition fromState="hidden_bottom" toState="">
+			<mx:Parallel effectEnd="this._timer.start();">
+				<mx:Move target="{headline}"/>
+				<mx:AnimateProperty property="alpha" target="{headline}" fromValue="0.0" toValue="1.0"/>
+			</mx:Parallel>
+		</mx:Transition>
+		
+		<mx:Transition fromState="" toState="hidden_top">
+			<mx:Parallel effectEnd="play_next_stage2(event)">
+				<mx:Move target="{headline}"/>
+				<mx:AnimateProperty property="alpha" target="{headline}" fromValue="1.0" toValue="0.0"/>
+			</mx:Parallel>
+		</mx:Transition>
+		
+		<mx:Transition fromState="hidden_top" toState="">
+			<mx:Parallel effectEnd="this._timer.start();">
+				<mx:Move target="{headline}"/>
+				<mx:AnimateProperty property="alpha" target="{headline}" fromValue="0.0" toValue="1.0"/>
+			</mx:Parallel>
+		</mx:Transition>
+	</mx:transitions>
+	
+	<mx:SWFLoader  scaleContent="true" id="logoSWF" verticalAlign="middle" horizontalAlign="center" width="107" x="9" top="0" bottom="0"/>
+	<mx:Canvas id="headline" verticalScrollPolicy="off" horizontalScrollPolicy="off" backgroundColor="#000000" backgroundAlpha="0.0" width="830" x="{logoSWF.x+logoSWF.width+20}" height="81" y="0" alpha="1.0">
+		<mx:Label fontFamily="HelvNeueBlack" fontSize="41" color="#000000" id="headtext" fontWeight="normal" truncateToFit="false" y="10" left="1"/>
+		<mx:Label text="" fontFamily="HelvNeueBlack" fontSize="20" color="#000000" id="bodytext" truncateToFit="false" y="53" left="1" alpha="0.45"/>
+	</mx:Canvas>
+
 	<mx:Style>
 		@font-face {
 		    src:url("/assets/Helvetica Neue Condensed Black.ttf");
@@ -64,7 +102,116 @@
 			private var _color:String;
 			
 			private var _stopped:Boolean = false;
+			private var _feedType:int;
 			
+			
+			//Change the following 4 functions to if you want to support more types of feeds
+			public static var INVALID_FEED:int = 0;
+			public static var ATOM_FEED:int = 1;
+			public static var RSS_FEED:int = 2;
+	
+			private function get headlineDescription():String {
+				var ret:String;
+				
+				switch(this._feedType) {
+					case INVALID_FEED:
+						ret = "";
+						break;
+					case ATOM_FEED:
+						ret = "";
+						break;
+					case RSS_FEED:
+						ret = this._RSSXML.channel.item[this._currentHeadline].description;
+						break;
+				}
+				
+				return ret;
+			}
+			
+			private function get headlineTitle():String {
+				var ret:String;
+				
+				switch(this._feedType) {
+					case INVALID_FEED:
+						ret = "";
+						break;
+					case ATOM_FEED:
+						ret = "";
+						break;
+					case RSS_FEED:
+						ret = this._RSSXML.channel.item[this._currentHeadline].title;
+												
+						break;
+					
+				}
+				return ret;
+			}
+			
+			private function get numHeadlines():int {
+				var ret:int;
+				
+				switch(this._feedType) {
+					case INVALID_FEED:
+						ret = 0;
+						break;
+					case ATOM_FEED:
+						ret = 0;
+						break;
+					case RSS_FEED:
+						ret = new XMLList(this._RSSXML.channel.item).length();
+						break;
+					
+				}
+				return ret;
+			}
+			
+			private function OnRSSLoadComplete(e:Event):void {
+				_reloadTimer.delay = 1*60*1000;
+				_reloadTimer.start();
+				this.visible = true;
+				
+				var tmpRSS:XML = new XML(_loader.data); // Load data into a temp variable
+				this._feedType = identifyRSS(tmpRSS);
+				
+				
+				switch(this._feedType) {
+					case INVALID_FEED:
+					case ATOM_FEED:
+						// No data loaded, or data is empty....
+						tmpRSS = new XML();
+						
+						// If the last update was more than 24 Hours ago, then set RSS to an empty one
+						if (new Date().getTime() - this._lastUpdateDate.getTime() > 24*60*60*1000) {
+							this._RSSXML = tmpRSS;
+							this._currentHeadline = 0;
+						}
+						break;
+					case RSS_FEED:
+						this._lastUpdateDate = new Date();
+						
+						if (tmpRSS.toString() == this._RSSXML.toString()) {
+							// Do nothing as XML was not updated
+						} else {
+							if( this._timer.running ) {
+								this._timer.stop();
+							}
+							
+							this._RSSXML = tmpRSS;
+							this._currentHeadline = 0;
+							
+							if ( !this._timer.running ) {
+								this._timer.start();
+							}
+						}
+					
+						break;
+				}
+				
+				this.play_next();
+			}
+			
+			// End feed support functions
+
 			public function play():void {
 				trace("RSS URL: " +this.source);
 				trace("Logo URL: " +this.logoUrl);
@@ -92,8 +239,6 @@
 				
 				this.logoSWF.source = this.logoUrl;
 				
-				this.logo.visible = false;
-
 				this.resize();
 
 				if (headtext != null ) { 
@@ -112,9 +257,9 @@
 				this._stopped = true;
 			}
 			
-			public function pause():void {
-				this.stop();
-			}
+//			public function pause():void {
+//				this.stop();
+//			}
 			
 			public function resume():void {
 				this._stopped = false;
@@ -123,15 +268,9 @@
 				
 			}
 			
-			public function next():void {
-				this.play_next();
-			}
-			
-			public function prev():void {
-				this.prev_headline();
-				this.prev_headline();
-				this.play_next();
-			}
+//			public function next():void {
+//				this.play_next();
+//			}
 			
 			public function resize():void {
 				if ( this.resizing == false ) {
@@ -218,54 +357,14 @@
 				RSSLoadBegin();
 			}
 			
-			private function OnRSSLoadComplete(e:Event):void {
-				_reloadTimer.delay = 1*60*1000;
-				_reloadTimer.start();
-				this.visible = true;
-				this.logo.source = this.logoUrl;
-				
-				var tmpRSS:XML = new XML(_loader.data); // Load data into a temp variable
-				
-				if (new XMLList(tmpRSS.channel.item).length() == 0) {
-					// No data loaded, or data is empty....
-					tmpRSS = new XML();
-					
-					
-					// If the last update was more than 24 Hours ago, then set RSS to an empty one
-					if (new Date().getTime() - this._lastUpdateDate.getTime() > 24*60*60*1000) {
-						this._RSSXML = tmpRSS;
-						this._currentHeadline = 0;
-					}
+
+			
+			private function identifyRSS(responseXML:XML):int {
+				if(new XMLList(responseXML.channel.item).length() > 0) {
+					return RSS_FEED;
 				} else {
-					this._lastUpdateDate = new Date();
-					
-					if (tmpRSS.toString() == this._RSSXML.toString()) {
-						// Do nothing as XML was not updated
-					} else {
-						var _timerstopped:Boolean = false;
-						if( this._timer.running ) {
-							this._timer.stop();
-						}
-						
-						this._RSSXML = tmpRSS;
-						this._currentHeadline = 0;
-						
-						if ( _timerstopped ) {
-							this._timer.start();
-						}
-					}
-					
+					return INVALID_FEED;
 				}
-				
-				
-				this._RSSXML = new XML(_loader.data);
-				
-				this._currentHeadline = -1;
-				
-				this.play_next();
-//				channel.item
-//					->title
-//					->description
 			}
 			
 			private function OnTimer(e:TimerEvent):void {
@@ -279,87 +378,62 @@
 			}
 			
 			private function play_next():void {
-				var MoveTween:Move 
-				
-				if (MoveTween == null) {
-					MoveTween = new Move();
+				if(this.y > this.screen.height/2) { 
+					this.currentState = "hidden_bottom"; // TODO: somehow detect if we are at the top of the screen and go to hidden_top instead
+				} else {
+					this.currentState = "hidden_top";
 				}
-				
-				MoveTween.yFrom = headline.y;
-				MoveTween.yTo = this.height;
-				
-				MoveTween.addEventListener(EffectEvent.EFFECT_END,play_next_stage2,false,0,true);
-				
-				MoveTween.play([headline]);
 			}
 			
 			private function next_headline():void {
 				var headlineIndex:int = this._currentHeadline;
-				
+
 				if ( this._stopped == true ) {
 					return;
 				}
 				
-				if(new XMLList(this._RSSXML.channel.item).length() == 0) {
+				if(this.numHeadlines == 0) {
 					return;
 				}
 
 				do {
 					this._currentHeadline += 1;
-					if (this._currentHeadline > new XMLList(this._RSSXML.channel.item).length() - 1) {
+					if (this._currentHeadline > this.numHeadlines - 1) {
 						this._currentHeadline = 0;
 					}	
-				} while(headlineIndex != this._currentHeadline && this._RSSXML.channel.item[this._currentHeadline].description == "")
+				} while(headlineIndex != this._currentHeadline && isHeadlineEmpty())
 				 			
 			}
 			
-			private function prev_headline():void {
-				var headlineIndex:int = this._currentHeadline;
-				
-				if ( this._stopped == true ) {
-					return;
-				}
-
-				if(new XMLList(this._RSSXML.channel.item).length() == 0) {
-					return;
+			private function isHeadlineEmpty():Boolean {
+				if(this.headlineDescription == "") {
+					return true;
+				} else {
+					return false;
 				}
 				
-				do {
-					this._currentHeadline -= 1;
-					if (this._currentHeadline < 0) {
-						this._currentHeadline = new XMLList(this._RSSXML.channel.item).length() - 1;
-					}	
-				} while(headlineIndex != this._currentHeadline && this._RSSXML.channel.item[this._currentHeadline].description == "")
-				 			
 			}
+			
 
 			
 			private function play_next_stage2(e:EffectEvent):void {
-				
-				next_headline();
-								
-				if (new XMLList(this._RSSXML.channel.item).length() == 0) {
-					headtext.text = this.source;
-					bodytext.text = "Actualizando..."
+				if(isHeadlineEmpty()) {
+					next_headline();
+				}
+												
+				if (this.numHeadlines == 0) {
+					headtext.htmlText = this.source;
+					bodytext.htmlText = "Actualizando..."
 				} else {
-					headtext.text = this._RSSXML.channel.item[this._currentHeadline].title;
-					bodytext.text = this._RSSXML.channel.item[this._currentHeadline].description;
+					headtext.htmlText = this.headlineTitle;
+					bodytext.htmlText = this.headlineDescription;
 				}
 				
-				this.truncateText(headtext, this.headline.width);
-				this.truncateText(bodytext, this.headline.width);
+//				this.truncateText(headtext, this.headline.width);
+//				this.truncateText(bodytext, this.headline.width);
 				
-//				Logger.addEvent("Head: "+ headtext.text);
-//				Logger.addEvent("Body: " + bodytext.text); 
-				Move(e.target).removeEventListener(EffectEvent.EFFECT_END,play_next_stage2);
-				
-				this.resize();
-				
-				Move(e.target).yTo = Move(e.target).yFrom;
-				Move(e.target).yFrom = headline.y;
-				Move(e.target).play([headline]);
-				
-				this._timer.start();
+				this.currentState = "";
+				next_headline();
 			}
 			
 			
@@ -381,6 +455,7 @@
 
 
 					txtWidth = obj.measureText(txt).width;
+					Logger.addEvent("Truncate Text Out");
 				}
 //				Logger.addEvent("Truncate Text Out: " + txt);
 				
@@ -392,12 +467,6 @@
 	</mx:Script>
 	
 	
-	<mx:Canvas id="headline" left="Canvas1_col2:15" right="10" top="0" bottom="0" verticalScrollPolicy="off" horizontalScrollPolicy="off" backgroundColor="#000000" backgroundAlpha="0.0">
-		<mx:constraintColumns>
-			<mx:ConstraintColumn id="Canvas12_col2" width="5%"/>
-		</mx:constraintColumns>
-		<mx:Label fontFamily="HelvNeueBlack" fontSize="41" color="#000000" id="headtext" fontWeight="normal" truncateToFit="false" y="10" left="1"/>
-		<mx:Label text="" fontFamily="HelvNeueBlack" fontSize="20" color="#000000" id="bodytext" truncateToFit="false" y="53" left="1" alpha="0.45"/>
-	</mx:Canvas>
+
 	
 </mx:Canvas>
