@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="971" height="81" backgroundColor="#000000"
-	 creationComplete="onCreate(event)"
 	 resize="onResize(event)"
 	  xmlns:display="flash.display.*"
 	   verticalScrollPolicy="off" horizontalScrollPolicy="off" backgroundAlpha="0.0">
@@ -11,10 +10,32 @@
 		<mx:State name="hidden_top">
 			<mx:SetProperty target="{headline}" name="y" value="-82"/>
 		</mx:State>
+		<mx:State name="sidescroll" enterState="changeToSideScroll(event)">
+			<mx:RemoveChild target="{headtext}"/>
+			<mx:RemoveChild target="{bodytext}"/>
+			<mx:AddChild relativeTo="{headline}" position="lastChild">
+				<mx:Label fontFamily="HelvNeueBlack" fontSize="41" color="#000000" id="headtext1" fontWeight="normal" truncateToFit="false" x="1" verticalCenter="0"/>
+			</mx:AddChild>
+			<mx:AddChild relativeTo="{headline}" position="lastChild">
+				<mx:Label fontFamily="HelvNeueBlack" fontSize="41" color="#000000" id="headtext2" fontWeight="normal" truncateToFit="false" x="88" verticalCenter="0"/>
+			</mx:AddChild>
+			<mx:AddChild relativeTo="{headline}" position="lastChild">
+				<mx:Label fontFamily="HelvNeueBlack" fontSize="41" color="#000000" id="headtext3" fontWeight="normal" truncateToFit="false" x="177" verticalCenter="0"/>
+			</mx:AddChild>
+			<mx:AddChild relativeTo="{headline}" position="lastChild">
+				<mx:Label fontFamily="HelvNeueBlack" fontSize="41" color="#000000" id="spacer1" fontWeight="normal" truncateToFit="false" verticalCenter="0" x="54" enabled="true" width="25"/>
+			</mx:AddChild>
+			<mx:AddChild relativeTo="{headline}" position="lastChild">
+				<mx:Label fontFamily="HelvNeueBlack" fontSize="41" color="#000000" id="spacer2" fontWeight="normal" truncateToFit="false" verticalCenter="0" x="108" enabled="true" width="25"/>
+			</mx:AddChild>
+			<mx:AddChild relativeTo="{headline}" position="lastChild">
+				<mx:Label fontFamily="HelvNeueBlack" fontSize="41" color="#000000" id="spacer3" fontWeight="normal" truncateToFit="false" verticalCenter="0" x="162" enabled="true" width="25"/>
+			</mx:AddChild>
+		</mx:State>
 	</mx:states>
 	
 	<mx:transitions>
-		<mx:Transition fromState="" toState="hidden_bottom">
+		<mx:Transition fromState="*" toState="hidden_bottom">
 			<mx:Parallel effectEnd="play_next_stage2(event)">
 				<mx:Move target="{headline}"/>
 				<mx:AnimateProperty property="alpha" target="{headline}" fromValue="1.0" toValue="0.0"/>
@@ -22,13 +43,13 @@
 		</mx:Transition>
 		
 		<mx:Transition fromState="hidden_bottom" toState="">
-			<mx:Parallel effectEnd="this._timer.start();">
+			<mx:Parallel effectEnd="this._playNextTimer.start();">
 				<mx:Move target="{headline}"/>
 				<mx:AnimateProperty property="alpha" target="{headline}" fromValue="0.0" toValue="1.0"/>
 			</mx:Parallel>
 		</mx:Transition>
 		
-		<mx:Transition fromState="" toState="hidden_top">
+		<mx:Transition fromState="*" toState="hidden_top">
 			<mx:Parallel effectEnd="play_next_stage2(event)">
 				<mx:Move target="{headline}"/>
 				<mx:AnimateProperty property="alpha" target="{headline}" fromValue="1.0" toValue="0.0"/>
@@ -36,7 +57,7 @@
 		</mx:Transition>
 		
 		<mx:Transition fromState="hidden_top" toState="">
-			<mx:Parallel effectEnd="this._timer.start();">
+			<mx:Parallel effectEnd="this._playNextTimer.start();">
 				<mx:Move target="{headline}"/>
 				<mx:AnimateProperty property="alpha" target="{headline}" fromValue="0.0" toValue="1.0"/>
 			</mx:Parallel>
@@ -58,13 +79,13 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.events.FlexEvent;
+			import mx.events.StateChangeEvent;
 //			import com.adobe.utils.;
 			import mx.events.ResizeEvent;
 			import mx.controls.Label;
 			import mx.events.EffectEvent;
 			import mx.effects.Move;
-			private function onCreate(e:Event):void {
-			}
 			
 			private var resizing:Boolean = false;
 			
@@ -75,9 +96,15 @@
 			public function set color(val:String):void {
 				this._color = val;
 				
-				if (headtext != null ) { 
+				if (headtext1 != null ) { 
 					this.headtext.setStyle("color","#" + val);
 					this.bodytext.setStyle("color","#" + val);
+				}
+			}
+			
+			private function set mode(val:int):void {
+				if( this._stopped == true ) {
+					this._mode = val;
 				}
 			}
 			
@@ -92,8 +119,10 @@
 			public var source:String;
 			public var logoUrl:String;
 			
-			private var _timer:Timer;
+			private var _playNextTimer:Timer;
 			private var _reloadTimer:Timer;
+			private var _scrollTimer:Timer;
+			
 			private var _lastUpdateDate:Date;
 			private var _RSSXML:XML = new XML();
 			private var _loader:URLLoader;
@@ -103,24 +132,30 @@
 			
 			private var _stopped:Boolean = false;
 			private var _feedType:int;
+			private var _mode:int = MODE_SLIDE;
+			
+			
+			public static const MODE_SLIDE:int = 0;
+			public static const MODE_SCROLL:int = 1;
+			
 			
 			
 			//Change the following 4 functions to if you want to support more types of feeds
-			public static var INVALID_FEED:int = 0;
-			public static var ATOM_FEED:int = 1;
-			public static var RSS_FEED:int = 2;
+			public static const FEED_INVALID:int = 0;
+			public static const FEED_ATOM:int = 1;
+			public static const FEED_RSS:int = 2;
 	
 			private function get headlineDescription():String {
 				var ret:String;
 				
 				switch(this._feedType) {
-					case INVALID_FEED:
+					case FEED_INVALID:
 						ret = "";
 						break;
-					case ATOM_FEED:
+					case FEED_ATOM:
 						ret = "";
 						break;
-					case RSS_FEED:
+					case FEED_RSS:
 						ret = this._RSSXML.channel.item[this._currentHeadline].description;
 						break;
 				}
@@ -132,13 +167,13 @@
 				var ret:String;
 				
 				switch(this._feedType) {
-					case INVALID_FEED:
+					case FEED_INVALID:
 						ret = "";
 						break;
-					case ATOM_FEED:
+					case FEED_ATOM:
 						ret = "";
 						break;
-					case RSS_FEED:
+					case FEED_RSS:
 						ret = this._RSSXML.channel.item[this._currentHeadline].title;
 												
 						break;
@@ -151,13 +186,13 @@
 				var ret:int;
 				
 				switch(this._feedType) {
-					case INVALID_FEED:
+					case FEED_INVALID:
 						ret = 0;
 						break;
-					case ATOM_FEED:
+					case FEED_ATOM:
 						ret = 0;
 						break;
-					case RSS_FEED:
+					case FEED_RSS:
 						ret = new XMLList(this._RSSXML.channel.item).length();
 						break;
 					
@@ -175,8 +210,8 @@
 				
 				
 				switch(this._feedType) {
-					case INVALID_FEED:
-					case ATOM_FEED:
+					case FEED_INVALID:
+					case FEED_ATOM:
 						// No data loaded, or data is empty....
 						tmpRSS = new XML();
 						
@@ -186,21 +221,30 @@
 							this._currentHeadline = 0;
 						}
 						break;
-					case RSS_FEED:
+					case FEED_RSS:
 						this._lastUpdateDate = new Date();
 						
 						if (tmpRSS.toString() == this._RSSXML.toString()) {
 							// Do nothing as XML was not updated
 						} else {
-							if( this._timer.running ) {
-								this._timer.stop();
+							if( this._playNextTimer.running ) {
+								this._playNextTimer.stop();
 							}
 							
 							this._RSSXML = tmpRSS;
 							this._currentHeadline = 0;
 							
-							if ( !this._timer.running ) {
-								this._timer.start();
+							switch(this._mode) {
+								case MODE_SCROLL:
+									if ( !this._scrollTimer.running ) {
+										this._scrollTimer.start();
+									}
+									break;
+								case MODE_SLIDE:
+									if ( !this._playNextTimer.running ) {
+										this._playNextTimer.start();
+									}
+									break;
 							}
 						}
 					
@@ -217,25 +261,42 @@
 				trace("Logo URL: " +this.logoUrl);
 				trace("delay: " +this.delay);
 				
-				if (_timer == null ) {
-					_timer = new Timer(this.delay);
-					_timer.addEventListener(TimerEvent.TIMER, OnTimer,false,0,true);
+//				this._mode = MODE_SCROLL;
+				
+				switch(this._mode) {
+					case MODE_SCROLL:
+						this.currentState = "sidescroll";
+						break;
+					case MODE_SLIDE:
+						this.currentState = "";
+						break;
+				}
+				
+				if (_playNextTimer == null ) {
+					_playNextTimer = new Timer(this.delay);
+					_playNextTimer.addEventListener(TimerEvent.TIMER, OnPlayNextTimer,false,0,true);
 				} else {
-					_timer.delay = this.delay;
+					_playNextTimer.delay = this.delay;
 				}
 
 				if (_reloadTimer == null ) {
-					_reloadTimer = new Timer(this.delay);
+					_reloadTimer = new Timer(10*60*1000);
 					_reloadTimer.addEventListener(TimerEvent.TIMER, OnReloadTimer,false,0,true);
 				} else {
-					_reloadTimer.delay = 1*60*1000;
+					_reloadTimer.delay = 10*60*1000;
+				}
+
+				if (_scrollTimer == null ) {
+					_scrollTimer = new Timer(15);
+					_scrollTimer.addEventListener(TimerEvent.TIMER, OnScrollTimer,false,0,true);
+				} else {
+					_scrollTimer.delay = 15;
 				}
 
 				this._lastUpdateDate = new Date();
 				this._lastUpdateDate.setTime(0);
 
 				this.RSSLoadBegin();
-
 				
 				this.logoSWF.source = this.logoUrl;
 				
@@ -243,6 +304,9 @@
 
 				if (headtext != null ) { 
 					this.headtext.setStyle("color","#" + this._color);
+				}
+				
+				if (bodytext != null ) {
 					this.bodytext.setStyle("color","#" + this._color);
 				}
 				
@@ -251,76 +315,147 @@
 				_reloadTimer.start();
 			}
 			
+			public function changeToSideScroll(e:FlexEvent):void {
+				this.headtext1.setStyle("color","#" + this._color);
+				this.headtext2.setStyle("color","#" + this._color);
+				this.headtext3.setStyle("color","#" + this._color);
+				this.spacer1.setStyle("color","#" + this._color);
+				this.spacer2.setStyle("color","#" + this._color);
+				this.spacer3.setStyle("color","#" + this._color);
+				
+				repositionSideScrollElements();
+			}
+			
+			public function repositionSideScrollElements():void {
+				this.headtext1.validateNow();
+				this.headtext2.validateNow();
+				this.headtext3.validateNow();
+				
+				var currState:int = calculateState();
+				
+				switch(currState) {
+					case 1:
+						this.spacer1.x = this.headtext1.x + this.headtext1.textWidth + 10;
+						this.headtext2.x = this.spacer1.x + this.spacer1.width + 10;
+						this.spacer2.x = this.headtext2.x + this.headtext2.textWidth + 10;
+						this.headtext3.x = this.spacer2.x + this.spacer2.width + 10;
+						this.spacer3.x = this.headtext3.x + this.headtext3.textWidth + 10;
+						
+						break;
+					case 2:
+						this.spacer2.x = this.headtext2.x + this.headtext2.textWidth + 10;
+						this.headtext3.x = this.spacer2.x + this.spacer2.width + 10;
+						this.spacer3.x = this.headtext3.x + this.headtext3.textWidth + 10;
+						this.headtext1.x = this.spacer3.x + this.spacer3.width + 10;
+						this.spacer1.x = this.headtext1.x + this.headtext1.textWidth + 10;
+						
+						break;
+					case 3:
+						this.spacer3.x = this.headtext3.x + this.headtext3.textWidth + 10;
+						this.headtext1.x = this.spacer3.x + this.spacer3.width + 10;
+						this.spacer1.x = this.headtext1.x + this.headtext1.textWidth + 10;
+						this.headtext2.x = this.spacer1.x + this.spacer1.width + 10;
+						this.spacer2.x = this.headtext2.x + this.headtext2.textWidth + 10;
+						
+						break;
+				}
+				
+
+			}
+			
+			private function calculateState():int {
+				if( headtext2.x > 0 && headtext3.x > 0 ) {
+					return 1;
+				}
+				
+				if( headtext2.x <= 0 && headtext3.x > 0 ) {
+					return 2;
+				}
+				
+				if( headtext3.x <= 0 && headtext1.x > 0 ) {
+					return 3;
+				}
+				
+				return 1;
+			}
+			
 			public function stop():void {
-				this._timer.stop();
+				this._playNextTimer.stop();
 				this._reloadTimer.stop();
 				this._stopped = true;
 			}
 			
-//			public function pause():void {
-//				this.stop();
-//			}
-			
 			public function resume():void {
 				this._stopped = false;
-				this._timer.start();
+				this._playNextTimer.start();
 				this._reloadTimer.start();
 				
 			}
 			
-//			public function next():void {
-//				this.play_next();
-//			}
-			
 			public function resize():void {
-				if ( this.resizing == false ) {
-					this.resizing = true;
-					var scaleX:Number = (this.width / this._origWidth);
-					var scaleY:Number = (this.height / this._origHeight);
-					
-					var scale:Number;
-					
-					if (scaleX >scaleY ) {
-						scale = scaleY;
-					} else {
-						scale = scaleX;
+				var scaleX:Number;
+				var scaleY:Number
+				
+				if( this._mode == MODE_SCROLL ) {
+					if ( this.resizing == false ) {
+						this.resizing = true;
+						scaleX = (this.width / this._origWidth);
+						scaleY = (this.height / this._origHeight);
+						
 					}
-					
-					scale = scaleY;
-					
-//					trace("Scaled 41 = "  + (41*scale).toString());
-//					trace("Scaled 20 = "  + (20*scale).toString());
-//					trace("RSS Width, headtext: " + this.headtext.width);
-//					trace("RSS Width, bodytext: " + this.bodytext.width);
-//					
-//					trace("Text Width, headtext: " + this.headtext.measuredMinWidth);
-//					trace("Text Width, bodytext: " + this.bodytext.measuredMinWidth);
-					
-					this.headtext.setStyle("fontSize", (Math.floor(39*scale)).toString());
-					this.bodytext.setStyle("fontSize", (Math.floor(20*scale)).toString());
-					
-					this.headtext.y = 4*scale - 2;
-					this.bodytext.y = this.headtext.y + this.headtext.measureText(this.headtext.text).height - 6;
-					
-					var adjustingFonts:Boolean = true;
-					do {					
-						if ( this.bodytext.text != "" && this.bodytext.y + this.bodytext.measureText(this.bodytext.text).height > this.headline.height ) {
-							var fontSize:Number = Number(this.headtext.getStyle("fontSize"));
-							
-							fontSize -= 1;
-							this.headtext.setStyle("fontSize", fontSize.toString());
-							this.bodytext.y = this.headtext.y + this.headtext.measureText(this.headtext.text).height - 6;
-//							Logger.addEvent("re-adjusting fonts");
+
+					return;
+				} else {
+				
+					if ( this.resizing == false ) {
+						this.resizing = true;
+						scaleX = (this.width / this._origWidth);
+						scaleY = (this.height / this._origHeight);
+						
+						var scale:Number;
+						
+						if (scaleX >scaleY ) {
+							scale = scaleY;
 						} else {
-							adjustingFonts = false;
+							scale = scaleX;
 						}
-					} while( adjustingFonts && fontSize > 2 )
-
-
-					this.headtext.width = headline.width;
-					this.bodytext.width = headline.width;
-					
-					this.resizing = false;
+						
+						scale = scaleY;
+						
+	//					trace("Scaled 41 = "  + (41*scale).toString());
+	//					trace("Scaled 20 = "  + (20*scale).toString());
+	//					trace("RSS Width, headtext: " + this.headtext.width);
+	//					trace("RSS Width, bodytext: " + this.bodytext.width);
+	//					
+	//					trace("Text Width, headtext: " + this.headtext.measuredMinWidth);
+	//					trace("Text Width, bodytext: " + this.bodytext.measuredMinWidth);
+						
+						this.headtext.setStyle("fontSize", (Math.floor(39*scale)).toString());
+						this.bodytext.setStyle("fontSize", (Math.floor(20*scale)).toString());
+						
+						this.headtext.y = 4*scale - 2;
+						this.bodytext.y = this.headtext.y + this.headtext.measureText(this.headtext.text).height - 6;
+						
+						var adjustingFonts:Boolean = true;
+						do {					
+							if ( this.bodytext.text != "" && this.bodytext.y + this.bodytext.measureText(this.bodytext.text).height > this.headline.height ) {
+								var fontSize:Number = Number(this.headtext.getStyle("fontSize"));
+								
+								fontSize -= 1;
+								this.headtext.setStyle("fontSize", fontSize.toString());
+								this.bodytext.y = this.headtext.y + this.headtext.measureText(this.headtext.text).height - 6;
+	//							Logger.addEvent("re-adjusting fonts");
+							} else {
+								adjustingFonts = false;
+							}
+						} while( adjustingFonts && fontSize > 2 )
+	
+	
+						this.headtext.width = headline.width;
+						this.bodytext.width = headline.width;
+						
+						this.resizing = false;
+					}
 				}
 			}
 			
@@ -357,31 +492,71 @@
 				RSSLoadBegin();
 			}
 			
+			private function OnScrollTimer(e:TimerEvent):void {
+				var currState:int = calculateState();
+				var scrollDelta:int = -1;
+				
+				switch(currState) {
+					case 1:
+						this.headtext1.x += scrollDelta;
+						break;
+					case 2:
+						this.headtext2.x += scrollDelta;
+						break;
+					case 3:
+						this.headtext3.x += scrollDelta;
+						break;
+				}
+				
+				
+				repositionSideScrollElements();
+				
+				if( currState != calculateState() ) {
+					switch(currState) {
+						case 1:
+							updateHeadline(headtext1);
+							break;
+						case 2:
+							updateHeadline(headtext2);
+							break;
+						case 3:
+							updateHeadline(headtext3);
+							break;
+					}
+				}
+			}
 
 			
 			private function identifyRSS(responseXML:XML):int {
 				if(new XMLList(responseXML.channel.item).length() > 0) {
-					return RSS_FEED;
+					return FEED_RSS;
 				} else {
-					return INVALID_FEED;
+					return FEED_INVALID;
 				}
 			}
 			
-			private function OnTimer(e:TimerEvent):void {
+			private function OnPlayNextTimer(e:TimerEvent):void {
 				if ( this._stopped == true ) {
 					return;
 				}
 
-				this._timer.stop();
+				this._playNextTimer.stop();
 				
 				play_next();
 			}
 			
 			private function play_next():void {
-				if(this.y > this.screen.height/2) { 
-					this.currentState = "hidden_bottom"; // TODO: somehow detect if we are at the top of the screen and go to hidden_top instead
-				} else {
-					this.currentState = "hidden_top";
+				switch(this._mode) {
+					case MODE_SCROLL:
+							play_next_scroll();
+						break;
+					case MODE_SLIDE:				
+						if(this.y > this.screen.height/2) { 
+							this.currentState = "hidden_bottom"; // TODO: somehow detect if we are at the top of the screen and go to hidden_top instead
+						} else {
+							this.currentState = "hidden_top";
+						}
+						break;
 				}
 			}
 			
@@ -429,10 +604,63 @@
 					bodytext.htmlText = this.cleanupHTML(this.headlineDescription);
 				}
 				
-//				this.truncateText(headtext, this.headline.width);
-//				this.truncateText(bodytext, this.headline.width);
+				this.truncateText(headtext, this.headline.width);
+				this.truncateText(bodytext, this.headline.width);
 				
 				this.currentState = "";
+				next_headline();
+			}
+			
+			private function updateHeadline(obj:Label):void {
+				if(isHeadlineEmpty()) {
+					next_headline();
+				}
+
+				obj.htmlText = this.cleanupHTML(this.headlineTitle);
+				obj.validateNow();
+				obj.width = obj.textWidth;
+				
+				next_headline();
+				
+			}
+			
+			private function play_next_scroll():void {
+				if(isHeadlineEmpty()) {
+					next_headline();
+				}
+												
+				spacer1.text = "•";
+				spacer2.text = "•";
+				spacer3.text = "•";
+				if (this.numHeadlines == 0) {
+					headtext1.htmlText = this.source;
+					headtext2.htmlText = "Actualizando..."
+				} else {
+					headtext1.htmlText = this.cleanupHTML(this.headlineTitle);
+					next_headline();
+					headtext2.htmlText = this.cleanupHTML(this.headlineTitle);
+					next_headline();
+					headtext3.htmlText = this.cleanupHTML(this.headlineTitle);
+				}
+				
+				this.headtext1.validateNow();
+//				this.headtext1.text = this.headtext1.text;
+//				this.headtext1.validateNow();
+				
+				this.headtext2.validateNow();
+//				this.headtext2.text = this.headtext2.text;
+//				this.headtext2.validateNow();
+				
+				this.headtext3.validateNow();
+//				this.headtext3.text = this.headtext3.text;
+//				this.headtext3.validateNow();
+				
+				this.headtext1.width = this.headtext1.textWidth + 10;
+				this.headtext2.width = this.headtext2.textWidth + 10;
+				this.headtext3.width = this.headtext3.textWidth + 10;
+				
+				repositionSideScrollElements();
+								
 				next_headline();
 			}
 			
@@ -473,6 +701,7 @@
 				var txt:String;
 				var txtArr:Array;
 				
+				obj.validateNow();
 				txt = obj.text;
 //				Logger.addEvent("Truncate Text In: " + txt);
 				txtWidth = obj.measureText(txt).width;
@@ -485,7 +714,7 @@
 
 
 					txtWidth = obj.measureText(txt).width;
-					Logger.addEvent("Truncate Text Out");
+//					Logger.addEvent("Truncate Text Out");
 				}
 //				Logger.addEvent("Truncate Text Out: " + txt);
 				
