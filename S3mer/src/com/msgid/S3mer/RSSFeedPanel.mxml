@@ -31,6 +31,10 @@
 			<mx:AddChild relativeTo="{headline}" position="lastChild">
 				<mx:Label fontFamily="HelvNeueBlack" fontSize="41" color="#000000" id="spacer3" fontWeight="normal" truncateToFit="false" verticalCenter="0" x="162" enabled="true" width="25"/>
 			</mx:AddChild>
+			<mx:SetProperty target="{headline}" name="y"/>
+			<mx:SetStyle target="{headline}" name="top" value="0"/>
+			<mx:SetProperty target="{headline}" name="height"/>
+			<mx:SetStyle target="{headline}" name="bottom" value="0"/>
 		</mx:State>
 	</mx:states>
 	
@@ -65,7 +69,7 @@
 	</mx:transitions>
 	
 	<mx:SWFLoader  scaleContent="true" id="logoSWF" verticalAlign="middle" horizontalAlign="center" width="107" x="9" top="0" bottom="0"/>
-	<mx:Canvas id="headline" verticalScrollPolicy="off" horizontalScrollPolicy="off" backgroundColor="#000000" backgroundAlpha="0.0" width="830" x="{logoSWF.x+logoSWF.width+20}" height="81" y="0" alpha="1.0">
+	<mx:Canvas id="headline" verticalScrollPolicy="off" horizontalScrollPolicy="off" backgroundColor="#000000" backgroundAlpha="0.0" width="830" x="126" height="81" y="0" alpha="1.0">
 		<mx:Label fontFamily="HelvNeueBlack" fontSize="41" color="#000000" id="headtext" fontWeight="normal" truncateToFit="false" y="10" left="1"/>
 		<mx:Label text="" fontFamily="HelvNeueBlack" fontSize="20" color="#000000" id="bodytext" truncateToFit="false" y="53" left="1" alpha="0.45"/>
 	</mx:Canvas>
@@ -79,6 +83,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import flash.text.engine.FontMetrics;
 			import mx.events.FlexEvent;
 			import mx.events.StateChangeEvent;
 //			import com.adobe.utils.;
@@ -132,7 +137,7 @@
 			
 			private var _stopped:Boolean = false;
 			private var _feedType:int;
-			private var _mode:int = MODE_SLIDE;
+			private var _mode:int = MODE_SCROLL;
 			
 			
 			public static const MODE_SLIDE:int = 0;
@@ -395,13 +400,40 @@
 			public function resize():void {
 				var scaleX:Number;
 				var scaleY:Number
+				var adjustingFonts:Boolean;
+				var fontSize:Number;
 				
 				if( this._mode == MODE_SCROLL ) {
-					if ( this.resizing == false ) {
+					if ( this.resizing == false && headtext1 != null) {
 						this.resizing = true;
 						scaleX = (this.width / this._origWidth);
 						scaleY = (this.height / this._origHeight);
 						
+						scale = scaleY;
+						
+						this.headtext1.validateNow();
+						
+						scrollChangeFontSize((Math.floor(39*scale)).toString());
+						
+						
+						adjustingFonts = true;
+						do {					
+							if ( this.headtext1.text != "" && this.headtext1.y + this.headtext1.measureText(this.headtext1.text).height > this.headline.height ) {
+								fontSize = Number(this.headtext1.getStyle("fontSize"));
+								
+								fontSize -= 1;
+								
+								scrollChangeFontSize(fontSize.toString());
+							} else {
+								adjustingFonts = false;
+							}
+						} while( adjustingFonts && fontSize > 2 )
+	
+	
+						this.headtext.width = headline.width;
+						this.bodytext.width = headline.width;
+						
+						this.resizing = false;
 					}
 
 					return;
@@ -422,24 +454,16 @@
 						
 						scale = scaleY;
 						
-	//					trace("Scaled 41 = "  + (41*scale).toString());
-	//					trace("Scaled 20 = "  + (20*scale).toString());
-	//					trace("RSS Width, headtext: " + this.headtext.width);
-	//					trace("RSS Width, bodytext: " + this.bodytext.width);
-	//					
-	//					trace("Text Width, headtext: " + this.headtext.measuredMinWidth);
-	//					trace("Text Width, bodytext: " + this.bodytext.measuredMinWidth);
-						
 						this.headtext.setStyle("fontSize", (Math.floor(39*scale)).toString());
 						this.bodytext.setStyle("fontSize", (Math.floor(20*scale)).toString());
 						
 						this.headtext.y = 4*scale - 2;
 						this.bodytext.y = this.headtext.y + this.headtext.measureText(this.headtext.text).height - 6;
 						
-						var adjustingFonts:Boolean = true;
+						adjustingFonts = true;
 						do {					
 							if ( this.bodytext.text != "" && this.bodytext.y + this.bodytext.measureText(this.bodytext.text).height > this.headline.height ) {
-								var fontSize:Number = Number(this.headtext.getStyle("fontSize"));
+								fontSize = Number(this.headtext.getStyle("fontSize"));
 								
 								fontSize -= 1;
 								this.headtext.setStyle("fontSize", fontSize.toString());
@@ -457,6 +481,17 @@
 						this.resizing = false;
 					}
 				}
+			}
+			
+			private function scrollChangeFontSize(newSize:String):void {
+				this.headtext1.setStyle("fontSize", newSize);
+				this.headtext2.setStyle("fontSize", newSize);
+				this.headtext3.setStyle("fontSize", newSize);
+				this.spacer1.setStyle("fontSize", newSize);
+				this.spacer2.setStyle("fontSize", newSize);
+				this.spacer3.setStyle("fontSize", newSize);
+				
+				repositionSideScrollElements();
 			}
 			
 			private function RSSLoadBegin():void {
