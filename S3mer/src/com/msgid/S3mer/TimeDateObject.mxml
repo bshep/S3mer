@@ -111,6 +111,9 @@
 					case "es_ES":
 						df.formatString = "D de MMMM";
 						break;
+					case "it_IT":
+						df.formatString = "D MMMM";
+						break;
 				}
 				
 				this.txtDate.text = df.format(datenow).toUpperCase();
