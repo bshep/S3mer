@@ -468,6 +468,7 @@
 			[Bindable]
 			private var localesList:Array = [ {label:"English", data:"en_US"},
 											  {label:"Español", data:"es_ES"},
+											  {label:"Italiano", data:"it_IT"},
 											  {label:"Portuguese", data:"pt_BR"}];
 			
 		]]>

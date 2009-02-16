@@ -337,7 +337,6 @@
 				this._updater = new ApplicationUpdater();
 				
 				
-//				resourceManager.localeChain = [ "pt_BR" ];
 			}
 			
 			private function play():void {
