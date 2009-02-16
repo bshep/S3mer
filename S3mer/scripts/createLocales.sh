@@ -3,7 +3,7 @@
 
 DEST=/Applications/Adobe\ Flex\ Builder\ 3/sdks/3.2.0/frameworks/locale
 
-LOCALES_DIR=../locales
+LOCALES_DIR=../../locales
 
 pushd $LOCALES_DIR > /dev/null
 
@@ -38,9 +38,11 @@ for locale in $LOCALES_LIST; do
 	popd > /dev/null
 done
 
-for locale in "en_US$LOCALE_LIST"; do
+LOCALES_LIST="${LOCALES_LIST} en_US"
+for locale in ${LOCALES_LIST}; do
 	if [[ ! -d "locale/$locale" ]]; then
-		mkdir -p "locale/$locale"
-		touch "locale/$locale/application.properties"
+		echo "Making dir - ../locale/$locale"
+		mkdir -p "../locale/$locale"
+		touch "../locale/$locale/application.properties"
 	fi
 done

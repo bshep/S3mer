@@ -35,6 +35,10 @@
 			<mx:SetStyle target="{headline}" name="top" value="0"/>
 			<mx:SetProperty target="{headline}" name="height"/>
 			<mx:SetStyle target="{headline}" name="bottom" value="0"/>
+			<mx:SetProperty target="{headline}" name="width"/>
+			<mx:SetProperty target="{headline}" name="x"/>
+			<mx:SetStyle target="{headline}" name="right" value="0"/>
+			<mx:SetStyle target="{headline}" name="left" value="116"/>
 		</mx:State>
 	</mx:states>
 	
@@ -137,7 +141,7 @@
 			
 			private var _stopped:Boolean = false;
 			private var _feedType:int;
-			private var _mode:int = MODE_SCROLL;
+			private var _mode:int = MODE_SLIDE;
 			
 			
 			public static const MODE_SLIDE:int = 0;

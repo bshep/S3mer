@@ -4,7 +4,7 @@ DEST=/Applications/Adobe\ Flex\ Builder\ 3/sdks/3.2.0/frameworks/locale
 TOOLS_DIR=/Applications/Adobe\ Flex\ Builder\ 3/sdks/3.2.0/bin
 
 
-LOCALES_DIR=../locales
+LOCALES_DIR=../../locales
 
 LOCALES_FILES="airframework_rb automation_rb framework_rb rpc_rb"
 
@@ -54,6 +54,6 @@ done
 # COMPILER_ARGS="${COMPILER_ARGS} -source-path=locale/{locale}"
 
 echo "Setting Compiler Arguments: ${COMPILER_ARGS}"
-sed "s/\(additionalCompilerArguments=\"\)\([^\"]*\)\(\"\)/\1${COMPILER_ARGS}\3/" .actionScriptProperties > .actionScriptProperties_new
-mv .actionScriptProperties_new .actionScriptProperties
+sed "s/\(additionalCompilerArguments=\"\)\([^\"]*\)\(\"\)/\1${COMPILER_ARGS}\3/" ../.actionScriptProperties > .actionScriptProperties_new
+mv .actionScriptProperties_new ../.actionScriptProperties
 
