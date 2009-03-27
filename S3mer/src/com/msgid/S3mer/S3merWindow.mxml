@@ -173,6 +173,10 @@
 			}
 
 			private function OnConfigurationUpdate(e:ConfigurationEvent):void {
+				if( this._stopped ) {
+					return;
+				}
+				
 				if (this.currentState == "loading") {
 					this.currentState = "playing";
 					myFileProgress.setProgress(100,100);
@@ -257,6 +261,10 @@
 			}
 			
 			public function resetApp():void {
+				this._configuration.stopDownloads();
+				this._configuration.removeEventListener(ConfigurationEvent.UPDATED, OnConfigurationUpdate);
+				this._configuration.removeEventListener(DownloaderEvent.PARTIAL_COMPLETE, OnDownloadProgress);
+				this._configuration.removeEventListener(DownloaderEvent.PROGRESS, OnDownloadProgress);			
 				this._owner.resetApp();
 			}
 			
@@ -264,6 +272,7 @@
 				this._show.reset();
 				this._show.removeAllChildren();
 				this.removeChild(this._show);
+				
 				this.setStyle("backgroundColor","#FFFFFF");				
 										
 				this.loadConfiguration(this._multiScreen);
