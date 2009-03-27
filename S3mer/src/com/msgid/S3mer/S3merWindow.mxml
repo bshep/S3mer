@@ -173,10 +173,10 @@
 			}
 
 			private function OnConfigurationUpdate(e:ConfigurationEvent):void {
-				if( this._stopped ) {
-					return;
-				}
-				
+//				if( this._stopped ) {
+//					return;
+//				}
+//				
 				if (this.currentState == "loading") {
 					this.currentState = "playing";
 					myFileProgress.setProgress(100,100);
