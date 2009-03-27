@@ -9,6 +9,8 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.logging.LogEvent;
+			import com.msgid.S3mer.NetUtils;
 			import mx.core.Application;
 			import com.msgid.S3mer.FileIO;
 			import mx.core.Window;
@@ -29,6 +31,8 @@
 			private var _playerWindows:ArrayCollection = new ArrayCollection;
 			private var _isPro:Boolean = false;
 			private var _isDemo:Boolean = false;
+			private var _networkStatus:Boolean = false;
+			
 			
 			private function isMultiscreen():Boolean {
 				var multiScreen:Boolean;
@@ -42,6 +46,16 @@
 				return multiScreen;
 			}
 			
+			public function get networkStatus():Boolean {
+				return _networkStatus;
+			}
+			
+			private function networkStatusChanged(event:Event):void {
+				this.removeEventListener(Event.NETWORK_CHANGE,networkStatusChanged);					
+
+				new NetUtils().CheckOnlineStatus(onAppLoad_stage1_5);
+			}
+						
 			private function getScreenById(screenId:Number):S3merWindow {
 				for each( var _screen:S3merWindow in this._playerWindows ) {
 					if( screenId == _screen.getScreen() ) {
@@ -78,7 +92,22 @@
 				if( ApplicationSettings.getValue("ui.lang","") != "" ) {
 					resourceManager.localeChain = [ ApplicationSettings.getValue("ui.lang","en_US") ];
 				}
+				
+				new NetUtils().CheckOnlineStatus(onAppLoad_stage1_5);
+			}
+			
+			
 
+			private function onAppLoad_stage1_5(online:Boolean):void {
+				if(!online) {
+					Logger.addEvent("NETSTAT: network is down... waiting for it to come up");
+					this.addEventListener(Event.NETWORK_CHANGE,networkStatusChanged);
+					return;
+				} else {
+					Logger.addEvent("NETSTAT: network is up! Here we go...");
+//					this.removeEventListener(Event.NETWORK_CHANGE,networkStatusChanged);					
+				}
+				
 				createPlayerWindows();
 				createLoginWindow();
 				

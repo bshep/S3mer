@@ -14,31 +14,34 @@
 			<mx:RemoveChild target="{headtext}"/>
 			<mx:RemoveChild target="{bodytext}"/>
 			<mx:AddChild relativeTo="{headline}" position="lastChild">
-				<mx:Label fontFamily="HelvNeueBlack" fontSize="41" color="#000000" id="headtext1" fontWeight="normal" truncateToFit="false" x="1" verticalCenter="0"/>
+				<mx:Label fontFamily="Verdana" cacheAsBitmap="true" fontSize="41" color="#000000" id="headtext1" fontWeight="bold" truncateToFit="false" x="1" verticalCenter="0"/>
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{headline}" position="lastChild">
-				<mx:Label fontFamily="HelvNeueBlack" fontSize="41" color="#000000" id="headtext2" fontWeight="normal" truncateToFit="false" x="88" verticalCenter="0"/>
+				<mx:Label fontFamily="Verdana" cacheAsBitmap="true" fontSize="41" color="#000000" id="headtext2" fontWeight="bold" truncateToFit="false" x="88" verticalCenter="0"/>
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{headline}" position="lastChild">
-				<mx:Label fontFamily="HelvNeueBlack" fontSize="41" color="#000000" id="headtext3" fontWeight="normal" truncateToFit="false" x="177" verticalCenter="0"/>
+				<mx:Label fontFamily="Verdana" cacheAsBitmap="true" fontSize="41" color="#000000" id="headtext3" fontWeight="bold" truncateToFit="false" x="177" verticalCenter="0"/>
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{headline}" position="lastChild">
-				<mx:Label fontFamily="HelvNeueBlack" fontSize="41" color="#000000" id="spacer1" fontWeight="normal" truncateToFit="false" verticalCenter="0" x="54" enabled="true" width="25"/>
+				<mx:Label fontFamily="HelvNeueBlack" cacheAsBitmap="true" fontSize="41" color="#000000" id="spacer1" fontWeight="normal" truncateToFit="false" verticalCenter="0" x="54" enabled="true" width="25" alpha="0.25"/>
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{headline}" position="lastChild">
-				<mx:Label fontFamily="HelvNeueBlack" fontSize="41" color="#000000" id="spacer2" fontWeight="normal" truncateToFit="false" verticalCenter="0" x="108" enabled="true" width="25"/>
+				<mx:Label fontFamily="HelvNeueBlack" cacheAsBitmap="true" fontSize="41" color="#000000" id="spacer2" fontWeight="normal" truncateToFit="false" verticalCenter="0" x="108" enabled="true" width="25" alpha="0.25"/>
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{headline}" position="lastChild">
-				<mx:Label fontFamily="HelvNeueBlack" fontSize="41" color="#000000" id="spacer3" fontWeight="normal" truncateToFit="false" verticalCenter="0" x="162" enabled="true" width="25"/>
+				<mx:Label fontFamily="HelvNeueBlack" cacheAsBitmap="true" fontSize="41" color="#000000" id="spacer3" fontWeight="normal" truncateToFit="false" verticalCenter="0" x="162" enabled="true" width="25" alpha="0.25"/>
 			</mx:AddChild>
+			<mx:SetProperty target="{headline}" name="width"/>
+			<mx:SetProperty target="{headline}" name="x"/>
+			<mx:SetStyle target="{headline}" name="right" value="0"/>
+			<mx:SetStyle target="{headline}" name="left" value="124"/>
 			<mx:SetProperty target="{headline}" name="y"/>
 			<mx:SetStyle target="{headline}" name="top" value="0"/>
 			<mx:SetProperty target="{headline}" name="height"/>
 			<mx:SetStyle target="{headline}" name="bottom" value="0"/>
-			<mx:SetProperty target="{headline}" name="width"/>
-			<mx:SetProperty target="{headline}" name="x"/>
-			<mx:SetStyle target="{headline}" name="right" value="0"/>
-			<mx:SetStyle target="{headline}" name="left" value="116"/>
+			<mx:AddChild position="lastChild">
+				<mx:Image source="assets/rssMask2.png" left="124" right="0" top="0" bottom="0" id="headline_mask" cacheAsBitmap="true"/>
+			</mx:AddChild>
 		</mx:State>
 	</mx:states>
 	
@@ -73,10 +76,12 @@
 	</mx:transitions>
 	
 	<mx:SWFLoader  scaleContent="true" id="logoSWF" verticalAlign="middle" horizontalAlign="center" width="107" x="9" top="0" bottom="0"/>
-	<mx:Canvas id="headline" verticalScrollPolicy="off" horizontalScrollPolicy="off" backgroundColor="#000000" backgroundAlpha="0.0" width="830" x="126" height="81" y="0" alpha="1.0">
-		<mx:Label fontFamily="HelvNeueBlack" fontSize="41" color="#000000" id="headtext" fontWeight="normal" truncateToFit="false" y="10" left="1"/>
-		<mx:Label text="" fontFamily="HelvNeueBlack" fontSize="20" color="#000000" id="bodytext" truncateToFit="false" y="53" left="1" alpha="0.45"/>
+	<mx:Canvas id="headline" cacheAsBitmap="true" verticalScrollPolicy="off" horizontalScrollPolicy="off" backgroundColor="#000000" backgroundAlpha="0.0" width="830" x="126" height="81" y="0" alpha="1.0">
+		<mx:Label fontFamily="Verdana" fontSize="38" color="#000000" id="headtext" fontWeight="bold" truncateToFit="false" y="10" left="1">
+		</mx:Label>
+		<mx:Label fontFamily="Verdana" fontSize="18" color="#000000" id="bodytext" truncateToFit="false" alpha="0.45" fontWeight="bold" left="6" bottom="0"/>
 	</mx:Canvas>
+	
 
 	<mx:Style>
 		@font-face {
@@ -87,6 +92,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.controls.HTML;
 			import flash.text.engine.FontMetrics;
 			import mx.events.FlexEvent;
 			import mx.events.StateChangeEvent;
@@ -146,6 +152,9 @@
 			
 			public static const MODE_SLIDE:int = 0;
 			public static const MODE_SCROLL:int = 1;
+			
+			public var SCROLL_TIMER_DELAY:int = 10;
+			public var SCROLL_TIMER_DELTA:Number = -1.25;
 			
 			
 			
@@ -296,10 +305,10 @@
 				}
 
 				if (_scrollTimer == null ) {
-					_scrollTimer = new Timer(15);
+					_scrollTimer = new Timer(SCROLL_TIMER_DELAY);
 					_scrollTimer.addEventListener(TimerEvent.TIMER, OnScrollTimer,false,0,true);
 				} else {
-					_scrollTimer.delay = 15;
+					_scrollTimer.delay = SCROLL_TIMER_DELAY;
 				}
 
 				this._lastUpdateDate = new Date();
@@ -325,12 +334,24 @@
 			}
 			
 			public function changeToSideScroll(e:FlexEvent):void {
+				this.headtext1.x = this.width;
+				this.headtext2.x = this.width+50;
+				this.headtext3.x = this.width+100;
+				
 				this.headtext1.setStyle("color","#" + this._color);
 				this.headtext2.setStyle("color","#" + this._color);
 				this.headtext3.setStyle("color","#" + this._color);
 				this.spacer1.setStyle("color","#" + this._color);
 				this.spacer2.setStyle("color","#" + this._color);
 				this.spacer3.setStyle("color","#" + this._color);
+				
+				this.headline.mask = this.headline_mask;
+//				this.headtext1.mask = this.headline_mask;
+//				this.headtext2.mask = this.headline_mask;
+//				this.headtext3.mask = this.headline_mask;
+//				this.spacer1.mask = this.headline_mask;
+//				this.spacer2.mask = this.headline_mask;
+//				this.spacer3.mask = this.headline_mask;
 				
 				repositionSideScrollElements();
 			}
@@ -458,8 +479,8 @@
 						
 						scale = scaleY;
 						
-						this.headtext.setStyle("fontSize", (Math.floor(39*scale)).toString());
-						this.bodytext.setStyle("fontSize", (Math.floor(20*scale)).toString());
+						this.headtext.setStyle("fontSize", (Math.floor(35*scale)).toString());
+						this.bodytext.setStyle("fontSize", (Math.floor(18*scale)).toString());
 						
 						this.headtext.y = 4*scale - 2;
 						this.bodytext.y = this.headtext.y + this.headtext.measureText(this.headtext.text).height - 6;
@@ -533,17 +554,16 @@
 			
 			private function OnScrollTimer(e:TimerEvent):void {
 				var currState:int = calculateState();
-				var scrollDelta:int = -1;
 				
 				switch(currState) {
 					case 1:
-						this.headtext1.x += scrollDelta;
+						this.headtext1.x += SCROLL_TIMER_DELTA;
 						break;
 					case 2:
-						this.headtext2.x += scrollDelta;
+						this.headtext2.x += SCROLL_TIMER_DELTA;
 						break;
 					case 3:
-						this.headtext3.x += scrollDelta;
+						this.headtext3.x += SCROLL_TIMER_DELTA;
 						break;
 				}
 				
