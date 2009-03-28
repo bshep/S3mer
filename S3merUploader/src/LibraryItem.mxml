@@ -18,12 +18,13 @@
 			}
 
 			public function getSource(data:Object):Object {
-				if(XML(data).thumbnail == "") {
+				if(XML(data).thumbnail.toString() == "") {
 					thumb.scaleContent = false;
 					return ImageSwf;
 				} else {
 					thumb.scaleContent = true;
-					return "http://www.s3mer.com/" + XML(data).thumbnail;
+					trace("http://media1.s3mer.com/user/" + XML(data).thumbnail);
+					return "http://media1.s3mer.com/user/" + XML(data).thumbnail;
 				}
 			}
 			

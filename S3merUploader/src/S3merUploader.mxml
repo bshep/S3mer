@@ -14,8 +14,8 @@
 			private static var URL_GETTOKEN:String="http://www.s3mer.com/upload.php?action=gettoken";
 			private static var URL_GENTOKEN:String="http://www.s3mer.com/upload.php?action=generatetoken";
 			private static var URL_UPLOAD:String="http://www.s3mer.com/upload.php?action=upload&token=";
-			private static var URL_DELETE:String="http://www.s3mer.com/remoteprocedures.php?action=delete&mediaid=";
-			private static var URL_LIBRARY:String="http://www.s3mer.com/remoteprocedures.php?action=library";
+			private static var URL_DELETE:String="http://www.s3mer.com/flex_uploader/remoteprocedures.php?action=delete&mediaid=";
+			private static var URL_LIBRARY:String="http://www.s3mer.com/flex_uploader/remoteprocedures.php?action=library";
 
 			private var _refAddFiles:FileReferenceList;
 			
