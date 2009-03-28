@@ -20,6 +20,10 @@ package com.msgid.S3mer
 			//this._complete = false;
 		}
 		
+		public function get length():int {
+			return this._downloaders.length;
+		}
+		
 		public function get percent():int {
 			var percent:Number = 0;
 			var count:int = 0;
