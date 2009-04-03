@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="650" height="250" creationComplete="onCreate(event)">
+	<mx:Label x="10" y="10" text="Username" fontWeight="bold"/>
+	<mx:Label x="10" y="36" text="Password" fontWeight="bold"/>
+	<mx:TextInput x="80" y="8" id="txtUsername" focusOut="checkLogin(event)"/>
+	<mx:TextInput x="80" y="34" displayAsPassword="true" id="txtPassword"  focusOut="checkLogin(event)"/>
+	<mx:Button x="265" y="10" label="Drop Files Here" width="373" height="86" id="btnUpload" enabled="false" fontSize="16"/>
+	<mx:ProgressBar y="104" left="10" right="10" labelPlacement="top" label="Current File" id="pbFile"/>
+	<mx:ProgressBar y="140" left="10" right="10" labelPlacement="top" label="Total Progress" id="pbTotal"/>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.events.DragEvent;
+			import mx.managers.DragManager;
+			import mx.controls.Alert;
+			import mx.messaging.channels.StreamingAMFChannel;
+			private var _username:String;
+			private var _password:String;
+			private var _params:URLVariables = new URLVariables();
+			private var _uploading:Boolean = false;
+			
+			private var _uploadQueue:Array = new Array();
+			
+			private var LOGIN_URL:String = "http://www.s3mer.com/processlogin.php?";
+			private var PROCESS_CMD_URL:String = "http://www.s3mer.com/process_command.php?commandnr=save-media-data";
+			private var SET_FOLDER_URL:String = "http://www.s3mer.com/process_command.php?commandnr=set-library-folder";
+			private var PARAMS_URL:String = "http://www.s3mer.com/sign.php?uploader";
+			
+			
+			//process_command.php?commandnr=save-media-data&filename=' + fileObj.name + '&filesize=' + fileObj.size
+			
+			private function getLoginURL():String {
+				var url:String;
+				
+				url = LOGIN_URL + "username=" + this._username + "&password=" + this._password;
+				
+				return url;
+			}
+			
+			private function getProcessURL(filename:String, size:String):String {
+				var url:String;
+				var urlVariables:URLVariables = new URLVariables();
+				
+				urlVariables["filename"] = filename;
+				urlVariables["filesize"] = size;
+				
+				url = PROCESS_CMD_URL + "&" + urlVariables.toString();
+				
+				return url;
+			}
+			
+			private function getLibraryFolderURL(folder:String):String {
+				var url:String;
+				var urlVariables:URLVariables = new URLVariables();
+				
+				urlVariables["folder"] = folder;
+				
+				url = SET_FOLDER_URL + "&" + urlVariables.toString();
+				
+				return url;
+			}
+			
+			
+			
+			private function checkLogin(e:Event):void {
+				var urlRequest:URLRequest = new URLRequest()
+				var urlLoader:URLLoader;
+				
+				if(txtUsername.text == "" || txtPassword.text == "") {
+					return;
+				}
+				
+				if(_username != txtUsername.text || _password != txtPassword.text) {
+					this._username = txtUsername.text;
+					this._password = txtPassword.text;
+					
+					urlRequest.url = getLoginURL();
+					urlLoader  = new URLLoader()
+					urlLoader.addEventListener(Event.COMPLETE, checkLogin_complete);
+					urlLoader.addEventListener(IOErrorEvent.IO_ERROR, checkLogin_error);
+					
+					urlLoader.load(urlRequest);
+					
+				} 
+				
+				
+			}
+			
+			private function checkLogin_complete(e:Event):void {
+				var txt:String;
+				
+				txt = (e.target as URLLoader).data;
+				
+				if(txt.search("s3mer - Players") > 0) {
+					trace("Logged in");
+					
+					saveCredentials();
+					loadPostParams();
+					setLibraryFolder("All");			
+				} else {
+					trace("Login Failed");
+					Alert.show("Check your credentials","Login Error");
+				}
+			}
+			
+			private function checkLogin_error(e:IOErrorEvent):void {
+				Alert.show("Could not login","Login Error");
+			}
+			
+			
+			private function uploadClick(e:MouseEvent):void {
+				
+			}
+			
+			private function loadPostParams():void {
+				var urlRequest:URLRequest = new URLRequest()
+				var urlLoader:URLLoader;
+				
+				urlRequest.url = this.PARAMS_URL;
+				urlLoader  = new URLLoader()
+				urlLoader.addEventListener(Event.COMPLETE, loadPostParams_complete);
+				urlLoader.addEventListener(IOErrorEvent.IO_ERROR, loadPostParams_error);
+				
+				urlLoader.load(urlRequest);
+					
+			}
+			
+			private function loadPostParams_complete(e:Event):void {
+				var txt:String;
+				var params:Array;
+				var parts:Array;
+				
+				txt = (e.target as URLLoader).data;
+				
+				params = txt.split(",");
+				
+				for each( var param:String in params ) {
+					parts = param.split(":");
+
+					parts[0] = (parts[0] as String).replace(/^\"/,"");
+					parts[0] = (parts[0] as String).replace(/\"$/,"");
+					parts[1] = (parts[1] as String).replace(/^ \"/,"");
+					parts[1] = (parts[1] as String).replace(/\"$/,"");
+					
+					this._params[parts[0]] = parts[1];
+				}
+
+
+				btnUpload.enabled = true;
+				btnUpload.addEventListener(NativeDragEvent.NATIVE_DRAG_ENTER, dragEnterHandler);
+				btnUpload.addEventListener(NativeDragEvent.NATIVE_DRAG_DROP, dragDropHandler);
+				
+			}
+			
+			private function loadPostParams_error(e:IOErrorEvent):void {
+				Alert.show("Could not get post params","Params Error");
+			}
+
+
+			private function saveCredentials():void {
+				var bytes:ByteArray = new ByteArray();
+				bytes.writeUTFBytes(_username);
+				EncryptedLocalStore.setItem("username", bytes);
+				
+				bytes.clear();
+				
+				bytes.writeUTFBytes(_password);
+				EncryptedLocalStore.setItem("password", bytes);				
+				
+			}
+			
+			private function loadCredentials():void {
+				var bytes:ByteArray;
+				
+				bytes = EncryptedLocalStore.getItem("username");
+				
+				if(bytes != null) {
+					txtUsername.text = bytes.readUTFBytes(bytes.length);
+					//txtUsername.text = _username;
+				}
+				
+				bytes = EncryptedLocalStore.getItem("password");
+				
+				if(bytes != null) {
+					txtPassword.text = bytes.readUTFBytes(bytes.length);
+					//txtPassword.text = _password;
+				}
+				
+				checkLogin(null);
+			}
+			
+			private function onCreate(e:Event):void {
+				loadCredentials();
+			}
+			
+			private function dragEnterHandler(e:NativeDragEvent):void {
+				trace("Drag Enter");
+				DragManager.acceptDragDrop(btnUpload);
+			}
+			
+			private function dragDropHandler(e:NativeDragEvent):void {
+				var fileArray:Array;
+				
+				fileArray = (e.clipboard.getData(ClipboardFormats.FILE_LIST_FORMAT) as Array);
+				
+				addFilesToQueue(fileArray);
+				
+
+//				e.clipboard
+				trace("Drag Drop");
+			}
+			
+			private function addFilesToQueue(fileArray:Array):void {
+				var tmpFileObj:FileObject;
+				
+				for each( var file:File in fileArray) {
+					tmpFileObj = new FileObject(file);
+					
+					this._uploadQueue.push(tmpFileObj);
+				}
+				
+				updateProgressBars();
+				startUploads();
+			}
+			
+			private function startUploads():void {
+				var _urlRequest:URLRequest;
+				var _urlVariables:URLVariables;
+				var _file:File;
+					
+				_file = null;
+				for each( var fileObj:FileObject in this._uploadQueue ) {
+					if(fileObj.complete == false) {
+						_file = fileObj.file;
+						break; //Break out of the loop when we find the first file
+					}
+				}
+				
+				if(_file == null) { //No more files
+					return;
+				}
+
+				if(this._uploading) {
+					return;
+				}				
+				this._uploading = true;
+				
+				_urlVariables = new URLVariables(this._params.toString());
+				
+				_urlVariables["key"] = _urlVariables["key"] + _file.name;
+
+				_urlRequest = new URLRequest("http://media1.s3mer.com.s3.amazonaws.com/");
+				_urlRequest.method = URLRequestMethod.POST;
+				_urlRequest.data = _urlVariables;
+				
+				_file.addEventListener(ProgressEvent.PROGRESS, upload_progress);
+				_file.addEventListener(Event.COMPLETE, upload_complete);
+				_file.addEventListener(IOErrorEvent.IO_ERROR, upload_error);
+				
+				_file.upload(_urlRequest,"file");
+				
+				
+			}
+			
+			private function upload_progress(e:ProgressEvent):void {
+				var _file:File = e.target as File;
+				
+				pbFile.label = "Current File: " + _file.name + " " + e.bytesLoaded + "/" + e.bytesTotal + " (" + Math.round((e.bytesLoaded/e.bytesTotal)*100) + "%)";
+			}
+			
+			private function upload_complete(e:Event):void {
+				for each( var fileObj:FileObject in this._uploadQueue ) {
+					if( fileObj.file == e.target ) {
+						fileObj.complete = true;
+					}
+				}
+				
+				addToDatabase(e.target as File);
+			}
+			
+			private function updateProgressBars():void {
+				var completeFiles:int;
+				
+				for each( var fileObj:FileObject in this._uploadQueue ) {
+					if( fileObj.complete ) {
+						completeFiles++;
+					}
+				}
+				
+				pbTotal.label = "Total Progress: " + completeFiles + "/" + this._uploadQueue.length + " files complete.";
+			}
+			
+			private function upload_error(e:IOErrorEvent):void {
+				Alert.show("Error uploading file","Upload Error");
+				trace("Error UPloading");
+			}
+			
+			private function addToDatabase(file:File):void {
+				var urlRequest:URLRequest = new URLRequest()
+				var urlLoader:URLLoader;
+
+				urlRequest.url = getProcessURL(file.name, file.size.toString());
+				urlLoader  = new URLLoader()
+				urlLoader.addEventListener(Event.COMPLETE, addToDatabase_complete);
+				urlLoader.addEventListener(IOErrorEvent.IO_ERROR, addToDatabase_error);
+				
+				urlLoader.load(urlRequest);
+					
+			}
+			
+			private function addToDatabase_complete(e:Event):void {				
+				updateProgressBars();
+				this._uploading = false;
+				startUploads();
+			}
+			
+			private function addToDatabase_error(e:IOErrorEvent):void {
+				Alert.show("Error adding to DB","DB Error");				
+			}
+			
+			private function setLibraryFolder(folder:String):void {
+				var urlRequest:URLRequest = new URLRequest()
+				var urlLoader:URLLoader;
+
+				urlRequest.url = getLibraryFolderURL(folder);
+				urlLoader  = new URLLoader()
+				urlLoader.addEventListener(Event.COMPLETE, setLibraryFolder_complete);
+				urlLoader.addEventListener(IOErrorEvent.IO_ERROR, setLibraryFolder_error);
+				
+				urlLoader.load(urlRequest);
+					
+			}
+			
+			private function setLibraryFolder_complete(e:Event):void {				
+				trace("Library Folder Set");
+			}
+			
+			private function setLibraryFolder_error(e:IOErrorEvent):void {
+				Alert.show("Error setting library folder","API Error");				
+			}
+		]]>
+	</mx:Script>
+	
+</mx:WindowedApplication>
