@@ -145,11 +145,7 @@
 					this._params[parts[0]] = parts[1];
 				}
 
-
-				btnUpload.enabled = true;
-				btnUpload.addEventListener(NativeDragEvent.NATIVE_DRAG_ENTER, dragEnterHandler);
-				btnUpload.addEventListener(NativeDragEvent.NATIVE_DRAG_DROP, dragDropHandler);
-				
+				enableUploadButton();
 			}
 			
 			private function loadPostParams_error(e:IOErrorEvent):void {
@@ -338,7 +334,31 @@
 			private function setLibraryFolder_error(e:IOErrorEvent):void {
 				Alert.show("Error setting library folder","API Error");				
 			}
+			
+			private function onLogout(e:Event):void {
+				this._username = "";
+				this._password = "";
+				saveCredentials();
+				
+				txtUsername.text = "";
+				txtPassword.text = "";
+				
+				disableUploadButton();
+			}
+			
+			private function disableUploadButton():void {
+				btnUpload.enabled = false;
+				btnUpload.removeEventListener(NativeDragEvent.NATIVE_DRAG_ENTER, dragEnterHandler);
+				btnUpload.removeEventListener(NativeDragEvent.NATIVE_DRAG_DROP, dragDropHandler);				
+			}
+			
+			private function enableUploadButton():void {
+				btnUpload.enabled = true;
+				btnUpload.addEventListener(NativeDragEvent.NATIVE_DRAG_ENTER, dragEnterHandler);
+				btnUpload.addEventListener(NativeDragEvent.NATIVE_DRAG_DROP, dragDropHandler);				
+			}
 		]]>
 	</mx:Script>
+	<mx:Button x="80" y="62" label="Logout" width="160" click="onLogout(event)"/>
 	
 </mx:WindowedApplication>
