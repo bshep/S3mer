@@ -276,7 +276,7 @@
 			private function dragEnterHandler(e:NativeDragEvent):void {
 				trace("Drag Enter");
 				DragManager.acceptDragDrop(btnUpload);
-				btnUpload.emphasized = true;
+				btnUpload.setStyle('borderColor', '#FFFFFF');
 			}
 			
 			private function dragDropHandler(e:NativeDragEvent):void {
@@ -285,14 +285,14 @@
 				fileArray = (e.clipboard.getData(ClipboardFormats.FILE_LIST_FORMAT) as Array);
 				
 				addFilesToQueue(fileArray);
-				btnUpload.emphasized = false;
+				btnUpload.setStyle('borderColor', '#909090');
 
 //				e.clipboard
 				trace("Drag Drop");
 			}
 			
 			private function dragExitHandler(e:NativeDragEvent):void {
-				btnUpload.emphasized = false;
+				btnUpload.setStyle('borderColor', '#909090');
 			}
 			
 			private function addFilesToQueue(fileArray:Array):void {
@@ -529,7 +529,6 @@
 		<mx:State name="Login">
 			<mx:RemoveChild target="{pbTotal}"/>
 			<mx:RemoveChild target="{pbFile}"/>
-			<mx:RemoveChild target="{btnUpload}"/>
 			<mx:AddChild position="lastChild">
 				<mx:Form x="190" y="60">
 					<mx:FormItem label="Username" color="#000000">
@@ -545,18 +544,21 @@
 			</mx:AddChild>
 			<mx:RemoveChild target="{applicationcontrolbar1}"/>
 			<mx:SetStyle name="backgroundGradientColors" value="[#E4E4E4, #C1C1C1]"/>
+			<mx:RemoveChild target="{btnUpload}"/>
 		</mx:State>
 		<mx:State name="AOT">
 			<mx:RemoveChild target="{button1}"/>
 			<mx:RemoveChild target="{pbTotal}"/>
 			<mx:RemoveChild target="{pbFile}"/>
 			<mx:SetProperty name="width" value="304"/>
-			<mx:SetProperty target="{btnUpload}" name="width" value="282"/>
-			<mx:SetProperty target="{btnUpload}" name="height" value="177"/>
 			<mx:SetProperty name="height" value="246"/>
+			<mx:SetProperty target="{btnUpload}" name="width" value="282"/>
+			<mx:SetProperty target="{btnUpload}" name="y" value="40"/>
+			<mx:SetProperty target="{btnUpload}" name="height" value="179"/>
+			<mx:SetProperty target="{label1}" name="x" value="50.5"/>
+			<mx:SetProperty target="{label1}" name="y" value="73"/>
 		</mx:State>
 	</mx:states>
-	<mx:Button label="Drop Files Here" id="btnUpload" enabled="false" width="628" x="10" height="85" y="43" styleName="btnDrop" themeColor="#FFFFFF"/>
 	<mx:ProgressBar labelPlacement="top" label="Current File" id="pbFile" indeterminate="false" minimum="0" maximum="100" enabled="true" mode="manual" width="628" x="10" height="28" y="136" color="#000000"/>
 	<mx:ProgressBar labelPlacement="top" label="Total Progress" id="pbTotal" indeterminate="false" minimum="0" maximum="100" enabled="true" mode="manual" width="628" x="10" height="28" y="172" color="#000000"/>
 	<mx:ApplicationControlBar id="applicationcontrolbar1" cornerRadius="0" right="0" left="0" top="-1">
@@ -567,4 +569,7 @@
 		<mx:ComboBox id="cmbFolders" labelField="@name" change="selectFolder(event)"></mx:ComboBox>
 		<mx:Button label="Logout" click="onLogout(event)" toolTip="Click here to logout and clear the settings" id="button1" width="74" height="22"/>
 	</mx:ApplicationControlBar>
+	<mx:Canvas x="10" y="43" width="628" height="85" cornerRadius="10" borderStyle="solid" borderColor="#909090" borderThickness="1" backgroundColor="#C1C1C1" label="Drop Files Here" color="#000000" id="btnUpload">
+		<mx:Label x="223.5" y="28" text="Drop Files Here" fontWeight="bold" fontSize="20" color="#5D5D5D" id="label1"/>
+	</mx:Canvas>
 </mx:WindowedApplication>
