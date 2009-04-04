@@ -31,7 +31,8 @@
 			[Bindable]
 			private var _folderList:ArrayCollection;
 			
-			private var _uploadQueue:Array = new Array();
+			[Bindable]
+			private var _uploadQueue:ArrayCollection = new ArrayCollection();
 			
 			private var LOGIN_URL:String = "http://www.s3mer.com/flex_uploader/login.php?";
 			private var PROCESS_CMD_URL:String = "http://www.s3mer.com/process_command.php?commandnr=save-media-data";
@@ -109,7 +110,7 @@
 					loadLibraryFolderList();
 					setLibraryFolder("All");
 					
-					currentState = "";
+					currentState = "ExtendedView";
 					status = "Logged in as: " + _username;
 				} else {
 					trace("Login Failed");
@@ -281,7 +282,7 @@
 					} else {
 						tmpFileObj = new FileObject(file);
 						
-						this._uploadQueue.push(tmpFileObj);
+						this._uploadQueue.addItem(tmpFileObj);
 					}
 				}
 				
@@ -519,8 +520,15 @@
 			<mx:SetProperty target="{label1}" name="x" value="50.5"/>
 			<mx:SetProperty target="{label1}" name="y" value="73"/>
 		</mx:State>
+		<mx:State name="ExtendedView">
+			<mx:SetProperty name="height" value="350"/>
+			<mx:AddChild position="lastChild">
+				<mx:List x="10" width="628" height="142" itemRenderer="QueueItem" dataProvider="{_uploadQueue}" bottom="10"></mx:List>
+			</mx:AddChild>
+			<mx:SetProperty target="{pbTotal}" name="y" value="136"/>
+		</mx:State>
 	</mx:states>
-	<mx:ProgressBar labelPlacement="top" label="Current File" id="pbFile" indeterminate="false" minimum="0" maximum="100" enabled="true" mode="manual" width="628" x="10" height="28" y="136" color="#000000"/>
+	<mx:ProgressBar labelPlacement="top" label="Current File" id="pbFile" indeterminate="false" minimum="0" maximum="100" enabled="true" mode="manual" width="628" x="10" height="28" y="136" color="#000000" visible="false"/>
 	<mx:ProgressBar labelPlacement="top" label="Total Progress" id="pbTotal" indeterminate="false" minimum="0" maximum="100" enabled="true" mode="manual" width="628" x="10" height="28" y="172" color="#000000"/>
 	<mx:ApplicationControlBar id="applicationcontrolbar1" cornerRadius="0" right="0" left="0" top="-1">
 		<mx:CheckBox label="Always On Top" id="chkAOT" width="111" height="22">
