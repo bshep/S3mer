@@ -556,7 +556,7 @@
 			<mx:SetProperty name="height" value="246"/>
 		</mx:State>
 	</mx:states>
-	<mx:Button label="Drop Files Here" id="btnUpload" enabled="false" width="628" x="10" height="85" y="43" styleName="btnDrop"/>
+	<mx:Button label="Drop Files Here" id="btnUpload" enabled="false" width="628" x="10" height="85" y="43" styleName="btnDrop" themeColor="#FFFFFF"/>
 	<mx:ProgressBar labelPlacement="top" label="Current File" id="pbFile" indeterminate="false" minimum="0" maximum="100" enabled="true" mode="manual" width="628" x="10" height="28" y="136" color="#000000"/>
 	<mx:ProgressBar labelPlacement="top" label="Total Progress" id="pbTotal" indeterminate="false" minimum="0" maximum="100" enabled="true" mode="manual" width="628" x="10" height="28" y="172" color="#000000"/>
 	<mx:ApplicationControlBar id="applicationcontrolbar1" cornerRadius="0" right="0" left="0" top="-1">
