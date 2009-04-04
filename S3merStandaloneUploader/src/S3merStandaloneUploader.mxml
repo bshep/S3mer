@@ -293,7 +293,17 @@
 			}
 			
 			private function upload_error(e:IOErrorEvent):void {
+				var _file:File = e.target as File;
+				
+				for each( var fileObj:FileObject in this._uploadQueue ) {
+					if( fileObj.file == e.target ) {
+						fileObj.complete = true;
+					}
+				}
+
 				Alert.show("Error uploading file","Upload Error");
+				this._uploading = false;
+				startUploads();
 				trace("Error UPloading");
 			}
 			
