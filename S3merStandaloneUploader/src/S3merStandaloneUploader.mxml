@@ -202,6 +202,8 @@
 			private function onCreate(e:Event):void {
 				loadCredentials();
 				chkAOT.addEventListener(Event.CHANGE, aotHandler);
+				
+				txtUsername.addEventListener(KeyboardEvent.KEY_DOWN, returnKeyHandler);
 				txtPassword.addEventListener(KeyboardEvent.KEY_DOWN, returnKeyHandler);
 			}
 			
@@ -219,7 +221,11 @@
 			
 			private function returnKeyHandler(e:KeyboardEvent):void {
 				if(e.keyCode == 13) {
-					checkLogin(null);
+					if( e.currentTarget == txtUsername ) {
+						txtPassword.setFocus();
+					} else {
+						checkLogin(null);
+					}
 					trace("Hit return");
 				}
 			}
