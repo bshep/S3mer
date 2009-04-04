@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="650" height="250" creationComplete="onCreate(event)">
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="650" height="186" creationComplete="onCreate(event)" alwaysInFront="{chkAOT.selected}" showStatusBar="false">
 	<mx:Label x="10" y="10" text="Username" fontWeight="bold"/>
 	<mx:Label x="10" y="36" text="Password" fontWeight="bold"/>
 	<mx:TextInput x="80" y="8" id="txtUsername" focusOut="checkLogin(event)"/>
 	<mx:TextInput x="80" y="34" displayAsPassword="true" id="txtPassword"  focusOut="checkLogin(event)"/>
 	<mx:Button x="265" y="10" label="Drop Files Here" width="373" height="86" id="btnUpload" enabled="false" fontSize="16"/>
-	<mx:ProgressBar y="104" left="10" right="10" labelPlacement="top" label="Current File" id="pbFile"/>
-	<mx:ProgressBar y="140" left="10" right="10" labelPlacement="top" label="Total Progress" id="pbTotal"/>
+	<mx:ProgressBar y="104" left="10" right="10" labelPlacement="top" label="Current File" id="pbFile" indeterminate="false" minimum="0" maximum="100" enabled="true" mode="manual"/>
+	<mx:ProgressBar y="140" left="10" right="10" labelPlacement="top" label="Total Progress" id="pbTotal" indeterminate="false" minimum="0" maximum="100" enabled="true" mode="manual"/>
 	
 	<mx:Script>
 		<![CDATA[
@@ -261,16 +261,21 @@
 			private function upload_progress(e:ProgressEvent):void {
 				var _file:File = e.target as File;
 				
+				
+				pbFile.setProgress(e.bytesLoaded, e.bytesTotal);
 				pbFile.label = "Current File: " + _file.name + " " + e.bytesLoaded + "/" + e.bytesTotal + " (" + Math.round((e.bytesLoaded/e.bytesTotal)*100) + "%)";
 			}
 			
 			private function upload_complete(e:Event):void {
+				var _file:File = e.target as File;
+				
 				for each( var fileObj:FileObject in this._uploadQueue ) {
 					if( fileObj.file == e.target ) {
 						fileObj.complete = true;
 					}
 				}
 				
+				pbFile.label = "Current File: " + _file.name + " " + _file.size + "/" + _file.size + " (100%)";
 				addToDatabase(e.target as File);
 			}
 			
@@ -283,6 +288,7 @@
 					}
 				}
 				
+				pbTotal.setProgress(completeFiles, this._uploadQueue.length);
 				pbTotal.label = "Total Progress: " + completeFiles + "/" + this._uploadQueue.length + " files complete.";
 			}
 			
@@ -359,6 +365,9 @@
 			}
 		]]>
 	</mx:Script>
-	<mx:Button x="80" y="62" label="Logout" width="160" click="onLogout(event)"/>
+	<mx:Button x="80" y="62" label="Logout" width="160" click="onLogout(event)" toolTip="Click here to logout and clear the settings"/>
+	<mx:CheckBox x="10" y="62" label="AOT" fontWeight="bold" id="chkAOT">
+		<mx:toolTip>Always On Top - Select this option to keep the window always on top.</mx:toolTip>
+	</mx:CheckBox>
 	
 </mx:WindowedApplication>
