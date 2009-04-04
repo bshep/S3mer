@@ -35,3 +35,20 @@ CheckBox
 	fillAlphas: 1.0, 1.0, 1.0, 1.0;
 	fillColors: #999999, #474747, #B2B2B2, #4E4E4E;
 }
+
+Alert
+{
+	color: #222222;
+	backgroundAlpha: 0.3;
+	backgroundColor: black;
+	borderAlpha: 0.3;
+	borderColor: white;
+	dropShadowEnabled: false;
+	button-style-name: AlertButton;
+}
+
+
+AlertButton
+{
+	color: #FFFFFF;
+}
