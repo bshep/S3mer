@@ -8,6 +8,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.collections.ArrayCollection;
 		
 			import air.update.events.DownloadErrorEvent;
 			import air.update.ApplicationUpdaterUI;
@@ -27,11 +28,15 @@
 			private var _params:URLVariables = new URLVariables();
 			private var _uploading:Boolean = false;
 			
+			[Bindable]
+			private var _folderList:ArrayCollection;
+			
 			private var _uploadQueue:Array = new Array();
 			
-			private var LOGIN_URL:String = "http://www.s3mer.com/processlogin.php?";
+			private var LOGIN_URL:String = "http://www.s3mer.com/flex_uploader/login.php?";
 			private var PROCESS_CMD_URL:String = "http://www.s3mer.com/process_command.php?commandnr=save-media-data";
 			private var SET_FOLDER_URL:String = "http://www.s3mer.com/process_command.php?commandnr=set-library-folder";
+			private var GET_FOLDER__LIST_URL:String = "http://www.s3mer.com/flex_uploader/remoteprocedures.php?action=folder-list";
 			private var PARAMS_URL:String = "http://www.s3mer.com/sign.php?uploader";
 			
 			
@@ -106,27 +111,38 @@
 				
 				txt = (e.target as URLLoader).data;
 				
-				if(txt.search("s3mer - Players") > 0) {
+				if(txt == "1") {
 					trace("Logged in");
 					
 					saveCredentials();
 					loadPostParams();
+					loadLibraryFolderList();
 					setLibraryFolder("All");
 					
 					currentState = "";
 					status = "Logged in as: " + _username;
 				} else {
 					trace("Login Failed");
-					Alert.show("Check your credentials","Login Error");
+					if(txt == "2") {
+						Alert.show("Only available to pro users","Login Error");
+					} else {
+						Alert.show("Check your credentials","Login Error");						
+					}
 					status = "Try Again";
 					txtPassword.enabled = true;
 					txtUsername.enabled = true;
 					btnLogin.enabled = true;
+					this._username = "";
+					this._password = "";
 				}
 			}
 			
 			private function checkLogin_error(e:IOErrorEvent):void {
 				Alert.show("Could not login","Login Error");
+				status = "Try Again";
+				txtPassword.enabled = true;
+				txtUsername.enabled = true;
+				btnLogin.enabled = true;
 			}
 			
 			
@@ -248,7 +264,7 @@
 			
 			private function returnKeyHandler(e:KeyboardEvent):void {
 				if(e.keyCode == 13) {
-					if( e.target == txtUsername ) {
+					if( e.currentTarget == txtUsername ) {
 						txtPassword.setFocus();
 					} else {
 						checkLogin(null);
@@ -300,17 +316,17 @@
 			private function startUploads():void {
 				var _urlRequest:URLRequest;
 				var _urlVariables:URLVariables;
-				var _file:File;
+				var _fileObj:FileObject;
 					
-				_file = null;
+				_fileObj = null;
 				for each( var fileObj:FileObject in this._uploadQueue ) {
-					if(fileObj.complete == false) {
-						_file = fileObj.file;
+					if(fileObj.canUpload) {
+						_fileObj = fileObj;
 						break; //Break out of the loop when we find the first file
 					}
 				}
 				
-				if(_file == null) { //No more files
+				if(_fileObj == null) { //No more files
 					return;
 				}
 
@@ -321,17 +337,18 @@
 				
 				_urlVariables = new URLVariables(this._params.toString());
 				
-				_urlVariables["key"] = _urlVariables["key"] + _file.name;
+				_urlVariables["key"] = _urlVariables["key"] + _fileObj.file.name;
 
 				_urlRequest = new URLRequest("http://media1.s3mer.com.s3.amazonaws.com/");
 				_urlRequest.method = URLRequestMethod.POST;
 				_urlRequest.data = _urlVariables;
 				
-				_file.addEventListener(ProgressEvent.PROGRESS, upload_progress);
-				_file.addEventListener(Event.COMPLETE, upload_complete);
-				_file.addEventListener(IOErrorEvent.IO_ERROR, upload_error);
+				_fileObj.file.addEventListener(ProgressEvent.PROGRESS, upload_progress);
+				_fileObj.file.addEventListener(Event.COMPLETE, upload_complete);
+				_fileObj.file.addEventListener(IOErrorEvent.IO_ERROR, upload_error);
 				
-				_file.upload(_urlRequest,"file");
+				_fileObj.uploading = true;
+				_fileObj.file.upload(_urlRequest,"file");
 				
 				
 			}
@@ -350,6 +367,7 @@
 				for each( var fileObj:FileObject in this._uploadQueue ) {
 					if( fileObj.file == e.target ) {
 						fileObj.complete = true;
+						fileObj.uploading = false;
 					}
 				}
 				
@@ -381,7 +399,7 @@
 				
 				for each( var fileObj:FileObject in this._uploadQueue ) {
 					if( fileObj.file == e.target ) {
-						fileObj.complete = true;
+						fileObj.error = true;
 					}
 				}
 
@@ -434,6 +452,45 @@
 			private function setLibraryFolder_error(e:IOErrorEvent):void {
 				Alert.show("Error setting library folder","API Error");				
 			}
+
+			private function loadLibraryFolderList():void {
+				var urlRequest:URLRequest = new URLRequest()
+				var urlLoader:URLLoader;
+
+				urlRequest.url = GET_FOLDER__LIST_URL;
+				urlLoader  = new URLLoader()
+				urlLoader.addEventListener(Event.COMPLETE, loadLibraryFolderList_complete);
+				urlLoader.addEventListener(IOErrorEvent.IO_ERROR, loadLibraryFolderList_error);
+				
+				urlLoader.load(urlRequest);
+					
+			}
+			
+			private function loadLibraryFolderList_complete(e:Event):void {
+				var _listXML:XML = new XML((e.target as URLLoader).data);
+				
+				this.cmbFolders.dataProvider = _listXML.item;
+				
+				trace("Library Folder Get");
+			}
+			
+			private function loadLibraryFolderList_error(e:IOErrorEvent):void {
+				Alert.show("Error getting library folder list","API Error");				
+			}
+			
+			private function selectFolder(event:Event):void {
+				var index:String;
+				
+				index = cmbFolders.selectedItem.@id.toString();
+				
+				if( index == "0" ) {
+					setLibraryFolder("All");
+				} else {
+					setLibraryFolder("mediafolder_"+index);
+				}
+				
+			}
+
 			
 			private function onLogout(e:Event):void {
 				this._username = "";
@@ -507,6 +564,7 @@
 			<mx:toolTip>Select this option to keep the window always on top.</mx:toolTip>
 		</mx:CheckBox>
 		<mx:Spacer width="100%"/>
+		<mx:ComboBox id="cmbFolders" labelField="@name" change="selectFolder(event)"></mx:ComboBox>
 		<mx:Button label="Logout" click="onLogout(event)" toolTip="Click here to logout and clear the settings" id="button1" width="74" height="22"/>
 	</mx:ApplicationControlBar>
 </mx:WindowedApplication>

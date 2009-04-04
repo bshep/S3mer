@@ -51,3 +51,15 @@ AlertButton
 {
 	color: #FFFFFF;
 }
+ComboBox
+{
+	cornerRadius: 0;
+	fillAlphas: 1.0, 1.0;
+	fillColors: #000000, #626262, #000000, #000000;
+	color: #A3A3A3;
+	textRollOverColor: #FFFFFF;
+	disabledColor: #FFFFFF;
+	borderColor: #000000;
+	themeColor: #FFFFFF;
+	textSelectedColor: #000000;
+}
