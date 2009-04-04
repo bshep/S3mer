@@ -14,7 +14,7 @@
 -->
 
 	<!-- The application identifier string, unique to this application. Required. -->
-	<id>S3merStandaloneUploader</id>
+	<id>com.s3mer.fileuploader</id>
 
 	<!-- Used as the filename for the application. Required. -->
 	<filename>s3mer Pro File Uploader</filename>
