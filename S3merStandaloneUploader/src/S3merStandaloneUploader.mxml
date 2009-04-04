@@ -323,7 +323,6 @@
 				pbFile.label = "Current File: " + _file.name + " " + _file.size + "/" + _file.size + " (100%)";
 				addToDatabase(e.target as File);
 				
-				Alert.show("Completed", "Uploads");
 				
 			}
 			
@@ -338,6 +337,10 @@
 				
 				pbTotal.setProgress(completeFiles, this._uploadQueue.length);
 				pbTotal.label = "Total Progress: " + completeFiles + "/" + this._uploadQueue.length + " files complete.";
+				
+				if( completeFiles == this._uploadQueue.length ) {
+					Alert.show("Completed", "Uploads");
+				}
 			}
 			
 			private function upload_error(e:IOErrorEvent):void {
@@ -467,8 +470,8 @@
 	<mx:ProgressBar labelPlacement="top" label="Current File" id="pbFile" indeterminate="false" minimum="0" maximum="100" enabled="true" mode="manual" width="628" x="10" height="28" y="136" color="#000000"/>
 	<mx:ProgressBar labelPlacement="top" label="Total Progress" id="pbTotal" indeterminate="false" minimum="0" maximum="100" enabled="true" mode="manual" width="628" x="10" height="28" y="172" color="#000000"/>
 	<mx:ApplicationControlBar id="applicationcontrolbar1" cornerRadius="0" right="0" left="0" top="-1">
-		<mx:CheckBox label="AOT" id="chkAOT" width="49" height="22">
-			<mx:toolTip>Always On Top - Select this option to keep the window always on top.</mx:toolTip>
+		<mx:CheckBox label="Always On Top" id="chkAOT" width="111" height="22">
+			<mx:toolTip>Select this option to keep the window always on top.</mx:toolTip>
 		</mx:CheckBox>
 		<mx:Spacer width="100%"/>
 		<mx:Button label="Logout" click="onLogout(event)" toolTip="Click here to logout and clear the settings" id="button1" width="74" height="22"/>
