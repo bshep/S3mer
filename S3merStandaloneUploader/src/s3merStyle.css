@@ -1,0 +1,37 @@
+/* CSS file */
+
+Button
+{
+	cornerRadius: 0;
+	fillAlphas: 1.0, 1.0;
+	fillColors: #000000, #626262, #000000, #000000;
+	color: #FFFFFF;
+	textRollOverColor: #FFFFFF;
+	disabledColor: #FFFFFF;
+	borderColor: #000000;
+	themeColor: #FFFFFF;
+	textSelectedColor: #000000;
+}
+Button.btnDrop
+{
+	color: #000000;
+	fontSize: 16;
+	fillAlphas: 1.0, 1.0;
+	fillColors: #D7D7D7, #B7B7B7;
+	borderColor: #FFFFFF;
+	cornerRadius: 3;
+	textSelectedColor: #000000;
+	disabledColor: #000000;
+	themeColor: #26C963;
+}
+CheckBox
+{
+	color: #000000;
+	fontWeight: bold;
+	textSelectedColor: #000000;
+	borderColor: #000000;
+	disabledColor: #000000;
+	textRollOverColor: #000000;
+	fillAlphas: 1.0, 1.0, 1.0, 1.0;
+	fillColors: #999999, #474747, #B2B2B2, #4E4E4E;
+}

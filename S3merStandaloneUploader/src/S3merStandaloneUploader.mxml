@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="650" height="186" creationComplete="onCreate(event)" alwaysInFront="{chkAOT.selected}" showStatusBar="false">
-	<mx:Label x="10" y="10" text="Username" fontWeight="bold"/>
-	<mx:Label x="10" y="36" text="Password" fontWeight="bold"/>
-	<mx:TextInput x="80" y="8" id="txtUsername" focusOut="checkLogin(event)"/>
-	<mx:TextInput x="80" y="34" displayAsPassword="true" id="txtPassword"  focusOut="checkLogin(event)"/>
-	<mx:Button x="265" y="10" label="Drop Files Here" width="373" height="86" id="btnUpload" enabled="false" fontSize="16"/>
-	<mx:ProgressBar y="104" left="10" right="10" labelPlacement="top" label="Current File" id="pbFile" indeterminate="false" minimum="0" maximum="100" enabled="true" mode="manual"/>
-	<mx:ProgressBar y="140" left="10" right="10" labelPlacement="top" label="Total Progress" id="pbTotal" indeterminate="false" minimum="0" maximum="100" enabled="true" mode="manual"/>
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="650" height="232"
+	creationComplete="onCreate(event)"
+	currentState="Login"
+	backgroundGradientAlphas="[1.0, 1.0]"
+	backgroundGradientColors="[#E4E4E4, #C1C1C1]">
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.states.State;
+			import mx.core.Window;
 			import mx.events.DragEvent;
 			import mx.managers.DragManager;
 			import mx.controls.Alert;
@@ -67,6 +66,7 @@
 				var urlLoader:URLLoader;
 				
 				if(txtUsername.text == "" || txtPassword.text == "") {
+//					Alert.show("Please enter your credentials","Login Error");
 					return;
 				}
 				
@@ -80,6 +80,12 @@
 					urlLoader.addEventListener(IOErrorEvent.IO_ERROR, checkLogin_error);
 					
 					urlLoader.load(urlRequest);
+					
+					// Disable login controls give status
+					status = "Loggin in";
+					txtPassword.enabled = false;
+					txtUsername.enabled = false;
+					btnLogin.enabled = false;
 					
 				} 
 				
@@ -96,10 +102,17 @@
 					
 					saveCredentials();
 					loadPostParams();
-					setLibraryFolder("All");			
+					setLibraryFolder("All");
+					
+					currentState = "";
+					status = "Logged in as: " + _username;
 				} else {
 					trace("Login Failed");
 					Alert.show("Check your credentials","Login Error");
+					status = "Try Again";
+					txtPassword.enabled = true;
+					txtUsername.enabled = true;
+					btnLogin.enabled = true;
 				}
 			}
 			
@@ -185,13 +198,36 @@
 				checkLogin(null);
 			}
 			
+			// *** Start Here ***
 			private function onCreate(e:Event):void {
 				loadCredentials();
+				chkAOT.addEventListener(Event.CHANGE, aotHandler);
+				txtPassword.addEventListener(KeyboardEvent.KEY_DOWN, returnKeyHandler);
+			}
+			
+			private function aotHandler(e:Event):void {
+				if(chkAOT.selected) {
+					currentState = "AOT";
+					application.alwaysInFront = true;
+				} else {
+					currentState = "";
+					application.alwaysInFront = false;
+					application.width = 650;
+					application.height = 232;
+				}
+			}
+			
+			private function returnKeyHandler(e:KeyboardEvent):void {
+				if(e.keyCode == 13) {
+					checkLogin(null);
+					trace("Hit return");
+				}
 			}
 			
 			private function dragEnterHandler(e:NativeDragEvent):void {
 				trace("Drag Enter");
 				DragManager.acceptDragDrop(btnUpload);
+				btnUpload.emphasized = true;
 			}
 			
 			private function dragDropHandler(e:NativeDragEvent):void {
@@ -200,19 +236,28 @@
 				fileArray = (e.clipboard.getData(ClipboardFormats.FILE_LIST_FORMAT) as Array);
 				
 				addFilesToQueue(fileArray);
-				
+				btnUpload.emphasized = false;
 
 //				e.clipboard
 				trace("Drag Drop");
+			}
+			
+			private function dragExitHandler(e:NativeDragEvent):void {
+				btnUpload.emphasized = false;
 			}
 			
 			private function addFilesToQueue(fileArray:Array):void {
 				var tmpFileObj:FileObject;
 				
 				for each( var file:File in fileArray) {
-					tmpFileObj = new FileObject(file);
 					
-					this._uploadQueue.push(tmpFileObj);
+					if( file.isDirectory ) {
+						addFilesToQueue(file.getDirectoryListing());
+					} else {
+						tmpFileObj = new FileObject(file);
+						
+						this._uploadQueue.push(tmpFileObj);
+					}
 				}
 				
 				updateProgressBars();
@@ -277,6 +322,9 @@
 				
 				pbFile.label = "Current File: " + _file.name + " " + _file.size + "/" + _file.size + " (100%)";
 				addToDatabase(e.target as File);
+				
+				Alert.show("Completed", "Uploads");
+				
 			}
 			
 			private function updateProgressBars():void {
@@ -304,7 +352,7 @@
 				Alert.show("Error uploading file","Upload Error");
 				this._uploading = false;
 				startUploads();
-				trace("Error UPloading");
+				trace("Error Uploading");
 			}
 			
 			private function addToDatabase(file:File):void {
@@ -360,24 +408,69 @@
 				txtPassword.text = "";
 				
 				disableUploadButton();
+				currentState = "Login";
+				// Enable login controls give status
+				status = "";
+				txtPassword.enabled = true;
+				txtUsername.enabled = true;
+				btnLogin.enabled = true;
 			}
 			
 			private function disableUploadButton():void {
 				btnUpload.enabled = false;
 				btnUpload.removeEventListener(NativeDragEvent.NATIVE_DRAG_ENTER, dragEnterHandler);
-				btnUpload.removeEventListener(NativeDragEvent.NATIVE_DRAG_DROP, dragDropHandler);				
+				btnUpload.removeEventListener(NativeDragEvent.NATIVE_DRAG_DROP, dragDropHandler);
+				btnUpload.removeEventListener(NativeDragEvent.NATIVE_DRAG_EXIT, dragExitHandler);		
 			}
 			
 			private function enableUploadButton():void {
 				btnUpload.enabled = true;
 				btnUpload.addEventListener(NativeDragEvent.NATIVE_DRAG_ENTER, dragEnterHandler);
-				btnUpload.addEventListener(NativeDragEvent.NATIVE_DRAG_DROP, dragDropHandler);				
+				btnUpload.addEventListener(NativeDragEvent.NATIVE_DRAG_DROP, dragDropHandler);
+				btnUpload.addEventListener(NativeDragEvent.NATIVE_DRAG_EXIT, dragExitHandler);
 			}
 		]]>
 	</mx:Script>
-	<mx:Button x="80" y="62" label="Logout" width="160" click="onLogout(event)" toolTip="Click here to logout and clear the settings"/>
-	<mx:CheckBox x="10" y="62" label="AOT" fontWeight="bold" id="chkAOT">
-		<mx:toolTip>Always On Top - Select this option to keep the window always on top.</mx:toolTip>
-	</mx:CheckBox>
-	
+	<mx:Style source="s3merStyle.css"/>
+	<mx:states>
+		<mx:State name="Login">
+			<mx:RemoveChild target="{pbTotal}"/>
+			<mx:RemoveChild target="{pbFile}"/>
+			<mx:RemoveChild target="{btnUpload}"/>
+			<mx:AddChild position="lastChild">
+				<mx:Form x="190" y="60">
+					<mx:FormItem label="Username" color="#000000">
+						<mx:TextInput id="txtUsername" color="#000000" themeColor="#000000"/>
+					</mx:FormItem>
+					<mx:FormItem label="Password" color="#000000" themeColor="#000000">
+						<mx:TextInput id="txtPassword" displayAsPassword="true" color="#000000"/>
+					</mx:FormItem>
+					<mx:FormItem>
+						<mx:Button label="Login" id="btnLogin" click="checkLogin(event)"/>
+					</mx:FormItem>
+				</mx:Form>
+			</mx:AddChild>
+			<mx:RemoveChild target="{applicationcontrolbar1}"/>
+			<mx:SetStyle name="backgroundGradientColors" value="[#E4E4E4, #C1C1C1]"/>
+		</mx:State>
+		<mx:State name="AOT">
+			<mx:RemoveChild target="{button1}"/>
+			<mx:RemoveChild target="{pbTotal}"/>
+			<mx:RemoveChild target="{pbFile}"/>
+			<mx:SetProperty name="width" value="304"/>
+			<mx:SetProperty target="{btnUpload}" name="width" value="282"/>
+			<mx:SetProperty target="{btnUpload}" name="height" value="177"/>
+			<mx:SetProperty name="height" value="246"/>
+		</mx:State>
+	</mx:states>
+	<mx:Button label="Drop Files Here" id="btnUpload" enabled="false" width="628" x="10" height="85" y="43" styleName="btnDrop"/>
+	<mx:ProgressBar labelPlacement="top" label="Current File" id="pbFile" indeterminate="false" minimum="0" maximum="100" enabled="true" mode="manual" width="628" x="10" height="28" y="136" color="#000000"/>
+	<mx:ProgressBar labelPlacement="top" label="Total Progress" id="pbTotal" indeterminate="false" minimum="0" maximum="100" enabled="true" mode="manual" width="628" x="10" height="28" y="172" color="#000000"/>
+	<mx:ApplicationControlBar id="applicationcontrolbar1" cornerRadius="0" right="0" left="0" top="-1">
+		<mx:CheckBox label="AOT" id="chkAOT" width="49" height="22">
+			<mx:toolTip>Always On Top - Select this option to keep the window always on top.</mx:toolTip>
+		</mx:CheckBox>
+		<mx:Spacer width="100%"/>
+		<mx:Button label="Logout" click="onLogout(event)" toolTip="Click here to logout and clear the settings" id="button1" width="74" height="22"/>
+	</mx:ApplicationControlBar>
 </mx:WindowedApplication>
