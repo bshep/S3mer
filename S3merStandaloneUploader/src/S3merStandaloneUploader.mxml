@@ -76,9 +76,6 @@
 			
 			
 			private function checkLogin(e:Event):void {
-				var urlRequest:URLRequest = new URLRequest()
-				var urlLoader:URLLoader;
-				
 				if(txtUsername.text == "" || txtPassword.text == "") {
 //					Alert.show("Please enter your credentials","Login Error");
 					return;
@@ -87,13 +84,8 @@
 				if(_username != txtUsername.text || _password != txtPassword.text) {
 					this._username = txtUsername.text;
 					this._password = txtPassword.text;
-					
-					urlRequest.url = getLoginURL();
-					urlLoader  = new URLLoader()
-					urlLoader.addEventListener(Event.COMPLETE, checkLogin_complete);
-					urlLoader.addEventListener(IOErrorEvent.IO_ERROR, checkLogin_error);
-					
-					urlLoader.load(urlRequest);
+										
+					doRequest(getLoginURL(), checkLogin_complete, checkLogin_error);
 					
 					// Disable login controls give status
 					status = "Loggin in";
@@ -102,8 +94,6 @@
 					btnLogin.enabled = false;
 					
 				} 
-				
-				
 			}
 			
 			private function checkLogin_complete(e:Event):void {
@@ -145,22 +135,8 @@
 				btnLogin.enabled = true;
 			}
 			
-			
-			private function uploadClick(e:MouseEvent):void {
-				
-			}
-			
 			private function loadPostParams():void {
-				var urlRequest:URLRequest = new URLRequest()
-				var urlLoader:URLLoader;
-				
-				urlRequest.url = this.PARAMS_URL;
-				urlLoader  = new URLLoader()
-				urlLoader.addEventListener(Event.COMPLETE, loadPostParams_complete);
-				urlLoader.addEventListener(IOErrorEvent.IO_ERROR, loadPostParams_error);
-				
-				urlLoader.load(urlRequest);
-					
+				doRequest(PARAMS_URL, loadPostParams_complete, loadPostParams_error);
 			}
 			
 			private function loadPostParams_complete(e:Event):void {
@@ -410,16 +386,7 @@
 			}
 			
 			private function addToDatabase(file:File):void {
-				var urlRequest:URLRequest = new URLRequest()
-				var urlLoader:URLLoader;
-
-				urlRequest.url = getProcessURL(file.name, file.size.toString());
-				urlLoader  = new URLLoader()
-				urlLoader.addEventListener(Event.COMPLETE, addToDatabase_complete);
-				urlLoader.addEventListener(IOErrorEvent.IO_ERROR, addToDatabase_error);
-				
-				urlLoader.load(urlRequest);
-					
+				doRequest(getProcessURL(file.name, file.size.toString()), addToDatabase_complete, addToDatabase_error);
 			}
 			
 			private function addToDatabase_complete(e:Event):void {				
@@ -433,16 +400,7 @@
 			}
 			
 			private function setLibraryFolder(folder:String):void {
-				var urlRequest:URLRequest = new URLRequest()
-				var urlLoader:URLLoader;
-
-				urlRequest.url = getLibraryFolderURL(folder);
-				urlLoader  = new URLLoader()
-				urlLoader.addEventListener(Event.COMPLETE, setLibraryFolder_complete);
-				urlLoader.addEventListener(IOErrorEvent.IO_ERROR, setLibraryFolder_error);
-				
-				urlLoader.load(urlRequest);
-					
+				doRequest(getLibraryFolderURL(folder), setLibraryFolder_complete, setLibraryFolder_error);
 			}
 			
 			private function setLibraryFolder_complete(e:Event):void {				
@@ -454,16 +412,7 @@
 			}
 
 			private function loadLibraryFolderList():void {
-				var urlRequest:URLRequest = new URLRequest()
-				var urlLoader:URLLoader;
-
-				urlRequest.url = GET_FOLDER__LIST_URL;
-				urlLoader  = new URLLoader()
-				urlLoader.addEventListener(Event.COMPLETE, loadLibraryFolderList_complete);
-				urlLoader.addEventListener(IOErrorEvent.IO_ERROR, loadLibraryFolderList_error);
-				
-				urlLoader.load(urlRequest);
-					
+				doRequest(GET_FOLDER__LIST_URL, loadLibraryFolderList_complete, loadLibraryFolderList_error);
 			}
 			
 			private function loadLibraryFolderList_complete(e:Event):void {
@@ -521,6 +470,18 @@
 				btnUpload.addEventListener(NativeDragEvent.NATIVE_DRAG_ENTER, dragEnterHandler);
 				btnUpload.addEventListener(NativeDragEvent.NATIVE_DRAG_DROP, dragDropHandler);
 				btnUpload.addEventListener(NativeDragEvent.NATIVE_DRAG_EXIT, dragExitHandler);
+			}
+			
+			private function doRequest(url:String, complete:Function, error:Function):void {
+				var urlRequest:URLRequest = new URLRequest()
+				var urlLoader:URLLoader;
+
+				urlRequest.url = url;
+				urlLoader  = new URLLoader()
+				urlLoader.addEventListener(Event.COMPLETE, complete);
+				urlLoader.addEventListener(IOErrorEvent.IO_ERROR, error);
+				
+				urlLoader.load(urlRequest);
 			}
 		]]>
 	</mx:Script>
