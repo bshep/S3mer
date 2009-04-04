@@ -39,11 +39,10 @@ CheckBox
 Alert
 {
 	color: #222222;
-	backgroundAlpha: 0.3;
-	backgroundColor: black;
-	borderAlpha: 0.3;
+	backgroundAlpha: 1.0;
+	backgroundColor: white;
+	borderAlpha: 1.0;
 	borderColor: white;
-	dropShadowEnabled: false;
 	button-style-name: AlertButton;
 }
 
