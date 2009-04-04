@@ -1,18 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="650" height="232"
-	creationComplete="onCreate(event)" addedToStage="txtUsername.setFocus();"
+	creationComplete="onCreate(event)"
+	addedToStage="txtUsername.setFocus();"
 	currentState="Login"
 	backgroundGradientAlphas="[1.0, 1.0]"
 	backgroundGradientColors="[#E4E4E4, #C1C1C1]">
 	
 	<mx:Script>
 		<![CDATA[
+		
+			import air.update.events.DownloadErrorEvent;
+			import air.update.ApplicationUpdaterUI;
+			import air.update.events.UpdateEvent;
+		
 			import mx.states.State;
 			import mx.core.Window;
 			import mx.events.DragEvent;
 			import mx.managers.DragManager;
 			import mx.controls.Alert;
 			import mx.messaging.channels.StreamingAMFChannel;
+			
+			private var appUpdater:ApplicationUpdaterUI = new ApplicationUpdaterUI();
+			
 			private var _username:String;
 			private var _password:String;
 			private var _params:URLVariables = new URLVariables();
@@ -202,9 +211,26 @@
 			private function onCreate(e:Event):void {
 				loadCredentials();
 				chkAOT.addEventListener(Event.CHANGE, aotHandler);
-				
-				txtUsername.addEventListener(KeyboardEvent.KEY_DOWN, returnKeyHandler);
 				txtPassword.addEventListener(KeyboardEvent.KEY_DOWN, returnKeyHandler);
+				
+				// updater stuff
+			    appUpdater.updateURL = "http://www.s3mer.com/app/s3merStandaloneUploader_updateDescriptor.xml";
+			    appUpdater.addEventListener(UpdateEvent.INITIALIZED, onUpdateInitialized);
+			    appUpdater.addEventListener(ErrorEvent.ERROR, onUpdateError);
+			    appUpdater.isCheckForUpdateVisible = false;
+			    appUpdater.isFileUpdateVisible = false;
+			    appUpdater.isInstallUpdateVisible = true;
+			    appUpdater.initialize();
+			}
+			
+			private function onUpdateInitialized(event:UpdateEvent):void
+			{
+				appUpdater.checkNow();
+			}
+			
+			private function onUpdateError(event:ErrorEvent):void
+			{
+            	Alert.show('Contact us s3mer.team@s3mer.com and report this\n\n' + event.toString(), 'Updater Error');
 			}
 			
 			private function aotHandler(e:Event):void {
@@ -221,11 +247,7 @@
 			
 			private function returnKeyHandler(e:KeyboardEvent):void {
 				if(e.keyCode == 13) {
-					if( e.currentTarget == txtUsername ) {
-						txtPassword.setFocus();
-					} else {
-						checkLogin(null);
-					}
+					checkLogin(null);
 					trace("Hit return");
 				}
 			}
