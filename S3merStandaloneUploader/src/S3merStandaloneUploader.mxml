@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="650" height="232"
-	creationComplete="onCreate(event)"
+	creationComplete="onCreate(event)" addedToStage="txtUsername.setFocus();"
 	currentState="Login"
 	backgroundGradientAlphas="[1.0, 1.0]"
 	backgroundGradientColors="[#E4E4E4, #C1C1C1]">
