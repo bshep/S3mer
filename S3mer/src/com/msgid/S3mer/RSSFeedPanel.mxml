@@ -153,8 +153,8 @@
 			public static const MODE_SLIDE:int = 0;
 			public static const MODE_SCROLL:int = 1;
 			
-			public var SCROLL_TIMER_DELAY:int = 10;
-			public var SCROLL_TIMER_DELTA:Number = -1.25;
+			public var SCROLL_TIMER_DELAY:int = 40;
+			public var SCROLL_TIMER_DELTA:Number = -3;
 			
 			
 			
@@ -287,8 +287,12 @@
 						break;
 					case MODE_SLIDE:
 						this.currentState = "";
+						play_step2();
 						break;
 				}
+			}
+			
+			private function play_step2():void {
 				
 				if (_playNextTimer == null ) {
 					_playNextTimer = new Timer(this.delay);
@@ -354,6 +358,7 @@
 //				this.spacer3.mask = this.headline_mask;
 				
 				repositionSideScrollElements();
+				play_step2();
 			}
 			
 			public function repositionSideScrollElements():void {

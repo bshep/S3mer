@@ -19,14 +19,14 @@
 			import com.msgid.S3mer.S3merWindow;
 			import mx.collections.ArrayCollection;
 			import com.msgid.S3mer.LoginWindow;
-			import com.msgid.S3mer.ApplicationUpdater;
+			import com.msgid.S3mer.S3merApplicationUpdater;
 			import com.msgid.S3mer.Logger;
 			import mx.events.ResizeEvent;
 			import mx.events.FlexEvent;
 			import mx.events.TweenEvent;
 			
 //			private var _log:Logger = Logger.instance;
-			private var _updater:ApplicationUpdater;
+			private var _updater:S3merApplicationUpdater;
 			private var _loginWindow:LoginWindow;
 			private var _playerWindows:ArrayCollection = new ArrayCollection;
 			private var _isPro:Boolean = false;
@@ -209,8 +209,6 @@
 					this.cursorManager.hideCursor();
 				}
 
-				this._updater.start();
-				
 				if( doInitialSetup() == false ) {
 					return;
 				}
@@ -363,7 +361,7 @@
 				this.visible = false;
 				this.move(-1000,-1000);
 				
-				this._updater = new ApplicationUpdater();
+				this._updater = new S3merApplicationUpdater();
 				
 				
 			}
