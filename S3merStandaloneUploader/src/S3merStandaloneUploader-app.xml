@@ -17,7 +17,7 @@
 	<id>S3merStandaloneUploader</id>
 
 	<!-- Used as the filename for the application. Required. -->
-	<filename>S3merStandaloneUploader</filename>
+	<filename>s3mer Pro File Uploader</filename>
 
 	<!-- The name that is displayed in the AIR application installer. 
 	     May have multiple values for each language. See samples or xsd schema file. Optional. -->
