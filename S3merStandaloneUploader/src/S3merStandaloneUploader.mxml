@@ -9,6 +9,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.formatters.Formatter;
 			import mx.events.CloseEvent;
 			import mx.core.Application;
 			import mx.events.FlexEvent;
@@ -32,6 +33,7 @@
 			private var _password:String;
 			private var _params:URLVariables = new URLVariables();
 			private var _uploading:Boolean = false;
+			private var _storageAvaiable:int;
 			
 			[Bindable]
 			private var _folderList:ArrayCollection;
@@ -44,7 +46,7 @@
 			private var SET_FOLDER_URL:String = "http://www.s3mer.com/process_command.php?commandnr=set-library-folder";
 			private var GET_FOLDER__LIST_URL:String = "http://www.s3mer.com/flex_uploader/remoteprocedures.php?action=folder-list";
 			private var PARAMS_URL:String = "http://www.s3mer.com/sign.php?uploader";
-			
+			private var USER_STATS_URL:String = "http://www.s3mer.com/flex_uploader/remoteprocedures.php?action=user-stats";
 			
 			//process_command.php?commandnr=save-media-data&filename=' + fileObj.name + '&filesize=' + fileObj.size
 			
@@ -113,6 +115,7 @@
 					saveCredentials();
 					loadPostParams();
 					loadLibraryFolderList();
+					updateQuota();
 					setLibraryFolder("All");
 					
 					currentState = "IdleView";
@@ -299,11 +302,17 @@
 				var _urlVariables:URLVariables;
 				var _fileObj:FileObject;
 					
+				evaluateState();
+
 				_fileObj = null;
 				for each( var fileObj:FileObject in this._uploadQueue ) {
 					if(fileObj.canUpload) {
-						_fileObj = fileObj;
-						break; //Break out of the loop when we find the first file
+						if(fileObj.file.size < this._storageAvaiable) {
+							_fileObj = fileObj;
+							break; //Break out of the loop when we find the first file
+						} else {
+							fileObj.nospace = true;
+						}
 					}
 				}
 				
@@ -315,7 +324,6 @@
 					return;
 				}				
 				
-				evaluateState();
 				
 				this._uploading = true;
 				
@@ -401,7 +409,7 @@
 			private function addToDatabase_complete(e:Event):void {				
 				updateProgressBars();
 				this._uploading = false;
-				startUploads();
+				updateQuota();
 			}
 			
 			private function addToDatabase_error(e:IOErrorEvent):void {
@@ -566,6 +574,46 @@
 
 				}
 			}
+			
+			private function updateQuota():void {
+				doRequest(this.USER_STATS_URL, updateQuota_complete, updateQuota_errore);	
+			}
+			
+			private function updateQuota_complete(e:Event):void {
+				var data:XML = new XML((e.target as URLLoader).data);
+				
+				var used:Number;
+				var quota:Number;
+				var avail:Number;
+				var availStr:String;
+				
+				used = parseInt(data.user.@used.toString(),10);
+				quota = parseInt(data.user.@quota.toString(),10);
+				
+				avail = quota - used;
+				
+				if(avail <= 1024) {
+					availStr = avail.toString() + " B";
+				}else if(avail <= 1024*1024) {
+					availStr = Math.floor(avail/1024).toString() + " KB";
+				} else if(avail <= 1024*1024*1024) {
+					availStr = Math.floor(avail/(1024*1024)).toString() + " MB";
+				} else if(avail <= 1024*1024*1024*1024) {
+					availStr = Math.floor(avail/(1024*1024*1024)).toString() + " GB";
+				} 
+				
+				
+				this.status = _username + " - " + availStr + " available";
+				this._storageAvaiable = avail;
+				
+				startUploads();
+			}
+			
+			private function updateQuota_errore(e:IOErrorEvent):void {
+				trace("Error updating user stats");
+				Alert.show("Error updating user stats", "API Error");
+			}
+			
 		]]>
 	</mx:Script>
 	<mx:Style source="s3merStyle.css"/>

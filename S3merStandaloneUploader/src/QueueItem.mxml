@@ -38,6 +38,9 @@
 				} else if(fileObj.uploading == true ) {
 					pbPercent.mode = ProgressBarMode.EVENT;
 					return "Uploading %3%%";
+				} else if(fileObj.nospace == true ) {
+					pbPercent.mode = ProgressBarMode.EVENT;
+					return "No Space Available";
 				} else {
 					pbPercent.mode = ProgressBarMode.MANUAL;
 					pbPercent.setProgress(0,100);

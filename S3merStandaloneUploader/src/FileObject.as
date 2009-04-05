@@ -10,6 +10,7 @@ package
 		private var _uploading:Boolean;
 		private var _error:Boolean;
 		private var _status:String;
+		private var _nospace:Boolean;
 		private var _urlRequest:URLRequest;
 		
 
@@ -56,6 +57,15 @@ package
 		}
 		
 		[Bindable]
+		public function get nospace():Boolean {
+			return this._nospace;
+		}
+		
+		public function set nospace(val:Boolean):void {
+			this._nospace = val;	
+		}
+		
+		[Bindable]
 		public function get urlRequest():URLRequest {
 			return this._urlRequest;
 		}
@@ -65,7 +75,7 @@ package
 		}
 		
 		public function get canUpload():Boolean {
-			if( this._complete == false && this._error == false && this._uploading == false ) {
+			if( this._complete == false && this._error == false && this._uploading == false && this._nospace == false) {
 				return true;
 			} else {
 				return false;
