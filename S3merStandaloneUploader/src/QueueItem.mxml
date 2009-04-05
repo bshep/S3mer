@@ -49,18 +49,9 @@
 				dispatchEvent(new QueueEvent(QueueEvent.DELETE,data as FileObject, true));
 			}
 			
-			private function isDeleteVisible(data:Object):Boolean {
-				var fileObj:FileObject = data as FileObject;
-				
-				if( fileObj.uploading == true || fileObj.complete == true || fileObj.error == true ) {
-					return false;
-				} else {
-					return true;
-				}
-			}
 		]]>
 	</mx:Script>
 			<mx:Label text="{getName(data)}" toolTip="{getName(data)}" verticalCenter="0" left="10" id="lblFilename" width="249"/>
 			<mx:ProgressBar id="pbPercent" mode="event" source="{(data as FileObject).file}" label="{getPb(data)}" labelPlacement="center" verticalCenter="0" right="33" left="267" minimum="0" maximum="100"/>
-			<mx:SWFLoader source="assets/deleteIcon.swf" height="15" width="15" verticalCenter="0" right="10" click="doDelete(data)" visible="{isDeleteVisible(data)}"/>
+			<mx:SWFLoader source="assets/deleteIcon.swf" height="15" width="15" verticalCenter="0" right="10" click="doDelete(data)"/>
 </mx:Canvas>

@@ -9,6 +9,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.events.CloseEvent;
 			import mx.core.Application;
 			import mx.events.FlexEvent;
 			import mx.events.StateChangeEvent;
@@ -502,7 +503,15 @@
 			
 			private function deleteQueueItem(event:QueueEvent):void {
 				this._uploadQueue.removeItemAt(this._uploadQueue.getItemIndex(event.fileObject));
-				updateProgressBars();
+
+				if( event.fileObject.uploading ) {
+					event.fileObject.file.cancel();
+					this._uploading = false;
+					startUploads();
+				}
+
+				updateProgressBars(false);
+				evaluateState();
 			}
 			
 			private function evaluateState():void {
@@ -531,6 +540,31 @@
 				}
 				updateProgressBars(false);
 				evaluateState();
+			}
+			private function clearQueue():void {
+				
+				Alert.show("Are you sure?", "Confirmation", Alert.YES | Alert.NO,null,clearQueue_step2,null, Alert.NO);
+				
+			}
+			
+			private function clearQueue_step2(event:CloseEvent):void {
+				var fileObj:FileObject;
+				
+				if(event.detail == Alert.YES ) {
+					for(var index:int = this._uploadQueue.length-1; index >= 0; index-- ) {
+						fileObj = this._uploadQueue.getItemAt(index) as FileObject;
+						
+						if( fileObj.uploading ) {
+							(fileObj.file as FileReference).cancel();
+						}
+						this._uploadQueue.removeItemAt(index);
+					}
+					
+					this._uploading = false;
+					updateProgressBars(false);
+					evaluateState();
+
+				}
 			}
 		]]>
 	</mx:Script>
@@ -593,6 +627,9 @@
 			<mx:SetStyle target="{btnUpload}" name="top" value="43"/>
 			<mx:SetStyle target="{btnUpload}" name="horizontalCenter" value="0"/>
 			<mx:SetStyle target="{pbTotal}" name="top" value="136"/>
+			<mx:AddChild position="lastChild">
+				<mx:Button label="Clear Queue" bottom="10" right="137" click="clearQueue()" width="119"/>
+			</mx:AddChild>
 		</mx:State>
 		<mx:State name="IdleView">
 			<mx:SetProperty name="height" value="165"/>
