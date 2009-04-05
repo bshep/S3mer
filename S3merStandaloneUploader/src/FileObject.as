@@ -1,14 +1,17 @@
 package
 {
 	import flash.filesystem.File;
+	import flash.net.URLRequest;
 	
 	public class FileObject
 	{
-		public var _file:File;
-		public var _complete:Boolean;
-		public var _uploading:Boolean;
-		public var _error:Boolean;
-		public var _status:String;
+		private var _file:File;
+		private var _complete:Boolean;
+		private var _uploading:Boolean;
+		private var _error:Boolean;
+		private var _status:String;
+		private var _urlRequest:URLRequest;
+		
 
 		public function FileObject(file:File)
 		{
@@ -16,10 +19,16 @@ package
 			this._complete = false;
 		}
 		
+		[Bindable]
 		public function get file():File {
 			return this._file;
 		}
 		
+		public function set file(val:File):void {
+			this._file = val;
+		}
+		
+		[Bindable]
 		public function get complete():Boolean {
 			return this._complete;
 		}
@@ -28,20 +37,31 @@ package
 			this._complete = val;
 		}
 		
+		[Bindable]
 		public function get error():Boolean {
-			return _error;
+			return this._error;
 		}
 		
 		public function set error(val:Boolean):void {
 			this._error = val;	
 		}
 		
+		[Bindable]
 		public function get uploading():Boolean {
-			return _error;
+			return this._uploading;
 		}
 		
 		public function set uploading(val:Boolean):void {
 			this._uploading = val;	
+		}
+		
+		[Bindable]
+		public function get urlRequest():URLRequest {
+			return this._urlRequest;
+		}
+		
+		public function set urlRequest(val:URLRequest):void {
+			this._urlRequest = val;	
 		}
 		
 		public function get canUpload():Boolean {

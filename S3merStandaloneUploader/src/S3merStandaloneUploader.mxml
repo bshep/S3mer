@@ -3,11 +3,15 @@
 	creationComplete="onCreate(event)"
 	addedToStage="txtUsername.setFocus();"
 	currentState="Login"
+	close="Application.application.exit()"
 	backgroundGradientAlphas="[1.0, 1.0]"
-	backgroundGradientColors="[#E4E4E4, #C1C1C1]">
+	backgroundGradientColors="[#E4E4E4, #C1C1C1]" verticalScrollPolicy="off" horizontalScrollPolicy="off">
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.core.Application;
+			import mx.events.FlexEvent;
+			import mx.events.StateChangeEvent;
 			import mx.collections.ArrayCollection;
 		
 			import air.update.events.DownloadErrorEvent;
@@ -110,7 +114,7 @@
 					loadLibraryFolderList();
 					setLibraryFolder("All");
 					
-					currentState = "ExtendedView";
+					currentState = "IdleView";
 					status = "Logged in as: " + _username;
 				} else {
 					trace("Login Failed");
@@ -232,10 +236,9 @@
 					currentState = "AOT";
 					application.alwaysInFront = true;
 				} else {
-					currentState = "";
 					application.alwaysInFront = false;
-					application.width = 650;
-					application.height = 232;
+					currentState = "IdleView";
+					evaluateState();
 				}
 			}
 			
@@ -310,6 +313,9 @@
 				if(this._uploading) {
 					return;
 				}				
+				
+				evaluateState();
+				
 				this._uploading = true;
 				
 				_urlVariables = new URLVariables(this._params.toString());
@@ -325,6 +331,7 @@
 				_fileObj.file.addEventListener(IOErrorEvent.IO_ERROR, upload_error);
 				
 				_fileObj.uploading = true;
+				_fileObj.urlRequest = _urlRequest;
 				_fileObj.file.upload(_urlRequest,"file");
 				
 				
@@ -351,10 +358,10 @@
 				pbFile.label = "Current File: " + _file.name + " " + _file.size + "/" + _file.size + " (100%)";
 				addToDatabase(e.target as File);
 				
-				
+				evaluateState();
 			}
 			
-			private function updateProgressBars():void {
+			private function updateProgressBars(alert:Boolean = true):void {
 				var completeFiles:int;
 				
 				for each( var fileObj:FileObject in this._uploadQueue ) {
@@ -366,7 +373,7 @@
 				pbTotal.setProgress(completeFiles, this._uploadQueue.length);
 				pbTotal.label = "Total Progress: " + completeFiles + "/" + this._uploadQueue.length + " files complete.";
 				
-				if( completeFiles == this._uploadQueue.length ) {
+				if( completeFiles == this._uploadQueue.length && alert) {
 					Alert.show("Completed", "Uploads");
 				}
 			}
@@ -484,15 +491,57 @@
 				
 				urlLoader.load(urlRequest);
 			}
+			
+			private function extendedView_enter(event:FlexEvent):void {
+				lstQueue.addEventListener(QueueEvent.DELETE, deleteQueueItem);
+			}
+			
+			private function extendedView_exit(event:FlexEvent):void {
+				lstQueue.removeEventListener(QueueEvent.DELETE, deleteQueueItem);				
+			}
+			
+			private function deleteQueueItem(event:QueueEvent):void {
+				this._uploadQueue.removeItemAt(this._uploadQueue.getItemIndex(event.fileObject));
+				updateProgressBars();
+			}
+			
+			private function evaluateState():void {
+				if( this.currentState == "AOT" ) {
+					//Do nothing
+				} else {
+					if( this._uploadQueue.length == 0) {
+						this.currentState = "IdleView";
+					} else {
+						this.currentState = "ExtendedView";
+					}
+					
+				}
+				
+			}
+			
+			private function clearCompleted():void {
+				var fileObj:FileObject;
+				
+				for(var index:int = this._uploadQueue.length-1; index >= 0; index-- ) {
+					fileObj = this._uploadQueue.getItemAt(index) as FileObject;
+					
+					if( fileObj.complete ) {
+						this._uploadQueue.removeItemAt(index);
+					}
+				}
+				updateProgressBars(false);
+				evaluateState();
+			}
 		]]>
 	</mx:Script>
 	<mx:Style source="s3merStyle.css"/>
+	
 	<mx:states>
 		<mx:State name="Login">
 			<mx:RemoveChild target="{pbTotal}"/>
 			<mx:RemoveChild target="{pbFile}"/>
 			<mx:AddChild position="lastChild">
-				<mx:Form x="190" y="60">
+				<mx:Form verticalCenter="0" horizontalCenter="0">
 					<mx:FormItem label="Username" color="#000000">
 						<mx:TextInput id="txtUsername" color="#000000" themeColor="#000000"/>
 					</mx:FormItem>
@@ -507,6 +556,7 @@
 			<mx:RemoveChild target="{applicationcontrolbar1}"/>
 			<mx:SetStyle name="backgroundGradientColors" value="[#E4E4E4, #C1C1C1]"/>
 			<mx:RemoveChild target="{btnUpload}"/>
+			<mx:SetProperty name="height" value="165"/>
 		</mx:State>
 		<mx:State name="AOT">
 			<mx:RemoveChild target="{button1}"/>
@@ -520,16 +570,37 @@
 			<mx:SetProperty target="{label1}" name="x" value="50.5"/>
 			<mx:SetProperty target="{label1}" name="y" value="73"/>
 		</mx:State>
-		<mx:State name="ExtendedView">
-			<mx:SetProperty name="height" value="350"/>
+		<mx:State name="ExtendedView" enterState="extendedView_enter(event)" exitState="extendedView_exit(event)">
+			<mx:SetProperty name="height" value="375"/>
 			<mx:AddChild position="lastChild">
-				<mx:List x="10" width="628" height="142" itemRenderer="QueueItem" dataProvider="{_uploadQueue}" bottom="10"></mx:List>
+				<mx:List id="lstQueue" itemRenderer="QueueItem" dataProvider="{_uploadQueue}" bottom="40" offscreenExtraRowsOrColumns="5" left="10" right="10" top="172"></mx:List>
 			</mx:AddChild>
-			<mx:SetProperty target="{pbTotal}" name="y" value="136"/>
+			<mx:SetProperty target="{pbTotal}" name="y"/>
+			<mx:SetProperty target="{pbTotal}" name="visible" value="true"/>
+			<mx:AddChild position="lastChild">
+				<mx:Button label="Clear Completed" bottom="10" right="10" click="clearCompleted()"/>
+			</mx:AddChild>
+			<mx:SetProperty target="{pbTotal}" name="x"/>
+			<mx:SetStyle target="{pbTotal}" name="left" value="10"/>
+			<mx:SetProperty target="{pbTotal}" name="width"/>
+			<mx:SetStyle target="{pbTotal}" name="right" value="10"/>
+			<mx:SetProperty target="{label1}" name="x"/>
+			<mx:SetStyle target="{label1}" name="horizontalCenter" value="0"/>
+			<mx:SetProperty target="{label1}" name="y"/>
+			<mx:SetStyle target="{label1}" name="verticalCenter" value="0"/>
+			<mx:SetProperty target="{btnUpload}" name="x"/>
+			<mx:SetProperty target="{btnUpload}" name="y"/>
+			<mx:SetStyle target="{btnUpload}" name="top" value="43"/>
+			<mx:SetStyle target="{btnUpload}" name="horizontalCenter" value="0"/>
+			<mx:SetStyle target="{pbTotal}" name="top" value="136"/>
+		</mx:State>
+		<mx:State name="IdleView">
+			<mx:SetProperty name="height" value="165"/>
+			<mx:SetProperty name="width" value="650"/>
 		</mx:State>
 	</mx:states>
 	<mx:ProgressBar labelPlacement="top" label="Current File" id="pbFile" indeterminate="false" minimum="0" maximum="100" enabled="true" mode="manual" width="628" x="10" height="28" y="136" color="#000000" visible="false"/>
-	<mx:ProgressBar labelPlacement="top" label="Total Progress" id="pbTotal" indeterminate="false" minimum="0" maximum="100" enabled="true" mode="manual" width="628" x="10" height="28" y="172" color="#000000"/>
+	<mx:ProgressBar labelPlacement="top" label="Total Progress" id="pbTotal" indeterminate="false" minimum="0" maximum="100" enabled="true" mode="manual" width="628" x="10" height="28" y="172" color="#000000" visible="false"/>
 	<mx:ApplicationControlBar id="applicationcontrolbar1" cornerRadius="0" right="0" left="0" top="-1">
 		<mx:CheckBox label="Always On Top" id="chkAOT" width="111" height="22">
 			<mx:toolTip>Select this option to keep the window always on top.</mx:toolTip>

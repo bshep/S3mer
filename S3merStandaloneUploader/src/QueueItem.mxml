@@ -1,8 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="28">
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="21" toolTip="{getName(data)}">
 	<mx:Script>
 		<![CDATA[
+			import mx.controls.ProgressBarMode;
 			import mx.controls.Label;
+			
+			[Bindable]
+			public function get file():File {
+				var fileObj:FileObject = data as FileObject;
+
+				
+				return fileObj != null ? fileObj.file : null;
+			}
+			
+			public function set file(val:File):void {
+			
+			}
+
 
 			public function getName(data:Object):String {
 				var fileObj:FileObject = data as FileObject;
@@ -14,34 +28,39 @@
 				var fileObj:FileObject = data as FileObject;
 
 				if(fileObj.complete == true) {
+					pbPercent.mode = ProgressBarMode.MANUAL;
+					pbPercent.setProgress(100,100);
 					return "Complete";
 				} else if(fileObj.error == true ) {
+					pbPercent.mode = ProgressBarMode.MANUAL;
+					pbPercent.setProgress(0,100);
 					return "Error";
-				} else {
-					fileObj.file.addEventListener(ProgressEvent.PROGRESS,pb_update);			
-					fileObj.file.addEventListener(Event.COMPLETE,pb_complete);			
-					
+				} else if(fileObj.uploading == true ) {
+					pbPercent.mode = ProgressBarMode.EVENT;
 					return "Uploading %3%%";
+				} else {
+					pbPercent.mode = ProgressBarMode.MANUAL;
+					pbPercent.setProgress(0,100);
+					return "Waiting...";
 				}
 			}
 			
-			private function pb_update(event:ProgressEvent):void {
-				pbPercent.setProgress(event.bytesLoaded, event.bytesTotal)
-			}
-			
-			private function pb_complete(event:Event):void {
-				pbPercent.setProgress(100,100);
-				pbPercent.label =  "Complete";
-			}
-			
 			private function doDelete(data:Object):void {
-				var bmp:Label;
+				dispatchEvent(new QueueEvent(QueueEvent.DELETE,data as FileObject, true));
+			}
+			
+			private function isDeleteVisible(data:Object):Boolean {
+				var fileObj:FileObject = data as FileObject;
 				
-//				this.alpha = .5;
-				dispatchEvent(new Event("DELETE_PLAYLIST_ITEM",true));
+				if( fileObj.uploading == true || fileObj.complete == true || fileObj.error == true ) {
+					return false;
+				} else {
+					return true;
+				}
 			}
 		]]>
 	</mx:Script>
-			<mx:Label text="{getName(data)}" verticalCenter="0" left="10" id="lblFilename" width="272"/>
-			<mx:ProgressBar id="pbPercent" mode="manual" label="{getPb(data)}" labelPlacement="center" verticalCenter="0" right="10" left="290" minimum="0" maximum="100"/>
+			<mx:Label text="{getName(data)}" toolTip="{getName(data)}" verticalCenter="0" left="10" id="lblFilename" width="249"/>
+			<mx:ProgressBar id="pbPercent" mode="event" source="{(data as FileObject).file}" label="{getPb(data)}" labelPlacement="center" verticalCenter="0" right="33" left="267" minimum="0" maximum="100"/>
+			<mx:SWFLoader source="assets/deleteIcon.swf" height="15" width="15" verticalCenter="0" right="10" click="doDelete(data)" visible="{isDeleteVisible(data)}"/>
 </mx:Canvas>
