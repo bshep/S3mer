@@ -573,7 +573,7 @@
 		<mx:State name="ExtendedView" enterState="extendedView_enter(event)" exitState="extendedView_exit(event)">
 			<mx:SetProperty name="height" value="375"/>
 			<mx:AddChild position="lastChild">
-				<mx:List id="lstQueue" itemRenderer="QueueItem" dataProvider="{_uploadQueue}" bottom="40" offscreenExtraRowsOrColumns="5" left="10" right="10" top="172"></mx:List>
+				<mx:List alternatingItemColors="[#DDDDDD,#EEEEEE]"  id="lstQueue" itemRenderer="QueueItem" dataProvider="{_uploadQueue}" bottom="40" offscreenExtraRowsOrColumns="5" left="10" right="10" top="172"></mx:List>
 			</mx:AddChild>
 			<mx:SetProperty target="{pbTotal}" name="y"/>
 			<mx:SetProperty target="{pbTotal}" name="visible" value="true"/>
