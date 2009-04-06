@@ -8,6 +8,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import mx.events.CloseEvent;
 			import mx.core.Application;
 			import mx.events.FlexEvent;
 			import mx.events.StateChangeEvent;
@@ -30,6 +31,7 @@
 			private var _password:String;
 			private var _params:URLVariables = new URLVariables();
 			private var _uploading:Boolean = false;
+			private var _storageAvaiable:Number;
 			
 			[Bindable]
 			private var _folderList:ArrayCollection;
@@ -42,6 +44,7 @@
 			private var SET_FOLDER_URL:String = "http://www.s3mer.com/process_command.php?commandnr=set-library-folder";
 			private var GET_FOLDER__LIST_URL:String = "http://www.s3mer.com/flex_uploader/remoteprocedures.php?action=folder-list";
 			private var PARAMS_URL:String = "http://www.s3mer.com/sign.php?uploader";
+			private var USER_STATS_URL:String = "http://www.s3mer.com/flex_uploader/remoteprocedures.php?action=user-stats";
 			
 			
 			//process_command.php?commandnr=save-media-data&filename=' + fileObj.name + '&filesize=' + fileObj.size
@@ -106,17 +109,18 @@
 				txt = (e.target as URLLoader).data;
 				
 				if(txt == "1") {
-					trace("Logged in");
+//					trace("Logged in");
 					
 					saveCredentials();
 					loadPostParams();
 					loadLibraryFolderList();
+					updateQuota();
 					setLibraryFolder("All");
 					
 					currentState = "IdleView";
 					status = "Logged in as: " + _username;
 				} else {
-					trace("Login Failed");
+//					trace("Login Failed");
 					if(txt == "2") {
 						Alert.show("Only available to pro users","Login Error");
 					} else {
@@ -248,12 +252,12 @@
 					} else {
 						checkLogin(null);
 					}
-					trace("Hit return");
+//					trace("Hit return");
 				}
 			}
 			
 			private function dragEnterHandler(e:NativeDragEvent):void {
-				trace("Drag Enter");
+//				trace("Drag Enter");
 				DragManager.acceptDragDrop(btnUpload);
 				btnUpload.setStyle('borderColor', '#FFFFFF');
 			}
@@ -267,7 +271,7 @@
 				btnUpload.setStyle('borderColor', '#909090');
 
 //				e.clipboard
-				trace("Drag Drop");
+//				trace("Drag Drop");
 			}
 			
 			private function dragExitHandler(e:NativeDragEvent):void {
@@ -297,11 +301,17 @@
 				var _urlVariables:URLVariables;
 				var _fileObj:FileObject;
 					
+				evaluateState();
+
 				_fileObj = null;
 				for each( var fileObj:FileObject in this._uploadQueue ) {
 					if(fileObj.canUpload) {
-						_fileObj = fileObj;
-						break; //Break out of the loop when we find the first file
+						if(fileObj.file.size < this._storageAvaiable) {
+							_fileObj = fileObj;
+							break; //Break out of the loop when we find the first file
+						} else {
+							fileObj.nospace = true;
+						}
 					}
 				}
 				
@@ -313,7 +323,6 @@
 					return;
 				}				
 				
-				evaluateState();
 				
 				this._uploading = true;
 				
@@ -389,7 +398,7 @@
 				Alert.show("Error uploading file","Upload Error");
 				this._uploading = false;
 				startUploads();
-				trace("Error Uploading");
+//				trace("Error Uploading");
 			}
 			
 			private function addToDatabase(file:File):void {
@@ -399,7 +408,7 @@
 			private function addToDatabase_complete(e:Event):void {				
 				updateProgressBars();
 				this._uploading = false;
-				startUploads();
+				updateQuota();
 			}
 			
 			private function addToDatabase_error(e:IOErrorEvent):void {
@@ -411,7 +420,7 @@
 			}
 			
 			private function setLibraryFolder_complete(e:Event):void {				
-				trace("Library Folder Set");
+//				trace("Library Folder Set");
 			}
 			
 			private function setLibraryFolder_error(e:IOErrorEvent):void {
@@ -427,7 +436,7 @@
 				
 				this.cmbFolders.dataProvider = _listXML.item;
 				
-				trace("Library Folder Get");
+//				trace("Library Folder Get");
 			}
 			
 			private function loadLibraryFolderList_error(e:IOErrorEvent):void {
@@ -501,7 +510,15 @@
 			
 			private function deleteQueueItem(event:QueueEvent):void {
 				this._uploadQueue.removeItemAt(this._uploadQueue.getItemIndex(event.fileObject));
-				updateProgressBars();
+
+				if( event.fileObject.uploading ) {
+					event.fileObject.file.cancel();
+					this._uploading = false;
+					startUploads();
+				}
+
+				updateProgressBars(false);
+				evaluateState();
 			}
 			
 			private function evaluateState():void {
@@ -531,6 +548,71 @@
 				updateProgressBars(false);
 				evaluateState();
 			}
+			private function clearQueue():void {
+				
+				Alert.show("Are you sure?", "Confirmation", Alert.YES | Alert.NO,null,clearQueue_step2,null, Alert.NO);
+				
+			}
+			
+			private function clearQueue_step2(event:CloseEvent):void {
+				var fileObj:FileObject;
+				
+				if(event.detail == Alert.YES ) {
+					for(var index:int = this._uploadQueue.length-1; index >= 0; index-- ) {
+						fileObj = this._uploadQueue.getItemAt(index) as FileObject;
+						
+						if( fileObj.uploading ) {
+							(fileObj.file as FileReference).cancel();
+						}
+						this._uploadQueue.removeItemAt(index);
+					}
+					
+					this._uploading = false;
+					updateProgressBars(false);
+					evaluateState();
+
+				}
+			}
+			
+			private function updateQuota():void {
+				doRequest(this.USER_STATS_URL, updateQuota_complete, updateQuota_errore);	
+			}
+			
+			private function updateQuota_complete(e:Event):void {
+				var data:XML = new XML((e.target as URLLoader).data);
+				
+				var used:Number;
+				var quota:Number;
+				var avail:Number;
+				var availStr:String;
+				
+				used = parseInt(data.user.@used.toString(),10);
+				quota = parseInt(data.user.@quota.toString(),10);
+				
+				avail = quota - used;
+				
+				if(avail <= 1024) {
+					availStr = avail.toString() + " B";
+				}else if(avail <= 1024*1024) {
+					availStr = (Math.floor(avail/10.24)/100).toString() + " KB";
+				} else if(avail <= 1024*1024*1024) {
+					availStr = (Math.floor(avail/(1024*10.24))/100).toString() + " MB";
+				} else if(avail <= 1024*1024*1024*1024) {
+					availStr = (Math.floor(avail/(1024*1024*10.24))/100).toString() + " GB";
+				} 
+				
+				
+				this.status = "Logged in as: " + _username + " - " + availStr + " available";
+				this._storageAvaiable = avail;
+				
+				startUploads();
+			}
+			
+			private function updateQuota_errore(e:IOErrorEvent):void {
+//				trace("Error updating user stats");
+				Alert.show("Error updating user stats", "API Error");
+			}
+			
 		]]>
 	</mx:Script>
 	<mx:Style source="style/style.css"/>
@@ -591,6 +673,9 @@
 			<mx:SetStyle target="{btnUpload}" name="horizontalCenter" value="0"/>
 			<mx:SetStyle target="{pbTotal}" name="top" value="136"/>
 			<mx:SetStyle target="{pbTotal}" name="color" value="#6D6D6D"/>
+			<mx:AddChild position="lastChild">
+				<mx:Button label="Cancel All" bottom="10" right="137" click="clearQueue()" width="119"/>
+			</mx:AddChild>
 		</mx:State>
 		<mx:State name="IdleView">
 			<mx:SetProperty name="height" value="165"/>
