@@ -4,13 +4,10 @@
 	addedToStage="txtUsername.setFocus();"
 	currentState="Login"
 	close="Application.application.exit()"
-	backgroundGradientAlphas="[1.0, 1.0]"
-	backgroundGradientColors="[#E4E4E4, #C1C1C1]" verticalScrollPolicy="off" horizontalScrollPolicy="off">
-	
+	verticalScrollPolicy="off" horizontalScrollPolicy="off">
+
 	<mx:Script>
 		<![CDATA[
-			import mx.formatters.Formatter;
-			import mx.events.CloseEvent;
 			import mx.core.Application;
 			import mx.events.FlexEvent;
 			import mx.events.StateChangeEvent;
@@ -33,7 +30,6 @@
 			private var _password:String;
 			private var _params:URLVariables = new URLVariables();
 			private var _uploading:Boolean = false;
-			private var _storageAvaiable:int;
 			
 			[Bindable]
 			private var _folderList:ArrayCollection;
@@ -46,7 +42,7 @@
 			private var SET_FOLDER_URL:String = "http://www.s3mer.com/process_command.php?commandnr=set-library-folder";
 			private var GET_FOLDER__LIST_URL:String = "http://www.s3mer.com/flex_uploader/remoteprocedures.php?action=folder-list";
 			private var PARAMS_URL:String = "http://www.s3mer.com/sign.php?uploader";
-			private var USER_STATS_URL:String = "http://www.s3mer.com/flex_uploader/remoteprocedures.php?action=user-stats";
+			
 			
 			//process_command.php?commandnr=save-media-data&filename=' + fileObj.name + '&filesize=' + fileObj.size
 			
@@ -115,7 +111,6 @@
 					saveCredentials();
 					loadPostParams();
 					loadLibraryFolderList();
-					updateQuota();
 					setLibraryFolder("All");
 					
 					currentState = "IdleView";
@@ -302,17 +297,11 @@
 				var _urlVariables:URLVariables;
 				var _fileObj:FileObject;
 					
-				evaluateState();
-
 				_fileObj = null;
 				for each( var fileObj:FileObject in this._uploadQueue ) {
 					if(fileObj.canUpload) {
-						if(fileObj.file.size < this._storageAvaiable) {
-							_fileObj = fileObj;
-							break; //Break out of the loop when we find the first file
-						} else {
-							fileObj.nospace = true;
-						}
+						_fileObj = fileObj;
+						break; //Break out of the loop when we find the first file
 					}
 				}
 				
@@ -324,6 +313,7 @@
 					return;
 				}				
 				
+				evaluateState();
 				
 				this._uploading = true;
 				
@@ -409,7 +399,7 @@
 			private function addToDatabase_complete(e:Event):void {				
 				updateProgressBars();
 				this._uploading = false;
-				updateQuota();
+				startUploads();
 			}
 			
 			private function addToDatabase_error(e:IOErrorEvent):void {
@@ -511,15 +501,7 @@
 			
 			private function deleteQueueItem(event:QueueEvent):void {
 				this._uploadQueue.removeItemAt(this._uploadQueue.getItemIndex(event.fileObject));
-
-				if( event.fileObject.uploading ) {
-					event.fileObject.file.cancel();
-					this._uploading = false;
-					startUploads();
-				}
-
-				updateProgressBars(false);
-				evaluateState();
+				updateProgressBars();
 			}
 			
 			private function evaluateState():void {
@@ -549,86 +531,20 @@
 				updateProgressBars(false);
 				evaluateState();
 			}
-			private function clearQueue():void {
-				
-				Alert.show("Are you sure?", "Confirmation", Alert.YES | Alert.NO,null,clearQueue_step2,null, Alert.NO);
-				
-			}
-			
-			private function clearQueue_step2(event:CloseEvent):void {
-				var fileObj:FileObject;
-				
-				if(event.detail == Alert.YES ) {
-					for(var index:int = this._uploadQueue.length-1; index >= 0; index-- ) {
-						fileObj = this._uploadQueue.getItemAt(index) as FileObject;
-						
-						if( fileObj.uploading ) {
-							(fileObj.file as FileReference).cancel();
-						}
-						this._uploadQueue.removeItemAt(index);
-					}
-					
-					this._uploading = false;
-					updateProgressBars(false);
-					evaluateState();
-
-				}
-			}
-			
-			private function updateQuota():void {
-				doRequest(this.USER_STATS_URL, updateQuota_complete, updateQuota_errore);	
-			}
-			
-			private function updateQuota_complete(e:Event):void {
-				var data:XML = new XML((e.target as URLLoader).data);
-				
-				var used:Number;
-				var quota:Number;
-				var avail:Number;
-				var availStr:String;
-				
-				used = parseInt(data.user.@used.toString(),10);
-				quota = parseInt(data.user.@quota.toString(),10);
-				
-				avail = quota - used;
-				
-				if(avail <= 1024) {
-					availStr = avail.toString() + " B";
-				}else if(avail <= 1024*1024) {
-					availStr = Math.floor(avail/1024).toString() + " KB";
-				} else if(avail <= 1024*1024*1024) {
-					availStr = Math.floor(avail/(1024*1024)).toString() + " MB";
-				} else if(avail <= 1024*1024*1024*1024) {
-					availStr = Math.floor(avail/(1024*1024*1024)).toString() + " GB";
-				} 
-				
-				
-				this.status = _username + " - " + availStr + " available";
-				this._storageAvaiable = avail;
-				
-				startUploads();
-			}
-			
-			private function updateQuota_errore(e:IOErrorEvent):void {
-				trace("Error updating user stats");
-				Alert.show("Error updating user stats", "API Error");
-			}
-			
 		]]>
 	</mx:Script>
-	<mx:Style source="s3merStyle.css"/>
-	
+	<mx:Style source="style/style.css"/>
 	<mx:states>
 		<mx:State name="Login">
 			<mx:RemoveChild target="{pbTotal}"/>
 			<mx:RemoveChild target="{pbFile}"/>
 			<mx:AddChild position="lastChild">
 				<mx:Form verticalCenter="0" horizontalCenter="0">
-					<mx:FormItem label="Username" color="#000000">
-						<mx:TextInput id="txtUsername" color="#000000" themeColor="#000000"/>
+					<mx:FormItem label="Username">
+						<mx:TextInput id="txtUsername"/>
 					</mx:FormItem>
-					<mx:FormItem label="Password" color="#000000" themeColor="#000000">
-						<mx:TextInput id="txtPassword" displayAsPassword="true" color="#000000"/>
+					<mx:FormItem label="Password">
+						<mx:TextInput id="txtPassword" displayAsPassword="true"/>
 					</mx:FormItem>
 					<mx:FormItem>
 						<mx:Button label="Login" id="btnLogin" click="checkLogin(event)"/>
@@ -636,7 +552,6 @@
 				</mx:Form>
 			</mx:AddChild>
 			<mx:RemoveChild target="{applicationcontrolbar1}"/>
-			<mx:SetStyle name="backgroundGradientColors" value="[#E4E4E4, #C1C1C1]"/>
 			<mx:RemoveChild target="{btnUpload}"/>
 			<mx:SetProperty name="height" value="165"/>
 		</mx:State>
@@ -655,7 +570,7 @@
 		<mx:State name="ExtendedView" enterState="extendedView_enter(event)" exitState="extendedView_exit(event)">
 			<mx:SetProperty name="height" value="375"/>
 			<mx:AddChild position="lastChild">
-				<mx:List alternatingItemColors="[#DDDDDD,#EEEEEE]"  id="lstQueue" itemRenderer="QueueItem" dataProvider="{_uploadQueue}" bottom="40" offscreenExtraRowsOrColumns="5" left="10" right="10" top="172"></mx:List>
+				<mx:List  id="lstQueue" itemRenderer="QueueItem" dataProvider="{_uploadQueue}" bottom="40" offscreenExtraRowsOrColumns="5" left="10" right="10" top="172"></mx:List>
 			</mx:AddChild>
 			<mx:SetProperty target="{pbTotal}" name="y"/>
 			<mx:SetProperty target="{pbTotal}" name="visible" value="true"/>
@@ -675,9 +590,7 @@
 			<mx:SetStyle target="{btnUpload}" name="top" value="43"/>
 			<mx:SetStyle target="{btnUpload}" name="horizontalCenter" value="0"/>
 			<mx:SetStyle target="{pbTotal}" name="top" value="136"/>
-			<mx:AddChild position="lastChild">
-				<mx:Button label="Clear Queue" bottom="10" right="137" click="clearQueue()" width="119"/>
-			</mx:AddChild>
+			<mx:SetStyle target="{pbTotal}" name="color" value="#6D6D6D"/>
 		</mx:State>
 		<mx:State name="IdleView">
 			<mx:SetProperty name="height" value="165"/>
@@ -686,7 +599,7 @@
 	</mx:states>
 	<mx:ProgressBar labelPlacement="top" label="Current File" id="pbFile" indeterminate="false" minimum="0" maximum="100" enabled="true" mode="manual" width="628" x="10" height="28" y="136" color="#000000" visible="false"/>
 	<mx:ProgressBar labelPlacement="top" label="Total Progress" id="pbTotal" indeterminate="false" minimum="0" maximum="100" enabled="true" mode="manual" width="628" x="10" height="28" y="172" color="#000000" visible="false"/>
-	<mx:ApplicationControlBar id="applicationcontrolbar1" cornerRadius="0" right="0" left="0" top="-1">
+	<mx:ApplicationControlBar id="applicationcontrolbar1" cornerRadius="0" right="0" left="0" top="0">
 		<mx:CheckBox label="Always On Top" id="chkAOT" width="111" height="22">
 			<mx:toolTip>Select this option to keep the window always on top.</mx:toolTip>
 		</mx:CheckBox>
@@ -694,7 +607,7 @@
 		<mx:ComboBox id="cmbFolders" labelField="@name" change="selectFolder(event)"></mx:ComboBox>
 		<mx:Button label="Logout" click="onLogout(event)" toolTip="Click here to logout and clear the settings" id="button1" width="74" height="22"/>
 	</mx:ApplicationControlBar>
-	<mx:Canvas x="10" y="43" width="628" height="85" cornerRadius="10" borderStyle="solid" borderColor="#909090" borderThickness="1" backgroundColor="#C1C1C1" label="Drop Files Here" color="#000000" id="btnUpload">
-		<mx:Label x="223.5" y="28" text="Drop Files Here" fontWeight="bold" fontSize="20" color="#5D5D5D" id="label1"/>
+	<mx:Canvas x="10" y="43" width="628" height="85" label="Drop Files Here" id="btnUpload" backgroundColor="#464646" borderColor="#4E4E4E">
+		<mx:Label x="233.5" y="30" text="Drop Files Here" id="label1" fontSize="20" color="#6D6D6D"/>
 	</mx:Canvas>
 </mx:WindowedApplication>
