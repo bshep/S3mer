@@ -268,7 +268,7 @@
 			private function dragEnterHandler(e:NativeDragEvent):void {
 //				trace("Drag Enter");
 				DragManager.acceptDragDrop(btnUpload);
-				btnUpload.setStyle('borderColor', '#FFFFFF');
+				btnUpload.alpha = 0.5;
 			}
 			
 			private function dragDropHandler(e:NativeDragEvent):void {
@@ -277,14 +277,14 @@
 				fileArray = (e.clipboard.getData(ClipboardFormats.FILE_LIST_FORMAT) as Array);
 				
 				addFilesToQueue(fileArray);
-				btnUpload.setStyle('borderColor', '#909090');
+				btnUpload.alpha = 1.0;
 
 //				e.clipboard
 //				trace("Drag Drop");
 			}
 			
 			private function dragExitHandler(e:NativeDragEvent):void {
-				btnUpload.setStyle('borderColor', '#909090');
+				btnUpload.alpha = 1.0;
 			}
 			
 			private function addFilesToQueue(fileArray:Array):void {
