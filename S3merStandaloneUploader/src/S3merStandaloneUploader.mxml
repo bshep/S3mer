@@ -39,45 +39,54 @@
 			[Bindable]
 			private var _uploadQueue:ArrayCollection = new ArrayCollection();
 			
-			private var LOGIN_URL:String = "http://www.s3mer.com/flex_uploader/login.php?";
-			private var PROCESS_CMD_URL:String = "http://www.s3mer.com/process_command.php?commandnr=save-media-data";
-			private var SET_FOLDER_URL:String = "http://www.s3mer.com/process_command.php?commandnr=set-library-folder";
-			private var GET_FOLDER__LIST_URL:String = "http://www.s3mer.com/flex_uploader/remoteprocedures.php?action=folder-list";
-			private var PARAMS_URL:String = "http://www.s3mer.com/sign.php?uploader";
-			private var USER_STATS_URL:String = "http://www.s3mer.com/flex_uploader/remoteprocedures.php?action=user-stats";
+			// We store the url and the method in an array, we need to update the API to always use POST so we can simplify this
+			private var LOGIN_URL:Array = ["https://www.s3mer.com/flex_uploader/login.php", URLRequestMethod.POST];
+			private var PROCESS_CMD_URL:Array = ["http://www.s3mer.com/process_command.php", URLRequestMethod.GET];
+			private var S3_PARAMS_URL:Array = ["http://www.s3mer.com/sign.php?uploader", URLRequestMethod.GET];
+			private var REMOTE_PROCEDURES_URL:Array = ["http://www.s3mer.com/flex_uploader/remoteprocedures.php", URLRequestMethod.GET];
 			
-			
-			//process_command.php?commandnr=save-media-data&filename=' + fileObj.name + '&filesize=' + fileObj.size
-			
-			private function getLoginURL():String {
-				var url:String;
-				
-				url = LOGIN_URL + "username=" + this._username + "&password=" + this._password;
-				
-				return url;
-			}
-			
-			private function getProcessURL(filename:String, size:String):String {
-				var url:String;
+			private function getFolderListVariables():URLVariables {
 				var urlVariables:URLVariables = new URLVariables();
 				
+				urlVariables["action"] = "folder-list";
+				
+				return urlVariables;
+			}
+			
+			private function getUserStatsVariables():URLVariables {
+				var urlVariables:URLVariables = new URLVariables();
+				
+				urlVariables["action"] = "user-stats";
+				
+				return urlVariables;
+			}
+			
+			private function getLoginVariables():URLVariables {
+				var urlVariables:URLVariables = new URLVariables();
+				
+				urlVariables["username"] = this._username;
+				urlVariables["password"] = this._password;
+				
+				return urlVariables;
+			}
+			
+			private function getProcessMediaVariables(filename:String, size:String):URLVariables {
+				var urlVariables:URLVariables = new URLVariables();
+				
+				urlVariables["commandnr"] = 'save-media-data';
 				urlVariables["filename"] = filename;
 				urlVariables["filesize"] = size;
 				
-				url = PROCESS_CMD_URL + "&" + urlVariables.toString();
-				
-				return url;
+				return urlVariables;
 			}
 			
-			private function getLibraryFolderURL(folder:String):String {
-				var url:String;
+			private function getSetLibraryFolderVariables(folder:String):URLVariables {
 				var urlVariables:URLVariables = new URLVariables();
 				
+				urlVariables["commandnr"] = 'set-library-folder';
 				urlVariables["folder"] = folder;
 				
-				url = SET_FOLDER_URL + "&" + urlVariables.toString();
-				
-				return url;
+				return urlVariables;
 			}
 			
 			
@@ -92,7 +101,7 @@
 					this._username = txtUsername.text;
 					this._password = txtPassword.text;
 										
-					doRequest(getLoginURL(), checkLogin_complete, checkLogin_error);
+					doRequest(LOGIN_URL, checkLogin_complete, checkLogin_error, getLoginVariables());
 					
 					// Disable login controls give status
 					status = "Loggin in";
@@ -144,7 +153,7 @@
 			}
 			
 			private function loadPostParams():void {
-				doRequest(PARAMS_URL, loadPostParams_complete, loadPostParams_error);
+				doRequest(S3_PARAMS_URL, loadPostParams_complete, loadPostParams_error);
 			}
 			
 			private function loadPostParams_complete(e:Event):void {
@@ -402,7 +411,7 @@
 			}
 			
 			private function addToDatabase(file:File):void {
-				doRequest(getProcessURL(file.name, file.size.toString()), addToDatabase_complete, addToDatabase_error);
+				doRequest(PROCESS_CMD_URL, addToDatabase_complete, addToDatabase_error,getProcessMediaVariables(file.name, file.size.toString()));
 			}
 			
 			private function addToDatabase_complete(e:Event):void {				
@@ -416,7 +425,7 @@
 			}
 			
 			private function setLibraryFolder(folder:String):void {
-				doRequest(getLibraryFolderURL(folder), setLibraryFolder_complete, setLibraryFolder_error);
+				doRequest(PROCESS_CMD_URL, setLibraryFolder_complete, setLibraryFolder_error, getSetLibraryFolderVariables(folder));
 			}
 			
 			private function setLibraryFolder_complete(e:Event):void {				
@@ -428,7 +437,7 @@
 			}
 
 			private function loadLibraryFolderList():void {
-				doRequest(GET_FOLDER__LIST_URL, loadLibraryFolderList_complete, loadLibraryFolderList_error);
+				doRequest(REMOTE_PROCEDURES_URL, loadLibraryFolderList_complete, loadLibraryFolderList_error, getFolderListVariables());
 			}
 			
 			private function loadLibraryFolderList_complete(e:Event):void {
@@ -488,11 +497,18 @@
 				btnUpload.addEventListener(NativeDragEvent.NATIVE_DRAG_EXIT, dragExitHandler);
 			}
 			
-			private function doRequest(url:String, complete:Function, error:Function):void {
+			private function doRequest(url:Array, complete:Function, error:Function, urlVars:URLVariables = null ):void {
 				var urlRequest:URLRequest = new URLRequest()
 				var urlLoader:URLLoader;
 
-				urlRequest.url = url;
+				urlRequest.url = url[0];
+				urlRequest.method = url[1];
+
+				if( urlRequest != null ) {
+					urlRequest.data = urlVars;
+				}
+
+				
 				urlLoader  = new URLLoader()
 				urlLoader.addEventListener(Event.COMPLETE, complete);
 				urlLoader.addEventListener(IOErrorEvent.IO_ERROR, error);
@@ -575,7 +591,7 @@
 			}
 			
 			private function updateQuota():void {
-				doRequest(this.USER_STATS_URL, updateQuota_complete, updateQuota_errore);	
+				doRequest(REMOTE_PROCEDURES_URL, updateQuota_complete, updateQuota_error, getUserStatsVariables());	
 			}
 			
 			private function updateQuota_complete(e:Event):void {
@@ -608,7 +624,7 @@
 				startUploads();
 			}
 			
-			private function updateQuota_errore(e:IOErrorEvent):void {
+			private function updateQuota_error(e:IOErrorEvent):void {
 //				trace("Error updating user stats");
 				Alert.show("Error updating user stats", "API Error");
 			}
