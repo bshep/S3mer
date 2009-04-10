@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Window xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="800" height="600">
+	<mx:HTML left="0" top="0" bottom="0" right="0" id="htmlBrowser" location="{_url}" locationChange="this.status = 'Loading...'" complete="this.status = 'Done'"/>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.core.Application;
+			import mx.events.FlexNativeMenuEvent;
+			[Bindable]
+			private var _url:String;
+
+			public function navigateTo(url:URLRequest):void {
+				this._url = url.url;
+			}
+			
+		]]>
+	</mx:Script>
+</mx:Window>

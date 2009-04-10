@@ -4,10 +4,12 @@
 	addedToStage="txtUsername.setFocus();"
 	currentState="Login"
 	close="Application.application.exit()"
-	verticalScrollPolicy="off" horizontalScrollPolicy="off">
+	verticalScrollPolicy="off" horizontalScrollPolicy="off"
+	menu="{mnuGoto}" xmlns:display="flash.display.*">
 
 	<mx:Script>
 		<![CDATA[
+			import mx.events.FlexNativeMenuEvent;
 			import mx.events.CloseEvent;
 			import mx.core.Application;
 			import mx.events.FlexEvent;
@@ -163,6 +165,11 @@
 				
 				txt = (e.target as URLLoader).data;
 				
+				if( txt == "0" ) {
+					Alert.show("Could not load S3 params","API Error");
+					return;
+				}
+				
 				params = txt.split(",");
 				
 				for each( var param:String in params ) {
@@ -219,7 +226,6 @@
 			// *** Start Here ***
 			private function onCreate(e:Event):void {
 				loadCredentials();
-				chkAOT.addEventListener(Event.CHANGE, aotHandler);
 				txtUsername.addEventListener(KeyboardEvent.KEY_DOWN, returnKeyHandler);
 				txtPassword.addEventListener(KeyboardEvent.KEY_DOWN, returnKeyHandler);
 				
@@ -629,6 +635,58 @@
 				Alert.show("Error updating user stats", "API Error");
 			}
 			
+            private function onMenuSelected(e:FlexNativeMenuEvent):void {
+            	switch(e.label) {
+            		case 'Close':
+						if( wndBrowser != null && wndBrowser.nativeWindow.active ) {
+							wndBrowser.close();
+						}
+            			break;
+            		case 'Quit':
+            			Application.application.exit();
+            			break;
+            		case 'Mini':
+            			chkAOT.selected = true;
+            			aotHandler(null);
+            			break;
+            		case 'Full':
+            			chkAOT.selected = false;
+            			aotHandler(null);
+            			break;
+            		case 'Players':
+            			navigateToSite(new URLRequest("http://www.s3mer.com/player-tiles.php"));
+            			break;
+            		case 'Shows':
+            			navigateToSite(new URLRequest("http://www.s3mer.com/show-tiles.php"));
+            			break;
+            		case 'Library':
+            			navigateToSite(new URLRequest("http://www.s3mer.com/library-tiles.php"));
+            			break;
+            		default:
+            			trace("Unhandled Menu: " + e.label);
+            	}
+            }
+
+			private var wndBrowser:BrowserWindow;
+			
+        	private function navigateToSite(url:URLRequest):void {
+        		if(wndBrowser == null) {
+        			wndBrowser = new BrowserWindow();
+        			wndBrowser.addEventListener(Event.CLOSE, navigateToSite_closed)
+        		}
+				
+        		wndBrowser.open(true);
+        		MenuUtilities.centerWindow(wndBrowser.nativeWindow);
+        		wndBrowser.nativeWindow.x = 10;    		
+        		
+        		wndBrowser.navigateTo(url);
+        		
+        	}
+        	
+        	private function navigateToSite_closed(e:Event):void {
+        		this.wndBrowser = null;
+        	}
+          			
 		]]>
 	</mx:Script>
 	<mx:Style source="style/style.css"/>
@@ -701,7 +759,7 @@
 	<mx:ProgressBar labelPlacement="top" label="Current File" id="pbFile" indeterminate="false" minimum="0" maximum="100" enabled="true" mode="manual" width="628" x="10" height="28" y="136" color="#000000" visible="false"/>
 	<mx:ProgressBar labelPlacement="top" label="Total Progress" id="pbTotal" indeterminate="false" minimum="0" maximum="100" enabled="true" mode="manual" width="628" x="10" height="28" y="172" color="#000000" visible="false"/>
 	<mx:ApplicationControlBar id="applicationcontrolbar1" cornerRadius="0" right="0" left="0" top="0">
-		<mx:CheckBox label="Always On Top" id="chkAOT" width="111" height="22">
+		<mx:CheckBox label="Always On Top" id="chkAOT" width="111" height="22" change="aotHandler(event)">
 			<mx:toolTip>Select this option to keep the window always on top.</mx:toolTip>
 		</mx:CheckBox>
 		<mx:Spacer width="100%"/>
@@ -711,4 +769,32 @@
 	<mx:Canvas x="10" y="43" width="628" height="85" label="Drop Files Here" id="btnUpload" backgroundColor="#464646" borderColor="#4E4E4E">
 		<mx:Label x="233.5" y="30" text="Drop Files Here" id="label1" fontSize="20" color="#6D6D6D"/>
 	</mx:Canvas>
+	
+	<mx:FlexNativeMenu id="mnuGoto" dataProvider="{menubarXML}"
+		labelField="@label" 
+            keyEquivalentField="@keyEquivalent"
+            keyEquivalentModifiersFunction="MenuUtilities.keyEquivalentModifiers"
+            showRoot="false" 
+            itemClick="onMenuSelected(event)"/>
+	
+    <mx:XML format="e4x" id="menubarXML">
+        <root>
+            <menuitem label="File">
+                <menuitem label="Close" keyEquivalent="w" ctrlKey="true"/>
+                <menuitem type="separator"/>
+                <menuitem label="Quit" keyEquivalent="q" ctrlKey="true"/>
+            </menuitem>
+            <menuitem label="View">
+                <menuitem label="Mini" keyEquivalent="1" ctrlKey="true"/>
+                <menuitem label="Full" keyEquivalent="2" ctrlKey="true"/>
+            </menuitem>
+            <menuitem label="Go To">
+                <menuitem label="Home" keyEquivalent="h" ctrlKey="true"/>
+                <menuitem type="separator"/>
+                <menuitem label="Players" keyEquivalent="p" ctrlKey="true"/>
+                <menuitem label="Shows" keyEquivalent="s" ctrlKey="true"/>
+                <menuitem label="Library" keyEquivalent="l" ctrlKey="true"/>
+            </menuitem>
+        </root>
+    </mx:XML>
 </mx:WindowedApplication>

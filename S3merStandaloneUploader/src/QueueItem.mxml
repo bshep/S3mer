@@ -1,31 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="21" toolTip="{getName(data)}">
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="21" 
+	implements="mx.controls.listClasses.IListItemRenderer">
 	<mx:Script>
 		<![CDATA[
 			import mx.controls.ProgressBarMode;
 			import mx.controls.Label;
+			import mx.controls.listClasses.IListItemRenderer;
 			
-			[Bindable]
-			public function get file():File {
-				var fileObj:FileObject = data as FileObject;
-
-				
-				return fileObj != null ? fileObj.file : null;
-			}
+			private var _data:Object;
 			
-			public function set file(val:File):void {
-			
-			}
+			private function getPb():String {
+				var fileObj:FileObject = _data as FileObject;
 
-
-			public function getName(data:Object):String {
-				var fileObj:FileObject = data as FileObject;
-
-				return fileObj.file.name;
-			}
-			
-			public function getPb(data:Object):String {
-				var fileObj:FileObject = data as FileObject;
+				if(!fileObj) {
+					return null;
+				}
 
 				if(fileObj.complete == true) {
 					pbPercent.mode = ProgressBarMode.MANUAL;
@@ -48,13 +37,39 @@
 				}
 			}
 			
-			private function doDelete(data:Object):void {
+			private function doDelete():void {
 				dispatchEvent(new QueueEvent(QueueEvent.DELETE,data as FileObject, true));
 			}
 			
+	        override public function get data():Object {
+	            if(_data != null) {
+	                return _data;
+	            }
+	            return null;
+	        }
+	
+	        override public function set data(value:Object):void {
+	        	var file:File;
+	        	var name:String;
+	        	
+	            _data = value;
+	            if(_data != null) {
+	            	file = (data as FileObject).file;
+	            	name = file.name;
+	            	
+	                lblFilename.text = name;
+	                lblFilename.toolTip = name;
+	                this.toolTip = name;
+	                
+	                pbPercent.label= getPb();
+	                pbPercent.source = file;
+	            }
+	        }
+
+			
 		]]>
 	</mx:Script>
-			<mx:Label text="{getName(data)}" toolTip="{getName(data)}" verticalCenter="0" left="10" id="lblFilename" width="249"/>
-			<mx:ProgressBar id="pbPercent" mode="event" source="{(data as FileObject).file}" label="{getPb(data)}" labelPlacement="center" verticalCenter="0" right="33" left="267" minimum="0" maximum="100"/>
-			<mx:SWFLoader source="assets/deleteIcon.swf" height="15" width="15" verticalCenter="0" right="10" click="doDelete(data)"/>
+			<mx:Label verticalCenter="0" left="10" id="lblFilename" width="249"/>
+			<mx:ProgressBar id="pbPercent" mode="event" labelPlacement="center" verticalCenter="0" right="33" left="267" minimum="0" maximum="100"/>
+			<mx:SWFLoader source="assets/deleteIcon.swf" height="15" width="15" verticalCenter="0" right="10" click="doDelete()"/>
 </mx:Canvas>
