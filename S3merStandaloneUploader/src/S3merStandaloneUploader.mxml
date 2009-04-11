@@ -645,13 +645,20 @@
             		case 'Quit':
             			Application.application.exit();
             			break;
-            		case 'Mini':
+            		case 'Refresh':
+            			updateQuota();
+            			updateProgressBars(false);
+            			break;
+             		case 'Mini':
             			chkAOT.selected = true;
             			aotHandler(null);
             			break;
             		case 'Full':
             			chkAOT.selected = false;
             			aotHandler(null);
+            			break;
+            		case 'Documentation':
+            			navigateToSite(new URLRequest("http://docs.s3mer.com/"));
             			break;
             		case 'Players':
             			navigateToSite(new URLRequest("http://www.s3mer.com/player-tiles.php"));
@@ -673,14 +680,12 @@
         		if(wndBrowser == null) {
         			wndBrowser = new BrowserWindow();
         			wndBrowser.addEventListener(Event.CLOSE, navigateToSite_closed)
+	        		wndBrowser.open(true);
+	        		MenuUtilities.centerWindow(wndBrowser.nativeWindow);
+	        		wndBrowser.nativeWindow.x = 10;    		
         		}
-				
-        		wndBrowser.open(true);
-        		MenuUtilities.centerWindow(wndBrowser.nativeWindow);
-        		wndBrowser.nativeWindow.x = 10;    		
         		
         		wndBrowser.navigateTo(url);
-        		
         	}
         	
         	private function navigateToSite_closed(e:Event):void {
@@ -785,11 +790,13 @@
                 <menuitem label="Quit" keyEquivalent="q" ctrlKey="true"/>
             </menuitem>
             <menuitem label="View">
+                <menuitem label="Refresh" keyEquivalent="r" ctrlKey="true"/>
+                <menuitem type="separator"/>
                 <menuitem label="Mini" keyEquivalent="1" ctrlKey="true"/>
                 <menuitem label="Full" keyEquivalent="2" ctrlKey="true"/>
             </menuitem>
-            <menuitem label="Go To">
-                <menuitem label="Home" keyEquivalent="h" ctrlKey="true"/>
+            <menuitem label="Navigate">
+                <menuitem label="Documentation" keyEquivalent="d" ctrlKey="true"/>
                 <menuitem type="separator"/>
                 <menuitem label="Players" keyEquivalent="p" ctrlKey="true"/>
                 <menuitem label="Shows" keyEquivalent="s" ctrlKey="true"/>
