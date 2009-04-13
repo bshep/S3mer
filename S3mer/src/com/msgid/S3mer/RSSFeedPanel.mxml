@@ -229,7 +229,14 @@
 				_reloadTimer.start();
 				this.visible = true;
 				
+				try {
 				var tmpRSS:XML = new XML(_loader.data); // Load data into a temp variable
+				} catch (e:Error) {
+					_reloadTimer.delay = 1*60*1000;
+					_reloadTimer.start();
+					return;
+				}
+
 				this._feedType = identifyRSS(tmpRSS);
 				
 				
