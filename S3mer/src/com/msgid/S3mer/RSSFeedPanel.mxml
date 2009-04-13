@@ -14,31 +14,38 @@
 			<mx:RemoveChild target="{headtext}"/>
 			<mx:RemoveChild target="{bodytext}"/>
 			<mx:AddChild relativeTo="{headline}" position="lastChild">
-				<mx:Label fontFamily="Verdana" cacheAsBitmap="true" fontSize="41" color="#000000" id="headtext1" fontWeight="bold" truncateToFit="false" x="1" verticalCenter="0"/>
+				<mx:Label fontFamily="HelvNeueBlack" fontSize="41" color="#000000" id="headtext1" fontWeight="normal" truncateToFit="false" x="1" verticalCenter="0"/>
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{headline}" position="lastChild">
-				<mx:Label fontFamily="Verdana" cacheAsBitmap="true" fontSize="41" color="#000000" id="headtext2" fontWeight="bold" truncateToFit="false" x="88" verticalCenter="0"/>
+				<mx:Label fontFamily="HelvNeueBlack" fontSize="41" color="#000000" id="headtext2" fontWeight="normal" truncateToFit="false" x="88" verticalCenter="0"/>
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{headline}" position="lastChild">
-				<mx:Label fontFamily="Verdana" cacheAsBitmap="true" fontSize="41" color="#000000" id="headtext3" fontWeight="bold" truncateToFit="false" x="177" verticalCenter="0"/>
+				<mx:Label fontFamily="HelvNeueBlack" fontSize="41" color="#000000" id="headtext3" fontWeight="normal" truncateToFit="false" x="177" verticalCenter="0"/>
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{headline}" position="lastChild">
-				<mx:Label fontFamily="HelvNeueBlack" cacheAsBitmap="true" fontSize="41" color="#000000" id="spacer1" fontWeight="normal" truncateToFit="false" verticalCenter="0" x="54" enabled="true" width="25" alpha="0.25"/>
+				<mx:Label fontFamily="HelvNeueBlack" fontSize="41" color="#000000" id="spacer1" fontWeight="normal" truncateToFit="false" verticalCenter="0" x="54" enabled="true" width="25"/>
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{headline}" position="lastChild">
-				<mx:Label fontFamily="HelvNeueBlack" cacheAsBitmap="true" fontSize="41" color="#000000" id="spacer2" fontWeight="normal" truncateToFit="false" verticalCenter="0" x="108" enabled="true" width="25" alpha="0.25"/>
+				<mx:Label fontFamily="HelvNeueBlack" fontSize="41" color="#000000" id="spacer2" fontWeight="normal" truncateToFit="false" verticalCenter="0" x="108" enabled="true" width="25"/>
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{headline}" position="lastChild">
-				<mx:Label fontFamily="HelvNeueBlack" cacheAsBitmap="true" fontSize="41" color="#000000" id="spacer3" fontWeight="normal" truncateToFit="false" verticalCenter="0" x="162" enabled="true" width="25" alpha="0.25"/>
+				<mx:Label fontFamily="HelvNeueBlack" fontSize="41" color="#000000" id="spacer3" fontWeight="normal" truncateToFit="false" verticalCenter="0" x="162" enabled="true" width="25"/>
 			</mx:AddChild>
-			<mx:SetProperty target="{headline}" name="width"/>
-			<mx:SetProperty target="{headline}" name="x"/>
-			<mx:SetStyle target="{headline}" name="right" value="0"/>
-			<mx:SetStyle target="{headline}" name="left" value="124"/>
 			<mx:SetProperty target="{headline}" name="y"/>
 			<mx:SetStyle target="{headline}" name="top" value="0"/>
 			<mx:SetProperty target="{headline}" name="height"/>
 			<mx:SetStyle target="{headline}" name="bottom" value="0"/>
+			<mx:SetProperty target="{headline}" name="width"/>
+			<mx:SetProperty target="{headline}" name="x"/>
+			<mx:SetStyle target="{headline}" name="right" value="0"/>
+			<mx:SetStyle target="{headline}" name="left" value="116"/>
+			<mx:SetProperty target="{headline}" name="cacheAsBitmap" value="true"/>
+			<mx:SetProperty target="{headtext1}" name="cacheAsBitmap" value="true"/>
+			<mx:SetProperty target="{headtext2}" name="cacheAsBitmap" value="true"/>
+			<mx:SetProperty target="{headtext3}" name="cacheAsBitmap" value="true"/>
+			<mx:SetProperty target="{spacer1}" name="cacheAsBitmap" value="true"/>
+			<mx:SetProperty target="{spacer2}" name="cacheAsBitmap" value="true"/>
+			<mx:SetProperty target="{spacer3}" name="cacheAsBitmap" value="true"/>
 			<mx:AddChild position="lastChild">
 				<mx:Image source="assets/rssMask2.png" left="124" right="0" top="0" bottom="0" id="headline_mask" cacheAsBitmap="true"/>
 			</mx:AddChild>
@@ -76,10 +83,9 @@
 	</mx:transitions>
 	
 	<mx:SWFLoader  scaleContent="true" id="logoSWF" verticalAlign="middle" horizontalAlign="center" width="107" x="9" top="0" bottom="0"/>
-	<mx:Canvas id="headline" cacheAsBitmap="true" verticalScrollPolicy="off" horizontalScrollPolicy="off" backgroundColor="#000000" backgroundAlpha="0.0" width="830" x="126" height="81" y="0" alpha="1.0">
-		<mx:Label fontFamily="Verdana" fontSize="38" color="#000000" id="headtext" fontWeight="bold" truncateToFit="false" y="10" left="1">
-		</mx:Label>
-		<mx:Label fontFamily="Verdana" fontSize="18" color="#000000" id="bodytext" truncateToFit="false" alpha="0.45" fontWeight="bold" left="6" bottom="0"/>
+	<mx:Canvas id="headline" verticalScrollPolicy="off" horizontalScrollPolicy="off" backgroundColor="#000000" backgroundAlpha="0.0" width="830" x="126" height="81" y="0" alpha="1.0">
+		<mx:Label fontFamily="HelvNeueBlack" fontSize="41" color="#000000" id="headtext" fontWeight="normal" truncateToFit="false" y="10" left="1"/>
+		<mx:Label text="" fontFamily="HelvNeueBlack" fontSize="20" color="#000000" id="bodytext" truncateToFit="false" y="53" left="1" alpha="0.45"/>
 	</mx:Canvas>
 	
 
@@ -484,8 +490,8 @@
 						
 						scale = scaleY;
 						
-						this.headtext.setStyle("fontSize", (Math.floor(35*scale)).toString());
-						this.bodytext.setStyle("fontSize", (Math.floor(18*scale)).toString());
+						this.headtext.setStyle("fontSize", (Math.floor(39*scale)).toString());
+						this.bodytext.setStyle("fontSize", (Math.floor(20*scale)).toString());
 						
 						this.headtext.y = 4*scale - 2;
 						this.bodytext.y = this.headtext.y + this.headtext.measureText(this.headtext.text).height - 6;
