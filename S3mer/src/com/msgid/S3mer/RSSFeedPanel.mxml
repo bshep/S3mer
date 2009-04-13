@@ -85,7 +85,7 @@
 	<mx:SWFLoader  scaleContent="true" id="logoSWF" verticalAlign="middle" horizontalAlign="center" width="107" x="9" top="0" bottom="0"/>
 	<mx:Canvas id="headline" verticalScrollPolicy="off" horizontalScrollPolicy="off" backgroundColor="#000000" backgroundAlpha="0.0" width="830" x="126" height="81" y="0" alpha="1.0">
 		<mx:Label fontFamily="HelvNeueBlack" fontSize="41" color="#000000" id="headtext" fontWeight="normal" truncateToFit="false" y="10" left="1"/>
-		<mx:Label text="" fontFamily="HelvNeueBlack" fontSize="20" color="#000000" id="bodytext" truncateToFit="false" y="53" left="1" alpha="0.45"/>
+		<mx:Label text="" fontFamily="HelvNeueBlack" fontSize="20" color="#000000" id="bodytext" truncateToFit="false" y="{headtext.y + headtext.height - 8}" left="1" alpha="0.45"/>
 	</mx:Canvas>
 	
 
@@ -494,7 +494,7 @@
 						this.bodytext.setStyle("fontSize", (Math.floor(20*scale)).toString());
 						
 						this.headtext.y = 4*scale - 2;
-						this.bodytext.y = this.headtext.y + this.headtext.measureText(this.headtext.text).height - 6;
+//						this.bodytext.y = this.headtext.y + this.headtext.measureText(this.headtext.text).height - 6;
 						
 						adjustingFonts = true;
 						do {					
@@ -503,7 +503,7 @@
 								
 								fontSize -= 1;
 								this.headtext.setStyle("fontSize", fontSize.toString());
-								this.bodytext.y = this.headtext.y + this.headtext.measureText(this.headtext.text).height - 6;
+//								this.bodytext.y = this.headtext.y + this.headtext.measureText(this.headtext.text).height - 6;
 	//							Logger.addEvent("re-adjusting fonts");
 							} else {
 								adjustingFonts = false;
