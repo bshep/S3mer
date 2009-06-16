@@ -25,22 +25,20 @@
 				<mx:Label fontFamily="Arial" fontSize="41" color="#000000" id="headtext3" fontWeight="bold" letterSpacing="-2" truncateToFit="false" x="177" verticalCenter="0"/>
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{headline}" position="lastChild">
-				<mx:Label fontFamily="Arial" fontSize="41" color="#000000" id="spacer1" fontWeight="bold" letterSpacing="-2" truncateToFit="false" verticalCenter="0" x="54" enabled="true" width="25"/>
+				<mx:Image source="assets/rssMask2.png" x="54" enabled="true" width="75" id="spacer1" verticalAlign="middle" horizontalAlign="center" cacheAsBitmap="true" top="0" bottom="0"/>
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{headline}" position="lastChild">
-				<mx:Label fontFamily="Arial" fontSize="41" color="#000000" id="spacer2" fontWeight="bold" letterSpacing="-2" truncateToFit="false" verticalCenter="0" x="108" enabled="true" width="25"/>
+				<mx:Image source="assets/rssMask2.png" x="54" enabled="true" width="75" id="spacer2" verticalAlign="middle" horizontalAlign="center" cacheAsBitmap="true" top="0" bottom="0"/>
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{headline}" position="lastChild">
-				<mx:Label fontFamily="Arial" fontSize="41" color="#000000" id="spacer3" fontWeight="bold" letterSpacing="-2" truncateToFit="false" verticalCenter="0" x="162" enabled="true" width="25"/>
+				<mx:Image source="assets/rssMask2.png" x="54" enabled="true" width="75" id="spacer3" cacheAsBitmap="true" verticalAlign="middle" horizontalAlign="center" top="0" bottom="0"/>
 			</mx:AddChild>
 			<mx:SetProperty target="{headline}" name="y"/>
-			<mx:SetStyle target="{headline}" name="top" value="0"/>
 			<mx:SetProperty target="{headline}" name="height"/>
-			<mx:SetStyle target="{headline}" name="bottom" value="0"/>
 			<mx:SetProperty target="{headline}" name="width"/>
 			<mx:SetProperty target="{headline}" name="x"/>
 			<mx:SetStyle target="{headline}" name="right" value="0"/>
-			<mx:SetStyle target="{headline}" name="left" value="116"/>
+			<mx:SetStyle target="{headline}" name="left" value="0"/>
 			<mx:SetProperty target="{headline}" name="cacheAsBitmap" value="true"/>
 			<mx:SetProperty target="{headtext1}" name="cacheAsBitmap" value="true"/>
 			<mx:SetProperty target="{headtext2}" name="cacheAsBitmap" value="true"/>
@@ -49,8 +47,9 @@
 			<mx:SetProperty target="{spacer2}" name="cacheAsBitmap" value="true"/>
 			<mx:SetProperty target="{spacer3}" name="cacheAsBitmap" value="true"/>
 			<mx:AddChild position="lastChild">
-				<mx:Image source="assets/rssMask2.png" left="124" right="0" top="0" bottom="0" id="headline_mask" cacheAsBitmap="true"/>
+				<mx:Image source="assets/rssMask2.png" left="0" right="0" top="0" bottom="0" id="headline_mask" cacheAsBitmap="true" maintainAspectRatio="false" scaleContent="true"/>
 			</mx:AddChild>
+			<mx:RemoveChild target="{logoSWF}"/>
 		</mx:State>
 	</mx:states>
 	
@@ -361,9 +360,12 @@
 				this.headtext1.setStyle("color","#" + this._color);
 				this.headtext2.setStyle("color","#" + this._color);
 				this.headtext3.setStyle("color","#" + this._color);
-				this.spacer1.setStyle("color","#" + this._color);
-				this.spacer2.setStyle("color","#" + this._color);
-				this.spacer3.setStyle("color","#" + this._color);
+				this.spacer1.source = this.logoUrl;
+				this.spacer2.source = this.logoUrl;
+				this.spacer3.source = this.logoUrl;
+//				this.spacer1.setStyle("color","#" + this._color);
+//				this.spacer2.setStyle("color","#" + this._color);
+//				this.spacer3.setStyle("color","#" + this._color);
 				
 				this.headline.mask = this.headline_mask;
 //				this.headtext1.mask = this.headline_mask;
@@ -386,27 +388,27 @@
 				
 				switch(currState) {
 					case 1:
-						this.spacer1.x = this.headtext1.x + this.headtext1.textWidth + 10;
-						this.headtext2.x = this.spacer1.x + this.spacer1.width + 10;
-						this.spacer2.x = this.headtext2.x + this.headtext2.textWidth + 10;
-						this.headtext3.x = this.spacer2.x + this.spacer2.width + 10;
-						this.spacer3.x = this.headtext3.x + this.headtext3.textWidth + 10;
+						this.spacer1.x = this.headtext1.x + this.headtext1.textWidth + 20;
+						this.headtext2.x = this.spacer1.x + this.spacer1.width + 20;
+						this.spacer2.x = this.headtext2.x + this.headtext2.textWidth + 20;
+						this.headtext3.x = this.spacer2.x + this.spacer2.width + 20;
+						this.spacer3.x = this.headtext3.x + this.headtext3.textWidth + 20;
 						
 						break;
 					case 2:
-						this.spacer2.x = this.headtext2.x + this.headtext2.textWidth + 10;
-						this.headtext3.x = this.spacer2.x + this.spacer2.width + 10;
-						this.spacer3.x = this.headtext3.x + this.headtext3.textWidth + 10;
-						this.headtext1.x = this.spacer3.x + this.spacer3.width + 10;
-						this.spacer1.x = this.headtext1.x + this.headtext1.textWidth + 10;
+						this.spacer2.x = this.headtext2.x + this.headtext2.textWidth + 20;
+						this.headtext3.x = this.spacer2.x + this.spacer2.width + 20;
+						this.spacer3.x = this.headtext3.x + this.headtext3.textWidth + 20;
+						this.headtext1.x = this.spacer3.x + this.spacer3.width + 20;
+						this.spacer1.x = this.headtext1.x + this.headtext1.textWidth + 20;
 						
 						break;
 					case 3:
-						this.spacer3.x = this.headtext3.x + this.headtext3.textWidth + 10;
-						this.headtext1.x = this.spacer3.x + this.spacer3.width + 10;
-						this.spacer1.x = this.headtext1.x + this.headtext1.textWidth + 10;
-						this.headtext2.x = this.spacer1.x + this.spacer1.width + 10;
-						this.spacer2.x = this.headtext2.x + this.headtext2.textWidth + 10;
+						this.spacer3.x = this.headtext3.x + this.headtext3.textWidth + 20;
+						this.headtext1.x = this.spacer3.x + this.spacer3.width + 20;
+						this.spacer1.x = this.headtext1.x + this.headtext1.textWidth + 20;
+						this.headtext2.x = this.spacer1.x + this.spacer1.width + 20;
+						this.spacer2.x = this.headtext2.x + this.headtext2.textWidth + 20;
 						
 						break;
 				}
@@ -708,10 +710,10 @@
 				if(isHeadlineEmpty()) {
 					next_headline();
 				}
-												
-				spacer1.text = "•";
-				spacer2.text = "•";
-				spacer3.text = "•";
+
+//				spacer1.text = "•";
+//				spacer2.text = "•";
+//				spacer3.text = "•";
 				if (this.numHeadlines == 0) {
 					headtext1.htmlText = this.source;
 					headtext2.htmlText = "Actualizando..."
