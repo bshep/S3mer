@@ -3,10 +3,11 @@
 <compiler additionalCompilerArguments="-locale en_US es_ES pt_BR it_IT" copyDependentFiles="true" enableModuleDebug="true" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="false" htmlHistoryManagement="false" htmlPlayerVersion="9.0.28" htmlPlayerVersionCheck="true" outputFolderPath="bin" sourceFolderPath="src" strict="true" useApolloConfig="true" verifyDigests="true" warn="true">
 <compilerSourcePath>
 <compilerSourcePathEntry kind="1" linkType="1" path="locale/{locale}"/>
+<compilerSourcePathEntry kind="1" linkType="1" path="libraries/as3syndicationlib/src"/>
 </compilerSourcePath>
 <libraryPath defaultLinkType="1">
 <libraryPathEntry kind="4" path=""/>
-<libraryPathEntry kind="3" linkType="1" path="libraries/FlexUnit.swc" useDefaultLinkType="false"/>
+<libraryPathEntry kind="1" linkType="1" path="libraries"/>
 </libraryPath>
 <sourceAttachmentPath/>
 </compiler>

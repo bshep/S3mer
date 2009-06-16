@@ -16,13 +16,13 @@
 			<mx:RemoveChild target="{headtext}"/>
 			<mx:RemoveChild target="{bodytext}"/>
 			<mx:AddChild relativeTo="{headline}" position="lastChild">
-				<mx:Label fontFamily="Arial" fontSize="41" color="#000000" id="headtext1" fontWeight="bold" letterSpacing="-2" truncateToFit="false" x="1" verticalCenter="0"/>
+				<mx:Label fontFamily="Arial" fontSize="41" color="#000000" id="headtext1" fontWeight="bold" letterSpacing="-2" truncateToFit="false" x="1" verticalCenter="0" paddingLeft="-2" paddingRight="-2"/>
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{headline}" position="lastChild">
-				<mx:Label fontFamily="Arial" fontSize="41" color="#000000" id="headtext2" fontWeight="bold" letterSpacing="-2" truncateToFit="false" x="88" verticalCenter="0"/>
+				<mx:Label fontFamily="Arial" fontSize="41" color="#000000" id="headtext2" fontWeight="bold" letterSpacing="-2" truncateToFit="false" x="88" verticalCenter="0" paddingLeft="-2" paddingRight="-2"/>
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{headline}" position="lastChild">
-				<mx:Label fontFamily="Arial" fontSize="41" color="#000000" id="headtext3" fontWeight="bold" letterSpacing="-2" truncateToFit="false" x="177" verticalCenter="0"/>
+				<mx:Label fontFamily="Arial" fontSize="41" color="#000000" id="headtext3" fontWeight="bold" letterSpacing="-2" truncateToFit="false" x="177" verticalCenter="0" paddingLeft="-2" paddingRight="-2"/>
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{headline}" position="lastChild">
 				<mx:Image source="assets/rssMask2.png" x="54" enabled="true" width="75" id="spacer1" verticalAlign="middle" horizontalAlign="center" cacheAsBitmap="true" top="0" bottom="0"/>
@@ -99,11 +99,16 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.msgid.S3mer.Net.URLContentMonitor;
+			import com.adobe.xml.syndication.generic.IItem;
+			import com.adobe.xml.syndication.atom.FeedData03;
+			import com.msgid.S3mer.RSS.FeedManager;
+			import com.adobe.xml.syndication.generic.IFeed;
+			import com.adobe.xml.syndication.generic.FeedFactory;
 			import mx.controls.HTML;
 			import flash.text.engine.FontMetrics;
 			import mx.events.FlexEvent;
 			import mx.events.StateChangeEvent;
-//			import com.adobe.utils.;
 			import mx.events.ResizeEvent;
 			import mx.controls.Label;
 			import mx.events.EffectEvent;
@@ -142,19 +147,17 @@
 			public var logoUrl:String;
 			
 			private var _playNextTimer:Timer;
-			private var _reloadTimer:Timer;
 			private var _scrollTimer:Timer;
 			
-			private var _lastUpdateDate:Date;
-			private var _RSSXML:XML = new XML();
-			private var _loader:URLLoader;
-			private var _currentHeadline:int = 0;
+			private var _feedItem:IItem;
+			private var _feedManager:FeedManager = new FeedManager(50);
+
+			private var _urlMonitor:URLContentMonitor;
 			
 			private var _color:String;
 			
 			private var _stopped:Boolean = false;
-			private var _feedType:int;
-			private var _mode:int = MODE_SCROLL;
+			private var _mode:int = MODE_SLIDE;
 			
 			
 			public static const MODE_SLIDE:int = 0;
@@ -163,26 +166,11 @@
 			public var SCROLL_TIMER_DELAY:int = 40;
 			public var SCROLL_TIMER_DELTA:Number = -3;
 			
-			
-			
-			//Change the following 4 functions to if you want to support more types of feeds
-			public static const FEED_INVALID:int = 0;
-			public static const FEED_ATOM:int = 1;
-			public static const FEED_RSS:int = 2;
-	
 			private function get headlineDescription():String {
 				var ret:String;
 				
-				switch(this._feedType) {
-					case FEED_INVALID:
-						ret = "";
-						break;
-					case FEED_ATOM:
-						ret = "";
-						break;
-					case FEED_RSS:
-						ret = this._RSSXML.channel.item[this._currentHeadline].description;
-						break;
+				if(_feedItem != null) {
+					ret = _feedItem.excerpt.value;
 				}
 				
 				return ret;
@@ -191,110 +179,69 @@
 			private function get headlineTitle():String {
 				var ret:String;
 				
-				switch(this._feedType) {
-					case FEED_INVALID:
-						ret = "";
-						break;
-					case FEED_ATOM:
-						ret = "";
-						break;
-					case FEED_RSS:
-						ret = this._RSSXML.channel.item[this._currentHeadline].title;
-												
-						break;
-					
+				if(_feedItem != null) {
+					ret = _feedItem.title.toString();
 				}
+				
 				return ret;
 			}
 			
 			private function get numHeadlines():int {
-				var ret:int;
-				
-				switch(this._feedType) {
-					case FEED_INVALID:
-						ret = 0;
-						break;
-					case FEED_ATOM:
-						ret = 0;
-						break;
-					case FEED_RSS:
-						ret = new XMLList(this._RSSXML.channel.item).length();
-						break;
-					
-				}
-				return ret;
+				return this._feedManager.length;
 			}
 			
-			private function OnRSSLoadComplete(e:Event):void {
-				_reloadTimer.delay = 1*60*1000;
-				_reloadTimer.start();
-				this.visible = true;
+			private function OnRSSLoad_complete(e:Event):void {
+				var _feed:IFeed;
+//				this.visible = true;
 				
 				try {
-				var tmpRSS:XML = new XML(_loader.data); // Load data into a temp variable
+					var tmpRSS:XML = new XML(_urlMonitor.data); // Load data into a temp variable
 				} catch (e:Error) {
-					_reloadTimer.delay = 1*60*1000;
-					_reloadTimer.start();
-					return;
+					return; //TODO: Detect the loading error...
 				}
+				
+				_feed = FeedFactory.getFeedByXML(tmpRSS);
+				
+				this._feedManager.addItems(_feed);
 
-				this._feedType = identifyRSS(tmpRSS);
+				if(this._feedItem == null) {
+					this._feedItem = this._feedManager.getNextItem();
+				}
 				
+				if( this._playNextTimer != null && this._playNextTimer.running ) {
+					this._playNextTimer.stop();
+				}
 				
-				switch(this._feedType) {
-					case FEED_INVALID:
-					case FEED_ATOM:
-						// No data loaded, or data is empty....
-						tmpRSS = new XML();
-						
-						// If the last update was more than 24 Hours ago, then set RSS to an empty one
-						if (new Date().getTime() - this._lastUpdateDate.getTime() > 24*60*60*1000) {
-							this._RSSXML = tmpRSS;
-							this._currentHeadline = 0;
+				switch(this._mode) {
+					case MODE_SCROLL:
+						if ( !this._scrollTimer.running ) {
+							this._scrollTimer.start();
 						}
 						break;
-					case FEED_RSS:
-						this._lastUpdateDate = new Date();
-						
-						if (tmpRSS.toString() == this._RSSXML.toString()) {
-							// Do nothing as XML was not updated
-						} else {
-							if( this._playNextTimer.running ) {
-								this._playNextTimer.stop();
-							}
-							
-							this._RSSXML = tmpRSS;
-							this._currentHeadline = 0;
-							
-							switch(this._mode) {
-								case MODE_SCROLL:
-									if ( !this._scrollTimer.running ) {
-										this._scrollTimer.start();
-									}
-									break;
-								case MODE_SLIDE:
-									if ( !this._playNextTimer.running ) {
-										this._playNextTimer.start();
-									}
-									this.resize();
-									break;
-							}
+					case MODE_SLIDE:
+						if ( !this._playNextTimer.running ) {
+							this._playNextTimer.start();
 						}
-					
+						this.resize();
 						break;
 				}
 				
 				this.play_next();
 			}
 			
-			// End feed support functions
-
+			private function OnRSSLoad_error(e:IOErrorEvent):void {
+				// What to do?
+			}
+			
 			public function play():void {
 				trace("RSS URL: " +this.source);
 				trace("Logo URL: " +this.logoUrl);
-				trace("delay: " +this.delay);
 				
-//				this._mode = MODE_SCROLL;
+				if( this._urlMonitor == null ) {
+					this._urlMonitor = new URLContentMonitor(this.source,60);
+					this._urlMonitor.addEventListener(Event.CHANGE, OnRSSLoad_complete);
+					this._urlMonitor.addEventListener(IOErrorEvent.IO_ERROR, OnRSSLoad_error);
+				}
 				
 				switch(this._mode) {
 					case MODE_SCROLL:
@@ -316,13 +263,6 @@
 					_playNextTimer.delay = this.delay;
 				}
 
-				if (_reloadTimer == null ) {
-					_reloadTimer = new Timer(10*60*1000);
-					_reloadTimer.addEventListener(TimerEvent.TIMER, OnReloadTimer,false,0,true);
-				} else {
-					_reloadTimer.delay = 10*60*1000;
-				}
-
 				if (_scrollTimer == null ) {
 					_scrollTimer = new Timer(SCROLL_TIMER_DELAY);
 					_scrollTimer.addEventListener(TimerEvent.TIMER, OnScrollTimer,false,0,true);
@@ -330,11 +270,6 @@
 					_scrollTimer.delay = SCROLL_TIMER_DELAY;
 				}
 
-				this._lastUpdateDate = new Date();
-				this._lastUpdateDate.setTime(0);
-
-				this.RSSLoadBegin();
-				
 				this.logoSWF.source = this.logoUrl;
 				
 				this.resize();
@@ -348,8 +283,7 @@
 				}
 				
 				this._stopped = false;
-				
-				_reloadTimer.start();
+				this._urlMonitor.start();
 			}
 			
 			public function changeToSideScroll(e:FlexEvent):void {
@@ -363,17 +297,8 @@
 				this.spacer1.source = this.logoUrl;
 				this.spacer2.source = this.logoUrl;
 				this.spacer3.source = this.logoUrl;
-//				this.spacer1.setStyle("color","#" + this._color);
-//				this.spacer2.setStyle("color","#" + this._color);
-//				this.spacer3.setStyle("color","#" + this._color);
 				
 				this.headline.mask = this.headline_mask;
-//				this.headtext1.mask = this.headline_mask;
-//				this.headtext2.mask = this.headline_mask;
-//				this.headtext3.mask = this.headline_mask;
-//				this.spacer1.mask = this.headline_mask;
-//				this.spacer2.mask = this.headline_mask;
-//				this.spacer3.mask = this.headline_mask;
 				
 				repositionSideScrollElements();
 				play_step2();
@@ -434,15 +359,14 @@
 			
 			public function stop():void {
 				this._playNextTimer.stop();
-				this._reloadTimer.stop();
+				this._urlMonitor.stop();
 				this._stopped = true;
 			}
 			
 			public function resume():void {
 				this._stopped = false;
 				this._playNextTimer.start();
-				this._reloadTimer.start();
-				
+				this._urlMonitor.start();
 			}
 			
 			public function resize():void {
@@ -477,10 +401,6 @@
 							}
 						} while( adjustingFonts && fontSize > 2 )
 	
-	
-						this.headtext.width = headline.width;
-						this.bodytext.width = headline.width;
-						
 						this.resizing = false;
 					}
 
@@ -542,39 +462,6 @@
 				repositionSideScrollElements();
 			}
 			
-			private function RSSLoadBegin():void {
-				var _loaderReq:URLRequest;
-
-				if (_loader == null) {
-					_loader = new URLLoader();
-					_loader.dataFormat = URLLoaderDataFormat.TEXT;
-					_loader.addEventListener(Event.COMPLETE,OnRSSLoadComplete,false,0,true);
-					_loader.addEventListener(IOErrorEvent.IO_ERROR,OnIOError,false,0,true);
-				}
-				
-				_loaderReq = new URLRequest(this.source);
-//				_loaderReq.setLoginCredentials("development","mils0ft");
-
-				_loader.load(_loaderReq);
-			}
-			
-			private function OnIOError(e:IOErrorEvent):void {
-				Logger.addEvent("RSS FAILED: Probably not connected");
-				_reloadTimer.delay = 5*1000;
-				_reloadTimer.start();
-				this.visible = false;
-			}
-		 
-
-			
-			private function OnReloadTimer(e:TimerEvent):void {
-				if ( this._stopped == true ) {
-					return;
-				}
-
-				RSSLoadBegin();
-			}
-			
 			private function OnScrollTimer(e:TimerEvent):void {
 				var currState:int = calculateState();
 				
@@ -609,14 +496,6 @@
 			}
 
 			
-			private function identifyRSS(responseXML:XML):int {
-				if(new XMLList(responseXML.channel.item).length() > 0) {
-					return FEED_RSS;
-				} else {
-					return FEED_INVALID;
-				}
-			}
-			
 			private function OnPlayNextTimer(e:TimerEvent):void {
 				if ( this._stopped == true ) {
 					return;
@@ -634,7 +513,7 @@
 						break;
 					case MODE_SLIDE:				
 						if(this.y > this.screen.height/2) { 
-							this.currentState = "hidden_bottom"; // TODO: somehow detect if we are at the top of the screen and go to hidden_top instead
+							this.currentState = "hidden_bottom";
 						} else {
 							this.currentState = "hidden_top";
 						}
@@ -643,23 +522,15 @@
 			}
 			
 			private function next_headline():void {
-				var headlineIndex:int = this._currentHeadline;
-
 				if ( this._stopped == true ) {
 					return;
 				}
 				
-				if(this.numHeadlines == 0) {
+				if(this._feedManager.length == 0) {
 					return;
 				}
-
-				do {
-					this._currentHeadline += 1;
-					if (this._currentHeadline > this.numHeadlines - 1) {
-						this._currentHeadline = 0;
-					}	
-				} while(headlineIndex != this._currentHeadline && isHeadlineEmpty())
-				 			
+				
+				this._feedItem = this._feedManager.getNextItem();
 			}
 			
 			private function isHeadlineEmpty():Boolean {
@@ -670,8 +541,6 @@
 				}
 				
 			}
-			
-
 			
 			private function play_next_stage2(e:EffectEvent):void {
 				if(isHeadlineEmpty()) {
@@ -711,9 +580,6 @@
 					next_headline();
 				}
 
-//				spacer1.text = "•";
-//				spacer2.text = "•";
-//				spacer3.text = "•";
 				if (this.numHeadlines == 0) {
 					headtext1.htmlText = this.source;
 					headtext2.htmlText = "Actualizando..."
@@ -726,16 +592,10 @@
 				}
 				
 				this.headtext1.validateNow();
-//				this.headtext1.text = this.headtext1.text;
-//				this.headtext1.validateNow();
 				
 				this.headtext2.validateNow();
-//				this.headtext2.text = this.headtext2.text;
-//				this.headtext2.validateNow();
 				
 				this.headtext3.validateNow();
-//				this.headtext3.text = this.headtext3.text;
-//				this.headtext3.validateNow();
 				
 				this.headtext1.width = this.headtext1.textWidth + 10;
 				this.headtext2.width = this.headtext2.textWidth + 10;
@@ -750,11 +610,12 @@
 			private function cleanupHTML(htmlToClean:String):String {
 				var ret:String;
 				
-				ret = htmlToClean;
-				ret = keepFirstStringBeforeTag(ret,/<p>/i);
-				ret = keepFirstStringBeforeTag(ret,/<br>/i);
-				ret = ret.replace(/^\s/,"");
-				
+				if( htmlToClean != null ) { 
+					ret = htmlToClean;
+					ret = keepFirstStringBeforeTag(ret,/<p>/i);
+					ret = keepFirstStringBeforeTag(ret,/<br>/i);
+					ret = ret.replace(/^\s/,"");
+				}
 				
 				return ret;
 			}
