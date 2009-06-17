@@ -99,6 +99,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.effects.easing.Linear;
 			import com.msgid.S3mer.Net.URLContentMonitor;
 			import com.adobe.xml.syndication.generic.IItem;
 			import com.adobe.xml.syndication.atom.FeedData03;
@@ -147,7 +148,7 @@
 			public var logoUrl:String;
 			
 			private var _playNextTimer:Timer;
-			private var _scrollTimer:Timer;
+//			private var _scrollTimer:Timer;
 			
 			private var _feedItem:IItem;
 			private var _feedManager:FeedManager = new FeedManager(50);
@@ -164,7 +165,7 @@
 			public static const MODE_SCROLL:int = 1;
 			
 			public var SCROLL_TIMER_DELAY:int = 40;
-			public var SCROLL_TIMER_DELTA:Number = -3;
+			public var SCROLL_TIMER_DELTA:Number = -4;
 			
 			private function get headlineDescription():String {
 				var ret:String;
@@ -217,9 +218,10 @@
 				
 				switch(this._mode) {
 					case MODE_SCROLL:
-						if ( !this._scrollTimer.running ) {
-							this._scrollTimer.start();
-						}
+//						doScroll();
+//						if ( !this._scrollTimer.running ) {
+//							this._scrollTimer.start();
+//						}
 						break;
 					case MODE_SLIDE:
 						if ( !this._playNextTimer.running ) {
@@ -285,12 +287,12 @@
 					_playNextTimer.delay = this.delay;
 				}
 
-				if (_scrollTimer == null ) {
-					_scrollTimer = new Timer(SCROLL_TIMER_DELAY);
-					_scrollTimer.addEventListener(TimerEvent.TIMER, OnScrollTimer,false,0,true);
-				} else {
-					_scrollTimer.delay = SCROLL_TIMER_DELAY;
-				}
+//				if (_scrollTimer == null ) {
+//					_scrollTimer = new Timer(SCROLL_TIMER_DELAY);
+//					_scrollTimer.addEventListener(TimerEvent.TIMER, OnScrollTimer,false,0,true);
+//				} else {
+//					_scrollTimer.delay = SCROLL_TIMER_DELAY;
+//				}
 
 				this.logoSWF.source = this.logoUrl;
 				
@@ -335,32 +337,43 @@
 				
 				switch(currState) {
 					case 1:
-						this.spacer1.x = this.headtext1.x + this.headtext1.textWidth + 20;
-						this.headtext2.x = this.spacer1.x + this.spacer1.width + 20;
-						this.spacer2.x = this.headtext2.x + this.headtext2.textWidth + 20;
-						this.headtext3.x = this.spacer2.x + this.spacer2.width + 20;
-						this.spacer3.x = this.headtext3.x + this.headtext3.textWidth + 20;
+						this.spacer1.move(this.headtext1.x + this.headtext1.textWidth + 20, this.spacer1.y);						
+						this.headtext2.move(this.spacer1.x + this.spacer1.width + 20, this.headtext2.y);
+						this.spacer2.move(this.headtext2.x + this.headtext2.textWidth + 20, this.spacer2.y);
+						this.headtext3.move(this.spacer2.x + this.spacer2.width + 20, this.headtext3.y);
+						this.spacer3.move(this.headtext3.x + this.headtext3.textWidth + 20, this.spacer3.y);
 						
 						break;
 					case 2:
-						this.spacer2.x = this.headtext2.x + this.headtext2.textWidth + 20;
-						this.headtext3.x = this.spacer2.x + this.spacer2.width + 20;
-						this.spacer3.x = this.headtext3.x + this.headtext3.textWidth + 20;
-						this.headtext1.x = this.spacer3.x + this.spacer3.width + 20;
-						this.spacer1.x = this.headtext1.x + this.headtext1.textWidth + 20;
-						
+						this.spacer2.move(this.headtext2.x + this.headtext2.textWidth + 20, this.spacer2.y);
+						this.headtext3.move(this.spacer2.x + this.spacer2.width + 20, this.headtext3.y);
+						this.spacer3.move(this.headtext3.x + this.headtext3.textWidth + 20, this.spacer3.y);
+						this.headtext1.move(this.spacer3.x + this.spacer3.width + 20, this.headtext1.y);
+						this.spacer1.move(this.headtext1.x + this.headtext1.textWidth + 20, this.spacer1.y);
+
+//						this.spacer2.x = this.headtext2.x + this.headtext2.textWidth + 20;
+//						this.headtext3.x = this.spacer2.x + this.spacer2.width + 20;
+//						this.spacer3.x = this.headtext3.x + this.headtext3.textWidth + 20;
+//						this.headtext1.x = this.spacer3.x + this.spacer3.width + 20;
+//						this.spacer1.x = this.headtext1.x + this.headtext1.textWidth + 20;
+//						
 						break;
 					case 3:
-						this.spacer3.x = this.headtext3.x + this.headtext3.textWidth + 20;
-						this.headtext1.x = this.spacer3.x + this.spacer3.width + 20;
-						this.spacer1.x = this.headtext1.x + this.headtext1.textWidth + 20;
-						this.headtext2.x = this.spacer1.x + this.spacer1.width + 20;
-						this.spacer2.x = this.headtext2.x + this.headtext2.textWidth + 20;
+						this.spacer3.move(this.headtext3.x + this.headtext3.textWidth + 20, this.spacer3.y);
+						this.headtext1.move(this.spacer3.x + this.spacer3.width + 20, this.headtext1.y);
+						this.spacer1.move(this.headtext1.x + this.headtext1.textWidth + 20, this.spacer1.y);
+						this.headtext2.move(this.spacer1.x + this.spacer1.width + 20, this.headtext2.y);
+						this.spacer2.move(this.headtext2.x + this.headtext2.textWidth + 20, this.spacer2.y);
+
+//						this.spacer3.x = this.headtext3.x + this.headtext3.textWidth + 20;
+//						this.headtext1.x = this.spacer3.x + this.spacer3.width + 20;
+//						this.spacer1.x = this.headtext1.x + this.headtext1.textWidth + 20;
+//						this.headtext2.x = this.spacer1.x + this.spacer1.width + 20;
+//						this.spacer2.x = this.headtext2.x + this.headtext2.textWidth + 20;
 						
 						break;
 				}
 				
-
 			}
 			
 			private function calculateState():int {
@@ -484,38 +497,62 @@
 				repositionSideScrollElements();
 			}
 			
-			private function OnScrollTimer(e:TimerEvent):void {
-				var currState:int = calculateState();
-				
-				switch(currState) {
-					case 1:
-						this.headtext1.x += SCROLL_TIMER_DELTA;
-						break;
-					case 2:
-						this.headtext2.x += SCROLL_TIMER_DELTA;
-						break;
-					case 3:
-						this.headtext3.x += SCROLL_TIMER_DELTA;
-						break;
-				}
-				
+			private function doScroll():void {
+				var effect:Move = new Move();
 				
 				repositionSideScrollElements();
 				
-				if( currState != calculateState() ) {
-					switch(currState) {
-						case 1:
-							updateHeadline(headtext1);
-							break;
-						case 2:
-							updateHeadline(headtext2);
-							break;
-						case 3:
-							updateHeadline(headtext3);
-							break;
-					}
-				}
+				effect.targets = [this.headtext1, this.headtext2, this.headtext3,
+								  this.spacer1, this.spacer2, this.spacer3];
+				effect.xBy = -1*this.headtext1.width*this.spacer1.width;
+				
+				effect.easingFunction = mx.effects.easing.Linear.easeNone;
+				
+				effect.addEventListener(EffectEvent.EFFECT_END, doScrollNext);
+				
+				
+				
+				effect.duration = Math.abs(effect.xBy)/80*1000;
+				
+				effect.play();
 			}
+			
+			private function doScrollNext(e:EffectEvent):void {
+				trace("Effect end");
+			}
+			
+//			private function OnScrollTimer(e:TimerEvent):void {
+//				var currState:int = calculateState();
+//				
+//				switch(currState) {
+//					case 1:
+//						this.headtext1.x += SCROLL_TIMER_DELTA;
+//						break;
+//					case 2:
+//						this.headtext2.x += SCROLL_TIMER_DELTA;
+//						break;
+//					case 3:
+//						this.headtext3.x += SCROLL_TIMER_DELTA;
+//						break;
+//				}
+//				
+//				
+//				repositionSideScrollElements();
+//				
+//				if( currState != calculateState() ) {
+//					switch(currState) {
+//						case 1:
+//							updateHeadline(headtext1);
+//							break;
+//						case 2:
+//							updateHeadline(headtext2);
+//							break;
+//						case 3:
+//							updateHeadline(headtext3);
+//							break;
+//					}
+//				}
+//			}
 
 			
 			private function OnPlayNextTimer(e:TimerEvent):void {
@@ -626,6 +663,7 @@
 				repositionSideScrollElements();
 								
 				next_headline();
+				doScroll();
 			}
 			
 			
