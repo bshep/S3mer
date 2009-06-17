@@ -75,6 +75,10 @@ package com.msgid.S3mer
 					}
 					
 					break;
+				case "W": // Resets config and reloads
+					statusDisplay("Window Pos. Save", target);
+					(target as S3merWindow).saveWindowPositions();
+					break;
 				case "X": // Resets config and reloads
 					statusDisplay("Reset Config", target);
 					(target as S3merWindow).disableKeyHandler(); 
@@ -117,23 +121,6 @@ package com.msgid.S3mer
 					ApplicationSettings.save();
 				
 					break;
-//					//Toggle smoothing
-//					var smoothing:String;
-//					
-//					smoothing = ApplicationSettings.getValue("video.smoothing");
-//					
-//					if (smoothing == "false") {
-//						target._configuration.setSmoothing(true);
-//						ApplicationSettings.setValue("video.smoothing","true");
-//						statusDisplay("Smoothing ON", target);
-//					} else {
-//						target._configuration.setSmoothing(false);
-//						ApplicationSettings.setValue("video.smoothing","false");
-//						statusDisplay("Smoothing OFF", target);
-//					}
-//					
-//					ApplicationSettings.save();
-//					break;
 				case "H":
 					var showcursor:String;
 					
@@ -213,18 +200,7 @@ package com.msgid.S3mer
 					statusDisplay("Quit", target);
 					Application.application.exit();
 					break;
-//				case "G": //Quit
-//					statusDisplay("GCollect", target);
-//					
-//					for each ( var _show:Object in target.getChildren() ) {
-//						if (_show is Show) {
-//							target.removeChild(_show as DisplayObject);
-//							target._configuration = null;
-//							target._updater = null;
-//						}
-//					}
-//					
-//					break;
+
 				case "*": //Redo First Run Config and QUIT
 					(target as S3merWindow).redoInitialSetup();
 					

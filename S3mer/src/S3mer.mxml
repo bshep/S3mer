@@ -127,6 +127,7 @@
 					_window.setScreen(screenNumber);
 					_window.ObjOwner = this;
 					_window.open(false);
+					
 					_window.showWindow();
 					this._playerWindows.addItem(_window);
 					if( screenNumber == 0 ) {
@@ -371,6 +372,23 @@
 					if(_window.visible) {
 						_window.play();
 					}
+				}
+			}
+			
+			public function saveWindowPositions():void {
+				for each( var _window:S3merWindow in this._playerWindows) {
+					if( _window.stage.displayState == StageDisplayState.FULL_SCREEN_INTERACTIVE ) {
+						ApplicationSettings.setValue("screen" + _window.screenId + ".location.x","0");
+						ApplicationSettings.setValue("screen" + _window.screenId + ".location.y","0");
+						ApplicationSettings.setValue("screen" + _window.screenId + ".location.width","0");
+						ApplicationSettings.setValue("screen" + _window.screenId + ".location.height","0");
+					} else {
+						ApplicationSettings.setValue("screen" + _window.screenId + ".location.x",_window.nativeWindow.bounds.x.toString());
+						ApplicationSettings.setValue("screen" + _window.screenId + ".location.y",_window.nativeWindow.bounds.y.toString());
+						ApplicationSettings.setValue("screen" + _window.screenId + ".location.width",_window.width.toString());
+						ApplicationSettings.setValue("screen" + _window.screenId + ".location.height",_window.height.toString());
+					}
+					ApplicationSettings.save();
 				}
 			}
 			

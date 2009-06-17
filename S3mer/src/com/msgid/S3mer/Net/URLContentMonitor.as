@@ -28,6 +28,8 @@ package com.msgid.S3mer.Net
 		private var _urlContent:String;
 		private var _urlLoader:URLLoader;
 		
+		private var _compareFunction:Function;
+		
 		// Initialize the monitor with:
 		// url: The url to monitor
 		// rate: The number of seconds to wait between checks
@@ -50,12 +52,22 @@ package com.msgid.S3mer.Net
 			return _lastUpdate;
 		}
 		
+		public function set compareFunction(val:Function):void {
+			this._compareFunction = val;
+		}
+		
 		public function start():void {
 			loadURL();
 		}
 		
 		public function stop():void {
 			_timer.stop();
+		}
+		
+		public function reload():void {
+			_timer.stop();
+			
+			loadURL();
 		}
 		
 		private function loadURL(e:TimerEvent = null):void {
@@ -69,17 +81,31 @@ package com.msgid.S3mer.Net
 		
 		private function loadURL_complete(e:Event):void {
 			var _data:String;
+			var _compareResult:Boolean;
 			
 			_data = (e.target as URLLoader).data;
 			
 			_lastUpdate = new Date();
 			
-			if(_data != _urlContent) {
-				//The url has updated!
-				_urlContent = _data;
-				dispatchEvent(new Event(Event.CHANGE));
+			if(_compareFunction != null) {
+				_compareResult = _compareFunction(_data,_urlContent);
+				
+				if(!_compareResult) {
+					//The url has updated!
+					_urlContent = _data;
+					dispatchEvent(new Event(Event.CHANGE));
+				} else {
+					dispatchEvent(new Event(Event.COMPLETE));
+				}
+				
 			} else {
-				dispatchEvent(new Event(Event.COMPLETE));
+				if(_data != _urlContent) {
+					//The url has updated!
+					_urlContent = _data;
+					dispatchEvent(new Event(Event.CHANGE));
+				} else {
+					dispatchEvent(new Event(Event.COMPLETE));
+				}
 			}
 			
 			_timer.start();

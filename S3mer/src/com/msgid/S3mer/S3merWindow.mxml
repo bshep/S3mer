@@ -27,10 +27,10 @@
 	
 	<mx:Script>
 		<![CDATA[
-			import mx.controls.Image;
-			import mx.core.BitmapAsset;
-			import mx.graphics.codec.PNGEncoder;
-			import mx.graphics.codec.JPEGEncoder;
+//			import mx.controls.Image;
+//			import mx.core.BitmapAsset;
+//			import mx.graphics.codec.PNGEncoder;
+//			import mx.graphics.codec.JPEGEncoder;
 			import mx.events.EffectEvent;
 			import mx.events.TweenEvent;
 			import mx.events.ResizeEvent;
@@ -101,11 +101,19 @@
 				this.setStyle("backgroundColor","#FFFFFF");				
 				this.visible = true;
 
-				this.move(_screen.bounds.x,_screen.bounds.y);
 				
 				this.title = "Screen #" + this._screenNumber;
 //				this.screenNumber.text = "Screen #" + this._screenNumber;
-				this.stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
+				if(ApplicationSettings.getValue("screen" + this._screenNumber + ".location.width", "0") != "0") {
+					this.move(parseInt(ApplicationSettings.getValue("screen" + this._screenNumber + ".location.x", "0"),10),
+							  parseInt(ApplicationSettings.getValue("screen" + this._screenNumber + ".location.y", "0"),10));
+					this.width =  parseInt(ApplicationSettings.getValue("screen" + this._screenNumber + ".location.width", "0"),10);
+					this.height =  parseInt(ApplicationSettings.getValue("screen" + this._screenNumber + ".location.height", "0"),10);
+					
+				} else {
+					this.move(_screen.bounds.x,_screen.bounds.y);
+					this.stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
+				}
 //				this.stage.scaleMode = StageScaleMode.SHOW_ALL;
 
 				this.currentState = "";
@@ -158,7 +166,7 @@
 				this._configuration.addEventListener(DownloaderEvent.PARTIAL_COMPLETE, OnDownloadProgress,false,0,true);
 				this._configuration.addEventListener(DownloaderEvent.PROGRESS, OnDownloadProgress,false,0,true);				
 				
-				this._configuration.updateConfiguration();
+				this._configuration.start();
 				
 			}
 			
@@ -196,31 +204,31 @@
 				this.enableKeyHandler();
 			}
 			
-			private var pictureTimer:Timer;
+//			private var pictureTimer:Timer;
 
-			private function snagPic(e:Event):void {
-				return;
-				
-				var bitmapData:BitmapData;
-				var newImage:File;
-				var fileStream:FileStream;
-				
-				bitmapData = new BitmapData(this.width,this.height,false,0x00000000);
-				bitmapData.draw(this,new Matrix());
-				var bitmap:Bitmap = new Bitmap(bitmapData);
-
-				this._notificationPanel.showNotification("Thumbnail");				
-				
-				var jpg:PNGEncoder = new PNGEncoder();
-				
-				var ba:ByteArray = jpg.encode(bitmapData);
-//				var ba:ByteArray = bitmap..encode(bitmapData);
-				newImage = File.applicationStorageDirectory.resolvePath("cap"+ this._screenNumber +".png");
-				fileStream = new FileStream();
-				fileStream.open(newImage, FileMode.UPDATE);
-				fileStream.writeBytes(ba);
-				fileStream.close();
-			}
+//			private function snagPic(e:Event):void {
+//				return;
+//				
+//				var bitmapData:BitmapData;
+//				var newImage:File;
+//				var fileStream:FileStream;
+//				
+//				bitmapData = new BitmapData(this.width,this.height,false,0x00000000);
+//				bitmapData.draw(this,new Matrix());
+//				var bitmap:Bitmap = new Bitmap(bitmapData);
+//
+//				this._notificationPanel.showNotification("Thumbnail");				
+//				
+//				var jpg:PNGEncoder = new PNGEncoder();
+//				
+//				var ba:ByteArray = jpg.encode(bitmapData);
+////				var ba:ByteArray = bitmap..encode(bitmapData);
+//				newImage = File.applicationStorageDirectory.resolvePath("cap"+ this._screenNumber +".png");
+//				fileStream = new FileStream();
+//				fileStream.open(newImage, FileMode.UPDATE);
+//				fileStream.writeBytes(ba);
+//				fileStream.close();
+//			}
 			
 			private function OnFadeComplete(e:EffectEvent):void {
 				_fader.removeEventListener(EffectEvent.EFFECT_END, OnFadeComplete);
@@ -247,9 +255,9 @@
 					this.play();
 				}
 				
-				pictureTimer = new Timer(1000,1);
-				pictureTimer.addEventListener(TimerEvent.TIMER,snagPic);
-				pictureTimer.start();
+//				pictureTimer = new Timer(1000,1);
+//				pictureTimer.addEventListener(TimerEvent.TIMER,snagPic);
+//				pictureTimer.start();
 			}
 			
 			private function OnDownloadProgress(e:DownloaderEvent):void {
@@ -296,6 +304,10 @@
 //										
 //			}
 
+			public function saveWindowPositions():void {
+				this._owner.saveWindowPositions();
+			}
+			
 			public function redoInitialSetup():void {
 				this._owner.doInitialSetup(true);
 			}

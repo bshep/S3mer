@@ -24,6 +24,7 @@ package com.msgid.S3mer.RSS
 			var _topItem:FeedManagerItem;
 			var _startIndex:int;
 			var _a:int;
+			var _shownTimes:int;
 			
 			if( _feedItems.length > 0 ) {
 				_topItem = _feedItems.getItemAt(0) as FeedManagerItem;
@@ -45,12 +46,14 @@ package com.msgid.S3mer.RSS
 				return;
 			}
 			
+			_shownTimes = findLeastShownItemShowings();
+			
 			for( _a = _startIndex; _a >= 0; _a--) {
 				var _tmpFeedItem:FeedManagerItem = new FeedManagerItem();
 				
 				_tmpFeedItem.item = feed.items[_a];
 				
-				this._feedItems.addItemAt(_tmpFeedItem,0);
+				this._feedItems.addItemAt(_tmpFeedItem,_shownTimes);
 			}
 			
 			
@@ -68,8 +71,24 @@ package com.msgid.S3mer.RSS
 			return _leastShown.item;
 		}
 		
+		private function findLeastShownItemShowings():int {
+			var _leastShown:FeedManagerItem;
+			
+			_leastShown = findLeastShownItem();
+			
+			if(_leastShown != null) {
+				return _leastShown.timeShown
+			} else {
+				return 0;
+			}
+		}
+		
 		private function findLeastShownItem():FeedManagerItem {
 			var _leastShown:FeedManagerItem;
+			
+			if(this._feedItems.length == 0) {
+				return null;
+			}
 			
 			_leastShown = this._feedItems.getItemAt(0) as FeedManagerItem;
 			

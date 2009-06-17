@@ -157,7 +157,7 @@
 			private var _color:String;
 			
 			private var _stopped:Boolean = false;
-			private var _mode:int = MODE_SLIDE;
+			private var _mode:int = MODE_SCROLL;
 			
 			
 			public static const MODE_SLIDE:int = 0;
@@ -208,6 +208,9 @@
 					this._feedItem = this._feedManager.getNextItem();
 				}
 				
+//				this.logoUrl = _feed.metadata.image.url;
+//				updateLogoURL();
+				
 				if( this._playNextTimer != null && this._playNextTimer.running ) {
 					this._playNextTimer.stop();
 				}
@@ -231,6 +234,25 @@
 			
 			private function OnRSSLoad_error(e:IOErrorEvent):void {
 				// What to do?
+			}
+			
+			private function updateLogoURL():void {
+				switch(this._mode) {
+					case MODE_SLIDE:
+						this.logoSWF.source = this.logoUrl;
+						
+						break;
+					case MODE_SCROLL:
+						if(spacer1 == null || spacer2 == null || spacer3 == null) {
+							return;
+						}
+						this.spacer1.source = this.logoUrl;
+						this.spacer2.source = this.logoUrl;
+						this.spacer3.source = this.logoUrl;
+						
+						break;
+				}
+				
 			}
 			
 			public function play():void {
