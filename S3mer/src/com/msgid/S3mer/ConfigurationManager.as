@@ -1,6 +1,7 @@
 package com.msgid.S3mer
 {
 	import com.msgid.S3mer.LocalDatabase.LocalDatabase;
+	import com.msgid.S3mer.Net.URLContentMonitor;
 	
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
@@ -18,6 +19,7 @@ package com.msgid.S3mer
 	import flash.utils.Timer;
 	
 	import mx.collections.ArrayCollection;
+	import mx.controls.Label;
 	import mx.core.Container;
 	import mx.events.EffectEvent;
 	import mx.utils.Base64Decoder;
@@ -34,12 +36,12 @@ package com.msgid.S3mer
 		
 		private var _container:Container;
 
-		private var _reloadConfigTimer:Timer;
+		private var _configMonitor:URLContentMonitor;
+		
 		private var _heartbeatTimer:Timer;
 		private var _isPro:Boolean;
 		private var _expirationDate:Date;
 		private var _expired:Boolean;
-		private var _updatingConfigguration:Boolean;
 		private var _channelId:String;
 		
 		private var _multiScreen:Boolean;
@@ -73,7 +75,6 @@ package com.msgid.S3mer
 			
 			this._container = container;
 			this._expired = false;
-			this._updatingConfigguration = false;
 			this._multiScreen = multiScreen;
 			
 			if (_downloadQueue == null) {
@@ -93,11 +94,19 @@ package com.msgid.S3mer
 				_heartbeatTimer.start();
 			}
 			
-			if (_reloadConfigTimer == null ) {
-				_reloadConfigTimer = new Timer(1*60*1000);
-				_reloadConfigTimer.addEventListener(TimerEvent.TIMER, OnReloadTimer);
+			this._channelId = ApplicationSettings.getValue("screen"+ getScreenId() +".channel.id","-1")
+
+			if(this._channelId != "-1") {
+				Logger.addEvent("ConfigurationManager::updateConfiguration: screenId = " + this._channelId );
+				this._configMonitor = new URLContentMonitor(getChannelUrl(this._channelId),60);
+				this._configMonitor.addEventListener(Event.CHANGE,updateConfiguration_step2_5);
+				this._configMonitor.addEventListener(IOErrorEvent.IO_ERROR, OnDownloadError);
+				this._configMonitor.compareFunction = config_compare_equals;
+				
+			} else {
+				(this._container as S3merWindow).visible = false;
 			}
-			
+
 			this._configURL = ApplicationSettings.getValue("config.configurl",this._configURL);
 			this._mediaURL = ApplicationSettings.getValue("config.mediaurl",this._mediaURL);
 			this._expirationDate = new Date(ApplicationSettings.getValue("config.expiration","0"));
@@ -137,18 +146,11 @@ package com.msgid.S3mer
 				var screenId:int = S3merWindow(this._container).screenId;
 				
 				_loaderReq = new URLRequest(_hearbeatURL + ApplicationSettings.getValue("screen"+ screenId +".channel.id",""));
-//				_loaderReq.setLoginCredentials("development","mils0ft");
 				
 				_loader.load(_loaderReq);
 			} catch(e:Error) {
 				Logger.addEvent("HEARTBEAT FAILED");
 			}
-		}
-		
-		private function OnReloadTimer(e:TimerEvent):void {
-			this._reloadConfigTimer.stop();
-			
-			this.updateConfiguration();
 		}
 		
 		private function OnIOError(e:IOErrorEvent):void {
@@ -157,7 +159,6 @@ package com.msgid.S3mer
 				this._heartbeatTimer.start();
 			}
 		}
-		 
 		 
 		private var tmrRestartDownloads:Timer;
 		private var tmrRestartDownloads_delay:int;
@@ -214,7 +215,7 @@ package com.msgid.S3mer
 				case 'R':
 					//Refresh
 					this._expired = true;
-					this.updateConfiguration();
+					this._configMonitor.reload();
 					break;
 				case 'O':
 					//OK
@@ -226,10 +227,9 @@ package com.msgid.S3mer
 					break;
 			}
 			
-			
 			if (isExpired() && this._expired == false) {
 				this._expired = true;
-				this.updateConfiguration();
+				this._configMonitor.reload();
 			}
 			
 			_heartbeatTimer.start();
@@ -250,36 +250,6 @@ package com.msgid.S3mer
 			// Sanity check, all media should be available?
 		}
 		
-		// Called whenever the configuration file was updated
-		public function updateConfiguration():void {
-			if(this._expired) {
-				trace("expired here");
-			}
-			
-			if (this._updatingConfigguration) {
-				return;
-			}
-			
-			this._updatingConfigguration = true;
-			
-			this._channelId = ApplicationSettings.getValue("screen"+ getScreenId() +".channel.id","-1")
-
-			if(this._channelId == "-1") {
-				(this._container as S3merWindow).visible = false;
-				this._updatingConfigguration = false;
-				return;
-			}
-
-			_downloadQueue.addEventListener(DownloaderEvent.COMPLETE,updateConfiguration_step2,false,0,true)
-			_downloadQueue.addEventListener(DownloaderEvent.ERROR,onDownloadError,false,0,true)
-
-
-			Logger.addEvent("ConfigurationManager::updateConfiguration: screenId = " + this._channelId );
-			_downloadQueue.addItem(getChannelUrl(this._channelId),getScreenId(), "", "config" + getScreenId() + ".xml", false,true);
-
-			_downloadQueue.start();
-		}
-		
 		private function getChannelUrl(channelNumber:String):String {
 			return this._configURL + "?playerid=" + channelNumber;
 		}
@@ -290,12 +260,8 @@ package com.msgid.S3mer
 			if( this._expired == true || isExpired()) {
 				this.stop();
 				
-				showNotConnected();
+				showNotConnected("Error: Expired");
 				
-				// Set the reload timer to 1 min intervals
-//				this._reloadConfigTimer.delay = 60*1000;
-				this._reloadConfigTimer.start();
-				this._updatingConfigguration = false;
 				return;				
 			}
 			
@@ -307,12 +273,8 @@ package com.msgid.S3mer
 			} else {
 				this.stop();
 				
-				showNotConnected();
+				showNotConnected("Error: Cannot download configuration");
 				
-				// Set the reload timer to 1 min intervals
-//				this._reloadConfigTimer.delay = 60*1000;
-				this._reloadConfigTimer.start();
-				this._updatingConfigguration = false;
 			}
 			
 			
@@ -323,6 +285,7 @@ package com.msgid.S3mer
 		public static var NotConnectedSWF:Class;
 
 		private var _showNotConnected:SmoothImage;
+		private var _showNotConnected_message:Label;
 		
 		private function initNotConnected():void {
 			var myAppObject:Container = this._container;
@@ -340,16 +303,27 @@ package com.msgid.S3mer
 				_showNotConnected.width = myAppObject.width;
 				_showNotConnected.height = myAppObject.height;
 				_showNotConnected.source = NotConnectedSWF;
-			}			
+			}
+			
+			if( _showNotConnected_message == null ) {
+				_showNotConnected_message = new Label();
+				_showNotConnected_message.setStyle("left","10");
+				_showNotConnected_message.setStyle("bottom","10");
+				_showNotConnected_message.setStyle("color","#FF0000");
+				_showNotConnected_message.setStyle("fontSize","24");
+				
+			}		
 		}
 		
-		private function showNotConnected():void {
+		private function showNotConnected(message:String):void {
 			var myAppObject:Container = this._container;
 						
 			initNotConnected();
 
 			if (_showNotConnected.parent != myAppObject) {
 				myAppObject.addChild(_showNotConnected);
+				_showNotConnected_message.text = message;
+				myAppObject.addChild(_showNotConnected_message);
 			}
 			
 			makeTopmostItem(_showNotConnected);
@@ -387,48 +361,59 @@ package com.msgid.S3mer
 			}
 		}
 
-		private function updateConfiguration_step2(e:DownloaderEvent):void {
-			updateConfiguration_step2_5();
+		private function config_compare_equals(config1:String, config2:String):Boolean {
+			var config_xml1:XML;
+			var config_xml2:XML;
+			
+			try {
+				config_xml1 = decryptConfig(new XML(config1));
+				config_xml2 = decryptConfig(new XML(config2));
+				
+				config_xml1.timestamp = "";
+				config_xml2.timestamp = "";
+				
+				
+				if( config_xml1 == config_xml2 ) {
+					return true;
+				}
+				
+			} catch(e:Error) {
+				trace("config_compare_equals: " + e.message);
+			}
+			
+			return false;
 		}
-
 		
-		private function updateConfiguration_step2_5():void {
+		private function updateConfiguration_step2_5(e:Event = null):void {
 			var configFile:File = new File(FileIO.mediaPath(getScreenId(),"config" + getScreenId() + ".xml"));
-			var configReader:FileStream;
+			var configWriter:FileStream;
 			var config:XML;
 			
-			_downloadQueue.removeEventListener(DownloaderEvent.ERROR,onDownloadError);
-			_downloadQueue.removeEventListener(DownloaderEvent.COMPLETE,updateConfiguration_step2);
-			
-			configReader = new FileStream;
+			configWriter = new FileStream;
 			
 			try {
 				
-				configReader.open(configFile,FileMode.READ);
+				configWriter.open(configFile,FileMode.WRITE);
 			} catch(e:Error) {
 				Logger.addEvent("ConfigurationManager: " + e.message);
 			}
 			
 			try {
 				// Ensure the new configuration file is valid before we replace the copy in memory
-				config = new XML(configReader.readUTFBytes(configReader.bytesAvailable));
+				config = new XML(this._configMonitor.data);
+				
+				configWriter.writeUTFBytes(config.toXMLString());
+				configWriter.close();
 				
 				config = decryptConfig(config);
 				
 				config.timestamp = "";
 
-				if( this._config == config ) {
-					this._updatingConfigguration = false;
-					this._reloadConfigTimer.start();
-					
-					if(this._expired && isExpired()) { // IF both these are true when we get here it means the player expired and the current configuration is still expired.
-						this.stop();
-						this.showNotConnected();
-					}
-					
-					return;
+				if(this._expired && isExpired()) { // IF both these are true when we get here it means the player expired and the current configuration is still expired.
+					this.stop();
+					this.showNotConnected("Error: Expired");
 				}
-				
+					
 				var newConfigUrl:String = config.config.configurl;
 				if (newConfigUrl != "" && newConfigUrl != this._configURL) {
 					Logger.addEvent("config.channel.config.configurl: " + config.config.configurl)
@@ -436,8 +421,7 @@ package com.msgid.S3mer
 					
 					ApplicationSettings.setValue("config.configurl",this._configURL);
 					ApplicationSettings.save();
-					this._updatingConfigguration = false;
-					this.updateConfiguration();
+					this._configMonitor.reload();
 					return;
 				}
 				
@@ -476,7 +460,7 @@ package com.msgid.S3mer
 				
 				if(this._expired && isExpired()) { // IF both these are true when we get here it means the player expired and the current configuration is still expired.
 					this.stop();
-					this.showNotConnected();
+					this.showNotConnected("Error: Expired");
 					return;
 				}
 				
@@ -535,10 +519,6 @@ package com.msgid.S3mer
 			
 			this.dispatchEvent(new ConfigurationEvent(ConfigurationEvent.UPDATED));
 			cleanupMedia();
-			
-			this._updatingConfigguration = false;
-//			this._reloadConfigTimer.delay = 1*60*1000;
-			this._reloadConfigTimer.start();
 		}
 		
 		public function play():void {
@@ -573,8 +553,7 @@ package com.msgid.S3mer
 			
 			this._stopped = true;
 			this._heartbeatTimer.stop();
-			this._reloadConfigTimer.stop();
-			
+			this._configMonitor.stop();
 		}
 		
 		public function reset():void {
@@ -1065,5 +1044,11 @@ package com.msgid.S3mer
 
 			}
 		}
+		
+		public function start():void {
+			this._configMonitor.start();
+		}
+		
+
 	}
 }
