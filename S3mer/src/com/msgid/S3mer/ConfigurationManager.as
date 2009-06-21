@@ -1049,6 +1049,10 @@ package com.msgid.S3mer
 			this._configMonitor.start();
 		}
 		
+		public function getDownloadText():String {
+			return _downloadQueue.getDownloadText();
+		}
+		
 
 	}
 }

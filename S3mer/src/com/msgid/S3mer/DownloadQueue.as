@@ -111,8 +111,21 @@ package com.msgid.S3mer
 			}
 		}
 		
+		public function getDownloadText():String {
+			var completed:int = 0;
+			
+			for each(var dl:Downloader in this._downloaders) {
+				if(dl.complete) {
+					completed++;
+				}
+			}
+			
+			return "Downloading Item " + (completed+1) + " of " + this._downloaders.length;
+			
+		}
+		
 		private function OnProgress(e:ProgressEvent):void {
-			this.dispatchEvent(new DownloaderEvent(DownloaderEvent.PROGRESS,this));
+			this.dispatchEvent(new DownloaderEvent(DownloaderEvent.PROGRESS,(e.target as Downloader)));
 		}
 		
 		private function OnComplete(e:ProgressEvent):void {

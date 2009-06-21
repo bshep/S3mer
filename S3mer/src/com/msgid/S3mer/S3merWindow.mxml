@@ -16,6 +16,7 @@
 					<mx:ProgressBar labelPlacement="bottom" id="myTotalProgress" enabled="true" mode="manual" label=" " bottom="20" right="10" left="10"/>
 					<mx:Label id="lblStatus" visible="false" left="0" right="0" color="#BDBDBD">
 					</mx:Label>
+					<mx:Label y="208" text="" id="fileProgress" left="10"/>
 				</mx:Canvas>
 			</mx:AddChild>
 			<mx:RemoveChild target="{_loginWindow}"/>
@@ -163,9 +164,10 @@
 				this._configuration = new ConfigurationManager(this, multiScreen);
 				
 				this._configuration.addEventListener(ConfigurationEvent.UPDATED, OnConfigurationUpdate,false,0,true);
-				this._configuration.addEventListener(DownloaderEvent.PARTIAL_COMPLETE, OnDownloadProgress,false,0,true);
-				this._configuration.addEventListener(DownloaderEvent.PROGRESS, OnDownloadProgress,false,0,true);				
+				this._configuration.addEventListener(DownloaderEvent.PARTIAL_COMPLETE, OnDownloadSingleFileComplete,false,0,true);
+				this._configuration.addEventListener(DownloaderEvent.PROGRESS, OnDownloadSingleFileProgress,false,0,true);				
 				
+				this.fileProgress.text = "Updating Configuration...";
 				this._configuration.start();
 				
 			}
@@ -260,8 +262,19 @@
 //				pictureTimer.start();
 			}
 			
-			private function OnDownloadProgress(e:DownloaderEvent):void {
-				this.myTotalProgress.setProgress(DownloadQueue(e._downloader).percent,100);
+			private function OnDownloadSingleFileProgress(e:DownloaderEvent):void {
+				var fileProgressText:String = this._configuration.getDownloadText();
+				
+				this.myTotalProgress.setProgress((e._downloader as Downloader).percent,100);
+				
+				if( this.fileProgress.text != fileProgressText ) {
+					this.fileProgress.text = fileProgressText;
+				}
+			}
+			
+			private function OnDownloadSingleFileComplete(e:DownloaderEvent):void {
+				this.myTotalProgress.setProgress(100,100);
+//				this.fileProgress.text = this._configuration.getDownloadText();
 			}
 
 			public function reloadApp():void {
@@ -271,8 +284,8 @@
 			public function resetApp():void {
 				this._configuration.stopDownloads();
 				this._configuration.removeEventListener(ConfigurationEvent.UPDATED, OnConfigurationUpdate);
-				this._configuration.removeEventListener(DownloaderEvent.PARTIAL_COMPLETE, OnDownloadProgress);
-				this._configuration.removeEventListener(DownloaderEvent.PROGRESS, OnDownloadProgress);			
+				this._configuration.removeEventListener(DownloaderEvent.PARTIAL_COMPLETE, OnDownloadSingleFileComplete);
+				this._configuration.removeEventListener(DownloaderEvent.PROGRESS, OnDownloadSingleFileProgress);			
 				this._owner.resetApp();
 			}
 			
