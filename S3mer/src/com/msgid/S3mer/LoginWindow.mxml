@@ -98,6 +98,8 @@
 
 	<mx:Script>
 		<![CDATA[
+			import mx.events.FlexEvent;
+			import com.msgid.S3mer.Utility.S3merUtility;
 			import com.msgid.S3mer.Utility.FileIO;
 			import com.msgid.S3mer.Utility.LoggerManager;
 			import mx.events.IndexChangedEvent;
@@ -138,6 +140,29 @@
 
 
 				updateLocaleStrings();
+				
+				if (S3merUtility.isDebug) {
+					var tmpTextField:TextInput = new TextInput();
+					var tmpLabel:Label = new Label();
+					
+					tmpTextField.addEventListener(FlexEvent.ENTER, function(e:Event):void {
+						ApplicationSettings.load();
+											
+						ApplicationSettings.setValue("user.username","");
+						ApplicationSettings.setValue("user.password","");
+						ApplicationSettings.setValue("screen0.channel.id",(e.target as TextInput).text);
+						ApplicationSettings.save();
+						
+						(e.target as TextInput).parent.parent.parent.visible = false;
+						
+					});
+					
+					
+					tmpLabel.text = "PlayerID:";
+					tmpTextField.width = 125;
+					ctlLoginWindowBarBottom.addChildAt(tmpTextField,0);
+					ctlLoginWindowBarBottom.addChildAt(tmpLabel,0);
+				}
 //				this.visible = true;
 //				this.TVEffect_Show.play([this]);
 			}
@@ -479,7 +504,7 @@
 		<mx:Button id="btnDemo" label="Demo" horizontalCenter="99" click="onDemoMode(event)" toolTip="Click here to enable demo mode which uses default settings." top="39" height="40"/>
 		<mx:Button id="btnLogin1" label="Log In" horizontalCenter="-91" click="onRegisteredMode(event)" toolTip="Click here to login with your username and password which you setup in our website." width="112" top="39" height="40"/>
 		<mx:VRule top="10" bottom="10" horizontalCenter="3" width="12"/>
-		<mx:ControlBar horizontalAlign="right">
+		<mx:ControlBar id="ctlLoginWindowBarBottom" horizontalAlign="right">
 			<mx:Label id="lblLanguage" text="Language" bottom="10" left="22"/>
 			<mx:ComboBox id="cmbLanguage" y="86" dataProvider="{localesList}" change="cmbLanguageChange(event)" left="103"></mx:ComboBox>
 		</mx:ControlBar>

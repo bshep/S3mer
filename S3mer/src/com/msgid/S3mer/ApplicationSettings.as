@@ -26,6 +26,7 @@ package com.msgid.S3mer
 //		public static var URL_MEDIA:String = "http://dhr770hhem8f8.cloudfront.net/";
 		public static var URL_HEARTBEAT:String = "http://" + SERVER + "/heartbeat.php";
 		public static var URL_CONFIG:String = "http://" + SERVER + "/getxmltest.php";
+		public static var URL_CONFIG_DEBUG:String = "http://" + SERVER + "/getxmltest_debug.php";
 		public static var URL_RUNLOG:String = "http://" + SERVER + "/asrunlog.php";
 		public static var URL_UPDATE:String = "http://" + SERVER + "/checkversion.php?version=1";
 

@@ -6,6 +6,7 @@ package com.msgid.S3mer
 	import com.msgid.S3mer.LocalDatabase.LocalDatabase;
 	import com.msgid.S3mer.Net.URLContentMonitor;
 	import com.msgid.S3mer.Utility.FileIO;
+	import com.msgid.S3mer.Utility.S3merUtility;
 	import com.msgid.S3mer.Utility.LoggerManager;
 	
 	import flash.display.DisplayObject;
@@ -256,7 +257,11 @@ package com.msgid.S3mer
 		}
 		
 		private function getChannelUrl(channelNumber:String):String {
-			return this._configURL + "?playerid=" + channelNumber;
+			if(S3merUtility.isDebug) {
+				return ApplicationSettings.URL_CONFIG_DEBUG + "?playerid=" + channelNumber;
+			} else {
+				return this._configURL + "?playerid=" + channelNumber;
+			}
 		}
 		
 		private function onDownloadError(e:Event):void {
