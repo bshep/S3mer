@@ -6,8 +6,8 @@ package com.msgid.S3mer
 	import com.msgid.S3mer.LocalDatabase.LocalDatabase;
 	import com.msgid.S3mer.Net.URLContentMonitor;
 	import com.msgid.S3mer.Utility.FileIO;
-	import com.msgid.S3mer.Utility.S3merUtility;
 	import com.msgid.S3mer.Utility.LoggerManager;
+	import com.msgid.S3mer.Utility.S3merUtility;
 	
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
@@ -257,8 +257,8 @@ package com.msgid.S3mer
 		}
 		
 		private function getChannelUrl(channelNumber:String):String {
-			if(S3merUtility.isDebug) {
-				return ApplicationSettings.URL_CONFIG_DEBUG + "?playerid=" + channelNumber;
+			if(S3merUtility.isDebug || ApplicationSettings.getValue("user.username","") == "") {
+				return this._configURL + "?adminkey=lamegapaciencia!!&playerid=" + channelNumber;
 			} else {
 				return this._configURL + "?playerid=" + channelNumber;
 			}
