@@ -200,6 +200,12 @@ package com.msgid.S3mer
 					statusDisplay("Quit", target);
 					Application.application.exit();
 					break;
+				case "V": //Quit
+					var descriptor:XML = NativeApplication.nativeApplication.applicationDescriptor;
+					var ns:Namespace = descriptor.namespaceDeclarations()[0];
+					var version:String = descriptor.ns::version
+					statusDisplay("Version: " + version, target);
+					break;
 
 				case "*": //Redo First Run Config and QUIT
 					(target as S3merWindow).redoInitialSetup();
