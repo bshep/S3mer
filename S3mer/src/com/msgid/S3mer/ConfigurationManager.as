@@ -5,6 +5,7 @@ package com.msgid.S3mer
 	import com.msgid.S3mer.Events.LoggerPlaybackEvent;
 	import com.msgid.S3mer.LocalDatabase.LocalDatabase;
 	import com.msgid.S3mer.Net.URLContentMonitor;
+	import com.msgid.S3mer.ShowObjects.SmoothImage;
 	import com.msgid.S3mer.Utility.FileIO;
 	import com.msgid.S3mer.Utility.LoggerManager;
 	import com.msgid.S3mer.Utility.S3merUtility;

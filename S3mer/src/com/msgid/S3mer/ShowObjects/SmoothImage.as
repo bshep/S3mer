@@ -1,8 +1,10 @@
-package com.msgid.S3mer {
-    import mx.controls.Image;
-    import flash.display.Loader;
+package com.msgid.S3mer.ShowObjects
+{
     import flash.display.Bitmap;
+    import flash.display.Loader;
     import flash.events.Event;
+    
+    import mx.controls.Image;
     import mx.core.mx_internal;
     
     use namespace mx_internal;
@@ -14,7 +16,7 @@ package com.msgid.S3mer {
      *
      * @author Ben Longoria
      */
-    public class SmoothImage extends Image {
+    public class SmoothImage extends Image implements IShowObject {
         
         public function SmoothImage():void {
             super();
@@ -32,6 +34,12 @@ package com.msgid.S3mer {
            	}
 	                   
             super.contentLoaderInfo_completeEventHandler(event);
+        }
+        
+        public function reset():void {
+        	if(this.parent) {
+        		this.parent.removeChild(this);
+        	}        	
         }
     }
 }
