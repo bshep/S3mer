@@ -1,24 +1,24 @@
 package com.msgid.S3mer.LocalDatabase
 {
-	import com.msgid.S3mer.ApplicationSettings;
-	import com.msgid.S3mer.Events.LoggerPlaybackEvent;
-	import com.msgid.S3mer.Logger;
-	
-	import flash.data.SQLConnection;
-	import flash.data.SQLResult;
-	import flash.data.SQLStatement;
-	import flash.errors.SQLError;
-	import flash.events.Event;
-	import flash.events.IOErrorEvent;
-	import flash.events.SQLErrorEvent;
-	import flash.events.SQLEvent;
-	import flash.events.TimerEvent;
-	import flash.filesystem.File;
-	import flash.net.URLLoader;
-	import flash.net.URLRequest;
-	import flash.net.URLRequestMethod;
-	import flash.net.URLVariables;
-	import flash.utils.Timer; 
+		import com.msgid.S3mer.ApplicationSettings;
+		import com.msgid.S3mer.Events.LoggerPlaybackEvent;
+		import com.msgid.S3mer.Utility.LoggerManager;
+		
+		import flash.data.SQLConnection;
+		import flash.data.SQLResult;
+		import flash.data.SQLStatement;
+		import flash.errors.SQLError;
+		import flash.events.Event;
+		import flash.events.IOErrorEvent;
+		import flash.events.SQLErrorEvent;
+		import flash.events.SQLEvent;
+		import flash.events.TimerEvent;
+		import flash.filesystem.File;
+		import flash.net.URLLoader;
+		import flash.net.URLRequest;
+		import flash.net.URLRequestMethod;
+		import flash.net.URLVariables;
+		import flash.utils.Timer; 
 
 	public class LocalDatabase
 	{
@@ -207,7 +207,7 @@ package com.msgid.S3mer.LocalDatabase
 		}
 		
 		private static function postDataToServer_ioError(e:IOErrorEvent):void {
-			Logger.addEvent("LocalDatabase: Error posting data back to server. Details: " + e.text);
+			LoggerManager.addEvent("LocalDatabase: Error posting data back to server. Details: " + e.text);
 		}
 		
 		private static function postDataToServer_complete(e:Event):void {

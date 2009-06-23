@@ -1,6 +1,8 @@
 package com.msgid.S3mer
 {
 	import com.msgid.S3mer.Events.DownloaderEvent;
+	import com.msgid.S3mer.Utility.FileIO;
+	import com.msgid.S3mer.Utility.LoggerManager;
 	
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
@@ -39,7 +41,7 @@ package com.msgid.S3mer
 				_loaderReq = new URLRequest(this._item.url);
 				_loader.load(_loaderReq);
 			} catch(e:Error) {
-				Logger.addEvent("HEARTBEAT FAILED");
+				LoggerManager.addEvent("HEARTBEAT FAILED");
 			}
 		}
 		
@@ -53,9 +55,9 @@ package com.msgid.S3mer
 		
 		public function queueDownload():void {
 			if(FileIO.fileExists(FileIO.Url2Filename(_currentItemURL),this._screenId)) {
-				Logger.addEvent("Already Downloaded File:"+ FileIO.Url2Filename(_currentItemURL));
+				LoggerManager.addEvent("Already Downloaded File:"+ FileIO.Url2Filename(_currentItemURL));
 			} else {
-				Logger.addEvent("Downloading File:"+ FileIO.Url2Filename(_currentItemURL));
+				LoggerManager.addEvent("Downloading File:"+ FileIO.Url2Filename(_currentItemURL));
 				PodcastManager._queue.addItem(_currentItemURL,_screenId,"",null,false,false);
 			}
 			
@@ -64,7 +66,7 @@ package com.msgid.S3mer
 		
 		private function OnIOError(e:IOErrorEvent):void {
 			_errored = true;
-			Logger.addEvent("LOADRSS FAILED: url may not be valid: " + this._item.url);
+			LoggerManager.addEvent("LOADRSS FAILED: url may not be valid: " + this._item.url);
 			dispatchEvent(new Event("ERROR"));
 		}
 		
@@ -95,7 +97,7 @@ package com.msgid.S3mer
 				_loaderReq = new URLRequest(this._item.url);
 				_loader.load(_loaderReq);
 			} catch(e:Error) {
-				Logger.addEvent("HEARTBEAT FAILED");
+				LoggerManager.addEvent("HEARTBEAT FAILED");
 			}			
 		}
 		
@@ -103,10 +105,10 @@ package com.msgid.S3mer
 			extractFeedData((e.target as URLLoader).data);
 			
 			if(FileIO.fileExists(FileIO.Url2Filename(_currentItemURL),this._screenId)) {
-				Logger.addEvent("Already Downloaded File:"+ FileIO.Url2Filename(_currentItemURL));
+				LoggerManager.addEvent("Already Downloaded File:"+ FileIO.Url2Filename(_currentItemURL));
 				_item.file = FileIO.Url2Filename(_currentItemURL);
 			} else {
-				Logger.addEvent("Downloading File:"+ FileIO.Url2Filename(_currentItemURL));
+				LoggerManager.addEvent("Downloading File:"+ FileIO.Url2Filename(_currentItemURL));
 				
 				PodcastManager._queue.addEventListener(DownloaderEvent.PARTIAL_COMPLETE,checkRSS_loadmedia_complete);
 				PodcastManager._queue.addItem(_currentItemURL, _screenId);
@@ -116,7 +118,7 @@ package com.msgid.S3mer
 		
 		public function checkRSS_loadmedia_complete(e:DownloaderEvent):void {
 			if(FileIO.fileExists(FileIO.Url2Filename(_currentItemURL),this._screenId)) {
-				Logger.addEvent("Media for RSS updated: " + this._item.url);
+				LoggerManager.addEvent("Media for RSS updated: " + this._item.url);
 				_item.file = FileIO.Url2Filename(_currentItemURL);
 			}			
 		}

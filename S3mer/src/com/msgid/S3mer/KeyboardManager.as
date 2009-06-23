@@ -1,5 +1,7 @@
 package com.msgid.S3mer
 {
+	import com.msgid.S3mer.Utility.LoggerManager;
+
 	import flash.desktop.NativeApplication;
 	import flash.display.Stage;
 	import flash.display.StageDisplayState;
@@ -21,7 +23,7 @@ package com.msgid.S3mer
 		
 		
 		private static function statusDisplay(text:String, target:Object):void {
-			Logger.addEvent("HOTKEY: " + text);
+			LoggerManager.addEvent("HOTKEY: " + text);
 			if (target == null || target is Stage) {
 //				this._notificationPanel.showNotification(text);
 			} else {
@@ -193,7 +195,7 @@ package com.msgid.S3mer
 						}
 											
 					} catch( e:IllegalOperationError) {
-						Logger.addEvent("could not set to startup");
+						LoggerManager.addEvent("could not set to startup");
 					}
 					break;
 				case "Q": //Quit

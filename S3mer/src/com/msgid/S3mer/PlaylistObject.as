@@ -1,6 +1,6 @@
 package com.msgid.S3mer
 {
-	import mx.collections.ArrayCollection;
+	import com.msgid.S3mer.Utility.FileIO;
 	
 	public class PlaylistObject
 	{

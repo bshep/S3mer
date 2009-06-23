@@ -1,5 +1,7 @@
 package com.msgid.S3mer
 {
+	import com.msgid.S3mer.Utility.FileIO;
+	import com.msgid.S3mer.Utility.LoggerManager;
 	import flash.desktop.NativeApplication;
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;
@@ -60,7 +62,7 @@ package com.msgid.S3mer
 				settingsRW.writeUTFBytes(settings);
 				settingsRW.close();
 			} catch(e:Error) {
-				Logger.addEvent("_AppSettingsInstance._save: " + e.message);
+				LoggerManager.addEvent("_AppSettingsInstance._save: " + e.message);
 				return false;
 			}
 			
@@ -94,7 +96,7 @@ package com.msgid.S3mer
 				}
 								
 			} catch(e:Error) {
-				Logger.addEvent("_AppSettingsInstance._load: " + e.message);
+				LoggerManager.addEvent("_AppSettingsInstance._load: " + e.message);
 				return false;
 			}
 			

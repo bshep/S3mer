@@ -98,6 +98,8 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.msgid.S3mer.Utility.FileIO;
+			import com.msgid.S3mer.Utility.LoggerManager;
 			import mx.events.IndexChangedEvent;
 			import mx.resources.ResourceBundle;
 			import mx.events.EffectEvent;
@@ -236,7 +238,7 @@
 				
 				result = URLLoader(e.target).data;
 				
-				Logger.addEvent("LOGIN RESULT: " + result);
+				LoggerManager.addEvent("LOGIN RESULT: " + result);
 				
 				if( result == "OK" ) {
 					highlightTextbox(this.txtUsername,"",false);
@@ -274,7 +276,7 @@
 				
 				result = URLLoader(e.target).data;
 				
-				Logger.addEvent("LOGIN RESULT: " + result);
+				LoggerManager.addEvent("LOGIN RESULT: " + result);
 			}
 			
 			private function playerListLoaded(e:Event):void {
@@ -285,7 +287,7 @@
 				result = new XML(URLLoader(e.target).data);
 				
 				if(!result) {
-					Logger.addEvent("Error loading player list, Invalid XML returned");
+					LoggerManager.addEvent("Error loading player list, Invalid XML returned");
 				}
 				
 				if (!_isDemoMode) {
@@ -330,7 +332,7 @@
 					
 					for each( var _player:XML in playersXML.player ) {
 						dataProvider.addItem({label:_player.@name, data:_player.id});
-						Logger.addEvent("Player ID: " + _player.@name );
+						LoggerManager.addEvent("Player ID: " + _player.@name );
 					}
 					
 					if (dataProvider.length > 0) {
@@ -368,7 +370,7 @@
 				
 				result = URLLoader(e.target).data;
 				
-				Logger.addEvent("LOGIN RESULT: " + result);
+				LoggerManager.addEvent("LOGIN RESULT: " + result);
 			}
 
 		

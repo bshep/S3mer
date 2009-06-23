@@ -1,6 +1,6 @@
 package com.msgid.S3mer.Net
 {
-	import com.msgid.S3mer.Logger;
+	import com.msgid.S3mer.Utility.LoggerManager;
 	
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
@@ -113,7 +113,7 @@ package com.msgid.S3mer.Net
 		}
 		
 		private function loadURL_error(e:IOErrorEvent):void {
-			Logger.addEvent("URLContentMonitor: Error loading URL" + e.text);
+			LoggerManager.addEvent("URLContentMonitor: Error loading URL" + e.text);
 		}
 	}
 }

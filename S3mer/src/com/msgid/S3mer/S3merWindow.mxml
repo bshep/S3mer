@@ -30,18 +30,16 @@
 		<![CDATA[
 			import com.msgid.S3mer.Events.DownloaderEvent;
 			import com.msgid.S3mer.Events.ConfigurationEvent;
-//			import mx.controls.Image;
-//			import mx.core.BitmapAsset;
-//			import mx.graphics.codec.PNGEncoder;
-//			import mx.graphics.codec.JPEGEncoder;
 			import mx.events.EffectEvent;
 			import mx.events.TweenEvent;
 			import mx.events.ResizeEvent;
 			import mx.managers.SystemManager;
+			import com.msgid.S3mer.Utility.LoggerManager;
+
 			
 			private var _screenNumber:int;
 			private var _show:Show;
-			private var _log:Logger = Logger.instance;
+			private var _log:LoggerManager = LoggerManager.instance;
 			private var _configuration:ConfigurationManager;
 			private var _fader:FadePanel;
 			private var _stopped:Boolean = true;
@@ -140,15 +138,15 @@
 			}
 						
 			private function onWindowResize(e:ResizeEvent):void {
-				Logger.addEvent("Screen #" + this._screenNumber + " size is: " + this.width + "x" + this.height);
+				LoggerManager.addEvent("Screen #" + this._screenNumber + " size is: " + this.width + "x" + this.height);
 				
 				if( this._show != null ) {
-					Logger.addEvent("Screen #" + this._screenNumber + ": resizing");
+					LoggerManager.addEvent("Screen #" + this._screenNumber + ": resizing");
 					this._show.width = this.width;
 					this._show.height = this.height;
 					this._show.resize();
 				} else {
-					Logger.addEvent("Screen #" + this._screenNumber + ": NOT resizing, show is null");
+					LoggerManager.addEvent("Screen #" + this._screenNumber + ": NOT resizing, show is null");
 				}
 			}
 			
@@ -238,9 +236,9 @@
 				_fader.removeEventListener(EffectEvent.EFFECT_END, OnFadeComplete);
 				_fader.addEventListener(EffectEvent.EFFECT_END, OnFadeComplete_stage2);
 				
-				Logger.addEvent("Current BKG Color : " + this.getStyle("backgroundColor"));
+				LoggerManager.addEvent("Current BKG Color : " + this.getStyle("backgroundColor"));
 				this.setStyle("backgroundColor","#000000");
-				Logger.addEvent("Current BKG Color : " + this.getStyle("backgroundColor"));
+				LoggerManager.addEvent("Current BKG Color : " + this.getStyle("backgroundColor"));
 				this.currentState = "";
 				
 				_fader.fadeIn(100);

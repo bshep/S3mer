@@ -1,4 +1,4 @@
-package com.msgid.S3mer
+package com.msgid.S3mer.Utility
 {
 //	import com.adobe.crypto.SHA1;
 	
@@ -9,7 +9,7 @@ package com.msgid.S3mer
 	public class FileIO
 	{
 		private static const ENABLE_HASH:Boolean = false;
-		private static var _log:Logger = new Logger;	
+		private static var _log:LoggerManager = new LoggerManager;	
 		
 		public static function isMacOs():Boolean {
 //			Logger.addEvent("OS is: " + Capabilities.os);
@@ -63,7 +63,7 @@ package com.msgid.S3mer
 		}
 		
 		public static function appPath():String {
-			Logger.addEvent("Resource Directory: " + File.applicationDirectory.nativePath);
+			LoggerManager.addEvent("Resource Directory: " + File.applicationDirectory.nativePath);
 			return File.applicationDirectory.nativePath;
 		}
 		

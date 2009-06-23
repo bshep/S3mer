@@ -5,6 +5,8 @@ package com.msgid.S3mer
 	import com.msgid.S3mer.Events.LoggerPlaybackEvent;
 	import com.msgid.S3mer.LocalDatabase.LocalDatabase;
 	import com.msgid.S3mer.Net.URLContentMonitor;
+	import com.msgid.S3mer.Utility.FileIO;
+	import com.msgid.S3mer.Utility.LoggerManager;
 	
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
@@ -100,7 +102,7 @@ package com.msgid.S3mer
 			this._channelId = ApplicationSettings.getValue("screen"+ getScreenId() +".channel.id","-1")
 
 			if(this._channelId != "-1") {
-				Logger.addEvent("ConfigurationManager::updateConfiguration: screenId = " + this._channelId );
+				LoggerManager.addEvent("ConfigurationManager::updateConfiguration: screenId = " + this._channelId );
 				this._configMonitor = new URLContentMonitor(getChannelUrl(this._channelId),60);
 				this._configMonitor.addEventListener(Event.CHANGE,updateConfiguration_step2_5);
 				this._configMonitor.addEventListener(IOErrorEvent.IO_ERROR, OnDownloadError);
@@ -152,12 +154,12 @@ package com.msgid.S3mer
 				
 				_loader.load(_loaderReq);
 			} catch(e:Error) {
-				Logger.addEvent("HEARTBEAT FAILED");
+				LoggerManager.addEvent("HEARTBEAT FAILED");
 			}
 		}
 		
 		private function OnIOError(e:IOErrorEvent):void {
-			Logger.addEvent("HEARTBEAT FAILED: Probably not connected");
+			LoggerManager.addEvent("HEARTBEAT FAILED: Probably not connected");
 			if(this._heartbeatTimer != null) {
 				this._heartbeatTimer.start();
 			}
@@ -258,7 +260,7 @@ package com.msgid.S3mer
 		}
 		
 		private function onDownloadError(e:Event):void {
-			Logger.addEvent("Error with download" + (e.target).toString());
+			LoggerManager.addEvent("Error with download" + (e.target).toString());
 			
 			if( this._expired == true || isExpired()) {
 				this.stop();
@@ -398,7 +400,7 @@ package com.msgid.S3mer
 				
 				configWriter.open(configFile,FileMode.WRITE);
 			} catch(e:Error) {
-				Logger.addEvent("ConfigurationManager: " + e.message);
+				LoggerManager.addEvent("ConfigurationManager: " + e.message);
 			}
 			
 			try {
@@ -419,7 +421,7 @@ package com.msgid.S3mer
 					
 				var newConfigUrl:String = config.config.configurl;
 				if (newConfigUrl != "" && newConfigUrl != this._configURL) {
-					Logger.addEvent("config.channel.config.configurl: " + config.config.configurl)
+					LoggerManager.addEvent("config.channel.config.configurl: " + config.config.configurl)
 					this._configURL = newConfigUrl;
 					
 					ApplicationSettings.setValue("config.configurl",this._configURL);
@@ -430,7 +432,7 @@ package com.msgid.S3mer
 				
 				var newMediaUrl:String = config.config.mediaurl;
 				if (newMediaUrl != "" && newMediaUrl != this._mediaURL) {
-					Logger.addEvent("config.channel.config.mediaurl: " + config.config.mediaurl)
+					LoggerManager.addEvent("config.channel.config.mediaurl: " + config.config.mediaurl)
 					this._mediaURL = newMediaUrl;
 					ApplicationSettings.setValue("config.mediaurl",this._mediaURL);
 				}
@@ -488,7 +490,7 @@ package com.msgid.S3mer
 				
 				//TODO: show some loading graphics while updating...
 			} catch(e:Error) {
-				Logger.addEvent("ConfigurationManager: " + e.message);
+				LoggerManager.addEvent("ConfigurationManager: " + e.message);
 			}
 		}
 		
@@ -642,7 +644,7 @@ package com.msgid.S3mer
 		}
 		
 		private function cleanupMedia_ioError(e:IOErrorEvent):void {
-				Logger.addEvent("cleanupMedia: IO error");			
+				LoggerManager.addEvent("cleanupMedia: IO error");			
 		}
 		
 		private function isFile_filter(element:*, index:int, arr:Array):Boolean {
@@ -685,11 +687,11 @@ package com.msgid.S3mer
 			for each (var playlistXML:XML in _config.playlist) {
 				newPlaylist = new Playlist(getScreenId());
 				
-				Logger.addEvent("Playlist id: " + playlistXML.@id);
+				LoggerManager.addEvent("Playlist id: " + playlistXML.@id);
 				newPlaylist.id = playlistXML.@id;
 								
 				for each (var playlistitemXML:XML in playlistXML.playlistitem) {
-					Logger.addEvent("- element url: " + playlistitemXML);
+					LoggerManager.addEvent("- element url: " + playlistitemXML);
 					
 					newPlaylistObj = new PlaylistObject(playlistitemXML, getScreenId());
 					
@@ -719,7 +721,7 @@ package com.msgid.S3mer
 				
 				newShow.setConfiguration(this);
 				
-				Logger.addEvent("Show id: " + showXML.@id);
+				LoggerManager.addEvent("Show id: " + showXML.@id);
 				newShow.id = showXML.@id;
 				newShow.visible = true;
 				newShow.configuredWidth = showXML.@width;
@@ -756,14 +758,14 @@ package com.msgid.S3mer
 							hasAudio = true;
 						}
 						
-						Logger.addEvent("- region id: " + regionXML.@id + " type: " + regionXML.@type);
+						LoggerManager.addEvent("- region id: " + regionXML.@id + " type: " + regionXML.@type);
 						
 						newShow.addObject(regionXML, hasAudio, audioPan);
 						
 						parseShow_addPlaylists(regionXML, newShow);
 					}
 				} catch (e:Error) {
-					Logger.addEvent("Error @ " + e.message + e.getStackTrace());
+					LoggerManager.addEvent("Error @ " + e.message + e.getStackTrace());
 				}		
 				
 				parseShow_addSchedules(newShow);
@@ -837,11 +839,11 @@ package com.msgid.S3mer
 					var tmpSchedule:Schedule = this.getScheduleById(this._schedulesNew, scheduleXML.@id);
 					
 					if (tmpSchedule == null) {
-						Logger.addEvent("ERROR: no schedule defined with id = " + scheduleXML.@id);
+						LoggerManager.addEvent("ERROR: no schedule defined with id = " + scheduleXML.@id);
 						continue;
 					}
 					
-					Logger.addEvent("- adding reference to schedule id = " + scheduleXML.@id);
+					LoggerManager.addEvent("- adding reference to schedule id = " + scheduleXML.@id);
 					show.setSchedule(tmpSchedule);
 				}
 			}
@@ -853,7 +855,7 @@ package com.msgid.S3mer
 			tmpShowObject = show.getObjectById(regionXML.@id);
 			
 			if (tmpShowObject == null) {
-				Logger.addEvent("ERROR: could not find object with id = " + regionXML.@id);
+				LoggerManager.addEvent("ERROR: could not find object with id = " + regionXML.@id);
 				return;
 			}
 			
@@ -861,11 +863,11 @@ package com.msgid.S3mer
 				var tmpPlaylist:Playlist = this.getPlaylistById(this._playlistsNew, playlistXML.@id);
 				
 				if (tmpPlaylist == null) {
-					Logger.addEvent("ERROR: no playlist defined with id = " + playlistXML.@id);
+					LoggerManager.addEvent("ERROR: no playlist defined with id = " + playlistXML.@id);
 					continue;
 				}
 				
-				Logger.addEvent("- adding reference to playlist id = " + playlistXML.@id);
+				LoggerManager.addEvent("- adding reference to playlist id = " + playlistXML.@id);
 				tmpShowObject.addPlaylist(tmpPlaylist);
 			}
 

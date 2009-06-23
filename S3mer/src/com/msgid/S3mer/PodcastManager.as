@@ -1,5 +1,6 @@
 package com.msgid.S3mer
 {
+	import com.msgid.S3mer.Utility.LoggerManager;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.TimerEvent;
@@ -53,7 +54,7 @@ package com.msgid.S3mer
 			var newPodcast:PodcastItem = new PodcastItem(playlistItem, screenId);
 			init();
 			
-			Logger.addEvent("New Podcast:"+ playlistItem.url);
+			LoggerManager.addEvent("New Podcast:"+ playlistItem.url);
 			
 			
 			newPodcast.addEventListener(Event.COMPLETE, loadComplete);

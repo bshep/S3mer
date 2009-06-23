@@ -1,6 +1,8 @@
 package com.msgid.S3mer
 {
 	import com.msgid.S3mer.Events.DownloaderEvent;
+	import com.msgid.S3mer.Utility.FileIO;
+	import com.msgid.S3mer.Utility.LoggerManager;
 	
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
@@ -71,12 +73,12 @@ package com.msgid.S3mer
 
 			this._started = true;
 			if (isAlreadyDownloaded() && ( this._forceUpdate == false )) {
-				Logger.addEvent("File: " + this._filename + " has already been downloaded.");
+				LoggerManager.addEvent("File: " + this._filename + " has already been downloaded.");
 				this._complete = true;
 				this.dispatchEvent(new DownloaderEvent(DownloaderEvent.COMPLETE, this));
 				return;
 			} else {
-				Logger.addEvent("File: " + this._filename + " will be downloaded.");	
+				LoggerManager.addEvent("File: " + this._filename + " will be downloaded.");	
 			}
 	
 			try {
@@ -91,13 +93,13 @@ package com.msgid.S3mer
 
 				_loader.load(_loaderReq);
 			} catch(e:Error) {
-				Logger.addEvent("Net connection error");
+				LoggerManager.addEvent("Net connection error");
 				this.dispatchEvent(new DownloaderEvent(DownloaderEvent.ERROR, this));			
 			}
 		}
 		
 		private function OnIOError(e:IOErrorEvent):void {
-			Logger.addEvent("Net connection error");
+			LoggerManager.addEvent("Net connection error");
 			this._complete = true;
 			this.dispatchEvent(new DownloaderEvent(DownloaderEvent.ERROR, this));			
 		}
@@ -106,7 +108,7 @@ package com.msgid.S3mer
 			var newPercentage:int = Math.floor((e.bytesLoaded/e.bytesTotal)*100);
 			
 			if (newPercentage > this._lastPercentage ) {
-				Logger.addEvent("Downloaded " + newPercentage + "% of file");
+				LoggerManager.addEvent("Downloaded " + newPercentage + "% of file");
 				this._lastPercentage = newPercentage;
 			}
 			this.dispatchEvent(new DownloaderEvent(DownloaderEvent.PROGRESS, this, newPercentage));
@@ -140,7 +142,7 @@ package com.msgid.S3mer
 			myStorageStream.close();
 			
 			if( !isAlreadyDownloaded() ) {
-				Logger.addEvent("Hash failed!!! File: " + this._filename + " URL: " + this._url)
+				LoggerManager.addEvent("Hash failed!!! File: " + this._filename + " URL: " + this._url)
 			}
 			
 			this.dispatchEvent(new DownloaderEvent(DownloaderEvent.COMPLETE, this));

@@ -1,5 +1,7 @@
 package com.msgid.S3mer
 {
+	import com.msgid.S3mer.Utility.LoggerManager;
+
 	public class Schedule
 	{
 		public var id:String;
@@ -59,7 +61,7 @@ package com.msgid.S3mer
 		}
 		
 		public function Schedule(scheduleXML:XML):void {
-			Logger.addEvent("Schedule id: " + scheduleXML.@id);
+			LoggerManager.addEvent("Schedule id: " + scheduleXML.@id);
 			this.id = scheduleXML.@id;
 			
 			this.days = new Array(7);
@@ -75,7 +77,7 @@ package com.msgid.S3mer
 						this.setDateFromString(this.dateStart, conditionXML.@startdate);
 						this.setDateFromString(this.dateEnd, conditionXML.@enddate);
 
-						Logger.addEvent("- Start: " + dateStart.toDateString() + " End: " + dateEnd.toDateString());
+						LoggerManager.addEvent("- Start: " + dateStart.toDateString() + " End: " + dateEnd.toDateString());
 						break;
 					case "timerange":
 						this.timeStart = new Date();
@@ -84,21 +86,21 @@ package com.msgid.S3mer
 						this.setTimeFromString(this.timeStart, conditionXML.@starttime);
 						this.setTimeFromString(this.timeEnd, conditionXML.@endtime);
 					
-						Logger.addEvent("- Start: " + timeStart.toTimeString() + " End: " + timeEnd.toTimeString());
+						LoggerManager.addEvent("- Start: " + timeStart.toTimeString() + " End: " + timeEnd.toTimeString());
 						break;							
 					case "dayweek":
 						this.days[getDayIndex(conditionXML.@day)] = conditionXML.@value.toString();
 						
-						Logger.addEvent(" - Day: " + getDayIndex(conditionXML.@day) + " Value: " + conditionXML.@value);
+						LoggerManager.addEvent(" - Day: " + getDayIndex(conditionXML.@day) + " Value: " + conditionXML.@value);
 						break;
 					case "ampm":
 					
 						this.ampm[0] = conditionXML.@AM.toString()
 						this.ampm[1] = conditionXML.@PM.toString()
-						Logger.addEvent(" - AM: " + conditionXML.@AM + " PM: " + conditionXML.@PM);
+						LoggerManager.addEvent(" - AM: " + conditionXML.@AM + " PM: " + conditionXML.@PM);
 						break;
 					default:
-						Logger.addEvent("- INVALID CONDITION DATA: " + conditionXML);
+						LoggerManager.addEvent("- INVALID CONDITION DATA: " + conditionXML);
 						break;
 				}
 			}
@@ -110,7 +112,7 @@ package com.msgid.S3mer
 			dateObj.time = 0;
 			
 			if(sections.length != 3) {
-				Logger.addEvent("- Invalid time specification: " + timeStr );
+				LoggerManager.addEvent("- Invalid time specification: " + timeStr );
 				return;
 			}
 			
@@ -124,7 +126,7 @@ package com.msgid.S3mer
 			dateObj.time = 0;
 			
 			if(sections.length != 3) {
-				Logger.addEvent("- Invalid date specification: " + dateStr );
+				LoggerManager.addEvent("- Invalid date specification: " + dateStr );
 				return;
 			}
 			
@@ -164,7 +166,7 @@ package com.msgid.S3mer
 					ret = 6;
 					break;				
 				default:
-					Logger.addEvent("Invalid day specification: '" + dayStr + "'");
+					LoggerManager.addEvent("Invalid day specification: '" + dayStr + "'");
 					ret  = 0;
 					break;
 			}

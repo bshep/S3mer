@@ -3,6 +3,8 @@ package com.msgid.S3mer
 	import com.msgid.S3mer.Events.LoggerPlaybackEvent;
 	import com.msgid.S3mer.Events.ShowEvent;
 	import com.msgid.S3mer.LocalDatabase.LocalDatabase;
+	import com.msgid.S3mer.Utility.FileIO;
+	import com.msgid.S3mer.Utility.LoggerManager;
 	
 	import flash.display.DisplayObject;
 	import flash.events.Event;
@@ -277,7 +279,7 @@ package com.msgid.S3mer
 			// There is no current playlist... so go to the next one...
 			if ( _playlist == null ) {
 				if ( this._playlists.length == 0 ) {
-					Logger.addEvent(this.toString() + ": No playlists defined for " + this.id);
+					LoggerManager.addEvent(this.toString() + ": No playlists defined for " + this.id);
 					return;
 				}
 				
@@ -286,7 +288,7 @@ package com.msgid.S3mer
 				if ( _playlist != null ) {
 					_playlist.first();
 				} else {
-					Logger.addEvent(this.toString() + ": ERROR, could not go to the next playlist");
+					LoggerManager.addEvent(this.toString() + ": ERROR, could not go to the next playlist");
 					return;
 				}
 		
@@ -336,7 +338,7 @@ package com.msgid.S3mer
 							this._parent.id.slice(2),
 							(this._parent.parent as S3merWindow).screenId));
 				} catch(e:Error) {
-					Logger.addEvent("ShowObject/play_next(): Could not store item in as run log due to and error, probably null pointer exception");
+					LoggerManager.addEvent("ShowObject/play_next(): Could not store item in as run log due to and error, probably null pointer exception");
 				}
 			}
 			
@@ -380,7 +382,7 @@ package com.msgid.S3mer
 					play_next_url();
 					break;
 				default:
-					Logger.addEvent(this.toString() + ": bad playlist item type. Value = " + (this._currentPlaylist.current as PlaylistObject).type);
+					LoggerManager.addEvent(this.toString() + ": bad playlist item type. Value = " + (this._currentPlaylist.current as PlaylistObject).type);
 					
 					this.dispatchEvent(new ShowEvent("INVALID_PLAYLIST_ITEM"));
 					return;
@@ -442,7 +444,7 @@ package com.msgid.S3mer
 					try {
 						this._parent.addChild(nextObj);
 					} catch(e:Error) {
-						Logger.addEvent(e.message);
+						LoggerManager.addEvent(e.message);
 					}
 				}
 				
@@ -571,7 +573,7 @@ package com.msgid.S3mer
 				videoObj.smoothing = true;
 			}
 			
-			Logger.addEvent("Play live video");
+			LoggerManager.addEvent("Play live video");
 			
 			if ((tmpDuration != "0") && videoObj.cameraAttached == true) {
 				liveTimer.start();
@@ -661,7 +663,7 @@ package com.msgid.S3mer
 				SmoothVideoDisplay(this._realObject).smoothing = true;
 			}
 			
-			Logger.addEvent("Play next: " + FileIO.mediaPath(getScreenId(),_playlist.current.file));
+			LoggerManager.addEvent("Play next: " + FileIO.mediaPath(getScreenId(),_playlist.current.file));
 			
 			getTimerById("video_check").start();
 		}
@@ -689,7 +691,7 @@ package com.msgid.S3mer
 			
 			cleancut(this._prevObject, this._realObject);
 			
-			Logger.addEvent("Play next: " + _playlist.current.url);
+			LoggerManager.addEvent("Play next: " + _playlist.current.url);
 		
 			RSSFeedPanel(this._realObject).play();
 		}
@@ -741,9 +743,9 @@ package com.msgid.S3mer
 			
 			cleancut(this._prevObject,this._realObject);
 
-			Logger.addEvent("New timer duration: " +tmpTimer.delay);
+			LoggerManager.addEvent("New timer duration: " +tmpTimer.delay);
 
-			Logger.addEvent("Play next: " + FileIO.mediaPath(getScreenId(),_playlist.current.file));
+			LoggerManager.addEvent("Play next: " + FileIO.mediaPath(getScreenId(),_playlist.current.file));
 		
 			if (tmpDuration != "0") {
 				tmpTimer.start();
@@ -832,7 +834,7 @@ package com.msgid.S3mer
 						_videoLastTimeCode = SmoothVideoDisplay(this._realObject).playheadTime;
 					}
 				} catch(e:TypeError) {
-					Logger.addEvent(e.message + e.getStackTrace());
+					LoggerManager.addEvent(e.message + e.getStackTrace());
 				}
 				
 				handlingVideoEvent = false; 

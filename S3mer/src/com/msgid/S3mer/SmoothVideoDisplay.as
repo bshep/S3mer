@@ -1,5 +1,7 @@
 package com.msgid.S3mer
 {
+	import com.msgid.S3mer.Utility.LoggerManager;
+	
 	import flash.media.Camera;
 	import flash.media.SoundTransform;
 	
@@ -92,7 +94,7 @@ package com.msgid.S3mer
 				try {
 					videoPlayer.soundTransform = newTransform;
 				} catch(e:Error) {
-					Logger.addEvent(e.errorID + " could not se sound transform, probably a null ns object");
+					LoggerManager.addEvent(e.errorID + " could not se sound transform, probably a null ns object");
 				}
 			}
 	    }

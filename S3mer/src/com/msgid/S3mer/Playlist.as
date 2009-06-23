@@ -1,6 +1,7 @@
 package com.msgid.S3mer
 {
 	import mx.collections.ArrayCollection;
+	import com.msgid.S3mer.Utility.LoggerManager;
 	
 	public class Playlist
 	{
@@ -131,7 +132,7 @@ package com.msgid.S3mer
 			var pending:ArrayCollection = new ArrayCollection();
 			
 			for each (var item:PlaylistObject in this._items) {
-				Logger.addEvent("Item Type: " + item.configXML.@type);
+				LoggerManager.addEvent("Item Type: " + item.configXML.@type);
 				switch((item.configXML.@type).toString()) {
 					case "video":
 					case "image":
