@@ -9,10 +9,12 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.msgid.S3mer.Utility.FileIO;
+			import com.msgid.S3mer.Utility.LoggerManager;
+
 			import mx.logging.LogEvent;
 			import com.msgid.S3mer.Net.NetUtils;
 			import mx.core.Application;
-			import com.msgid.S3mer.FileIO;
 			import mx.core.Window;
 			import com.msgid.S3mer.ApplicationSettings;
 			import com.msgid.S3mer.KeyboardManager;
@@ -20,7 +22,6 @@
 			import mx.collections.ArrayCollection;
 			import com.msgid.S3mer.LoginWindow;
 			import com.msgid.S3mer.S3merApplicationUpdater;
-			import com.msgid.S3mer.Logger;
 			import mx.events.ResizeEvent;
 			import mx.events.FlexEvent;
 			import mx.events.TweenEvent;
@@ -100,11 +101,11 @@
 
 			private function onAppLoad_stage1_5(online:Boolean):void {
 				if(!online) {
-					Logger.addEvent("NETSTAT: network is down... waiting for it to come up");
+					LoggerManager.addEvent("NETSTAT: network is down... waiting for it to come up");
 					this.addEventListener(Event.NETWORK_CHANGE,networkStatusChanged);
 					return;
 				} else {
-					Logger.addEvent("NETSTAT: network is up! Here we go...");
+					LoggerManager.addEvent("NETSTAT: network is up! Here we go...");
 //					this.removeEventListener(Event.NETWORK_CHANGE,networkStatusChanged);					
 				}
 				
@@ -122,7 +123,7 @@
 				var screenNumber:int = 0;
 				var _window:S3merWindow;
 				for each( var _screen:Screen in Screen.screens ) {
-					Logger.addEvent("Creating window for screen #" + screenNumber);
+					LoggerManager.addEvent("Creating window for screen #" + screenNumber);
 					_window = new S3merWindow();
 					_window.setScreen(screenNumber);
 					_window.ObjOwner = this;
@@ -260,7 +261,7 @@
 			
 			public function doInitialSetup(ignoreFlags:Boolean = false):Boolean {
 				if (FileIO.assetsPath() == null) {
-					Logger.addEvent("Could not find assets path, cannot do initial setup");
+					LoggerManager.addEvent("Could not find assets path, cannot do initial setup");
 					return false;
 				}
 				
@@ -278,7 +279,7 @@
 					}
 										
 				} catch( e:IllegalOperationError) {
-					Logger.addEvent("could not set to startup");
+					LoggerManager.addEvent("could not set to startup");
 				}
 				
 				return true;
@@ -346,18 +347,18 @@
 			
 			private function onInvoke(e:InvokeEvent):void {
 		        var now:String = new Date().toTimeString();
-		        Logger.addEvent("Invoke event received: " + now);
+		        LoggerManager.addEvent("Invoke event received: " + now);
 		                
 		        if(e.currentDirectory != null){
-		            Logger.addEvent("Current directory=" + e.currentDirectory.nativePath);
+		            LoggerManager.addEvent("Current directory=" + e.currentDirectory.nativePath);
 		        } else {
-		            Logger.addEvent("--no directory information available--");
+		            LoggerManager.addEvent("--no directory information available--");
 		        }
 		                
 		        if(e.arguments.length > 0){
-		            Logger.addEvent("Arguments: " + e.arguments.toString());
+		            LoggerManager.addEvent("Arguments: " + e.arguments.toString());
 		        } else {
-		            Logger.addEvent("--no arguments--");
+		            LoggerManager.addEvent("--no arguments--");
 		        }
 				this.visible = false;
 				this.move(-1000,-1000);
