@@ -1,4 +1,4 @@
-package com.msgid.S3mer
+package com.msgid.S3mer.Net
 {
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
