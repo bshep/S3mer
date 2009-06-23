@@ -7,6 +7,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.msgid.S3mer.Events.ShowEvent;
 			import mx.events.VideoEvent;
 			import mx.events.ResizeEvent;
 			import mx.collections.ArrayCollection;

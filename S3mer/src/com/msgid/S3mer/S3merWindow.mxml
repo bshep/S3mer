@@ -28,6 +28,8 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.msgid.S3mer.Events.DownloaderEvent;
+			import com.msgid.S3mer.Events.ConfigurationEvent;
 //			import mx.controls.Image;
 //			import mx.core.BitmapAsset;
 //			import mx.graphics.codec.PNGEncoder;

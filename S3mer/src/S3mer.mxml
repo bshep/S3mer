@@ -10,7 +10,7 @@
 	<mx:Script>
 		<![CDATA[
 			import mx.logging.LogEvent;
-			import com.msgid.S3mer.NetUtils;
+			import com.msgid.S3mer.Net.NetUtils;
 			import mx.core.Application;
 			import com.msgid.S3mer.FileIO;
 			import mx.core.Window;

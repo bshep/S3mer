@@ -1,7 +1,7 @@
 package tests
 {
 	import com.msgid.S3mer.DownloadQueue;
-	import com.msgid.S3mer.DownloaderEvent;
+	import com.msgid.S3mer.Events.DownloaderEvent;
 	import com.msgid.S3mer.FileIO;
 	
 	import flash.events.Event;

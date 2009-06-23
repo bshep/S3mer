@@ -1,5 +1,7 @@
 package com.msgid.S3mer
 {
+	import com.msgid.S3mer.Events.LoggerPlaybackEvent;
+	import com.msgid.S3mer.Events.ShowEvent;
 	import com.msgid.S3mer.LocalDatabase.LocalDatabase;
 	
 	import flash.display.DisplayObject;

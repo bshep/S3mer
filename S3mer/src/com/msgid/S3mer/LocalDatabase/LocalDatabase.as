@@ -1,8 +1,8 @@
 package com.msgid.S3mer.LocalDatabase
 {
 	import com.msgid.S3mer.ApplicationSettings;
+	import com.msgid.S3mer.Events.LoggerPlaybackEvent;
 	import com.msgid.S3mer.Logger;
-	import com.msgid.S3mer.LoggerPlaybackEvent;
 	
 	import flash.data.SQLConnection;
 	import flash.data.SQLResult;

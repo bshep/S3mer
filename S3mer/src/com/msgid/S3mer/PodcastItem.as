@@ -1,5 +1,7 @@
 package com.msgid.S3mer
 {
+	import com.msgid.S3mer.Events.DownloaderEvent;
+	
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.IOErrorEvent;
