@@ -130,7 +130,8 @@
 			}
 			
 			public function stop():void {
-				this._timer.stop();
+				if(this._timer)
+					this._timer.stop();
 			}
 			
 			

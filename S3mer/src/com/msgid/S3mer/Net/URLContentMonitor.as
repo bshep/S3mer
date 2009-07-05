@@ -70,6 +70,10 @@ package com.msgid.S3mer.Net
 			loadURL();
 		}
 		
+		public function reset():void {
+			this._urlContent = "";
+		}
+		
 		private function loadURL(e:TimerEvent = null):void {
 			_timer.stop();
 			

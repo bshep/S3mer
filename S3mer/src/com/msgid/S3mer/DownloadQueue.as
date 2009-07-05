@@ -50,8 +50,24 @@ package com.msgid.S3mer
 			return true;
 		}
 		
+		public function isQueued(url:String):Boolean {
+			for each( var _downloader:Downloader in this._downloaders ) {
+				if(_downloader._url == url) {
+					return true;
+				}
+			}
+			
+			return false;
+		}
+		
+		
 		public function addItem(url:String,screenId:String, hash:String ="", filename:String = null, autostart:Boolean = true, forceUpdate:Boolean = false):void {
 			var myDL:Downloader
+			
+			// Check if item is already in the queue
+			if( this.isQueued(url) ) {
+				return;
+			}
 
 			myDL = new Downloader(url, hash, filename, forceUpdate, screenId.toString());
 			this._downloaders.addItem(myDL);

@@ -95,7 +95,7 @@ package com.msgid.S3mer
 					statusDisplay("Reload Config", target);
 					(target as S3merWindow).disableKeyHandler(); 
 					(target as S3merWindow).configuration.reset();
-					target.reloadApp();
+					(target as S3merWindow).reloadApp();
 					(target as S3merWindow).stopped = true;
 					break;
 				case "S":

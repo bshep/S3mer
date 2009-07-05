@@ -16,7 +16,7 @@ package com.msgid.S3mer.ShowObjects
      *
      * @author Ben Longoria
      */
-    public class SmoothImage extends Image implements IShowObject {
+    public class SmoothImage extends Image {
         
         public function SmoothImage():void {
             super();
@@ -36,10 +36,5 @@ package com.msgid.S3mer.ShowObjects
             super.contentLoaderInfo_completeEventHandler(event);
         }
         
-        public function reset():void {
-        	if(this.parent) {
-        		this.parent.removeChild(this);
-        	}        	
-        }
     }
 }

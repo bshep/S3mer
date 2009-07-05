@@ -55,7 +55,8 @@
 			}
 			
 			public function stop():void {
-				this._video.attachCamera(null);
+				if(this._video)
+					this._video.attachCamera(null);
 			}
 			
 			private function getPreferedCaptureDevice():Camera {

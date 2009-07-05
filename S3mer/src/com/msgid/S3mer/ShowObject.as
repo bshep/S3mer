@@ -13,27 +13,29 @@ package com.msgid.S3mer
 	
 	import flash.display.DisplayObject;
 	import flash.events.Event;
-	import flash.events.EventDispatcher;
+	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	
 	import mx.collections.ArrayCollection;
+	import mx.containers.Canvas;
 	import mx.controls.HTML;
 	import mx.controls.Label;
 	import mx.controls.videoClasses.VideoError;
+	import mx.core.ScrollPolicy;
+	import mx.core.UIComponent;
 	import mx.effects.Fade;
 	import mx.events.EffectEvent;
 	import mx.events.VideoEvent;
 	
-	public class ShowObject extends EventDispatcher
+	public class ShowObject extends Canvas
 	{
-		public var id:String;
 		public var resizeX:Number;
 		public var resizeY:Number;
 		
 		private var _configXML:XML;
-		private var _realObject:DisplayObject;
-		private var _prevObject:DisplayObject;
+		private var _realObject:UIComponent;
+		private var _prevObject:UIComponent;
 		
 		private var _playlists:ArrayCollection;
 		private var _timers:ArrayCollection;
@@ -46,8 +48,6 @@ package com.msgid.S3mer
 		private var _videoRepeatTimeCode:int;
 		private var _videoRepeatTimeCode2:int;
 		
-		private var _parent:Show;
-		
 		private var _item_start_time:Date = null;
 		private var _item_end_time:Date = null;
 		private var _item_file_id:String;
@@ -59,19 +59,48 @@ package com.msgid.S3mer
 		
 		
 		public function ShowObject() {
+			super();
+			
+			this.horizontalScrollPolicy = ScrollPolicy.OFF;
+			this.verticalScrollPolicy = ScrollPolicy.OFF;
+			
 			this._playlists = new ArrayCollection();
 			this._timers = new ArrayCollection();
 			
 			this._stopped = true;
 			this._errorplaying = false;
+			
+//			this.addEventListener(MouseEvent.CLICK, OnMouseClick);
+		}
+		
+		public function OnMouseClick(e:MouseEvent):void {
+//			trace("Clicked on ShowObject.as");
+//			trace(" - x: " + this.x);
+//			trace(" - y: " + this.y);
+//			trace(" - w: " + this.width);
+//			trace(" - h: " + this.height);
+//			trace(" - v: " + this.visible);
+			
+//			this.parent.removeChild(this);
+			
+//			e.stopPropagation();
+
 		}
 		
 		public function resize():void {
 			if( this._realObject != null ) {
-				this._realObject.y = this._configXML.@top * this.resizeY;
-				this._realObject.x = this._configXML.@left * this.resizeX;
-				this._realObject.width = this._configXML.@width * this.resizeX;
-				this._realObject.height = this._configXML.@height * this.resizeY;
+				this._realObject.setStyle("top","0");
+				this._realObject.setStyle("bottom","0");
+				this._realObject.setStyle("left","0");
+				this._realObject.setStyle("right","0");
+				
+				this.y = this._configXML.@top * this.resizeY;
+				this.x = this._configXML.@left * this.resizeX;
+				this.width = this._configXML.@width * this.resizeX;
+				this.height = this._configXML.@height * this.resizeY;
+				
+				trace("ShowObject Resized (id="+ this.id + "): width = " + this.width + " height = " + this.height );
+				trace("                           : x = " + this.x + " y = " + this.y );
 			}
 		}
 		
@@ -87,14 +116,11 @@ package com.msgid.S3mer
 			return _currentPlaylist;
 		}
 		
-		public function get parent():Show {
-			return _parent;
-		}
-		
-
-		
-		public function set parent(val:Show):void {
-			this._parent = val;
+		private function get _parent():Show {
+			if(this.parent is Show) {
+				return (this.parent as Show);
+			}
+			return null;
 		}
 		
 		public function nextPlaylist():void {
@@ -108,7 +134,9 @@ package com.msgid.S3mer
 					// This is the main media region, when we reach the end of the playlist, throw an event to move to the next show.
 					
 					// show_play_next finds the next show, if it returns false, we only have one show so dont need to set endofshow
-					this._atShowEnd = this._parent._configuration.show_play_next();
+					if(this._parent != null ) {
+						this._atShowEnd = this._parent.show_play_next();
+					}
 //					this._parent.dispatchEvent(new ShowEvent(ShowEvent.NEXT_SHOW));
 //					return;
 				}
@@ -195,11 +223,14 @@ package com.msgid.S3mer
 			newVideo.id	= objectXML.@id;
 			newVideo.name = objectXML.@id;
 			
-			if (this._parent.hasAudio==true) {
-				newVideo.volume = 1;			
-				newVideo.pan = this._parent.audioPan;
-			} else {
-				newVideo.volume = 0;				
+			
+			if (this._parent != null) {
+				if (this._parent.hasAudio==true) {
+					newVideo.volume = 1;			
+					newVideo.pan = this._parent.audioPan;
+				} else {
+					newVideo.volume = 0;				
+				}
 			}
 			
 			if (ApplicationSettings.getValue("video.mute","false") == "true") {
@@ -217,8 +248,16 @@ package com.msgid.S3mer
 			
 			newVideo.visible = false;
 			
-			this._parent.addChild(newVideo);
-			this._parent.removeChild(newVideo);
+			if (this._parent != null) {
+				this.addChild(newVideo);
+				this.removeChild(newVideo);
+
+				if (this._parent.hasAudio==true) {
+					newVideo.volume = 1;			
+				} else {
+					newVideo.volume = 0;				
+				}
+			}
 			
 			newVideo.visible = true;
 			
@@ -227,11 +266,6 @@ package com.msgid.S3mer
 			newVideo.name = objectXML.@id;
 			
 			
-			if (this._parent.hasAudio==true) {
-				newVideo.volume = 1;			
-			} else {
-				newVideo.volume = 0;				
-			}
 			
 			this._realObject = newVideo;
 			this.resize();
@@ -332,16 +366,20 @@ package com.msgid.S3mer
 			
 			this._item_end_time = new Date();
 			
-			if(this._item_start_time != null ) {
+			if(this._item_start_time != null && this._parent != null ) {
 				try {
-					LocalDatabase.insertPlaybackEvent(
-						new LoggerPlaybackEvent(this._item_file,
-							this._item_file_id,
-							this._item_type,
-							this._item_start_time,
-							this._item_end_time,
-							this._parent.id.slice(2),
-							(this._parent.parent as S3merWindow).screenId));
+					var _window:S3merWindow = getMyS3merWindow();
+					
+					if(_window != null) {
+						LocalDatabase.insertPlaybackEvent(
+							new LoggerPlaybackEvent(this._item_file,
+								this._item_file_id,
+								this._item_type,
+								this._item_start_time,
+								this._item_end_time,
+								this._parent.id.slice(2),
+								_window.screenId));
+					}
 				} catch(e:Error) {
 					LoggerManager.addEvent("ShowObject/play_next(): Could not store item in as run log due to and error, probably null pointer exception");
 				}
@@ -390,7 +428,7 @@ package com.msgid.S3mer
 					LoggerManager.addEvent(this.toString() + ": bad playlist item type. Value = " + (this._currentPlaylist.current as PlaylistObject).type);
 					
 					this.dispatchEvent(new ShowEvent("INVALID_PLAYLIST_ITEM"));
-					return;
+					break;
 					
 					
 //					DONT DO THIS: this is a bad idea, could be an infinite loop
@@ -410,8 +448,8 @@ package com.msgid.S3mer
 			}
 		}
 		
-		private static function getAncestor(startObj:DisplayObject):S3merWindow {
-			var _currAncestor:DisplayObject = startObj;
+		private function getMyS3merWindow():S3merWindow {
+			var _currAncestor:DisplayObject = this;
 			
 			while( _currAncestor != null && !(_currAncestor is S3merWindow) ) {
 				_currAncestor = _currAncestor.parent;
@@ -421,87 +459,71 @@ package com.msgid.S3mer
 		}
 		
 		private function cleancut(currentObj:DisplayObject, nextObj:DisplayObject):void	{
+			if (nextObj.parent != null) {
+				nextObj.parent.removeChild(nextObj);
+			}
 			
-			if ( this._parent != null ) {
+			//If nextObj is an Image  and  currentObj is an Image then Fade
+			if (isImage2Image(currentObj,nextObj)) {
+				nextObj.alpha = 0;
+			} else {
+				nextObj.alpha = 1;
+			}
+			
+			if ( currentObj is HTML && !(nextObj is HTML) ) {
+				getMyS3merWindow().enableKeyHandler();
+			} 
 				
-				if (nextObj.parent != null) {
-					nextObj.parent.removeChild(nextObj);
+			if (currentObj.parent == this) {
+				this.addChildAt(nextObj,this.getChildIndex(currentObj));						
+			} else {
+				this.addChild(nextObj);
+			}
+			
+			//Start Fade for images
+			if (nextObj is SmoothImage && currentObj is SmoothImage) {
+				if (cleancutFade == null) {
+					cleancutFade = new Fade();
 				}
 				
-				//If nextObj is an Image  and  currentObj is an Image then Fade
-				if (isImage2Image(currentObj,nextObj)) {
-					nextObj.alpha = 0;
+				cleancutFade.addEventListener(EffectEvent.EFFECT_END,Image2ImageFade);
+				cleancutFade.alphaFrom = 0;
+				cleancutFade.alphaTo = 1;
+				cleancutFade.duration = 500;
+				cleancutFade.play([nextObj]);
+			}
+			
+			this.resize();
+			
+			
+			if (nextObj is SmoothVideoDisplay) {
+				if ((nextObj as SmoothVideoDisplay).source != null ) {
+					(nextObj as SmoothVideoDisplay).addEventListener(VideoEvent.READY,cleancut_stage2,false,0,true);
+					(nextObj as SmoothVideoDisplay).play();
 				} else {
-					nextObj.alpha = 1;
+					cleancut_stage2(null);
 				}
-				
-				if ( currentObj is HTML && !(nextObj is HTML) ) {
-					getAncestor(this._parent).enableKeyHandler();
-				} 
-					
-				if (currentObj.parent == this._parent) {
-//					if (isImage2Image(currentObj,nextObj)) {
-//						this._parent.addChild(nextObj);
-//					} else {
-					this._parent.addChildAt(nextObj,this._parent.getChildIndex(currentObj));						
-//					}
-				} else {
-					try {
-						this._parent.addChild(nextObj);
-					} catch(e:Error) {
-						LoggerManager.addEvent(e.message);
-					}
-				}
-				
-				//Start Fade for images
+			} else {
 				if (nextObj is SmoothImage && currentObj is SmoothImage) {
-					if (cleancutFade == null) {
-						cleancutFade = new Fade();
-					}
-					
-					cleancutFade.addEventListener(EffectEvent.EFFECT_END,Image2ImageFade);
-					cleancutFade.alphaFrom = 0;
-					cleancutFade.alphaTo = 1;
-					cleancutFade.duration = 500;
-					cleancutFade.play([nextObj]);
-				}
-				
-				this.resize();
-				
-				
-//				if ( currentObj is Canvas ) {
-//					trace("objcanvas here");
-//				}
-				
-				if (nextObj is SmoothVideoDisplay) {
-					if ((nextObj as SmoothVideoDisplay).source != null ) {
-						(nextObj as SmoothVideoDisplay).addEventListener(VideoEvent.READY,cleancut_stage2,false,0,true);
-						(nextObj as SmoothVideoDisplay).play();
-					} else {
-						cleancut_stage2(null);
-					}
+					// This will be done after the fade...
 				} else {
-					if (nextObj is SmoothImage && currentObj is SmoothImage) {
-						// This will be done after the fade...
-					} else {
-						if (currentObj.parent == this._parent) {
-							this._parent.removeChild(currentObj);
-						}
+					if (currentObj.parent == this) {
+						this.removeChild(currentObj);
 					}
 				}
 			}
 		} 
 
 		private function Image2ImageFade(e:EffectEvent):void {
-			if (this._prevObject.parent == this._parent) {
-				this._parent.removeChild(_prevObject);
+			if (this._prevObject.parent == this) {
+				this.removeChild(_prevObject);
 			}			
 		}
 
 		private function cleancut_stage2(e:Event):void {
-			if (this._prevObject.parent == this._parent) {
-				this._parent.setChildIndex(this._realObject,this._parent.getChildIndex(this._prevObject));
-				this._parent.removeChild(this._prevObject);
+			if (this._prevObject.parent == this) {
+//				this.setChildIndex(this._realObject,this.getChildIndex(this._prevObject));
+				this.removeChild(this._prevObject);
 			}
 			
 			if (this._realObject is SmoothVideoDisplay) {
@@ -758,7 +780,13 @@ package com.msgid.S3mer
 		}
 		
 		private function getScreenId():String {
-			return (this._parent.parent as S3merWindow).screenId.toString();
+			var _window:S3merWindow = this.getMyS3merWindow();
+			
+			if(_window != null) {
+				return _window.screenId.toString();
+			} else {
+				return "";
+			}
 		}
 
 		public function image_check(e:TimerEvent):void {
@@ -879,7 +907,7 @@ package com.msgid.S3mer
 				this._realObject.parent.removeChild(this._realObject);
 			}
 
-			this.dispatchEvent(new ShowEvent(ShowEvent.STOPPED));
+//			this.dispatchEvent(new ShowEvent(ShowEvent.STOPPED));
 		}
 		
 		public function addPlaylist(list:Playlist):void {

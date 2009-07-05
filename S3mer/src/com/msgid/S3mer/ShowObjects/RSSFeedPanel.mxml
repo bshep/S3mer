@@ -279,8 +279,10 @@
 				} else {
 					_playNextTimer.delay = this.delay;
 				}
-
-				this.addEventListener(Event.EXIT_FRAME, OnScrollTimer);
+				
+				if(!this.willTrigger(Event.EXIT_FRAME)) {
+					this.addEventListener(Event.EXIT_FRAME, OnScrollTimer);
+				}
 
 				this.logoSWF.source = this.logoUrl;
 				
@@ -370,8 +372,14 @@
 			}
 			
 			public function stop():void {
-				this._playNextTimer.stop();
-				this._urlMonitor.stop();
+				if(this._playNextTimer)
+					this._playNextTimer.stop();
+				if(this._urlMonitor) 
+					this._urlMonitor.stop();
+					
+				if(this.willTrigger(Event.EXIT_FRAME)) 
+					this.removeEventListener(Event.EXIT_FRAME, OnScrollTimer);
+					
 				this._stopped = true;
 			}
 			

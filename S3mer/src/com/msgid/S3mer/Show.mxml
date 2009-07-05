@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
 	width="400" height="300" alpha="1.0" backgroundAlpha="1" backgroundColor="#000000" 
-	creationComplete="OnCreated(event)"
-	verticalScrollPolicy="off" horizontalScrollPolicy="off">
+	verticalScrollPolicy="off" horizontalScrollPolicy="off" click="onClick(event)">
+	<!--creationComplete="OnCreated(event)"-->
 	
 	
 	<mx:Script>
@@ -21,23 +21,26 @@
 			public var configuredWidth:int;
 			public var configuredHeight:int;
 			
-			private var _fader:FadePanel;
-			
 			private var _showObjects:ArrayCollection = new ArrayCollection();
 			
 			private var _hasAudio:Boolean;
 			private var _audioPan:Number;
 			private var _schedule:Schedule = null;
-			public var _configuration:ConfigurationManager;
 			
-
-			
-			private function OnCreated(e:Event):void {
-//				this.initFader();
-//				this._schedule = null;
-				
+			public function onClick(e:Event):void {
+//				var pt:Point = new Point((e as MouseEvent).localX,(e as MouseEvent).localY);
+//				var arr:Array;
+//				
+//				trace("Clicked on Show.mxml");
+//				trace(" - x: " + this.x);
+//				trace(" - y: " + this.y);
+//				trace(" - w: " + this.width);
+//				trace(" - h: " + this.height);
+//				trace(" - v: " + this.visible);
+//				arr = this.getObjectsUnderPoint(localToGlobal(pt));
+////				this.parent.removeChild(this);
 			}
-			
+
 			public function get hasAudio():Boolean {
 				return this._hasAudio;
 			}
@@ -49,9 +52,13 @@
 			public function get schedule():Schedule {
 				return this._schedule;
 			}
-			
-			public function setConfiguration(obj:ConfigurationManager):void {
-				this._configuration = obj;
+
+			public function show_play_next():Boolean {
+				if(this.parent) {
+					return (this.parent as S3merWindow).configuration.show_play_next();
+				}
+				
+				return false;
 			}
 
 			public function setSchedule(obj:Schedule):void {
@@ -72,20 +79,17 @@
 					showObject.resize();
 				}
 				
-				if (this._fader != null) {
-					this._fader.width = this.width;
-					this._fader.height = this.height;
-				}
 			}
 			
 			// Content related functions
-//			public function addObject(id:String,object:DisplayObject):void {
 			public function addObject(objectXML:XML, hasAudio:Boolean, audioPan:Number):void {
 				var showObject:ShowObject;
 				
 				showObject = getObjectById(objectXML.@id);
 				
+				trace("Added object: " + objectXML.@id);
 				if ( showObject == null ) {
+					trace(" - new");
 					showObject = new ShowObject();
 					showObject.id = objectXML.@id;
 					showObject.resizeX = this.resizeX;
@@ -97,7 +101,8 @@
 				showObject.addEventListener(ShowEvent.INVALID_PLAYLIST_ITEM,onInvalidPlaylistItem,false,0,true);
 				
 //				tmpObject.object = object;	
-				showObject.parent = this;
+				this.addChild(showObject);
+				
 				showObject.configure(objectXML);
 				
 				this._hasAudio = hasAudio;
@@ -122,20 +127,29 @@
 			
 			public function play():void {
 				//Start all video, slideshows, etc
+				this.resize();
 				for each( var _showObject:ShowObject in this._showObjects) {
-					_showObject.parent = this;
-//					this.addChild(_showObject.object);	
+					if(_showObject.parent != this) {
+						_showObject.parent.removeChild(_showObject);
+					}
+//					_showObject.parent = this;
+					this.addChild(_showObject);	
 					_showObject.play();
 				}
 			}
 
-			public function stop(force:Boolean):void {
+			public function reload(force:Boolean):void {
 				//Stop all video, slideshows, etc
 				for each( var _showObject:ShowObject in _showObjects) {
 					_showObject.stop(force);
-//					this.removeChild(_showObject.object);
-					_showObject.parent = this;
+					if(_showObject.parent != null) {
+						_showObject.parent.removeChild(_showObject);
+//						_showObject.parent = null;
+					}
+//					_showObject.parent = this;
 				}
+				
+				this._showObjects.removeAll();
 			}
 			
 			public function muteAudio(mute:Boolean):void {
@@ -170,46 +184,46 @@
 			}
 			
 			// Fading related functions
-			private function initFader():void {
-				if (this._fader == null) {
-					_fader = new FadePanel()
-					_fader.setup(this);
-					_fader.addEventListener(EffectEvent.EFFECT_END, OnFadeComplete);
-				} else {
-					this.removeChild(this._fader);
-					this.addChild(this._fader);
-				}
-				
-				
-			}
+//			private function initFader():void {
+//				if (this._fader == null) {
+//					_fader = new FadePanel()
+//					_fader.setup();
+//					_fader.addEventListener(EffectEvent.EFFECT_END, OnFadeComplete);
+//				} else {
+//					this.removeChild(this._fader);
+//					this.addChild(this._fader);
+//				}
+//				
+//				
+//			}
 			
-			public function OnFadeComplete(e:EffectEvent):void {
-				this.removeChild(this._fader);
-				this.addChildAt(this._fader,0);
-				this.dispatchEvent(new EffectEvent(EffectEvent.EFFECT_END));
-			}
+//			public function OnFadeComplete(e:EffectEvent):void {
+//				this.removeChild(this._fader);
+//				this.addChildAt(this._fader,0);
+//				this.dispatchEvent(new EffectEvent(EffectEvent.EFFECT_END));
+//			}
 				
-			public function fadeToggle(delay:int = 1000):void {
-				this.initFader();
-				
-				_fader.toggle(delay);
-			}
+//			public function fadeToggle(delay:int = 1000):void {
+//				this.initFader();
+//				
+//				_fader.toggle(delay);
+//			}
+//			
+//			public function fadeOut(delay:int = 1000):void {
+//				this.initFader();
+//				_fader.fadeOut(delay);
+//			}
+//
+//			public function fadeIn(delay:int = 1000):void {
+//				this.initFader();
+//				_fader.fadeIn(delay);
+//			}
 			
-			public function fadeOut(delay:int = 1000):void {
-				this.initFader();
-				_fader.fadeOut(delay);
-			}
-
-			public function fadeIn(delay:int = 1000):void {
-				this.initFader();
-				_fader.fadeIn(delay);
-			}
-			
-			public function reset():void {
-				for each (var obj:ShowObject in this._showObjects ) {
-					obj.stop();
-				}
-			}
+//			public function reset():void {
+//				for each (var obj:ShowObject in this._showObjects ) {
+//					obj.stop();
+//				}
+//			}
 		]]>
 	</mx:Script>
 </mx:Canvas>

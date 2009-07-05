@@ -269,7 +269,7 @@ package com.msgid.S3mer
 			LoggerManager.addEvent("Error with download" + (e.target).toString());
 			
 			if( this._expired == true || isExpired()) {
-				this.stop();
+				this.reload();
 				
 				showNotConnected("Error: Expired");
 				
@@ -282,7 +282,7 @@ package com.msgid.S3mer
 			if (new File(FileIO.mediaPath(getScreenId(),"config" + getScreenId() + ".xml")).exists) {
 				updateConfiguration_step2_5();
 			} else {
-				this.stop();
+				this.reload();
 				
 				showNotConnected("Error: Cannot download configuration");
 				
@@ -421,7 +421,7 @@ package com.msgid.S3mer
 				config.timestamp = "";
 
 				if(this._expired && isExpired()) { // IF both these are true when we get here it means the player expired and the current configuration is still expired.
-					this.stop();
+					this.reload();
 					this.showNotConnected("Error: Expired");
 				}
 					
@@ -470,7 +470,7 @@ package com.msgid.S3mer
 				ApplicationSettings.save();
 				
 				if(this._expired && isExpired()) { // IF both these are true when we get here it means the player expired and the current configuration is still expired.
-					this.stop();
+					this.reload();
 					this.showNotConnected("Error: Expired");
 					return;
 				}
@@ -547,42 +547,58 @@ package com.msgid.S3mer
 			this.show_play_next();		
 		}
 		
-		public function stop():void {
+		public function reload():void {
 			var myShowObject:Show;
 
 			myShowObject = Show(this._container.getChildByName("currentShow"));
 
 			if (myShowObject != null) {
-				myShowObject.stop(true);
+				myShowObject.reload(true);
+				myShowObject.removeAllChildren();
+				myShowObject.name = "removedObject";
 			}
 			
-			for each( var _showObj:DisplayObject in this._container.getChildren()) {
-				if(_showObj != this._showNotConnected) {
-					this._container.removeChild(_showObj);
-				}
-			}
+//			for each( var _showObj:DisplayObject in this._container.getChildren()) {
+//				if(_showObj != this._showNotConnected &&
+//				   _showObj != (this._container as S3merWindow)._notificationPanel) {
+//					this._container.removeChild(_showObj);
+//				}
+//			}
 			
 			this._stopped = true;
 			this._heartbeatTimer.stop();
 			this._configMonitor.stop();
+			this._configMonitor.reset();
 		}
 		
 		public function reset():void {
 			var myShowObject:Show 
-
-			
-			for each( var _screen:Container in this._container) {
-				myShowObject = Show(_screen.getChildByName("currentShow"));
-			
-				this.stop();
-				
-				if (myShowObject != null) {
-					_screen.removeChild(myShowObject);
-				}
-			}
 			
 			stopDownloads();
 
+			if( this._container is S3merWindow ) {
+				var _screen:S3merWindow = this._container as S3merWindow;
+				
+				myShowObject = Show(_screen.getChildByName("currentShow"));
+				
+				if (myShowObject != null) {
+					myShowObject.visible = false;
+				}
+
+				
+				this._showsNew = new ArrayCollection();
+				this._schedulesNew = new ArrayCollection();
+				this._playlistsNew = new ArrayCollection();
+				
+				this._showsCur = new ArrayCollection();
+				this._schedulesCur = new ArrayCollection();
+				this._playlistsCur = new ArrayCollection();
+				
+				this._expired = false;
+				this._stopped = true;
+				
+				this.reload();
+			}
 		}
 		
 		public function stopDownloads():void {
@@ -725,7 +741,7 @@ package com.msgid.S3mer
 			for each (var showXML:XML in _config.show) {
 				var newShow:Show = new Show();
 				
-				newShow.setConfiguration(this);
+//				newShow.setConfiguration(this);
 				
 				LoggerManager.addEvent("Show id: " + showXML.@id);
 				newShow.id = showXML.@id;
@@ -733,10 +749,10 @@ package com.msgid.S3mer
 				newShow.configuredWidth = showXML.@width;
 				newShow.configuredHeight = showXML.@height;	
 
-				newShow.x = 0;
-				newShow.y = 0;
-				newShow.width = this._container.width;
-				newShow.height = this._container.height;
+//				newShow.setStyle("top","0");
+//				newShow.setStyle("bottom","0");
+//				newShow.setStyle("left","0");
+//				newShow.setStyle("right","0");
 							
 				newShow.resizeX = newShow.width/newShow.configuredWidth;
 				newShow.resizeY = newShow.height/newShow.configuredHeight;
@@ -893,14 +909,14 @@ package com.msgid.S3mer
 				oldShowObject = Show(this._container.getChildByName("currentShow"));
 				
 				if( oldShowObject != null ) {
-					oldShowObject.stop(true);
+					oldShowObject.reload(true);
 					this._container.removeChild(oldShowObject);
 				}
 				return;
 			}
 			
 			if(newShowId == "") {
-				newShowObject = Show(this._showsNew.getItemAt(0));
+				newShowObject = (this._showsNew.getItemAt(0) as Show);
 			} else {
 		 		newShowObject = getShowById(this._showsNew, newShowId);
 			}
@@ -914,22 +930,21 @@ package com.msgid.S3mer
 						tmpDate,
 						tmpDate,
 						newShowObject.id.slice(2),
-						S3merWindow(this._container).screenId));
+						(this._container as S3merWindow).screenId));
 
-				oldShowObject = Show(this._container.getChildByName("currentShow"));
-				newShowObject.fadeOut(0);
+				oldShowObject = (this._container.getChildByName("currentShow") as Show);
+				(this._container as S3merWindow)._faderObject.fadeOut(0, false);
 				newShowObject.name = "currentShow";
-				this._container.addChildAt(newShowObject,0);
-				S3merWindow(this._container).show = newShowObject;
+				(this._container as S3merWindow).show = newShowObject;
 				
 				if (oldShowObject != null) {
 					oldShowObject.name = "oldShow";
 					oldShowObject.addEventListener(EffectEvent.EFFECT_END,switchShow_stage2,false,0,true);
-					oldShowObject.fadeOut(250);
+					(this._container as S3merWindow)._faderObject.fadeOut(250, false);
 				} else {
 					newShowObject.addEventListener(EffectEvent.EFFECT_END,switchShow_stage3,false,0,true);
 					newShowObject.play();			
-					newShowObject.fadeIn(0);
+					(this._container as S3merWindow)._faderObject.fadeIn(0, true);
 					
 					
 				}
@@ -943,7 +958,7 @@ package com.msgid.S3mer
 			var currShowObject:Show = Show(this._container.getChildByName("currentShow"));
 			
 			if(oldShowObject) {
-				oldShowObject.stop(true);
+				oldShowObject.reload(true);
 				oldShowObject.removeEventListener(EffectEvent.EFFECT_END,switchShow_stage2);
 				this._container.removeChild(oldShowObject);
 			}
@@ -956,7 +971,7 @@ package com.msgid.S3mer
 					this._container.removeChild(currShowObject);
 				} else {
 					currShowObject.play();			
-					currShowObject.fadeIn(250);
+					(this._container as S3merWindow)._faderObject.fadeIn(250, true);
 					
 				}
 			}
@@ -974,7 +989,7 @@ package com.msgid.S3mer
 			currShowObject.removeEventListener(EffectEvent.EFFECT_END,switchShow_stage3);
 	
 			if( this._stopped == true ) {
-				currShowObject.stop(true);
+				currShowObject.reload(true);
 				this._container.removeChild(currShowObject);
 			}
 		
@@ -982,6 +997,7 @@ package com.msgid.S3mer
 			this._showsCur = this._showsNew;
 			this._playlistsCur = this._playlistsNew;
 			this._schedulesCur = this._schedulesNew;
+			(this._container as S3merWindow)._faderObject.visible = false;
 		}
 
 		
@@ -1028,15 +1044,15 @@ package com.msgid.S3mer
 			}			
 		}
 
-		public function resize( newHeight:int, newWidth:int):void {
-			
-			for each ( var show:Show in this._showsNew ) {
-				show.width = newWidth;
-				show.height = newHeight;
-				
-				show.resize();
-			}
-		}
+//		public function resize( newHeight:int, newWidth:int):void {
+//			
+//			for each ( var show:Show in this._showsNew ) {
+//				show.width = newWidth;
+//				show.height = newHeight;
+//				
+//				show.resize();
+//			}
+//		}
 
 		public function muteAudio(mute:Boolean):void {
 			for each( var _showObj:DisplayObject in this._container.getChildren()) {

@@ -7,6 +7,8 @@
 		<![CDATA[
 			import mx.effects.AnimateProperty;
 			import mx.events.EffectEvent;
+			
+			private var _hideAtEnd:Boolean;
 
 			public function get faded():Boolean {
 				if (alpha == 1) {
@@ -16,32 +18,50 @@
 				}
 			}
 		
-			public function setup(container:DisplayObjectContainer):void {
+			public function setup():void {
+				var _parent:DisplayObjectContainer;
+				
 				this.alpha = 0;
 
-				this.x = 0;
-				this.y = 0;
-				this.width = container.width;
-				this.height = container.height;
-				this.visible = true;
+//				this.x = 0;
+//				this.y = 0;
+//				this.width = container.width;
+//				this.height = container.height;
 
-				container.addChild(this);
+//				this.visible = true;
+				
+				_parent = this.parent;
+				
+				_parent.removeChild(this);
+				_parent.addChild(this);
+
+//				container.addChild(this);
 			}
 			
-			public function fadeOut(length:int):void {
+			public function fadeOut(length:int, hideAtEnd:Boolean):void {
+				this.visible = true;
+				this._hideAtEnd = hideAtEnd;
+				
 				if( length == 0 ) {
 					this.alpha = 1;
 					dispatchEvent(new EffectEvent(EffectEvent.EFFECT_END));
+					if(this._hideAtEnd)
+						this.visible = false;
 				} else {
 					fadeOutAnim.duration = length;
 					fadeOutAnim.play([this]);
 				}
 			}
 			
-			public function fadeIn(length:int):void {
+			public function fadeIn(length:int, hideAtEnd:Boolean):void {
+				this.visible = true;
+				this._hideAtEnd = hideAtEnd;
+				
 				if( length == 0 ) {
 					this.alpha = 0;
 					dispatchEvent(new EffectEvent(EffectEvent.EFFECT_END));
+					if(this._hideAtEnd)
+						this.visible = false;
 				} else {
 					fadeInAnim.duration = length;
 					fadeInAnim.play([this]);
@@ -50,13 +70,15 @@
 			
 			public function fadeComplete_event(e:Event):void {
 				dispatchEvent(new EffectEvent(EffectEvent.EFFECT_END));
+				if(this._hideAtEnd)
+					this.visible = false;
 			}
 			
-			public function toggle(length:int):void {
+			public function toggle(length:int, hideAtEnd:Boolean):void {
 				if (this.faded) {
-					fadeIn(length);
+					fadeIn(length, hideAtEnd);
 				} else {
-					fadeOut(length);
+					fadeOut(length, hideAtEnd);
 				}
 			}
 			

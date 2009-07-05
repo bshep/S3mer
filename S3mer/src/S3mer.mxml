@@ -3,12 +3,13 @@
 	layout="absolute" 
 	applicationComplete="onAppLoad(event)"
 	invoke="onInvoke(event)"
-	borderStyle="none" showStatusBar="false" width="1" height="1" visible="false"
+	borderStyle="none" showStatusBar="false" width="100" height="100" visible="false"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off" backgroundColor="#000000"
      xmlns:ns1="com.msgid.S3mer.*">
 	
 	<mx:Script>
 		<![CDATA[
+			import com.msgid.S3mer.Utility.S3merUtility;
 			import com.msgid.S3mer.Utility.FileIO;
 			import com.msgid.S3mer.Utility.LoggerManager;
 
@@ -26,7 +27,6 @@
 			import mx.events.FlexEvent;
 			import mx.events.TweenEvent;
 			
-//			private var _log:Logger = Logger.instance;
 			private var _updater:S3merApplicationUpdater;
 			private var _loginWindow:LoginWindow;
 			private var _playerWindows:ArrayCollection = new ArrayCollection;
@@ -126,7 +126,7 @@
 					LoggerManager.addEvent("Creating window for screen #" + screenNumber);
 					_window = new S3merWindow();
 					_window.setScreen(screenNumber);
-					_window.ObjOwner = this;
+					_window.applicationObject = this;
 					_window.open(false);
 					
 					_window.showWindow();
@@ -152,7 +152,7 @@
 				
 
 				for each( _window in this._playerWindows ) {
-					_window.stop();
+					_window.reload();
 					_window.close();
 				}				
 				this._playerWindows.removeAll();
@@ -189,10 +189,10 @@
 				this._loginWindow.addEventListener("WINDOW_CLOSED",onAppLoad_stage2,false,0,true);
 				this.setStyle("backgroundColor","#FFFFFF");
 
-				if ( stage.nativeWindow.closed != true ) { 
-					stage.nativeWindow.visible = true;
-					this.visible = true;
-				}
+//				if ( stage.nativeWindow.closed != true ) { 
+//					stage.nativeWindow.visible = true;
+//					this.visible = true;
+//				}
 					
 				cursorManager.removeBusyCursor();
 				
@@ -271,19 +271,22 @@
 				
 				storePath.resolvePath("Utilities").createDirectory();
 				
-				try {
-					if( ApplicationSettings.getValue("ui.autoStartEnabled","true") == "true" ) {
-						NativeApplication.nativeApplication.startAtLogin = true;
-					} else {
-						NativeApplication.nativeApplication.startAtLogin = false;
+				if ( !S3merUtility.isDebug ) {
+					try {
+						if( ApplicationSettings.getValue("ui.autoStartEnabled","true") == "true" ) {
+							NativeApplication.nativeApplication.startAtLogin = true;
+						} else {
+							NativeApplication.nativeApplication.startAtLogin = false;
+						}
+											
+					} catch( e:IllegalOperationError) {
+						LoggerManager.addEvent("could not set to startup");
 					}
-										
-				} catch( e:IllegalOperationError) {
-					LoggerManager.addEvent("could not set to startup");
 				}
 				
 				return true;
 				
+				// We have eliminated the initial setup stuff since it was annoying
 				switch( FileIO.getOs() ) {
 					case 'WINDOWS':
 						try {
@@ -360,8 +363,10 @@
 		        } else {
 		            LoggerManager.addEvent("--no arguments--");
 		        }
-				this.visible = false;
-				this.move(-1000,-1000);
+//				this.visible = false;
+//				this.width = 1;
+//				this.height = 1;
+//				this.move(-1000,-1000);
 				
 				this._updater = new S3merApplicationUpdater();
 				

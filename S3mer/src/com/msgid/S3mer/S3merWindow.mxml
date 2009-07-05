@@ -5,7 +5,7 @@
 	visible="true" horizontalAlign="center" 
 	verticalAlign="middle" cornerRadius="0" layout="absolute"
 	backgroundColor="#FFFFFF"
-	resize="onWindowResize(event)"
+	resize="onWindowResize()"
 	 xmlns:ns1="com.msgid.S3mer.*">
 	<mx:states>
 		<mx:State name="loading">
@@ -38,29 +38,54 @@
 
 			
 			private var _screenNumber:int;
-			private var _show:Show;
+
 			private var _log:LoggerManager = LoggerManager.instance;
 			private var _configuration:ConfigurationManager;
-			private var _fader:FadePanel;
+
 			private var _stopped:Boolean = true;
-			private var _owner:S3mer;
+			private var _applicationObject:S3mer;
 			private var _multiScreen:Boolean;
 			
+			private var _showObject:Show;
+			
 			public function set show(myShow:Show):void {
-				this._show = myShow;
 				
-				this.onWindowResize(null);
+				// If we already have a showObject assign and the new object is different
+				// and the object is our child then, add the object in the same position as the old object
+				// Otherwise, just add the object at the top
+				if(this._showObject && this._showObject != myShow && this._showObject.parent == this) {
+					this.addChildAt(myShow, this.getChildIndex(this._showObject));
+					this.removeChild(this._showObject);
+				} else {
+//					if( this._showObject == myShow && myShow.parent != this ) {
+//					}
+					this.addChild(myShow);
+				}
+				
+				// If the old object is someone's child, remove it, it is no longer used
+//				if(this._showObject.parent != null) {
+//					this._showObject.parent.removeChild(this._showObject);
+//				}
+				
+				this._showObject = myShow;
+				this._showObject.setStyle("top","0");
+				this._showObject.setStyle("bottom","0");
+				this._showObject.setStyle("left","0");
+				this._showObject.setStyle("right","0");
+				
+				this.onWindowResize();
 			}
+
 			public function get show():Show{
-				return _show;
+				return _showObject;
 			}
 			
 			public function get screenId():int {
 				return this._screenNumber;
 			}
 			
-			public function set ObjOwner(myOwner:S3mer):void {
-				this._owner = myOwner;
+			public function set applicationObject(obj:S3mer):void {
+				this._applicationObject = obj;
 			}
 			
 			public function get configuration():ConfigurationManager {
@@ -76,7 +101,9 @@
 			}
 
 			
-			//Receives screenNumber in which to display this screen, returns screenNumber or -1
+			// Receives screenNumber in which to display this screen,
+			// changes the objects bounds to that screen
+			// returns screenNumber or -1
 			public function setScreen(screenNumber:int):int {
 				var _screen:Screen;
 				
@@ -104,7 +131,8 @@
 
 				
 				this.title = "Screen #" + this._screenNumber;
-//				this.screenNumber.text = "Screen #" + this._screenNumber;
+				
+				// This restores the window position if it saved in the config
 				if(ApplicationSettings.getValue("screen" + this._screenNumber + ".location.width", "0") != "0") {
 					this.move(parseInt(ApplicationSettings.getValue("screen" + this._screenNumber + ".location.x", "0"),10),
 							  parseInt(ApplicationSettings.getValue("screen" + this._screenNumber + ".location.y", "0"),10));
@@ -115,13 +143,9 @@
 					this.move(_screen.bounds.x,_screen.bounds.y);
 					this.stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
 				}
-//				this.stage.scaleMode = StageScaleMode.SHOW_ALL;
-
-				this.currentState = "";
 			}
 			
 			public function enableKeyHandler():void {
-				
 				if(this.stage) {
 					if ( !this.stage.willTrigger(KeyboardEvent.KEY_UP) ) {
 						this.stage.addEventListener(KeyboardEvent.KEY_UP,HandleKeyUp,false,0,true);
@@ -137,14 +161,14 @@
 				KeyboardManager.HandleKeyUp(e,this);
 			}
 						
-			private function onWindowResize(e:ResizeEvent):void {
+			private function onWindowResize():void {
 				LoggerManager.addEvent("Screen #" + this._screenNumber + " size is: " + this.width + "x" + this.height);
 				
-				if( this._show != null ) {
+				if( this._showObject != null ) {
 					LoggerManager.addEvent("Screen #" + this._screenNumber + ": resizing");
-					this._show.width = this.width;
-					this._show.height = this.height;
-					this._show.resize();
+					this._showObject.width = this.width;
+					this._showObject.height = this.height;
+					this._showObject.resize();
 				} else {
 					LoggerManager.addEvent("Screen #" + this._screenNumber + ": NOT resizing, show is null");
 				}
@@ -157,17 +181,17 @@
 
 				this.setStyle("backgroundColor","#FFFFFF");				
 				
-//				myLoadingImage.maintainAspectRatio = true;
-
-//				LoadingCanvas.visible = true;
-
-				this._configuration = new ConfigurationManager(this, multiScreen);
-				
-				this._configuration.addEventListener(ConfigurationEvent.UPDATED, OnConfigurationUpdate,false,0,true);
-				this._configuration.addEventListener(DownloaderEvent.PARTIAL_COMPLETE, OnDownloadSingleFileComplete,false,0,true);
-				this._configuration.addEventListener(DownloaderEvent.PROGRESS, OnDownloadSingleFileProgress,false,0,true);				
-				
-				this.fileProgress.text = "Updating Configuration...";
+				if(this._configuration == null ) {
+					this._configuration = new ConfigurationManager(this, multiScreen);
+					
+					this._configuration.addEventListener(ConfigurationEvent.UPDATED, OnConfigurationUpdate);
+					this._configuration.addEventListener(DownloaderEvent.PARTIAL_COMPLETE, OnDownloadSingleFileComplete);
+					this._configuration.addEventListener(DownloaderEvent.PROGRESS, OnDownloadSingleFileProgress);				
+					
+					if( this.fileProgress )	
+						this.fileProgress.text = "Updating Configuration...";
+				}
+	
 				this._configuration.start();
 				
 			}
@@ -178,26 +202,21 @@
 				this._configuration.play();
 			}
 			
-			public function stop():void {
-				this._configuration.stop();
+			public function reload():void {
+				this._configuration.reload();
 			}
 
 			private function OnConfigurationUpdate(e:ConfigurationEvent):void {
-//				if( this._stopped ) {
-//					return;
-//				}
-//				
 				if (this.currentState == "loading") {
-					this.currentState = "playing";
 					myFileProgress.setProgress(100,100);
 					myTotalProgress.setProgress(100,100);
 					
-					_fader = new FadePanel();
-					
-					_fader.setup(this);
-					_fader.addEventListener(EffectEvent.EFFECT_END, OnFadeComplete);
+					_faderObject.setup();
+					_faderObject.addEventListener(EffectEvent.EFFECT_END, OnFadeComplete);
 	
-					_fader.fadeOut(250);
+					_faderObject.fadeOut(250, false);
+					
+					this.currentState = "playing";
 				} else {
 					this.setStyle("backgroundColor","#000000");
 					this.play();
@@ -233,25 +252,19 @@
 //			}
 			
 			private function OnFadeComplete(e:EffectEvent):void {
-				_fader.removeEventListener(EffectEvent.EFFECT_END, OnFadeComplete);
-				_fader.addEventListener(EffectEvent.EFFECT_END, OnFadeComplete_stage2);
+				_faderObject.removeEventListener(EffectEvent.EFFECT_END, OnFadeComplete);
+				_faderObject.addEventListener(EffectEvent.EFFECT_END, OnFadeComplete_stage2);
 				
 				LoggerManager.addEvent("Current BKG Color : " + this.getStyle("backgroundColor"));
 				this.setStyle("backgroundColor","#000000");
 				LoggerManager.addEvent("Current BKG Color : " + this.getStyle("backgroundColor"));
-				this.currentState = "";
 				
-				_fader.fadeIn(100);
+				_faderObject.fadeIn(100, true);
 			}
 			
 			private function OnFadeComplete_stage2(e:EffectEvent):void {
-				_fader.removeEventListener(EffectEvent.EFFECT_END, OnFadeComplete_stage2);
-				try {
-					this.removeChild(_fader);
-				} catch(e:Error) {
-					
-				}
-							
+				_faderObject.removeEventListener(EffectEvent.EFFECT_END, OnFadeComplete_stage2);
+
 				if (this._stopped == true) {
 					this._stopped = false;
 					this.play();
@@ -278,7 +291,7 @@
 			}
 
 			public function reloadApp():void {
-				this._owner.reloadApp();
+				(this._applicationObject as S3mer).reloadApp();
 			}
 			
 			public function resetApp():void {
@@ -286,43 +299,20 @@
 				this._configuration.removeEventListener(ConfigurationEvent.UPDATED, OnConfigurationUpdate);
 				this._configuration.removeEventListener(DownloaderEvent.PARTIAL_COMPLETE, OnDownloadSingleFileComplete);
 				this._configuration.removeEventListener(DownloaderEvent.PROGRESS, OnDownloadSingleFileProgress);			
-				this._owner.resetApp();
+				this._applicationObject.resetApp();
 			}
 			
 			public function doReload():void {
-				this._show.reset();
-				this._show.removeAllChildren();
-				this.removeChild(this._show);
-				
 				this.setStyle("backgroundColor","#FFFFFF");				
-										
 				this.loadConfiguration(this._multiScreen);
 			}
 			
-//			public function doReset22():void {
-//				if( this._show != null ) {				
-//					try {
-//						this._show.reset();
-//						this._show.removeAllChildren();
-//						this.removeChild(this._show);
-//					} catch(e:Error) {
-//						
-//					}
-//				}
-//				
-//				this._configuration.stopDownloads();
-//				this.currentState = "";
-//								
-//				this.setStyle("backgroundColor","#FFFFFF");				
-//										
-//			}
-
 			public function saveWindowPositions():void {
-				this._owner.saveWindowPositions();
+				this._applicationObject.saveWindowPositions();
 			}
 			
 			public function redoInitialSetup():void {
-				this._owner.doInitialSetup(true);
+				this._applicationObject.doInitialSetup(true);
 			}
 			
 			public function cleanMediaDirectory():void {
@@ -334,4 +324,6 @@
 	
 	<ns1:NotificationPanel id="_notificationPanel" right="10" top="10" visible="false" />
 	<ns1:LoginWindow id="_loginWindow" alpha="0.0" horizontalCenter="0" verticalCenter="0" visible="false" />
+	<ns1:FadePanel left="0" top="0" bottom="0" right="0" id="_faderObject" visible="false">
+	</ns1:FadePanel>
 </mx:Window>
