@@ -41,7 +41,7 @@ package com.msgid.S3mer
 			return this._items.length;
 		}
 		
-		public function first():void {
+		public function rewind():void {
 			if(this._items.length == 0) {
 				return;// null;
 			}
@@ -53,43 +53,37 @@ package com.msgid.S3mer
 		}
 		
 		public function next():void {
-			//var tmpObj:PlaylistObject;
-			
 			if(this._items.length == 0) {
 				return;
 			}
 			
-			//tmpObj = PlaylistObject(this._items.getItemAt(this._position));
-			
-			this._position++;
 			this._EOL = false;
 			this._BOL = false;
 
-			if(this._position > this._items.length - 1) {
-				this._position = 0;
+			if((this._position+1) > (this._items.length - 1)) {
 				this._EOL = true;
+			} else {
+				this._position++;
 			}
-			
-			//return tmpObj;
 		}
 		
-		public function previous():void {
-			if(this._items.length == 0) {
-				return;
-			}
-			
-			this._position--;
-
-			if(this._position < 0) {
-				this._position = this._items.length - 1;
-			}
-			
-			if(this._position == 0) {
-				this._BOL = true;
-			}
-			
-			//return PlaylistObject(this._items.getItemAt(this._position));
-		}
+//		public function previous():void {
+//			if(this._items.length == 0) {
+//				return;
+//			}
+//			
+//			this._position--;
+//
+//			if(this._position < 0) {
+//				this._position = this._items.length - 1;
+//			}
+//			
+//			if(this._position == 0) {
+//				this._BOL = true;
+//			}
+//			
+//			//return PlaylistObject(this._items.getItemAt(this._position));
+//		}
 
 		public function get current():PlaylistObject {
 			if ( this._items.length == 0 ) {

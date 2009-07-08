@@ -7,22 +7,26 @@
 	backgroundColor="#FFFFFF"
 	resize="onWindowResize()"
 	 xmlns:ns1="com.msgid.S3mer.*">
+	 
+ 	<ns1:NotificationPanel id="_notificationPanel" right="10" top="10" visible="false" />
+	<ns1:LoginWindow id="_loginWindow" alpha="0.0" horizontalCenter="0" verticalCenter="0" visible="false" />
+	<ns1:FadePanel left="0" top="0" bottom="0" right="0" id="_faderObject" visible="false" />
+	<mx:Canvas id="LoadingCanvas" verticalScrollPolicy="off" horizontalScrollPolicy="off" visible="false" horizontalCenter="0" verticalCenter="0" width="320" height="240">
+		<mx:SWFLoader id="myLoadingImage" source="assets/logo.swf" x="0" top="0" maintainAspectRatio="true"/>
+		<mx:ProgressBar labelPlacement="bottom" id="myFileProgress" enabled="true" mode="manual" label=" " visible="false" bottom="10" right="10" left="10"/>
+		<mx:ProgressBar labelPlacement="bottom" id="myTotalProgress" enabled="true" mode="manual" label=" " bottom="20" right="10" left="10"/>
+		<mx:Label id="lblStatus" visible="false" left="0" right="0" color="#BDBDBD" />
+		<mx:Label y="208" text="" id="fileProgress" left="10"/>
+	</mx:Canvas>
+
 	<mx:states>
 		<mx:State name="loading">
-			<mx:AddChild position="lastChild">
-				<mx:Canvas id="LoadingCanvas" verticalScrollPolicy="off" horizontalScrollPolicy="off" visible="true" horizontalCenter="0" verticalCenter="0" width="320" height="240">
-					<mx:SWFLoader id="myLoadingImage" source="assets/logo.swf" x="0" top="0" maintainAspectRatio="true"/>
-					<mx:ProgressBar labelPlacement="bottom" id="myFileProgress" enabled="true" mode="manual" label=" " visible="false" bottom="10" right="10" left="10"/>
-					<mx:ProgressBar labelPlacement="bottom" id="myTotalProgress" enabled="true" mode="manual" label=" " bottom="20" right="10" left="10"/>
-					<mx:Label id="lblStatus" visible="false" left="0" right="0" color="#BDBDBD">
-					</mx:Label>
-					<mx:Label y="208" text="" id="fileProgress" left="10"/>
-				</mx:Canvas>
-			</mx:AddChild>
-			<mx:RemoveChild target="{_loginWindow}"/>
+			<mx:SetProperty target="{_loginWindow}" name="visible" value="false"/>
+			<mx:SetProperty target="{LoadingCanvas}" name="visible" value="true"/>
 		</mx:State>
-		<mx:State name="playing">
+		<mx:State name="playing" enterState="this.configuration.play();" basedOn="">
 			<mx:RemoveChild target="{_loginWindow}"/>
+			<mx:RemoveChild target="{LoadingCanvas}"/>
 		</mx:State>
 	</mx:states>
 	
@@ -59,7 +63,7 @@
 				} else {
 //					if( this._showObject == myShow && myShow.parent != this ) {
 //					}
-					this.addChild(myShow);
+					this.addChildAt(myShow,0);
 				}
 				
 				// If the old object is someone's child, remove it, it is no longer used
@@ -197,9 +201,13 @@
 			}
 			
 			public function play():void {
+//				this.currentState = "";
+//				if(this.LoadingCanvas.parent == this ) 
+//					this.removeChild(this.LoadingCanvas);
+					
 				this.currentState = "playing";
 				this._stopped = false;
-				this._configuration.play();
+//				this._configuration.play();
 			}
 			
 			public function reload():void {
@@ -216,7 +224,7 @@
 	
 					_faderObject.fadeOut(250, false);
 					
-					this.currentState = "playing";
+//					this.currentState = "playing";
 				} else {
 					this.setStyle("backgroundColor","#000000");
 					this.play();
@@ -322,8 +330,5 @@
 		]]>
 	</mx:Script>
 	
-	<ns1:NotificationPanel id="_notificationPanel" right="10" top="10" visible="false" />
-	<ns1:LoginWindow id="_loginWindow" alpha="0.0" horizontalCenter="0" verticalCenter="0" visible="false" />
-	<ns1:FadePanel left="0" top="0" bottom="0" right="0" id="_faderObject" visible="false">
-	</ns1:FadePanel>
+
 </mx:Window>

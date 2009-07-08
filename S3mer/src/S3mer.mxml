@@ -200,6 +200,10 @@
 			}
 			
 			private function onAppLoad_stage2(e:Event):void {
+				if(this._loginWindow.willTrigger("WINDOW_CLOSED")) {
+					this._loginWindow.removeEventListener("WINDOW_CLOSED", onAppLoad_stage2);
+				}
+				
 				this._isPro = this._loginWindow.isPro;
 				this._isDemo = this._loginWindow.isDemoMode;
 				

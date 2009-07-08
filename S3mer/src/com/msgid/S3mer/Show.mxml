@@ -111,7 +111,7 @@
 			}
 			
 			public function onInvalidPlaylistItem(e:ShowEvent):void {
-				(e.target as ShowObject).play_next();
+				(e.target as ShowObject).play_next(false);
 			}
 			
 			public function getObjectById(id:String):ShowObject {

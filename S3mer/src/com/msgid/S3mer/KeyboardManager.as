@@ -35,31 +35,6 @@ package com.msgid.S3mer
 		
 		public static function HandleKeyUp(e:KeyboardEvent, target:Object):void {
 			switch(String.fromCharCode(e.charCode).toUpperCase()){
-//				case "D":
-//					//this.appLog.alpha = 0
-//					var myTween:Move = new Move();
-//					myTween.duration = 1000;
-//						
-//					
-//					if (!target.appLog.visible == true) {
-//						myTween.yFrom = -target.appLog.height;
-//						myTween.yTo = target.appLog.y;
-//						
-//					} else {
-//						myTween.yTo = -target.appLog.height;
-//						myTween.yFrom = target.appLog.y;
-//					}
-//					myTween.play([target.appLog]);
-//					
-//					if (!target.appLog.visible == true) {
-//						statusDisplay("Debug ON", target);
-//						target.appLog.visible = true;
-//					} else {
-//						statusDisplay("Debug Off", target);
-//						myTween.addEventListener(TweenEvent.TWEEN_END,target.OnHideLogComplete,false,0,true);
-//					}
-//					
-//					break;
 				case "F":
 					if ( target.systemManager.stage.displayState == StageDisplayState.FULL_SCREEN_INTERACTIVE ) {
 						statusDisplay("Fullscreen OFF", target);
@@ -202,28 +177,28 @@ package com.msgid.S3mer
 					statusDisplay("Quit", target);
 					Application.application.exit();
 					break;
-				case "V": //Quit
+				case "V": //Display Version String
 					var descriptor:XML = NativeApplication.nativeApplication.applicationDescriptor;
 					var ns:Namespace = descriptor.namespaceDeclarations()[0];
 					var version:String = descriptor.ns::version
 					statusDisplay("Version: " + version, target);
 					break;
 
-				case "*": //Redo First Run Config and QUIT
-					(target as S3merWindow).redoInitialSetup();
+//				case "*": //Redo First Run Config and QUIT
+//					(target as S3merWindow).redoInitialSetup();
+//					
+//					Application.application.exit();
+//					
+//					break;
 					
-					Application.application.exit();
-					
-					break;
-					
-				case "#":
-					
-					(target as S3merWindow).disableKeyHandler(); 
-					(target as S3merWindow).configuration.reset();
-					(target as S3merWindow).cleanMediaDirectory();
-					(target as S3merWindow).stopped = true;
-				
-					break;
+//				case "#": // Cleanup Media Directory
+//					
+//					(target as S3merWindow).disableKeyHandler(); 
+//					(target as S3merWindow).configuration.reset();
+//					(target as S3merWindow).cleanMediaDirectory();
+//					(target as S3merWindow).stopped = true;
+//				
+//					break;
 				default:
 //					Logger.addEvent("KEY_UP: charcode = " + e.charCode + " str: " + String.fromCharCode(e.charCode).toUpperCase());
 					break;
