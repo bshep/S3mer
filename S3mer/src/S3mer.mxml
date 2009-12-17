@@ -4,31 +4,34 @@
 	applicationComplete="onAppLoad(event)"
 	invoke="onInvoke(event)"
 	borderStyle="none" showStatusBar="false" width="100" height="100" visible="false"
-	verticalScrollPolicy="off" horizontalScrollPolicy="off" backgroundColor="#000000"
-     xmlns:ns1="com.msgid.S3mer.*">
+	verticalScrollPolicy="off" horizontalScrollPolicy="off" backgroundColor="#000000">
 	
 	<mx:Script>
 		<![CDATA[
-			import com.msgid.S3mer.Utility.S3merUtility;
-			import com.msgid.S3mer.Utility.FileIO;
-			import com.msgid.S3mer.Utility.LoggerManager;
+			import com.s3mer.util.NetUtils;
+			import com.s3mer.util.ApplicationSettings;
+			import com.s3mer.util.LoggerManager;
+			import com.s3mer.ui.S3merWindow;
+//			import com.msgid.S3mer.Utility.S3merUtility;
+//			import com.msgid.S3mer.Utility.FileIO;
+//			import com.msgid.S3mer.Utility.LoggerManager;
 
 			import mx.logging.LogEvent;
-			import com.msgid.S3mer.Net.NetUtils;
+	//		import com.msgid.S3mer.Net.NetUtils;
 			import mx.core.Application;
 			import mx.core.Window;
-			import com.msgid.S3mer.ApplicationSettings;
-			import com.msgid.S3mer.KeyboardManager;
-			import com.msgid.S3mer.S3merWindow;
+	//		import com.msgid.S3mer.ApplicationSettings;
+//			import com.msgid.S3mer.KeyboardManager;
+//			import com.msgid.S3mer.S3merWindow;
 			import mx.collections.ArrayCollection;
-			import com.msgid.S3mer.LoginWindow;
-			import com.msgid.S3mer.S3merApplicationUpdater;
+//			import com.msgid.S3mer.LoginWindow;
+//			import com.msgid.S3mer.S3merApplicationUpdater;
 			import mx.events.ResizeEvent;
 			import mx.events.FlexEvent;
 			import mx.events.TweenEvent;
 			
-			private var _updater:S3merApplicationUpdater;
-			private var _loginWindow:LoginWindow;
+//			private var _updater:S3merApplicationUpdater;
+//			private var _loginWindow:LoginWindow;
 			private var _playerWindows:ArrayCollection = new ArrayCollection;
 			private var _isPro:Boolean = false;
 			private var _isDemo:Boolean = false;
@@ -53,11 +56,10 @@
 			
 			private function networkStatusChanged(event:Event):void {
 				this.removeEventListener(Event.NETWORK_CHANGE,networkStatusChanged);					
-
 				new NetUtils().CheckOnlineStatus(onAppLoad_stage1_5);
 			}
 						
-			private function getScreenById(screenId:Number):S3merWindow {
+			private function getScreenById(screenId:int):S3merWindow {
 				for each( var _screen:S3merWindow in this._playerWindows ) {
 					if( screenId == _screen.getScreen() ) {
 						return _screen;
@@ -66,24 +68,24 @@
 				
 				return null;			
 			}
-			
-			private function createLoginWindow():void {
-				var mainScreen:S3merWindow = getScreenById(0);
-				
-				if(mainScreen) {
-				
-					this._loginWindow = getScreenById(0)._loginWindow;
-					this._loginWindow.visible = false;
-					
-					if( Screen.screens.length > 1 ) {
-						this._loginWindow.isMultiScreen = true;
-					} else {
-						this._loginWindow.isMultiScreen = false;
-					}
-				} else {
-					this._loginWindow = null;
-				}
-			}
+//			
+//			private function createLoginWindow():void {
+//				var mainScreen:S3merWindow = getScreenById(0);
+//				
+//				if(mainScreen) {
+//				
+//					this._loginWindow = getScreenById(0)._loginWindow;
+//					this._loginWindow.visible = false;
+//					
+//					if( Screen.screens.length > 1 ) {
+//						this._loginWindow.isMultiScreen = true;
+//					} else {
+//						this._loginWindow.isMultiScreen = false;
+//					}
+//				} else {
+//					this._loginWindow = null;
+//				}
+//			}
 			
 			
 			private function onAppLoad(e:FlexEvent):void {
@@ -95,6 +97,7 @@
 				}
 				
 				new NetUtils().CheckOnlineStatus(onAppLoad_stage1_5);
+				
 			}
 			
 			
@@ -106,19 +109,29 @@
 					return;
 				} else {
 					LoggerManager.addEvent("NETSTAT: network is up! Here we go...");
-//					this.removeEventListener(Event.NETWORK_CHANGE,networkStatusChanged);					
+					
 				}
+				
+				
+				
+				
+				
 				
 				createPlayerWindows();
-				createLoginWindow();
-				
-				if( this._loginWindow ) {
-					this.stage.addEventListener(Event.CLOSE,onAppClose, false, 0, true);
-					this._loginWindow.checkCredentials(onAppLoad_postLogin);
-				}
-
+//				createLoginWindow();
+//				
+//				if( this._loginWindow ) {
+//					this.stage.addEventListener(Event.CLOSE,onAppClose, false, 0, true);
+//					this._loginWindow.checkCredentials(onAppLoad_postLogin);
+//				}
+//
 			}
 			
+			
+			
+			
+			
+		
 			private function createPlayerWindows():void {
 				var screenNumber:int = 0;
 				var _window:S3merWindow;
@@ -131,276 +144,275 @@
 					
 					_window.showWindow();
 					this._playerWindows.addItem(_window);
-					if( screenNumber == 0 ) {
-						_window._loginWindow.show();
-					}
 					screenNumber++;
 //					break; // Only show 1 window
 				}
 			}
-			
-			private function HandleKeyUp(e:KeyboardEvent):void {
-				KeyboardManager.HandleKeyUp(e,this);
-			}
-			
-			private function onAppClose(e:Event):void {
-				exit();
-			}
-			
-			public function resetApp():void {
-				var _window:S3merWindow;
-				
 
-				for each( _window in this._playerWindows ) {
-					_window.reload();
-					_window.close();
-				}				
-				this._playerWindows.removeAll();
-				
-				createPlayerWindows();
-				createLoginWindow();
-				
-				if( this._loginWindow ) {
-					this._loginWindow.checkCredentials(onAppLoad_postLogin);
-				}
-			}
-			
-			public function reloadApp():void {
-				for each( var _window:S3merWindow in this._playerWindows ) {
-					_window.doReload();
-				}				
-			}
-			
-			private function onAppLoad_postLogin(e:Event):void {
-				if(e != null && (e.target as URLLoader) == null) {
-					onAppLoad_stage2(e);
-				} else {
-				
-					if (e == null || (e.target as URLLoader).data != "OK") {
-						this.doLogin();
-					} else {
-						onAppLoad_stage2(e);
-					}	
-				}
 
-			}
-			
-			private function doLogin():void {
-				this._loginWindow.addEventListener("WINDOW_CLOSED",onAppLoad_stage2,false,0,true);
-				this.setStyle("backgroundColor","#FFFFFF");
 
-//				if ( stage.nativeWindow.closed != true ) { 
-//					stage.nativeWindow.visible = true;
-//					this.visible = true;
+
+
+
+
+
+
+
+	
+//			private function HandleKeyUp(e:KeyboardEvent):void {
+//				KeyboardManager.HandleKeyUp(e,this);
+//			}
+//			
+//			private function onAppClose(e:Event):void {
+//				exit();
+//			}
+//			
+//			public function resetApp():void {
+//				var _window:S3merWindow;
+//				
+//
+//				for each( _window in this._playerWindows ) {
+//					_window.reload();
+//					_window.close();
+//				}				
+//				this._playerWindows.removeAll();
+//				
+//				createPlayerWindows();
+//				createLoginWindow();
+//				
+//				if( this._loginWindow ) {
+//					this._loginWindow.checkCredentials(onAppLoad_postLogin);
 //				}
-					
-				cursorManager.removeBusyCursor();
-				
-				this._loginWindow.visible = true;	
-			}
-			
-			private function onAppLoad_stage2(e:Event):void {
-				if(this._loginWindow.willTrigger("WINDOW_CLOSED")) {
-					this._loginWindow.removeEventListener("WINDOW_CLOSED", onAppLoad_stage2);
-				}
-				
-				this._isPro = this._loginWindow.isPro;
-				this._isDemo = this._loginWindow.isDemoMode;
-				
-				this._loginWindow.visible = false;
-
-				systemManager.stage.addEventListener(KeyboardEvent.KEY_UP,HandleKeyUp,false,0,true);
-				if (ApplicationSettings.getValue("ui.showcursor") != "true") {
-					this.cursorManager.setBusyCursor();
-					this.cursorManager.hideCursor();
-				}
-
-				if( doInitialSetup() == false ) {
-					return;
-				}
-				
-				for each( var _window:S3merWindow in this._playerWindows) {
-					if( this._isPro || _window.screenId == 0) {
-						_window.loadConfiguration(isMultiscreen());
-						if(_window.channelId == "-1") {
-							_window.close();
-//							this._playerWindows.removeItemAt(this._playerWindows.getItemIndex(_window));
-						} else {
-							_window.enableKeyHandler();
-						}
-					}
-					
-					if(this._isDemo && _window.screenId != 0) {
-						_window.close();
+//			}
+//			
+//			public function reloadApp():void {
+//				for each( var _window:S3merWindow in this._playerWindows ) {
+//					_window.doReload();
+//				}				
+//			}
+//			
+//			private function onAppLoad_postLogin(e:Event):void {
+//				if(e != null && (e.target as URLLoader) == null) {
+//					onAppLoad_stage2(e);
+//				} else {
+//				
+//					if (e == null || (e.target as URLLoader).data != "OK") {
+//						this.doLogin();
+//					} else {
+//						onAppLoad_stage2(e);
+//					}	
+//				}
+//
+//			}
+//			
+//			private function doLogin():void {
+//				this._loginWindow.addEventListener("WINDOW_CLOSED",onAppLoad_stage2,false,0,true);
+//				this.setStyle("backgroundColor","#FFFFFF");
+//
+////				if ( stage.nativeWindow.closed != true ) { 
+////					stage.nativeWindow.visible = true;
+////					this.visible = true;
+////				}
+//					
+//				cursorManager.removeBusyCursor();
+//				
+//				this._loginWindow.visible = true;	
+//			}
+//			
+//			private function onAppLoad_stage2(e:Event):void {
+//				if(this._loginWindow.willTrigger("WINDOW_CLOSED")) {
+//					this._loginWindow.removeEventListener("WINDOW_CLOSED", onAppLoad_stage2);
+//				}
+//				
+//				this._isPro = this._loginWindow.isPro;
+//				this._isDemo = this._loginWindow.isDemoMode;
+//				
+//				this._loginWindow.visible = false;
+//
+//				systemManager.stage.addEventListener(KeyboardEvent.KEY_UP,HandleKeyUp,false,0,true);
+//				if (ApplicationSettings.getValue("ui.showcursor") != "true") {
+//					this.cursorManager.setBusyCursor();
+//					this.cursorManager.hideCursor();
+//				}
+//
+//				if( doInitialSetup() == false ) {
+//					return;
+//				}
+//				
+//				for each( var _window:S3merWindow in this._playerWindows) {
+//					if( this._isPro || _window.screenId == 0) {
+//						_window.loadConfiguration(isMultiscreen());
+//						if(_window.channelId == "-1") {
+//							_window.close();
+////							this._playerWindows.removeItemAt(this._playerWindows.getItemIndex(_window));
+//						} else {
+//							_window.enableKeyHandler();
+//						}
+//					}
+//					
+//					if(this._isDemo && _window.screenId != 0) {
+//						_window.close();
+////						this._playerWindows.removeItemAt(this._playerWindows.getItemIndex(_window));
+//					}
+//				}
+//				this.stage.removeEventListener(Event.CLOSE,onAppClose);
+//				
+//				for each(  _window in this._playerWindows) {
+//					if( _window.closed == true ) {
 //						this._playerWindows.removeItemAt(this._playerWindows.getItemIndex(_window));
-					}
-				}
-				this.stage.removeEventListener(Event.CLOSE,onAppClose);
-				
-				for each(  _window in this._playerWindows) {
-					if( _window.closed == true ) {
-						this._playerWindows.removeItemAt(this._playerWindows.getItemIndex(_window));
-						break;
-					}
-				}
+//						break;
+//					}
+//				}
+//
+//				
+//				for each(  _window in this._playerWindows) {
+//					if( _window.visible == true ) {
+//						_window.activate();
+//						_window.orderToFront();
+//						break;
+//					}
+//				}
+//				
+//				if(this._playerWindows.length == 0) {
+//					ApplicationSettings.setValue("user.username","");
+//					ApplicationSettings.setValue("user.password","");
+//					ApplicationSettings.save();
+//					this.resetApp()
+//				}
+//				
+//				this.close();
+//			}
+//			
+//			public function doInitialSetup(ignoreFlags:Boolean = false):Boolean {
+//				if (FileIO.assetsPath() == null) {
+//					LoggerManager.addEvent("Could not find assets path, cannot do initial setup");
+//					return false;
+//				}
+//				
+//				var storePath:File = new File(FileIO.storePath());
+//				var assetsPath:File = new File(FileIO.assetsPath());
+//				var appPath:File = new File(FileIO.appPath());
+//				
+//				storePath.resolvePath("Utilities").createDirectory();
+//				
+//				if ( !S3merUtility.isDebug ) {
+//					try {
+//						if( ApplicationSettings.getValue("ui.autoStartEnabled","true") == "true" ) {
+//							NativeApplication.nativeApplication.startAtLogin = true;
+//						} else {
+//							NativeApplication.nativeApplication.startAtLogin = false;
+//						}
+//											
+//					} catch( e:IllegalOperationError) {
+//						LoggerManager.addEvent("could not set to startup");
+//					}
+//				}
+//				
+//				return true;
+//				
+//				// We have eliminated the initial setup stuff since it was annoying
+//				switch( FileIO.getOs() ) {
+//					case 'WINDOWS':
+//						try {
+//							var firstimeFile:File = File.userDirectory.resolvePath("firstrun.bat");
+//							var templateFile:File;
+//							var firstimeStream:FileStream = new FileStream();
+//							var templateStream:FileStream = new FileStream();
+//							
+//							if (ignoreFlags == false && File.userDirectory.resolvePath("S3merSetupDone").exists) {
+//								return true;
+//							}
+//							
+//							assetsPath = assetsPath.resolvePath("Windows");
+//							
+//							templateFile = assetsPath.resolvePath("firstrun.bat");
+//							
+//							templateStream.open(templateFile,FileMode.READ);
+//							firstimeStream.open(firstimeFile,FileMode.WRITE);
+//							
+//							firstimeStream.writeMultiByte("set APPPATH=" + appPath.nativePath + "\r\n", File.systemCharset);
+//							firstimeStream.writeMultiByte("@echo off\r\n", File.systemCharset);
+//							
+//							var contents:String = templateStream.readMultiByte(templateStream.bytesAvailable, File.systemCharset);
+//							
+//							firstimeStream.writeMultiByte(contents,File.systemCharset);
+//							
+//							templateStream.close();
+//							firstimeStream.close();
+//							
+//							assetsPath.resolvePath("s3merConfig.ico").copyTo(File.userDirectory.resolvePath("s3merConfig.ico"),true);
+//							assetsPath.resolvePath("LAUNCH.SHK").copyTo(File.userDirectory.resolvePath("Desktop").resolvePath("S3mer Config.lnk"),true);
+//						} catch(e:Error) {
+//							trace(e.message);
+//						}
+//						break;
+//					case 'MAC':
+//						if (ignoreFlags == false && File.userDirectory.resolvePath("Library").resolvePath("Preferences").resolvePath("com.s3mer.playerConfig").resolvePath("configDone").exists) {
+//							return true;
+//						}
+//						
+//						assetsPath = assetsPath.resolvePath("Mac");
+//						
+//						if(!File.userDirectory.resolvePath("Desktop").resolvePath("S3merConfig.app").exists) {
+//							assetsPath.resolvePath("S3merConfig.app").copyTo(File.userDirectory.resolvePath("Desktop").resolvePath("S3merConfig.app"));						
+//						}
+//																		
+//						break;
+//					case 'LINUX':
+//						break;
+//					default:
+//						break;
+//				}
+//				
+//				for each( var _win:S3merWindow in this._playerWindows) {
+//					_win.displayImage(assetsPath.resolvePath("firstrun.swf"));
+//					_win.enableKeyHandler();
+//				}
+//				
+//				return false;
+//			}
+//			
 
-				
-				for each(  _window in this._playerWindows) {
-					if( _window.visible == true ) {
-						_window.activate();
-						_window.orderToFront();
-						break;
-					}
-				}
-				
-				if(this._playerWindows.length == 0) {
-					ApplicationSettings.setValue("user.username","");
-					ApplicationSettings.setValue("user.password","");
-					ApplicationSettings.save();
-					this.resetApp()
-				}
-				
-				this.close();
-			}
-			
-			public function doInitialSetup(ignoreFlags:Boolean = false):Boolean {
-				if (FileIO.assetsPath() == null) {
-					LoggerManager.addEvent("Could not find assets path, cannot do initial setup");
-					return false;
-				}
-				
-				var storePath:File = new File(FileIO.storePath());
-				var assetsPath:File = new File(FileIO.assetsPath());
-				var appPath:File = new File(FileIO.appPath());
-				
-				storePath.resolvePath("Utilities").createDirectory();
-				
-				if ( !S3merUtility.isDebug ) {
-					try {
-						if( ApplicationSettings.getValue("ui.autoStartEnabled","true") == "true" ) {
-							NativeApplication.nativeApplication.startAtLogin = true;
-						} else {
-							NativeApplication.nativeApplication.startAtLogin = false;
-						}
-											
-					} catch( e:IllegalOperationError) {
-						LoggerManager.addEvent("could not set to startup");
-					}
-				}
-				
-				return true;
-				
-				// We have eliminated the initial setup stuff since it was annoying
-				switch( FileIO.getOs() ) {
-					case 'WINDOWS':
-						try {
-							var firstimeFile:File = File.userDirectory.resolvePath("firstrun.bat");
-							var templateFile:File;
-							var firstimeStream:FileStream = new FileStream();
-							var templateStream:FileStream = new FileStream();
-							
-							if (ignoreFlags == false && File.userDirectory.resolvePath("S3merSetupDone").exists) {
-								return true;
-							}
-							
-							assetsPath = assetsPath.resolvePath("Windows");
-							
-							templateFile = assetsPath.resolvePath("firstrun.bat");
-							
-							templateStream.open(templateFile,FileMode.READ);
-							firstimeStream.open(firstimeFile,FileMode.WRITE);
-							
-							firstimeStream.writeMultiByte("set APPPATH=" + appPath.nativePath + "\r\n", File.systemCharset);
-							firstimeStream.writeMultiByte("@echo off\r\n", File.systemCharset);
-							
-							var contents:String = templateStream.readMultiByte(templateStream.bytesAvailable, File.systemCharset);
-							
-							firstimeStream.writeMultiByte(contents,File.systemCharset);
-							
-							templateStream.close();
-							firstimeStream.close();
-							
-							assetsPath.resolvePath("s3merConfig.ico").copyTo(File.userDirectory.resolvePath("s3merConfig.ico"),true);
-							assetsPath.resolvePath("LAUNCH.SHK").copyTo(File.userDirectory.resolvePath("Desktop").resolvePath("S3mer Config.lnk"),true);
-						} catch(e:Error) {
-							trace(e.message);
-						}
-						break;
-					case 'MAC':
-						if (ignoreFlags == false && File.userDirectory.resolvePath("Library").resolvePath("Preferences").resolvePath("com.s3mer.playerConfig").resolvePath("configDone").exists) {
-							return true;
-						}
-						
-						assetsPath = assetsPath.resolvePath("Mac");
-						
-						if(!File.userDirectory.resolvePath("Desktop").resolvePath("S3merConfig.app").exists) {
-							assetsPath.resolvePath("S3merConfig.app").copyTo(File.userDirectory.resolvePath("Desktop").resolvePath("S3merConfig.app"));						
-						}
-																		
-						break;
-					case 'LINUX':
-						break;
-					default:
-						break;
-				}
-				
-				for each( var _win:S3merWindow in this._playerWindows) {
-					_win.displayImage(assetsPath.resolvePath("firstrun.swf"));
-					_win.enableKeyHandler();
-				}
-				
-				return false;
-			}
-			
+
+
 			private function onInvoke(e:InvokeEvent):void {
 		        var now:String = new Date().toTimeString();
 		        LoggerManager.addEvent("Invoke event received: " + now);
-		                
-		        if(e.currentDirectory != null){
-		            LoggerManager.addEvent("Current directory=" + e.currentDirectory.nativePath);
-		        } else {
-		            LoggerManager.addEvent("--no directory information available--");
-		        }
-		                
-		        if(e.arguments.length > 0){
-		            LoggerManager.addEvent("Arguments: " + e.arguments.toString());
-		        } else {
-		            LoggerManager.addEvent("--no arguments--");
-		        }
-//				this.visible = false;
-//				this.width = 1;
-//				this.height = 1;
-//				this.move(-1000,-1000);
 				
-				this._updater = new S3merApplicationUpdater();
+//				this._updater = new S3merApplicationUpdater();
 				
 				
 			}
 			
-			private function play():void {
-				for each( var _window:S3merWindow in this._playerWindows) {
-					if(_window.visible) {
-						_window.play();
-					}
-				}
-			}
 			
-			public function saveWindowPositions():void {
-				for each( var _window:S3merWindow in this._playerWindows) {
-					if( _window.stage.displayState == StageDisplayState.FULL_SCREEN_INTERACTIVE ) {
-						ApplicationSettings.setValue("screen" + _window.screenId + ".location.x","0");
-						ApplicationSettings.setValue("screen" + _window.screenId + ".location.y","0");
-						ApplicationSettings.setValue("screen" + _window.screenId + ".location.width","0");
-						ApplicationSettings.setValue("screen" + _window.screenId + ".location.height","0");
-					} else {
-						ApplicationSettings.setValue("screen" + _window.screenId + ".location.x",_window.nativeWindow.bounds.x.toString());
-						ApplicationSettings.setValue("screen" + _window.screenId + ".location.y",_window.nativeWindow.bounds.y.toString());
-						ApplicationSettings.setValue("screen" + _window.screenId + ".location.width",_window.width.toString());
-						ApplicationSettings.setValue("screen" + _window.screenId + ".location.height",_window.height.toString());
-					}
-					ApplicationSettings.save();
-				}
-			}
+			
+//			
+//			
+//			
+//			private function play():void {
+//				for each( var _window:S3merWindow in this._playerWindows) {
+//					if(_window.visible) {
+//						_window.play();
+//					}
+//				}
+//			}
+//			
+//			public function saveWindowPositions():void {
+//				for each( var _window:S3merWindow in this._playerWindows) {
+//					if( _window.stage.displayState == StageDisplayState.FULL_SCREEN_INTERACTIVE ) {
+//						ApplicationSettings.setValue("screen" + _window.screenId + ".location.x","0");
+//						ApplicationSettings.setValue("screen" + _window.screenId + ".location.y","0");
+//						ApplicationSettings.setValue("screen" + _window.screenId + ".location.width","0");
+//						ApplicationSettings.setValue("screen" + _window.screenId + ".location.height","0");
+//					} else {
+//						ApplicationSettings.setValue("screen" + _window.screenId + ".location.x",_window.nativeWindow.bounds.x.toString());
+//						ApplicationSettings.setValue("screen" + _window.screenId + ".location.y",_window.nativeWindow.bounds.y.toString());
+//						ApplicationSettings.setValue("screen" + _window.screenId + ".location.width",_window.width.toString());
+//						ApplicationSettings.setValue("screen" + _window.screenId + ".location.height",_window.height.toString());
+//					}
+//					ApplicationSettings.save();
+//				}
+//			}
 			
 		]]>
 	</mx:Script>
