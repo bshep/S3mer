@@ -1,7 +1,7 @@
 #!/bin/sh
 
 
-DEST=/Applications/Adobe\ Flex\ Builder\ 3/sdks/3.2.0/frameworks/locale
+DEST=/Applications/Adobe\ Flex\ Builder\ 3/sdks/3.4.0/frameworks/locale
 
 LOCALES_DIR=../../locales
 
