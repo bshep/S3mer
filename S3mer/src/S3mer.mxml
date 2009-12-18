@@ -8,25 +8,18 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.s3mer.util.PlayerState;
+			import com.s3mer.events.ConfigurationEvent;
 			import mx.rpc.events.AbstractEvent;
 			import com.s3mer.util.NetUtils;
 			import com.s3mer.util.ApplicationSettings;
 			import com.s3mer.util.LoggerManager;
 			import com.s3mer.ui.S3merWindow;
-//			import com.msgid.S3mer.Utility.S3merUtility;
-//			import com.msgid.S3mer.Utility.FileIO;
-//			import com.msgid.S3mer.Utility.LoggerManager;
 
 			import mx.logging.LogEvent;
-	//		import com.msgid.S3mer.Net.NetUtils;
 			import mx.core.Application;
 			import mx.core.Window;
-	//		import com.msgid.S3mer.ApplicationSettings;
-//			import com.msgid.S3mer.KeyboardManager;
-//			import com.msgid.S3mer.S3merWindow;
 			import mx.collections.ArrayCollection;
-//			import com.msgid.S3mer.LoginWindow;
-//			import com.msgid.S3mer.S3merApplicationUpdater;
 			import mx.events.ResizeEvent;
 			import mx.events.FlexEvent;
 			import mx.events.TweenEvent;
@@ -69,25 +62,6 @@
 				
 				return null;			
 			}
-//			
-//			private function createLoginWindow():void {
-//				var mainScreen:S3merWindow = getScreenById(0);
-//				
-//				if(mainScreen) {
-//				
-//					this._loginWindow = getScreenById(0)._loginWindow;
-//					this._loginWindow.visible = false;
-//					
-//					if( Screen.screens.length > 1 ) {
-//						this._loginWindow.isMultiScreen = true;
-//					} else {
-//						this._loginWindow.isMultiScreen = false;
-//					}
-//				} else {
-//					this._loginWindow = null;
-//				}
-//			}
-			
 			
 			private function onAppLoad(e:FlexEvent):void {
 				this.frameRate = 30;
@@ -114,7 +88,7 @@
 				}
 				
 				
-				this.addEventListener("CREDENTIALS_CHECKED", createPlayerWindows);
+				this.addEventListener(ConfigurationEvent.CREDENTIALS_CHECKED, createPlayerWindows);
 				checkCredentials();
 				
 			}
@@ -122,22 +96,55 @@
 			private function checkCredentials():void {
 				
 				// Cehck the config file
-				if( ApplicationSettings.getValue("","") == "" ){
+				if( (ApplicationSettings.getValue("user.username","") == "") ||  (ApplicationSettings.getValue("user.password","") == "")){
+					PlayerState.credentialsValid = false;
+					LoggerManager.addEvent("S3mer.mxml: Username and/or Password not found");
+					this.dispatchEvent(new ConfigurationEvent(ConfigurationEvent.CREDENTIALS_CHECKED));	
+				} else {
+					PlayerState.username = ApplicationSettings.getValue("user.username","");
+					PlayerState.password = ApplicationSettings.getValue("user.password","");
+					// Try to login
+					NetUtils.remoteCommand(NetUtils.CMD_LOGIN, checkCredentials_complete, checkCredentials_error);
 					
 				}
 				
 				
-				// Try to login
 				
 				// Decide wether we are logged in or not and what type of player (pro, free)
 				
-				this.dispatchEvent(new AbstractEvent("CREDENTIALS_CHECKED"));	
+//				this.dispatchEvent(new ConfigurationEvent(ConfigurationEvent.CREDENTIALS_CHECKED));	
 			}
 			
+			private function checkCredentials_complete(e:Event):void {
+				var _data:String;
+				
+				_data = (e.target as URLLoader).data;
+				
+				if(_data == "OK") {
+					PlayerState.credentialsValid = true;
+				} else {
+					PlayerState.credentialsValid = false;
+				}
+				
+				LoggerManager.addEvent("S3mer.mxml: Login Successful");
+				
+				
+				this.dispatchEvent(new ConfigurationEvent(ConfigurationEvent.CREDENTIALS_CHECKED));	
+			}
 			
+			private function checkCredentials_error(e:IOErrorEvent):void {
+				LoggerManager.addEvent("S3mer.mxml: Login Command Failed");
+				
+				PlayerState.internetConnected = false;
+				//TODO: What to do now? 
+			}
+			
+			public function registation_complete(e:ConfigurationEvent):void {
+				LoggerManager.addEvent("S3mer.mxml: Registration Complete");
+			}
 			
 		
-			private function createPlayerWindows():void {
+			private function createPlayerWindows(e:ConfigurationEvent):void {
 				var screenNumber:int = 0;
 				var _window:S3merWindow;
 				for each( var _screen:Screen in Screen.screens ) {
@@ -154,7 +161,7 @@
 				}
 			}
 
-
+			
 
 
 
