@@ -8,6 +8,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.rpc.events.AbstractEvent;
 			import com.s3mer.util.NetUtils;
 			import com.s3mer.util.ApplicationSettings;
 			import com.s3mer.util.LoggerManager;
@@ -113,21 +114,25 @@
 				}
 				
 				
+				this.addEventListener("CREDENTIALS_CHECKED", createPlayerWindows);
+				checkCredentials();
 				
-				
-				
-				
-				createPlayerWindows();
-//				createLoginWindow();
-//				
-//				if( this._loginWindow ) {
-//					this.stage.addEventListener(Event.CLOSE,onAppClose, false, 0, true);
-//					this._loginWindow.checkCredentials(onAppLoad_postLogin);
-//				}
-//
 			}
 			
-			
+			private function checkCredentials():void {
+				
+				// Cehck the config file
+				if( ApplicationSettings.getValue("","") == "" ){
+					
+				}
+				
+				
+				// Try to login
+				
+				// Decide wether we are logged in or not and what type of player (pro, free)
+				
+				this.dispatchEvent(new AbstractEvent("CREDENTIALS_CHECKED"));	
+			}
 			
 			
 			

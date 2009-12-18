@@ -20,14 +20,12 @@ public function showWindow():void{
 	this.title = "Screen #"+this._ScreenNumber;
 	this.stage.displayState=StageDisplayState.FULL_SCREEN_INTERACTIVE;
 	if(_ScreenNumber==0){
-		var myLogin:LoginWindow;
-		myLogin = new LoginWindow();
-		this.addChild(myLogin);
-		myLogin.setStyle("horizontalCenter","0");
-		myLogin.setStyle("verticalCenter","0");
-		myLogin.show();
 		
+//		var myLogin:LoginWindow;
+//		myLogin = new LoginWindow();
+//		this.addChild(myLogin);
+//		myLogin.setStyle("horizontalCenter","0");
+//		myLogin.setStyle("verticalCenter","0");
+//		myLogin.show();	
 	}
-		
-	
 }
