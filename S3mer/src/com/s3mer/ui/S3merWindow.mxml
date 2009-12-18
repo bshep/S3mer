@@ -3,7 +3,7 @@
 
 	<mx:Script>
 		<![CDATA[
-			include "S3merWindow.as";
+			include "S3merWindowCode.as";
 		]]>
 	</mx:Script>	
 </mx:Window>

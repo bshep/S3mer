@@ -27,7 +27,7 @@
 		<mx:State name="register_choosePlayer" basedOn="register">
 			<mx:AddChild relativeTo="{pnlRegister}" position="lastChild">
 				<mx:Canvas id="playerPanel" right="40" left="39" top="86" height="42" verticalScrollPolicy="off" horizontalScrollPolicy="off">
-					<mx:ComboBox id="cmbPlayers0" y="10" height="21" dataProvider="Player List" width="301" x="0" change="OnComboChanged(event)"></mx:ComboBox>
+					<mx:ComboBox id="cmbPlayers0" y="10" height="21" dataProvider="Player List" width="301" x="0"></mx:ComboBox>
 				</mx:Canvas>
 			</mx:AddChild>
 			<mx:SetProperty name="height" value="230"/>
@@ -40,7 +40,7 @@
 			<mx:RemoveChild target="{lnkBack}"/>
 			<mx:AddChild relativeTo="{spacer1}" position="before">
 				<mx:LinkButton label="{resourceManager.getString('application', 'DIFFERENT_USER')}" fontFamily="Verdana" textDecoration="underline" color="#0042FF" fontSize="11" textAlign="left" id="linkbutton2" bottom="1" left="14" >
-					<mx:click>this.currentState = "register"; this.txtUsername.enabled = true; this.txtPassword.enabled = true</mx:click>
+					<mx:click>this.currentState = "register"; this.resetFields();</mx:click>
 				</mx:LinkButton>
 			</mx:AddChild>
 		</mx:State>
@@ -53,7 +53,7 @@
 			<mx:SetProperty target="{cmbPlayers0}" name="y"/>
 			<mx:SetStyle target="{cmbPlayers0}" name="top" value="30"/>
 			<mx:AddChild relativeTo="{label1}" position="before">
-				<mx:ComboBox id="cmbPlayers1" height="21" dataProvider="Player List" width="301" x="0" change="OnComboChanged(event)" top="79"></mx:ComboBox>
+				<mx:ComboBox id="cmbPlayers1" height="21" dataProvider="Player List" width="301" x="0" top="79"></mx:ComboBox>
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{label1}" position="before">
 				<mx:Label x="10" text="{resourceManager.getString('application', 'SECOND_SCREEN')}" top="59"/>
