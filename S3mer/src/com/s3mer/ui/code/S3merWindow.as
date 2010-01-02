@@ -54,7 +54,7 @@
 		configId = ApplicationSettings.getValue("screen" + this.screenNumber + ".channel.id","");
 		
 		
-		NetUtils.remoteCommand(NetUtils.CMD_GETCONFIG, getConfig_success, getConfig_error, 
+			NetUtils.remoteCommand(NetUtils.CMD_GETCONFIG, getConfig_success, getConfig_error, 
 				configId);	
 	}
 	
