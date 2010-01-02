@@ -1,8 +1,6 @@
 package com.s3mer.util
 
 {
-	import com.s3mer.util.FileIO;
-//	import com.msgid.S3mer.Utility.LoggerManager;
 	import flash.desktop.NativeApplication;
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;
@@ -32,6 +30,7 @@ package com.s3mer.util
 		public static var URL_UPDATE:String = "http://" + SERVER + "/checkversion.php?version=1";
 
 		private static const SETTINGS_KEY:String = "oewiur0830nf,mnv098-39n kchj098-932n,mcn-09";
+		public static const CONFIG_KEY:String = "disuri301293rfbc,nWou1309rjfbckvjh085-4cnkn091()*&*%&%$()";
 
 		private var _settings:XML;
 		private var _settingsFile:File;
@@ -45,7 +44,7 @@ package com.s3mer.util
 		}
 		
 		public function ApplicationSettings() {
-			this._settingsFile = new File(FileIO.storePath("settings.xml"));
+			this._settingsFile = File.applicationStorageDirectory.resolvePath("settings.xml");
 			this._loaded = false;
 		}
 		

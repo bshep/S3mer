@@ -5,6 +5,9 @@ package com.s3mer.util
 	
 	import flash.filesystem.File;
 	import flash.system.Capabilities;
+	import flash.utils.ByteArray;
+	
+	import mx.utils.Base64Decoder;
 	
 	
 	public class FileIO
@@ -51,45 +54,30 @@ package com.s3mer.util
 			}
 		}
 		
-		public static function storePath(fileName:String = ""):String {
-			var tmpPath:File;
+//		public static function appPath():String {
+//			LoggerManager.addEvent("Resource Directory: " + File.applicationDirectory.nativePath);
+//			return File.applicationDirectory.nativePath;
+//		}
+//		
+//		public static function assetsPath():String {
+//			var _appPath:File = new File(appPath());
+//			
+//			if (_appPath.resolvePath("assets").exists) {
+//				return _appPath.resolvePath("assets").nativePath;
+//			}
+//			
+//			if (_appPath.resolvePath("..").resolvePath("assets").exists) {
+//				return _appPath.resolvePath("..").resolvePath("assets").nativePath;	
+//			}
+//			
+//			return null;
+//		}
+//		
+		public static function mediaPath(screenId:String):String {
+			var tmpFile:File;
 			
-			tmpPath = File.applicationStorageDirectory;
-			
-			if(fileName != "") {
-				tmpPath = tmpPath.resolvePath(fileName);
-			}
-			
-			return tmpPath.nativePath;
-		}
-		
-		public static function appPath():String {
-			LoggerManager.addEvent("Resource Directory: " + File.applicationDirectory.nativePath);
-			return File.applicationDirectory.nativePath;
-		}
-		
-		public static function assetsPath():String {
-			var _appPath:File = new File(appPath());
-			
-			if (_appPath.resolvePath("assets").exists) {
-				return _appPath.resolvePath("assets").nativePath;
-			}
-			
-			if (_appPath.resolvePath("..").resolvePath("assets").exists) {
-				return _appPath.resolvePath("..").resolvePath("assets").nativePath;	
-			}
-			
-			return null;
-		}
-		
-		public static function mediaPath(screenId:String, fileName:String):String {
-			var tmpFile:File = File.applicationStorageDirectory.resolvePath("media");
-			
+			tmpFile = File.applicationStorageDirectory.resolvePath("media");
 			tmpFile = tmpFile.resolvePath("screen" + screenId);
-			
-			if(fileName != "") {
-				tmpFile = tmpFile.resolvePath(fileName);
-			}
 			
 			var realPath:String = tmpFile.nativePath;
 			
@@ -104,21 +92,21 @@ package com.s3mer.util
 			return realPath;
 		}
 		
-		public static function Url2Path(url:String):String {
-			var tmpFile:File = File.applicationStorageDirectory.resolvePath("media").resolvePath(Url2Filename(url));
-			return tmpFile.nativePath;
-		}
-		
-		public static function Url2Filename(url:String):String {
-			return url.substr(url.lastIndexOf("/")+1);
-		}
-
-		
+//		public static function Url2Path(url:String):String {
+//			var tmpFile:File = File.applicationStorageDirectory.resolvePath("media").resolvePath(Url2Filename(url));
+//			return tmpFile.nativePath;
+//		}
+//		
+//		public static function Url2Filename(url:String):String {
+//			return url.substr(url.lastIndexOf("/")+1);
+//		}
+//
+//		
 		
 		public  static function fileExists(fileName:String, screenId:String):Boolean {
 			var myFile:File;
 			
-			myFile = new File(mediaPath(screenId,fileName));
+			myFile = new File(mediaPath(screenId)).resolvePath(fileName);
 						
 			if (!myFile.exists) {
 				return false;
@@ -150,6 +138,32 @@ package com.s3mer.util
 //			}
 			
 			return true;
+		}
+		
+		public static function decryptConfig(data:String):XML {
+			var b64dec:Base64Decoder = new Base64Decoder();
+			var decoded_ba:ByteArray;
+			var decoded:String;
+			var md5:String;
+			var key:String = ApplicationSettings.CONFIG_KEY;
+			var xml:XML = new XML(data);
+			
+			
+			b64dec.decode(xml.content.toString());
+			
+			decoded_ba = b64dec.toByteArray();
+			decoded = decoded_ba.toString();
+			
+			b64dec.decode(xml.timestamp);
+			decoded_ba = b64dec.toByteArray();
+			
+			md5 = decoded_ba.toString();
+			
+			key = FileIO.mutateKey(key,md5);
+			
+			decoded = FileIO.simpleCrypt(decoded,key);		
+			
+			return new XML(decoded);
 		}
 		
 		public static function mutateKey( key:String, md5:String ):String {

@@ -98,7 +98,7 @@
 
 	<mx:Script>
 		<![CDATA[
-			include "LoginWindowCode.as";
+			include "code/LoginWindow.as";
 		]]>
 	</mx:Script>
 	

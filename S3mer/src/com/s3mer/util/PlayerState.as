@@ -1,5 +1,7 @@
 package com.s3mer.util
 {
+	import mx.collections.ArrayCollection;
+	
 	public  class PlayerState
 	{
 		public static const TYPE_DEMO:String = "demo";
@@ -14,7 +16,7 @@ package com.s3mer.util
 		public static var internetConnected:Boolean;
 		public static var multiScreen:Boolean;
 		
-//		public var 
+		public static var configurations:Array = new Array(); 
 		
 		
 		public function PlayerState()
