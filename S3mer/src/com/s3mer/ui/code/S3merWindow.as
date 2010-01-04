@@ -1,6 +1,8 @@
 	import com.s3mer.events.ConfigurationEvent;
 	import com.s3mer.util.ApplicationSettings;
+	import com.s3mer.util.DownloadQueue;
 	import com.s3mer.util.FileIO;
+	import com.s3mer.util.LoggerManager;
 	import com.s3mer.util.NetUtils;
 	import com.s3mer.util.PlayerState;
 	
@@ -44,7 +46,7 @@
 		this.addEventListener(ConfigurationEvent.REGISTRATION_COMPLETE, registrationComplete);
 	}
 	
-	public function registrationComplete(e:ConfigurationEvent):void {
+	private function registrationComplete(e:ConfigurationEvent):void {
 		(this.applicationObject as S3mer).registation_complete();
 	}
 	
@@ -54,18 +56,46 @@
 		configId = ApplicationSettings.getValue("screen" + this.screenNumber + ".channel.id","");
 		
 		
-			NetUtils.remoteCommand(NetUtils.CMD_GETCONFIG, getConfig_success, getConfig_error, 
+		NetUtils.remoteCommand(NetUtils.CMD_GETCONFIG, getConfig_success, getConfig_error, 
 				configId);	
 	}
 	
-	public function getConfig_success(e:Event):void {
+	private function getConfig_success(e:Event):void {
 		var data:String;
 		
 		data = (e.target as URLLoader).data;
 		
 		PlayerState.configurations[this.screenNumber] = FileIO.decryptConfig(data);
+		
+		beginDownloads();
 	}
 	
-	public function getConfig_error(e:IOErrorEvent):void {
-		
+	private function getConfig_error(e:IOErrorEvent):void {
+		// Retry after 5 mins
+		new NetUtils().CheckOnlineStatus(start,5*60);
 	}
+	
+	private function getMediaDirectory():String {
+		return FileIO.mediaPath(this.screenNumber);
+	}
+	
+	private function beginDownloads():void {
+		var config:XML = PlayerState.configurations[this.screenNumber];
+		
+		for each( var playlist:XML in config.playlist ) {
+			for each( var playlistItem:XML in playlist.playlistitem ) {
+				switch( playlistItem.@type.toString() ) {
+					case 'image':
+					case 'video':
+						LoggerManager.addEvent("- Download file: " + playlistItem.toString());
+						DownloadQueue.addItem(playlistItem.toString(), getMediaDirectory());
+						break;
+					default:
+						LoggerManager.addEvent("- File of unknown type '" + playlistItem.@type + "'");
+						break;
+				}
+			}
+		}
+	}
+	
+	

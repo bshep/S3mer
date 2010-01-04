@@ -5,7 +5,7 @@ package com.s3mer.util
 	public class DownloadQueueItem
 	{
 		public var url:String;
-		public var destination:ArrayCollection;
+		public var destinations:ArrayCollection;
 		public var completed:Boolean;
 		
 		
@@ -13,13 +13,13 @@ package com.s3mer.util
 		{
 			this.url = _url;
 			
-			this.destination = new ArrayCollection();
-			this.destination.addItem(_destination);
+			this.destinations = new ArrayCollection();
+			this.destinations.addItem(_destination);
 			this.completed = false;
 		}
 		
 		public function addDestination(_destination:String):void {
-			this.destination.addItem(_destination);
+			this.destinations.addItem(_destination);
 		}
 
 	}

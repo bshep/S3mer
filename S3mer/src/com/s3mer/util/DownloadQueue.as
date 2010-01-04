@@ -2,9 +2,9 @@ package com.s3mer.util
 {
 	import com.s3mer.events.DownloadEvent;
 	
-	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.IOErrorEvent;
+	import flash.events.ProgressEvent;
 	
 	import mx.collections.ArrayCollection;
 	
@@ -13,13 +13,19 @@ package com.s3mer.util
 		private static var _downloadQueue:DownloadQueue;
 		
 		private static var _queue:ArrayCollection = new ArrayCollection();
-		private static var _downloader:Downloader = new Downloader(downloadProgress, downloadComplete, downloadError);
+		private static var _downloader:Downloader;
 		
 		public static function addItem(_url:String, _destination:String):void {
 			var queueItem:DownloadQueueItem = isItemInList(_url);
 			
 			if( _downloadQueue == null ) {
 				_downloadQueue = new DownloadQueue();
+			}
+			
+			if( _downloader == null ) {
+				_downloader = new Downloader();
+				_downloader.addEventListener(DownloadEvent.DOWNLOAD_COMPLETE, downloadComplete);
+				_downloader.addEventListener(DownloadEvent.DOWNLOAD_PROGRESS, downloadProgress);
 			}
 			
 			if (queueItem == null) { // Item is not on the list, then add it to the queue
@@ -48,20 +54,25 @@ package com.s3mer.util
 		public static function download_next():void {
 			for each( var queueItem:DownloadQueueItem in _queue ) {
 				if( queueItem.completed == false ) {
-					_downloader.download(queueItem.url);
+					_downloader.download(queueItem);
 					break; // Only start one download at a time;
 				}
 			}
 		}
 		
-		public static function downloadComplete(e:Event):void {
-			_downloadQueue.dispatchEvent(new DownloadEvent(DownloadEvent.DOWNLOAD_COMPLETE));
+		public static function downloadComplete(e:DownloadEvent):void {			
+			_downloadQueue.dispatchEvent(e.clone());
+			
+			e.queueItem.completed = true;
 			
 			download_next();
 		}
 		
-		public static function downloadProgress(e:Event):void {
-			_downloadQueue.dispatchEvent(new DownloadEvent(DownloadEvent.DOWNLOAD_PROGRESS));
+		public static function downloadProgress(e:DownloadEvent):void {
+			LoggerManager.addEvent("Downloading at: " + ((e.originalEvent as ProgressEvent).bytesLoaded / 
+					(e.originalEvent as ProgressEvent).bytesTotal ) *100 + " %");
+			
+			_downloadQueue.dispatchEvent(e.clone());
 			
 		}
 		

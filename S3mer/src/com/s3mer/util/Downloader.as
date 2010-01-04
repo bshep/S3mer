@@ -1,39 +1,107 @@
 package com.s3mer.util
 {
+	import com.s3mer.events.DownloadEvent;
+	
 	import flash.events.Event;
+	import flash.events.EventDispatcher;
 	import flash.events.IOErrorEvent;
 	import flash.events.ProgressEvent;
+	import flash.filesystem.File;
+	import flash.filesystem.FileMode;
+	import flash.filesystem.FileStream;
 	import flash.net.URLLoader;
+	import flash.net.URLLoaderDataFormat;
 	import flash.net.URLRequest;
 	import flash.net.URLRequestMethod;
 	
-	public class Downloader
+	public class Downloader extends EventDispatcher
 	{
-		private var errorListener:Function;
-		private var completeListener:Function;
-		private var progressListener:Function;
+		private var _queueItem:DownloadQueueItem;
+		private var _downloadInProgress:Boolean;
 		
-		
-		public function Downloader(_progressListener:Function, _completeListener:Function, _errorListener:Function)
+		public function Downloader()
 		{
-			this.progressListener = _progressListener;
-			this.completeListener = _completeListener;
-			this.errorListener = _errorListener;
 		}
 		
-		public function download(_url:String):void {
+		public function download(_item:DownloadQueueItem):Boolean {
+			if( this._downloadInProgress == false ) {
+				this._downloadInProgress = true;
+			} else {
+				return false;
+			}
+			
+			if( checkIfAlreadyDownloaded(_item) == true ) {
+				return true;
+			}
+			
 			var loader:URLLoader;
 			var request:URLRequest = new URLRequest();
 			
-			request.url = _url;
+			_queueItem = _item;
+			
+			request.url = _item.url;
 			request.method = URLRequestMethod.GET;
 			
 			loader = new URLLoader();
+			
+			loader.dataFormat = URLLoaderDataFormat.BINARY;
 			loader.addEventListener(ProgressEvent.PROGRESS, progressListener);
 			loader.addEventListener(Event.COMPLETE,completeListener);
 			loader.addEventListener(IOErrorEvent.IO_ERROR,errorListener);
 			
 			loader.load(request);
+			
+			return true;
+		}
+		
+		public function checkIfAlreadyDownloaded(_item:DownloadQueueItem):Boolean {
+			var ret:Boolean = false;
+			var file:File;
+//			var existFile:File;
+			
+			for each(var dest:String in _item.destinations) {
+				file = new File(dest).resolvePath(FileIO.Url2Filename(_item.url));
+				if( file.exists ) {
+					ret = true;
+//					existFile = file;
+				} else {
+//					if (ret == true && existFile != null) {
+//						existFile.copyTo(file);
+//					}
+				}
+			}
+			
+			
+			return ret;
+		}
+		
+		public function progressListener(e:ProgressEvent):void {
+			var event:DownloadEvent = new DownloadEvent(DownloadEvent.DOWNLOAD_PROGRESS, this._queueItem, e);
+			
+			this.dispatchEvent(event);			
+		}
+		
+		public function completeListener(e:Event):void {
+			var outputFile:File;
+			var outputFileStream:FileStream = new FileStream();
+			
+			for each( var destination:String in _queueItem.destinations ) {
+				outputFile = new File(destination).resolvePath(FileIO.Url2Filename(_queueItem.url));
+				outputFileStream.open(outputFile,FileMode.WRITE);
+				outputFileStream.writeBytes((e.target as URLLoader).data);	
+			}
+			
+			var event:DownloadEvent = new DownloadEvent(DownloadEvent.DOWNLOAD_COMPLETE, this._queueItem, e);
+			
+			this.dispatchEvent(event);
+			this._downloadInProgress = false;
+		}
+		
+		public function errorListener(e:IOErrorEvent):void {
+			var event:DownloadEvent = new DownloadEvent(DownloadEvent.DOWNLOAD_ERROR, this._queueItem, e);
+			
+			this.dispatchEvent(event);			
+			this._downloadInProgress = false;
 		}
 
 	}

@@ -37,10 +37,14 @@ package com.s3mer.util
 		
 		private function requestCompleteHandler(event:Event):void {
 			this._callback(true);
+			this._callback = null;
+			this._timer = null;
 		}
 		
 		private function requestErrorHandler(event:IOErrorEvent):void {
 			this._callback(false);			
+			this._callback = null;
+			this._timer = null;
 		}
 		
 		public static const CMD_LOGIN:String = "login";

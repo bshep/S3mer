@@ -73,7 +73,7 @@ package com.s3mer.util
 //			return null;
 //		}
 //		
-		public static function mediaPath(screenId:String):String {
+		public static function mediaPath(screenId:int):String {
 			var tmpFile:File;
 			
 			tmpFile = File.applicationStorageDirectory.resolvePath("media");
@@ -97,13 +97,11 @@ package com.s3mer.util
 //			return tmpFile.nativePath;
 //		}
 //		
-//		public static function Url2Filename(url:String):String {
-//			return url.substr(url.lastIndexOf("/")+1);
-//		}
-//
-//		
+		public static function Url2Filename(url:String):String {
+			return url.substr(url.lastIndexOf("/")+1);
+		}
 		
-		public  static function fileExists(fileName:String, screenId:String):Boolean {
+		public  static function fileExists(fileName:String, screenId:int):Boolean {
 			var myFile:File;
 			
 			myFile = new File(mediaPath(screenId)).resolvePath(fileName);
