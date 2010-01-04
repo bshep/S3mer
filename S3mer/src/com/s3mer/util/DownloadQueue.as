@@ -63,7 +63,7 @@ package com.s3mer.util
 		public static function downloadComplete(e:DownloadEvent):void {			
 			_downloadQueue.dispatchEvent(e.clone());
 			
-			e.queueItem.completed = true;
+//			e.queueItem.completed = true;
 			
 			download_next();
 		}
