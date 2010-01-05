@@ -4,6 +4,7 @@ package com.s3mer.util
 	
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	import flash.events.IEventDispatcher;
 	import flash.events.IOErrorEvent;
 	import flash.events.ProgressEvent;
 	import flash.filesystem.File;
@@ -19,10 +20,11 @@ package com.s3mer.util
 		private var _queueItem:DownloadQueueItem;
 		private var _downloadInProgress:Boolean;
 		
-		public function Downloader()
+		public function Downloader(target:IEventDispatcher=null)
 		{
+			super(target);
 		}
-		
+
 		public function download(_item:DownloadQueueItem):Boolean {
 			if( this._downloadInProgress == false ) {
 				this._downloadInProgress = true;

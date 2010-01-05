@@ -1,16 +1,22 @@
 	import com.s3mer.events.ConfigurationEvent;
+	import com.s3mer.events.DownloadEvent;
+	import com.s3mer.ui.S3merWindow;
 	import com.s3mer.util.ApplicationSettings;
 	import com.s3mer.util.DownloadQueue;
 	import com.s3mer.util.FileIO;
 	import com.s3mer.util.LoggerManager;
 	import com.s3mer.util.NetUtils;
 	import com.s3mer.util.PlayerState;
+	import com.s3mer.util.ShowManager;
 	
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.net.URLLoader;
 	
 	private var _screenNumber:int;
+	
+	private var _showManager:ShowManager = new ShowManager(this as S3merWindow);
+	
 	public var applicationObject:Object;
 	
 	
@@ -82,6 +88,8 @@
 	private function beginDownloads():void {
 		var config:XML = PlayerState.configurations[this.screenNumber];
 		
+		DownloadQueue.eventDispatcher.addEventListener(DownloadEvent.QUEUE_COMPLETE, downloadsComplete);
+		
 		for each( var playlist:XML in config.playlist ) {
 			for each( var playlistItem:XML in playlist.playlistitem ) {
 				switch( playlistItem.@type.toString() ) {
@@ -96,6 +104,14 @@
 				}
 			}
 		}
+		
+		DownloadQueue.start();
+	}
+	
+	private function downloadsComplete(e:DownloadEvent):void {
+		LoggerManager.addEvent("Downloads COMPLETE");
+		
+		_showManager.start();
 	}
 	
 	

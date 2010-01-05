@@ -3,6 +3,7 @@ package com.s3mer.util
 	import com.s3mer.events.DownloadEvent;
 	
 	import flash.events.EventDispatcher;
+	import flash.events.IEventDispatcher;
 	import flash.events.IOErrorEvent;
 	import flash.events.ProgressEvent;
 	
@@ -14,6 +15,33 @@ package com.s3mer.util
 		
 		private static var _queue:ArrayCollection = new ArrayCollection();
 		private static var _downloader:Downloader;
+		
+		public function DownloadQueue(target:IEventDispatcher=null)
+		{
+			super(target);
+		}
+
+		public static function get eventDispatcher():EventDispatcher {
+			if( _downloadQueue == null ) {
+				_downloadQueue = new DownloadQueue();
+			}
+			
+			
+			return _downloadQueue;
+		}
+		
+		public static function get complete():Boolean {
+			var _complete:Boolean = true;
+			
+			for each( var queueItem:DownloadQueueItem in _queue ) {
+				if( queueItem.completed == false ) {
+					_complete = false;
+				}
+			}
+			
+			return _complete;
+		}
+		
 		
 		public static function addItem(_url:String, _destination:String):void {
 			var queueItem:DownloadQueueItem = isItemInList(_url);
@@ -34,12 +62,16 @@ package com.s3mer.util
 				queueItem.addDestination(_destination);
 			}
 			
+//			download_next();
+		}
+		
+		public static function start():void {
 			download_next();
 		}
 		
 		
 		// Returns the item if the url matches, null if it doesnt match
-		public static function isItemInList(_url:String):DownloadQueueItem {
+		private static function isItemInList(_url:String):DownloadQueueItem {
 			var item:DownloadQueueItem = null;
 			
 			for each( var queueItem:DownloadQueueItem in _queue ) {
@@ -51,16 +83,21 @@ package com.s3mer.util
 			return item;
 		}
 		
-		public static function download_next():void {
+		private static function download_next():void {
 			for each( var queueItem:DownloadQueueItem in _queue ) {
 				if( queueItem.completed == false ) {
 					_downloader.download(queueItem);
 					break; // Only start one download at a time;
 				}
 			}
+			
+			if( DownloadQueue.complete ) {
+				_downloadQueue.dispatchEvent(new DownloadEvent(DownloadEvent.QUEUE_COMPLETE,null, null));
+			}
+			
 		}
 		
-		public static function downloadComplete(e:DownloadEvent):void {			
+		private static function downloadComplete(e:DownloadEvent):void {			
 			_downloadQueue.dispatchEvent(e.clone());
 			
 //			e.queueItem.completed = true;
@@ -68,7 +105,7 @@ package com.s3mer.util
 			download_next();
 		}
 		
-		public static function downloadProgress(e:DownloadEvent):void {
+		private static function downloadProgress(e:DownloadEvent):void {
 			LoggerManager.addEvent("Downloading at: " + ((e.originalEvent as ProgressEvent).bytesLoaded / 
 					(e.originalEvent as ProgressEvent).bytesTotal ) *100 + " %");
 			
@@ -76,7 +113,7 @@ package com.s3mer.util
 			
 		}
 		
-		public static function downloadError(e:IOErrorEvent):void {
+		private static function downloadError(e:IOErrorEvent):void {
 			_downloadQueue.dispatchEvent(e.clone());
 			
 		}
