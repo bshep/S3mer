@@ -6,15 +6,12 @@ package com.s3mer.mediaObjects
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	
-	import mx.containers.Canvas;
 	import mx.controls.Image;
 
-	public class ImageObject extends Canvas implements IMediaObject
+	public class ImageObject extends GenericMediaObject implements IMediaObject
 	{
 		private var internalObject:Image = new Image;
 		private var imageTimer:Timer;
-		
-		public var mediaPath:String;
 		
 		public function ImageObject()
 		{
@@ -31,8 +28,9 @@ package com.s3mer.mediaObjects
 			this.imageTimer.addEventListener(TimerEvent.TIMER, play_complete);
 		}
 		
-		public function play(item:XML):void
+		public override function play(item:XML):void
 		{
+			super.play(item);
 			
 			this.internalObject.source = this.mediaPath + "/" + FileIO.Url2Filename(item.toString());
 
@@ -47,23 +45,10 @@ package com.s3mer.mediaObjects
 			this.dispatchEvent(new MediaEvent(MediaEvent.PLAY_COMPLETE));
 		}
 		
-		public function stop():void
+		public override function stop():void
 		{
+			super.stop();
 		}
-		
-		public function configure(_configuration:XML, layoutWidth:int, layoutHeight:int):void
-		{
-			this.setStyle("left",_configuration.@left.toString());
-			this.setStyle("top",_configuration.@top.toString());
-			
-			
-			var tmpInt:int;
-			
-			tmpInt = _configuration.@width;
-			this.setStyle("right",(layoutWidth - tmpInt));
-			tmpInt = _configuration.@height;
-			this.setStyle("bottom",(layoutHeight - tmpInt));
-		}
-		
+
 	}
 }
