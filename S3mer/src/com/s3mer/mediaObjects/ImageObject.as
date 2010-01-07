@@ -1,16 +1,15 @@
 package com.s3mer.mediaObjects
 {
 	import com.s3mer.events.MediaEvent;
+	import com.s3mer.mediaObjects.customObjects.SmoothImage;
 	import com.s3mer.util.FileIO;
 	
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
-	
-	import mx.controls.Image;
 
 	public class ImageObject extends GenericMediaObject implements IMediaObject
 	{
-		private var internalObject:Image = new Image;
+		private var internalObject:SmoothImage = new SmoothImage;
 		private var imageTimer:Timer;
 		
 		public function ImageObject()

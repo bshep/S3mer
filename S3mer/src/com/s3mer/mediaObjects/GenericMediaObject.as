@@ -1,6 +1,7 @@
 package com.s3mer.mediaObjects
 {
 	import com.s3mer.util.LoggerManager;
+	import com.s3mer.util.Scale;
 	
 	import mx.containers.Canvas;
 	import mx.core.ScrollPolicy;
@@ -27,32 +28,38 @@ package com.s3mer.mediaObjects
 		{
 		}
 		
-		public function configure(_configuration:XML, layoutWidth:int, layoutHeight:int, scaleX:Number, scaleY:Number):void
+		public function configure(_configuration:XML, layoutWidth:int, layoutHeight:int, scale:Scale):void
 		{
-			
+			var left:Number, width:Number, top:Number, height:Number;
 			this.configuration = _configuration;
 			
-			_configuration.@right = (layoutWidth - _configuration.@width.toString());;
-			_configuration.@bottom =  (layoutHeight - _configuration.@height.toString());;
+			left = _configuration.@left;
+			top = _configuration.@top;
+			width = _configuration.@width;
+			height = _configuration.@height;
+			
+			_configuration.@right = layoutWidth - (left + width);
 
-			resize(scaleX, scaleY);
+			_configuration.@bottom = layoutHeight - (top + height);
+
+			resize(scale);
 		}
 		
-		public function resize(scaleX:Number, scaleY:Number):void
+		public function resize(scale:Scale):void
 		{
 			var left:Number, right:Number, top:Number, bottom:Number;
 			
 			top  = this.configuration.@top.toString();
-			top *= scaleY;
+			top *= scale.scaleY;
 			
 			left = this.configuration.@left.toString();
-			left *= scaleX;
+			left *= scale.scaleX;
 			
 			right = this.configuration.@right.toString();
-			right *= scaleX;
+			right *= scale.scaleX;
 			
 			bottom = this.configuration.@bottom.toString();
-			bottom *= scaleY;
+			bottom *= scale.scaleY;
 			
 			this.setStyle("top",top);
 			this.setStyle("left",left);

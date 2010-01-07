@@ -1,12 +1,13 @@
 package com.s3mer.mediaObjects
 {
+	import com.s3mer.mediaObjects.customObjects.SmoothVideoDisplay;
 	import com.s3mer.util.FileIO;
 	
 	import mx.controls.VideoDisplay;
 	
 	public class MovieObject extends GenericMediaObject
 	{
-		private var internalObject:VideoDisplay = new VideoDisplay();
+		private var internalObject:SmoothVideoDisplay = new SmoothVideoDisplay();
 		
 		public function MovieObject() {
 			super();

@@ -1,10 +1,12 @@
 package com.s3mer.mediaObjects
 {
+	import com.s3mer.util.Scale;
+	
 	public interface IMediaObject 
 	{
 		function play(item:XML):void;
 		function stop():void;
-		function configure(configuration:XML, x:int, y:int, scaleX:Number, scaleY:Number):void;
-		function resize(scaleX:Number, scaleY:Number):void;
+		function configure(configuration:XML, x:int, y:int, scale:Scale):void;
+		function resize(scale:Scale):void;
 	}
 }

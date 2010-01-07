@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="251" height="81" backgroundAlpha="0.0" 
+	verticalScrollPolicy="off" horizontalScrollPolicy="off" borderStyle="none">
+	<mx:Style>
+		@font-face {
+		    src:url("/assets/Helvetica Neue Condensed Black.ttf");
+		    fontFamily: HelvNeueBlack;
+		}
+	</mx:Style>
+
+	<mx:Script>
+		<![CDATA[
+			include "TimeDateObjectCode.as";
+		]]>
+	</mx:Script>
+	<mx:Label id="txtDate" fontFamily="HelvNeueBlack" text="December 11" fontSize="20" width="160" color="#FFFFFF" left="10" height="30"/>
+	<mx:Label id="txtTime" fontFamily="HelvNeueBlack" text="4:27 PM" fontSize="45" left="10" bottom="0" width="231" color="#FFFFFF"/>
+		
+		
+</mx:Canvas>
