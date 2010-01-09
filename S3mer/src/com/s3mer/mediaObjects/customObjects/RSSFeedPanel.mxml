@@ -46,7 +46,7 @@
 			<mx:SetProperty target="{spacer2}" name="cacheAsBitmap" value="true"/>
 			<mx:SetProperty target="{spacer3}" name="cacheAsBitmap" value="true"/>
 			<mx:AddChild position="lastChild">
-				<mx:Image source="assets/rssMask2.png" left="0" right="0" top="0" bottom="0" id="headline_mask" cacheAsBitmap="true" maintainAspectRatio="false" scaleContent="true"/>
+				<mx:Image source="assets/images/rssMask2.png" left="0" right="0" top="0" bottom="0" id="headline_mask" cacheAsBitmap="true" maintainAspectRatio="false" scaleContent="true"/>
 			</mx:AddChild>
 			<mx:RemoveChild target="{logoSWF}"/>
 		</mx:State>

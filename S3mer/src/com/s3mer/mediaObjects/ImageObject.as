@@ -23,7 +23,7 @@ package com.s3mer.mediaObjects
 			this.internalObject.setStyle("bottom","0");
 			this.internalObject.maintainAspectRatio = false;
 			
-			this.imageTimer = new Timer(1000);
+			this.imageTimer = new Timer(1000, 1);
 			this.imageTimer.addEventListener(TimerEvent.TIMER, play_complete);
 		}
 		
@@ -35,6 +35,7 @@ package com.s3mer.mediaObjects
 
 			if( _item.@duration != '' && _item.@duration != "0" ) {	
 				this.imageTimer.delay = _item.@duration*1000;
+				this.imageTimer.reset();
 				this.imageTimer.start();
 			}
 			

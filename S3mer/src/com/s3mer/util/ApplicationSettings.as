@@ -1,6 +1,8 @@
 package com.s3mer.util
 
 {
+	import com.s3mer.util.managers.LoggerManager;
+	
 	import flash.desktop.NativeApplication;
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;

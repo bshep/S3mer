@@ -1,5 +1,8 @@
-package com.s3mer.util
+package com.s3mer.util.net
 {
+	import com.s3mer.util.ApplicationSettings;
+	import com.s3mer.util.PlayerState;
+	
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.events.TimerEvent;
@@ -9,7 +12,7 @@ package com.s3mer.util
 	import flash.net.URLVariables;
 	import flash.utils.Timer;
 	
-	public class NetUtils
+	public class NetworkFunctions
 	{
 		private var _callback:Function;
 		private var _timer:Timer

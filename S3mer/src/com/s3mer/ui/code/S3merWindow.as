@@ -4,10 +4,10 @@
 	import com.s3mer.util.ApplicationSettings;
 	import com.s3mer.util.DownloadQueue;
 	import com.s3mer.util.FileIO;
-	import com.s3mer.util.LoggerManager;
-	import com.s3mer.util.NetUtils;
 	import com.s3mer.util.PlayerState;
-	import com.s3mer.util.ShowManager;
+	import com.s3mer.util.managers.LoggerManager;
+	import com.s3mer.util.managers.ShowManager;
+	import com.s3mer.util.net.NetworkFunctions;
 	
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
@@ -65,7 +65,7 @@
 		configId = ApplicationSettings.getValue("screen" + this.screenNumber + ".channel.id","");
 		
 		
-		NetUtils.remoteCommand(NetUtils.CMD_GETCONFIG, getConfig_success, getConfig_error, 
+		NetworkFunctions.remoteCommand(NetworkFunctions.CMD_GETCONFIG, getConfig_success, getConfig_error, 
 				configId);	
 	}
 	
@@ -81,7 +81,7 @@
 	
 	private function getConfig_error(e:IOErrorEvent):void {
 		// Retry after 5 mins
-		new NetUtils().CheckOnlineStatus(start,5*60);
+		new NetworkFunctions().CheckOnlineStatus(start,5*60);
 	}
 	
 	private function getMediaDirectory():String {

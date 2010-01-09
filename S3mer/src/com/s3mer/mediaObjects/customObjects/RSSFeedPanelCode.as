@@ -1,7 +1,7 @@
 	import com.adobe.xml.syndication.generic.FeedFactory;
 	import com.adobe.xml.syndication.generic.IFeed;
 	import com.adobe.xml.syndication.generic.IItem;
-	import com.s3mer.util.URLContentMonitor;
+	import com.s3mer.util.net.URLContentMonitor;
 	import com.s3mer.util.rss.FeedManager;
 	
 	import mx.controls.Label;

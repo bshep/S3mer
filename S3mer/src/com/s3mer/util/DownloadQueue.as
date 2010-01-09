@@ -1,6 +1,7 @@
 package com.s3mer.util
 {
 	import com.s3mer.events.DownloadEvent;
+	import com.s3mer.util.managers.LoggerManager;
 	
 	import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;

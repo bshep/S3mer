@@ -1,9 +1,9 @@
 			import com.s3mer.events.ConfigurationEvent;
 			import com.s3mer.ui.S3merWindow;
 			import com.s3mer.util.ApplicationSettings;
-			import com.s3mer.util.LoggerManager;
-			import com.s3mer.util.NetUtils;
 			import com.s3mer.util.PlayerState;
+			import com.s3mer.util.managers.LoggerManager;
+			import com.s3mer.util.net.NetworkFunctions;
 			
 			import flash.display.Screen;
 			
@@ -34,7 +34,7 @@
 			
 			private function networkStatusChanged(event:Event):void {
 				this.removeEventListener(Event.NETWORK_CHANGE,networkStatusChanged);					
-				new NetUtils().CheckOnlineStatus(onAppLoad_stage2);
+				new NetworkFunctions().CheckOnlineStatus(onAppLoad_stage2);
 			}
 						
 			private function getScreenById(screenId:int):S3merWindow {
@@ -55,7 +55,7 @@
 					resourceManager.localeChain = [ ApplicationSettings.getValue("ui.lang","en_US") ];
 				}
 				
-				new NetUtils().CheckOnlineStatus(onAppLoad_stage2);
+				new NetworkFunctions().CheckOnlineStatus(onAppLoad_stage2);
 				
 			}
 			
@@ -86,7 +86,7 @@
 					PlayerState.username = ApplicationSettings.getValue("user.username","");
 					PlayerState.password = ApplicationSettings.getValue("user.password","");
 					// Try to login
-					NetUtils.remoteCommand(NetUtils.CMD_LOGIN, checkCredentials_complete, checkCredentials_error);
+					NetworkFunctions.remoteCommand(NetworkFunctions.CMD_LOGIN, checkCredentials_complete, checkCredentials_error);
 					
 				}
 				
@@ -120,7 +120,7 @@
 				PlayerState.internetConnected = false;
 				
 				// Retry after a while...
-				new NetUtils().CheckOnlineStatus(onAppLoad_stage2, 60);
+				new NetworkFunctions().CheckOnlineStatus(onAppLoad_stage2, 60);
 			}
 			
 			public function registation_complete():void {

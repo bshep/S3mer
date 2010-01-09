@@ -1,8 +1,8 @@
 package com.s3mer.mediaObjects
 {
 	import com.s3mer.events.MediaEvent;
-	import com.s3mer.util.LoggerManager;
 	import com.s3mer.util.Scale;
+	import com.s3mer.util.managers.LoggerManager;
 	
 	import flash.events.Event;
 	

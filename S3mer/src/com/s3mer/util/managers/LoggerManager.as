@@ -1,4 +1,4 @@
-package com.s3mer.util
+package com.s3mer.util.managers
 {
 	public class LoggerManager
 	{

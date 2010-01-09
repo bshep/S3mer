@@ -1,8 +1,8 @@
 import com.s3mer.events.ConfigurationEvent;
 import com.s3mer.util.ApplicationSettings;
-import com.s3mer.util.LoggerManager;
-import com.s3mer.util.NetUtils;
 import com.s3mer.util.PlayerState;
+import com.s3mer.util.managers.LoggerManager;
+import com.s3mer.util.net.NetworkFunctions;
 
 import flash.events.Event;
 import flash.events.IOErrorEvent;
@@ -88,7 +88,7 @@ private function doLogin():void {
 	PlayerState.username = this.txtUsername.text;
 	PlayerState.password = this.txtPassword.text;
 	
-	NetUtils.remoteCommand(NetUtils.CMD_LOGIN, doLogin_stage2, doLogin_error);
+	NetworkFunctions.remoteCommand(NetworkFunctions.CMD_LOGIN, doLogin_stage2, doLogin_error);
 }
 
 private function doLogin_error(e:IOErrorEvent):void {
@@ -106,7 +106,7 @@ private function doLogin_stage2(e:Event):void {
 		highlightTextbox(this.txtUsername,"",false);
 		highlightTextbox(this.txtPassword,"",false);
 
-		NetUtils.remoteCommand(NetUtils.CMD_PLAYERLIST,playerList_loaded, playerList_error);
+		NetworkFunctions.remoteCommand(NetworkFunctions.CMD_PLAYERLIST,playerList_loaded, playerList_error);
 	} else {
 		this.txtUsername.enabled = true;
 		this.txtPassword.enabled = true;
@@ -228,7 +228,7 @@ private function onDemoMode(e:Event):void {
 	PlayerState.password = "thisisthedemoacctpassword";
 	
 	// Login & Choose player & start playing....
-	NetUtils.remoteCommand(NetUtils.CMD_LOGIN, demoMode_step2, demoMode_error);
+	NetworkFunctions.remoteCommand(NetworkFunctions.CMD_LOGIN, demoMode_step2, demoMode_error);
 }
 
 private function demoMode_step2(e:Event):void {
@@ -239,7 +239,7 @@ private function demoMode_step2(e:Event):void {
 	LoggerManager.addEvent("LoginWindow.as demoMode_Step2: LOGIN RESULT: " + result);
 	
 	if( result == "OK" ) {
-		NetUtils.remoteCommand(NetUtils.CMD_PLAYERLIST,demoMode_step3, demoMode_error);
+		NetworkFunctions.remoteCommand(NetworkFunctions.CMD_PLAYERLIST,demoMode_step3, demoMode_error);
 	} else {
 		
 	}

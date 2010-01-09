@@ -1,6 +1,6 @@
 package com.s3mer.mediaObjects.customObjects
 {
-	import com.s3mer.util.LoggerManager;
+	import com.s3mer.util.managers.LoggerManager;
 	
 	import flash.media.Camera;
 	import flash.media.SoundTransform;

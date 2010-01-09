@@ -1,7 +1,8 @@
-package com.s3mer.util
+package com.s3mer.util.managers
 {
 	import com.s3mer.events.MediaEvent;
 	import com.s3mer.ui.S3merWindow;
+	import com.s3mer.util.Scale;
 	
 	import flash.display.Screen;
 	import flash.events.Event;

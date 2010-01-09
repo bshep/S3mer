@@ -1,5 +1,7 @@
-package com.s3mer.util
+package com.s3mer.util.net
 {
+	
+	import com.s3mer.util.managers.LoggerManager;
 	
 	import flash.events.Event;
 	import flash.events.EventDispatcher;

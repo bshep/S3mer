@@ -3,6 +3,8 @@ package com.s3mer.util
 {
 //	import com.adobe.crypto.SHA1;
 	
+	import com.s3mer.util.managers.LoggerManager;
+	
 	import flash.filesystem.File;
 	import flash.system.Capabilities;
 	import flash.utils.ByteArray;
