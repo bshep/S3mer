@@ -2,6 +2,7 @@ package com.s3mer.util.managers
 {
 	import com.s3mer.events.MediaEvent;
 	import com.s3mer.mediaObjects.GenericMediaObject;
+	import com.s3mer.mediaObjects.HTMLObject;
 	import com.s3mer.mediaObjects.ImageObject;
 	import com.s3mer.mediaObjects.MovieObject;
 	import com.s3mer.mediaObjects.RSSObject;
@@ -75,6 +76,10 @@ package com.s3mer.util.managers
 		
 		public function play_complete(e:Event):void {
 			var object:GenericMediaObject = e.target as GenericMediaObject;
+			
+			// remove the listener as we no longer wish to recieve events from this object
+			object.removeEventListener(MediaEvent.PLAY_COMPLETE, play_complete);
+			
 			LoggerManager.addEvent("RegionManager.as / play_complete: " + "id = " + object.id);
 			
 			this.dispatchEvent(e.clone());
@@ -102,6 +107,7 @@ package com.s3mer.util.managers
 				 	( mediaObject is MovieObject && type == "video" ) ||
 				 	( mediaObject is SWFObject && type == "swf" ) ||
 				 	( mediaObject is TimeObject && type == "timedate" ) || 
+				 	( mediaObject is HTMLObject && type == "url" ) || 
 				 	( mediaObject is RSSObject && type == "rss" ) ) 
 			 	{
 																		 	
@@ -127,6 +133,9 @@ package com.s3mer.util.managers
 						break;
 					case 'rss':
 						ret = new RSSObject();
+						break;
+					case 'url':
+						ret = new HTMLObject();
 						break;
 					default:
 						break;

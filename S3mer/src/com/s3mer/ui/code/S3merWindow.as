@@ -9,9 +9,11 @@
 	import com.s3mer.util.managers.ShowManager;
 	import com.s3mer.util.net.NetworkFunctions;
 	
+	import flash.display.StageDisplayState;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.net.URLLoader;
+	import flash.ui.Mouse;
 	
 	private var _screenNumber:int;
 	
@@ -41,6 +43,7 @@
 		
 		this.title = "Screen #"+this._screenNumber;
 		this.stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
+
 		if( _screenNumber == 0 ){
 			if( PlayerState.credentialsValid == false ) {
 			var myLogin:LoginWindow;
@@ -115,6 +118,10 @@
 		LoggerManager.addEvent("S3merWindow.as downloadsComplete: Downloads COMPLETE");
 		
 		_showManager.start();
+		
+		Mouse.show();
+		Mouse.hide();
+		
 	}
 	
 	

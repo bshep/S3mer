@@ -6,16 +6,13 @@
 			import com.s3mer.util.net.NetworkFunctions;
 			
 			import flash.display.Screen;
+			import flash.events.Event;
 			
 			import mx.collections.ArrayCollection;
 			import mx.events.FlexEvent;
 			
 			private var _playerWindows:ArrayCollection = new ArrayCollection;
-			private var _isPro:Boolean = false;
-			private var _isDemo:Boolean = false;
-			private var _networkStatus:Boolean = false;
-			
-			
+
 			private function isMultiscreen():Boolean {
 				var multiScreen:Boolean;
 				
@@ -26,10 +23,6 @@
 				}
 				
 				return multiScreen;
-			}
-			
-			public function get networkStatus():Boolean {
-				return _networkStatus;
 			}
 			
 			private function networkStatusChanged(event:Event):void {
@@ -56,10 +49,8 @@
 				}
 				
 				new NetworkFunctions().CheckOnlineStatus(onAppLoad_stage2);
-				
+
 			}
-			
-			
 
 			private function onAppLoad_stage2(online:Boolean):void {
 				if(!online) {
@@ -141,6 +132,7 @@
 					_window.screenNumber = screenNumber;
 					_window.applicationObject = this;
 					_window.open(false);
+					_window.addEventListener(Event.CLOSE, window_closed);
 					
 					_window.showWindow();
 					this._playerWindows.addItem(_window);
@@ -151,13 +143,13 @@
 					registation_complete();
 				}
 			}
+			
+			private function window_closed(e:Event):void {
+				exit();
+			}
 	
 //			private function HandleKeyUp(e:KeyboardEvent):void {
 //				KeyboardManager.HandleKeyUp(e,this);
-//			}
-//			
-//			private function onAppClose(e:Event):void {
-//				exit();
 //			}
 //			
 //			public function resetApp():void {
@@ -365,17 +357,6 @@
 //				return false;
 //			}
 //			
-
-
-
-			private function onInvoke(e:InvokeEvent):void {
-//		        var now:String = new Date().toTimeString();
-//		        LoggerManager.addEvent("S3merApp.as inInvoke: Invoke event received: " + now);
-//				this._updater = new S3merApplicationUpdater();
-			}
-			
-			
-			
 //			
 //			
 //			
