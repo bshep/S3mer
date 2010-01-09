@@ -45,13 +45,13 @@ package com.s3mer.util
 			scaleX = window.width / _layoutSizeX;
 			scaleY = window.height / _layoutSizeY;
 			
-			LoggerManager.addEvent("ShowManager.as: " + " scaleX = " + scaleX + " scaleY = " + scaleY );
+			LoggerManager.addEvent("ShowManager.as scale: " + " scaleX = " + scaleX + " scaleY = " + scaleY );
 			
 			return new Scale(scaleX, scaleY);			
 		}
 		
 		public function start():void {
-			LoggerManager.addEvent("ShowManager.as: Started");
+			LoggerManager.addEvent("ShowManager.as start: Started");
 			
 			var config:XML = PlayerState.configurations[window.screenNumber];
 			_layoutSizeX = config.show.@width;

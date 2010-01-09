@@ -65,7 +65,7 @@ package com.s3mer.mediaObjects
 			this.setStyle("left",left);
 			this.setStyle("right",right);
 			this.setStyle("bottom",bottom);
-			LoggerManager.addEvent("GenericMediaObject.as: " + " top = " + top + 
+			LoggerManager.addEvent("GenericMediaObject.as resize: " + " top = " + top + 
 							" left = " + left +
 							" right = " + right +
 							" bottom = " + bottom );

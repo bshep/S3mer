@@ -87,7 +87,7 @@ package com.s3mer.mediaObjects.customObjects
 				try {
 					videoPlayer.soundTransform = newTransform;
 				} catch(e:Error) {
-					LoggerManager.addEvent(e.errorID + " could not set sound transform, probably a null ns object");
+					LoggerManager.addEvent("SmoothVideoDisplay.as doPan:" + e.errorID + " could not set sound transform, probably a null ns object");
 				}
 			}
 	    }

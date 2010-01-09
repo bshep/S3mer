@@ -63,11 +63,11 @@
 
 			private function onAppLoad_stage2(online:Boolean):void {
 				if(!online) {
-					LoggerManager.addEvent("NETSTAT: network is down... waiting for it to come up");
+					LoggerManager.addEvent("S3merApp.as onAppLoad_stage2: network is down... waiting for it to come up");
 					this.addEventListener(Event.NETWORK_CHANGE,networkStatusChanged);
 					return;
 				} else {
-					LoggerManager.addEvent("NETSTAT: network is up! Here we go...");
+					LoggerManager.addEvent("S3merApp.as onAppLoad_stage2: network is up! Here we go...");
 					
 				}
 				
@@ -80,7 +80,7 @@
 				// Check the config file
 				if( (ApplicationSettings.getValue("user.username","") == "") ||  (ApplicationSettings.getValue("user.password","") == "")){
 					PlayerState.credentialsValid = false;
-					LoggerManager.addEvent("S3mer.mxml: Username and/or Password not found");
+					LoggerManager.addEvent("S3merApp.as checkCredentials: Username and/or Password not found");
 					this.dispatchEvent(new ConfigurationEvent(ConfigurationEvent.CREDENTIALS_CHECKED));	
 				} else {
 					PlayerState.username = ApplicationSettings.getValue("user.username","");
@@ -108,14 +108,14 @@
 					PlayerState.credentialsValid = false;
 				}
 				
-				LoggerManager.addEvent("S3mer.mxml: Login Successful");
+				LoggerManager.addEvent("S3merApp.as checkCredentials_complete: Login Successful");
 				
 				
 				this.dispatchEvent(new ConfigurationEvent(ConfigurationEvent.CREDENTIALS_CHECKED));	
 			}
 			
 			private function checkCredentials_error(e:IOErrorEvent):void {
-				LoggerManager.addEvent("S3mer.mxml: Login Command Failed");
+				LoggerManager.addEvent("S3merApp.as checkCredentials_error: Login Command Failed");
 				
 				PlayerState.internetConnected = false;
 				
@@ -124,7 +124,7 @@
 			}
 			
 			public function registation_complete():void {
-				LoggerManager.addEvent("S3mer.mxml: Registration Complete");
+				LoggerManager.addEvent("S3merApp.as registration_complete: Registration Complete");
 				
 				for each( var _window:S3merWindow in this._playerWindows ) {
 					_window.start();
@@ -136,7 +136,7 @@
 				var screenNumber:int = 0;
 				var _window:S3merWindow;
 				for each( var _screen:Screen in Screen.screens ) {
-					LoggerManager.addEvent("Creating window for screen #" + screenNumber);
+					LoggerManager.addEvent("S3merApp.as createPlayerWindows:Creating window for screen #" + screenNumber);
 					_window = new S3merWindow();
 					_window.screenNumber = screenNumber;
 					_window.applicationObject = this;
@@ -278,7 +278,7 @@
 //			
 //			public function doInitialSetup(ignoreFlags:Boolean = false):Boolean {
 //				if (FileIO.assetsPath() == null) {
-//					LoggerManager.addEvent("Could not find assets path, cannot do initial setup");
+//					LoggerManager.addEvent("S3merApp.as doInitialSetup: Could not find assets path, cannot do initial setup");
 //					return false;
 //				}
 //				
@@ -297,7 +297,7 @@
 //						}
 //											
 //					} catch( e:IllegalOperationError) {
-//						LoggerManager.addEvent("could not set to startup");
+//						LoggerManager.addEvent("S3merApp.as doInitialSetup could not set to startup");
 //					}
 //				}
 //				
@@ -370,7 +370,7 @@
 
 			private function onInvoke(e:InvokeEvent):void {
 //		        var now:String = new Date().toTimeString();
-//		        LoggerManager.addEvent("Invoke event received: " + now);
+//		        LoggerManager.addEvent("S3merApp.as inInvoke: Invoke event received: " + now);
 //				this._updater = new S3merApplicationUpdater();
 			}
 			

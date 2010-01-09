@@ -13,7 +13,7 @@
 			import mx.events.ListEvent;
 			
 
-			[Embed(source="assets/spinner.swf")]
+			[Embed(source="assets/swf/spinner.swf")]
 			[Bindable]
 			public static var SpinnerSwf:Class;
 			
@@ -93,7 +93,7 @@
 			}
 			
 			private function doLogin_error(e:IOErrorEvent):void {
-				LoggerManager.addEvent("LoginWindowCode.as: Error during login");
+				LoggerManager.addEvent("LoginWindow.as doLogin_error: Error during login");
 			}
 			
 			private function doLogin_stage2(e:Event):void {
@@ -101,7 +101,7 @@
 				
 				result = (e.target as URLLoader).data;
 				
-				LoggerManager.addEvent("LOGIN RESULT: " + result);
+				LoggerManager.addEvent("LoginWindow.as doLogin_stage2: LOGIN RESULT: " + result);
 				
 				if( result == "OK" ) {
 					highlightTextbox(this.txtUsername,"",false);
@@ -118,7 +118,7 @@
 			}
 			
 			private function playerList_error(e:IOErrorEvent):void {
-				LoggerManager.addEvent("LoginWindowCode.as: Error during loading player list");
+				LoggerManager.addEvent("LoginWindow.as playerList_error: Error during loading player list");
 			}
 			
 			private function playerList_loaded(e:Event):void {
@@ -129,7 +129,7 @@
 				result = new XML(URLLoader(e.target).data);
 				
 				if(!result) {
-					LoggerManager.addEvent("Error loading player list, Invalid XML returned");
+					LoggerManager.addEvent("LoginWindow.as playerList_loaded: Error loading player list, Invalid XML returned");
 				}
 				
 				if( PlayerState.playerType != PlayerState.TYPE_DEMO ) {
@@ -176,7 +176,7 @@
 					
 					for each( var _player:XML in playersXML.player ) {
 						dataProvider.addItem({label:_player.@name, data:_player.id});
-						LoggerManager.addEvent("Player ID: " + _player.@name );
+						LoggerManager.addEvent("LoginWindow.as populatedPlayerList: Player ID: " + _player.@name );
 					}
 					
 					if (dataProvider.length > 0) {
@@ -237,7 +237,7 @@
 				
 				result = (e.target as URLLoader).data;
 				
-				LoggerManager.addEvent("LOGIN RESULT: " + result);
+				LoggerManager.addEvent("LoginWindow.as demoMode_Step2: LOGIN RESULT: " + result);
 				
 				if( result == "OK" ) {
 					NetUtils.remoteCommand(NetUtils.CMD_PLAYERLIST,demoMode_step3, demoMode_error);

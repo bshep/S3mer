@@ -95,11 +95,11 @@
 				switch( playlistItem.@type.toString() ) {
 					case 'image':
 					case 'video':
-						LoggerManager.addEvent("- Download file: " + playlistItem.toString());
+						LoggerManager.addEvent("S3merWindow.as beginDownloads: Download file: " + playlistItem.toString());
 						DownloadQueue.addItem(playlistItem.toString(), getMediaDirectory());
 						break;
 					default:
-						LoggerManager.addEvent("- File of unknown type '" + playlistItem.@type + "'");
+						LoggerManager.addEvent("S3merWindow.as beginDownloads: File of unknown type '" + playlistItem.@type + "'");
 						break;
 				}
 			}
@@ -109,7 +109,7 @@
 	}
 	
 	private function downloadsComplete(e:DownloadEvent):void {
-		LoggerManager.addEvent("Downloads COMPLETE");
+		LoggerManager.addEvent("S3merWindow.as downloadsComplete: Downloads COMPLETE");
 		
 		_showManager.start();
 	}

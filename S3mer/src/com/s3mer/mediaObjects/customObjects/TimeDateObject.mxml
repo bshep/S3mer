@@ -3,7 +3,7 @@
 	verticalScrollPolicy="off" horizontalScrollPolicy="off" borderStyle="none">
 	<mx:Style>
 		@font-face {
-		    src:url("/assets/Helvetica Neue Condensed Black.ttf");
+		    src:url("/assets/fonts/Helvetica Neue Condensed Black.ttf");
 		    fontFamily: HelvNeueBlack;
 		}
 	</mx:Style>

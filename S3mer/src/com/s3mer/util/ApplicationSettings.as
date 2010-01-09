@@ -63,7 +63,7 @@ package com.s3mer.util
 				settingsRW.writeUTFBytes(settings);
 				settingsRW.close();
 			} catch(e:Error) {
-				LoggerManager.addEvent("_AppSettingsInstance._save: " + e.message);
+				LoggerManager.addEvent("ApplicationSettings.as _save: _AppSettingsInstance._save: " + e.message);
 				return false;
 			}
 			
@@ -97,7 +97,7 @@ package com.s3mer.util
 				}
 								
 			} catch(e:Error) {
-				LoggerManager.addEvent("_AppSettingsInstance._load: " + e.message);
+				LoggerManager.addEvent("ApplicationSettings.as _load: _AppSettingsInstance._load: " + e.message);
 				return false;
 			}
 			

@@ -106,7 +106,7 @@ package com.s3mer.util
 		}
 		
 		private static function downloadProgress(e:DownloadEvent):void {
-			LoggerManager.addEvent("Downloading at: " + ((e.originalEvent as ProgressEvent).bytesLoaded / 
+			LoggerManager.addEvent("DownloadQueue.as downloadProgress: Downloading at: " + ((e.originalEvent as ProgressEvent).bytesLoaded / 
 					(e.originalEvent as ProgressEvent).bytesTotal ) *100 + " %");
 			
 			_downloadQueue.dispatchEvent(e.clone());
