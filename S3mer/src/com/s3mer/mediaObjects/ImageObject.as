@@ -7,7 +7,7 @@ package com.s3mer.mediaObjects
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 
-	public class ImageObject extends GenericMediaObject implements IMediaObject
+	public class ImageObject extends GenericMediaObject
 	{
 		private var internalObject:SmoothImage = new SmoothImage;
 		private var imageTimer:Timer;
