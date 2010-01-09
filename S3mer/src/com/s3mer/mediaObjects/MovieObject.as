@@ -3,8 +3,6 @@ package com.s3mer.mediaObjects
 	import com.s3mer.mediaObjects.customObjects.SmoothVideoDisplay;
 	import com.s3mer.util.FileIO;
 	
-	import flash.events.Event;
-	
 	import mx.events.VideoEvent;
 	
 	public class MovieObject extends GenericMediaObject
@@ -26,7 +24,13 @@ package com.s3mer.mediaObjects
 		public override function play(_item:XML):void {
 			super.play(_item);
 			
-			this.internalObject.source = this.mediaPath + "/" + FileIO.Url2Filename(_item.toString());
+			var source:String = this.mediaPath + "/" + FileIO.Url2Filename(_item.toString());
+			
+			if( source == this.internalObject.source ) {
+				this.internalObject.play();
+			} else {
+				this.internalObject.source = source;
+			}
 		}
 		
 		public override function stop():void {

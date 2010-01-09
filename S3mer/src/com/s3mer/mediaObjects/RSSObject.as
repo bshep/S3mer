@@ -1,13 +1,13 @@
 package com.s3mer.mediaObjects
 {
-	import com.s3mer.mediaObjects.customObjects.TimeDateObject;
+	import com.s3mer.mediaObjects.customObjects.RSSFeedPanel;
 	import com.s3mer.util.Scale;
 	
-	public class TimeObject extends GenericMediaObject
+	public class RSSObject extends GenericMediaObject
 	{
-		protected var internalObject:TimeDateObject = new TimeDateObject;
+		protected var internalObject:RSSFeedPanel = new RSSFeedPanel;
 
-		public function TimeObject()
+		public function RSSObject()
 		{
 			super();
 			
@@ -16,16 +16,19 @@ package com.s3mer.mediaObjects
 			this.internalObject.setStyle("right","0");
 			this.internalObject.setStyle("top","0");
 			this.internalObject.setStyle("bottom","0");
-			
 		}
-
+		
 		public override function play(_item:XML):void
 		{
 			super.play(_item);
 			
+			this.internalObject.rssURL = _item.toString();
+			this.internalObject.logoURL = _item.@logoUrl;
+			
 			this.internalObject.play();
 		}
 
+		
 		public override function resize(scale:Scale):void
 		{
 			super.resize(scale);
@@ -33,5 +36,6 @@ package com.s3mer.mediaObjects
 			this.internalObject.scaleX = scale.scaleX;
 			this.internalObject.scaleY = scale.scaleY;
 		}
+
 	}
 }

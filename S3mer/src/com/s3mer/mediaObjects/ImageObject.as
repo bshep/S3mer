@@ -9,8 +9,8 @@ package com.s3mer.mediaObjects
 
 	public class ImageObject extends GenericMediaObject
 	{
-		private var internalObject:SmoothImage = new SmoothImage;
-		private var imageTimer:Timer;
+		protected var internalObject:SmoothImage = new SmoothImage;
+		protected var imageTimer:Timer;
 		
 		public function ImageObject()
 		{

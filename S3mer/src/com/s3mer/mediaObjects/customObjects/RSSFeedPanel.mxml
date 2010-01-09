@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="971" height="81" backgroundColor="#000000"
+	   xmlns:display="flash.display.*"
+	   verticalScrollPolicy="off" horizontalScrollPolicy="off" backgroundAlpha="0.0">
+	<mx:states>
+		<mx:State name="hidden_bottom">
+			<mx:SetStyle target="{headline}" name="bottom" value="-100"/>
+			<mx:SetStyle target="{headline}" name="top" value="100"/>
+		</mx:State>
+		<mx:State name="hidden_top">
+			<mx:SetStyle target="{headline}" name="bottom" value="100"/>
+			<mx:SetStyle target="{headline}" name="top" value="-100"/>
+		</mx:State>
+		<mx:State name="sidescroll" enterState="changeToSideScroll(event)">
+			<mx:RemoveChild target="{headtext}"/>
+			<mx:RemoveChild target="{bodytext}"/>
+			<mx:AddChild relativeTo="{headline}" position="lastChild">
+				<mx:Label fontFamily="Arial" fontSize="41" color="#000000" id="headtext1" fontWeight="bold" letterSpacing="-2" truncateToFit="false" x="1" verticalCenter="0" paddingLeft="-2" paddingRight="-2"/>
+			</mx:AddChild>
+			<mx:AddChild relativeTo="{headline}" position="lastChild">
+				<mx:Label fontFamily="Arial" fontSize="41" color="#000000" id="headtext2" fontWeight="bold" letterSpacing="-2" truncateToFit="false" x="88" verticalCenter="0" paddingLeft="-2" paddingRight="-2"/>
+			</mx:AddChild>
+			<mx:AddChild relativeTo="{headline}" position="lastChild">
+				<mx:Label fontFamily="Arial" fontSize="41" color="#000000" id="headtext3" fontWeight="bold" letterSpacing="-2" truncateToFit="false" x="177" verticalCenter="0" paddingLeft="-2" paddingRight="-2"/>
+			</mx:AddChild>
+			<mx:AddChild relativeTo="{headline}" position="lastChild">
+				<mx:Image source="assets/rssMask2.png" x="54" enabled="true" width="75" id="spacer1" verticalAlign="middle" horizontalAlign="center" cacheAsBitmap="true" top="0" bottom="0"/>
+			</mx:AddChild>
+			<mx:AddChild relativeTo="{headline}" position="lastChild">
+				<mx:Image source="assets/rssMask2.png" x="54" enabled="true" width="75" id="spacer2" verticalAlign="middle" horizontalAlign="center" cacheAsBitmap="true" top="0" bottom="0"/>
+			</mx:AddChild>
+			<mx:AddChild relativeTo="{headline}" position="lastChild">
+				<mx:Image source="assets/rssMask2.png" x="54" enabled="true" width="75" id="spacer3" cacheAsBitmap="true" verticalAlign="middle" horizontalAlign="center" top="0" bottom="0"/>
+			</mx:AddChild>
+			<mx:SetProperty target="{headline}" name="y"/>
+			<mx:SetProperty target="{headline}" name="height"/>
+			<mx:SetProperty target="{headline}" name="width"/>
+			<mx:SetProperty target="{headline}" name="x"/>
+			<mx:SetStyle target="{headline}" name="right" value="0"/>
+			<mx:SetStyle target="{headline}" name="left" value="0"/>
+			<mx:SetProperty target="{headline}" name="cacheAsBitmap" value="true"/>
+			<mx:SetProperty target="{headtext1}" name="cacheAsBitmap" value="true"/>
+			<mx:SetProperty target="{headtext2}" name="cacheAsBitmap" value="true"/>
+			<mx:SetProperty target="{headtext3}" name="cacheAsBitmap" value="true"/>
+			<mx:SetProperty target="{spacer1}" name="cacheAsBitmap" value="true"/>
+			<mx:SetProperty target="{spacer2}" name="cacheAsBitmap" value="true"/>
+			<mx:SetProperty target="{spacer3}" name="cacheAsBitmap" value="true"/>
+			<mx:AddChild position="lastChild">
+				<mx:Image source="assets/rssMask2.png" left="0" right="0" top="0" bottom="0" id="headline_mask" cacheAsBitmap="true" maintainAspectRatio="false" scaleContent="true"/>
+			</mx:AddChild>
+			<mx:RemoveChild target="{logoSWF}"/>
+		</mx:State>
+	</mx:states>
+	
+	<mx:transitions>
+		<mx:Transition fromState="*" toState="hidden_bottom">
+			<mx:Parallel effectEnd="play_next_stage2(event)">
+				<mx:Move target="{headline}"/>
+				<mx:AnimateProperty property="alpha" target="{headline}" fromValue="1.0" toValue="0.0"/>
+			</mx:Parallel>
+		</mx:Transition>
+		
+		<mx:Transition fromState="hidden_bottom" toState="">
+			<mx:Parallel effectEnd="this._playNextTimer.start();">
+				<mx:Move target="{headline}"/>
+				<mx:AnimateProperty property="alpha" target="{headline}" fromValue="0.0" toValue="1.0"/>
+			</mx:Parallel>
+		</mx:Transition>
+		
+		<mx:Transition fromState="*" toState="hidden_top">
+			<mx:Parallel effectEnd="play_next_stage2(event)">
+				<mx:Move target="{headline}"/>
+				<mx:AnimateProperty property="alpha" target="{headline}" fromValue="1.0" toValue="0.0"/>
+			</mx:Parallel>
+		</mx:Transition>
+		
+		<mx:Transition fromState="hidden_top" toState="">
+			<mx:Parallel effectEnd="this._playNextTimer.start();">
+				<mx:Move target="{headline}"/>
+				<mx:AnimateProperty property="alpha" target="{headline}" fromValue="0.0" toValue="1.0"/>
+			</mx:Parallel>
+		</mx:Transition>
+	</mx:transitions>
+	
+	<mx:SWFLoader  scaleContent="true" id="logoSWF" verticalAlign="middle" horizontalAlign="center" width="107" x="9" top="0" bottom="0"/>
+	<mx:Canvas id="headline" verticalScrollPolicy="off" horizontalScrollPolicy="off" backgroundColor="#000000" backgroundAlpha="0.0" alpha="1.0" left="126" top="0" bottom="0" right="15">
+		<mx:Label fontFamily="Arial" fontSize="41" color="#000000" id="headtext" fontWeight="bold" letterSpacing="-2" truncateToFit="false" y="10" left="1"/>
+		<mx:Label text="" fontFamily="Arial" fontSize="20" color="#000000" id="bodytext" fontWeight="bold" letterSpacing="-1" truncateToFit="false" y="{headtext.y + headtext.height - 8}" left="1" alpha="0.45"/>
+	</mx:Canvas>
+	
+
+	<mx:Style>
+		@font-face {
+		    src:url("/assets/fonts/Helvetica Neue Condensed Black.ttf");
+		    fontFamily: HelvNeueBlack;
+		}
+	</mx:Style>
+	
+	<mx:Script source="RSSFeedPanelCode.as"/>
+</mx:Canvas>

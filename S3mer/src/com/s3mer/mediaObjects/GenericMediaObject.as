@@ -18,8 +18,8 @@ package com.s3mer.mediaObjects
 
 	public class GenericMediaObject extends Canvas implements IMediaObject
 	{
-		private var configuration:XML;
-		private var item:XML;
+		protected var configuration:XML;
+		protected var item:XML;
 
 		public var mediaPath:String;
 		
@@ -29,6 +29,7 @@ package com.s3mer.mediaObjects
 			
 			this.horizontalScrollPolicy = ScrollPolicy.OFF;
 			this.verticalScrollPolicy = ScrollPolicy.OFF;
+			this.clipContent = false;
 		}
 		
 		public function play(_item:XML):void

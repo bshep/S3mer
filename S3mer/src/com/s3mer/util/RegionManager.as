@@ -4,6 +4,8 @@ package com.s3mer.util
 	import com.s3mer.mediaObjects.GenericMediaObject;
 	import com.s3mer.mediaObjects.ImageObject;
 	import com.s3mer.mediaObjects.MovieObject;
+	import com.s3mer.mediaObjects.RSSObject;
+	import com.s3mer.mediaObjects.SWFObject;
 	import com.s3mer.mediaObjects.TimeObject;
 	import com.s3mer.ui.S3merWindow;
 	
@@ -96,7 +98,9 @@ package com.s3mer.util
 			for each( var mediaObject:GenericMediaObject in mediaObjects ) {
 				if( ( mediaObject is ImageObject && type == "image" ) ||
 				 	( mediaObject is MovieObject && type == "video" ) ||
-				 	( mediaObject is TimeObject && type == "timedate" ) ) 
+				 	( mediaObject is SWFObject && type == "swf" ) ||
+				 	( mediaObject is TimeObject && type == "timedate" ) || 
+				 	( mediaObject is RSSObject && type == "rss" ) ) 
 			 	{
 																		 	
 					ret = mediaObject;
@@ -115,6 +119,12 @@ package com.s3mer.util
 						break;
 					case 'timedate':
 						ret = new TimeObject();
+						break;
+					case 'swf':
+						ret = new SWFObject();
+						break;
+					case 'rss':
+						ret = new RSSObject();
 						break;
 					default:
 						break;

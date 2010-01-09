@@ -1,10 +1,6 @@
 	import mx.formatters.DateFormatter;
 	
 	private var _timer:Timer;
-	private const _origWidth:int = 251;
-	private const _origHeight:int = 81;
-	
-	private var resizing:Boolean = false;
 	private var _timeFormat:String = "12hr";
 				
 	public function play():void {
