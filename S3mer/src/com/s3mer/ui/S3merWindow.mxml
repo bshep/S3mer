@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Window xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="640" height="480" showStatusBar="false" horizontalScrollPolicy="off" verticalScrollPolicy="off" backgroundColor="#FFFFFF">
 
-	<mx:Script>
-		<![CDATA[
-			include "code/S3merWindow.as";
-		]]>
-	</mx:Script>	
+	<mx:Script source="code/S3merWindow.as" />
 </mx:Window>
