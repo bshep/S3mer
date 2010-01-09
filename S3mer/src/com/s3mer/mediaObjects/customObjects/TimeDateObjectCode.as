@@ -13,62 +13,17 @@
 		_timer.start();
 	}
 	
-	public function setFormat(val:String):void {
+	public function set format(val:String):void {
 		this._timeFormat = val;
 	}
 	
-	public function setTimeColor(timeColor:String):void {
+	public function set timeColor(timeColor:String):void {
 		this.txtTime.setStyle("color",timeColor);	
 	}
 	
-	public function setDateColor(dateColor:String):void {
+	public function set dateColor(dateColor:String):void {
 		this.txtDate.setStyle("color",dateColor);	
 	}
-	
-	public function resize(scaleX:Number, scaleY:Number):void {
-		if ( this.resizing == false ) {
-			this.resizing = true;
-			
-			var scale:Number;
-			
-	//		if (scaleX >scaleY ) {
-	//			scale = scaleY;
-	//		} else {
-	//			scale = scaleX;
-	//		}
-			
-			scale = scaleY;
-			
-//			this.txtDate.setStyle("top",8*scale);
-			
-			this.txtTime.setStyle("fontSize", (Math.floor(43*scale)).toString());
-			this.txtDate.setStyle("fontSize", (Math.floor(20*scale)).toString());
-			
-			this.txtDate.y = 8*scale + 5;
-			this.txtTime.y = this.txtDate.y + this.txtDate.measureText(this.txtDate.text).height - 8;
-			
-			var adjustingFonts:Boolean = true;
-			do {					
-				if ( this.txtTime.y + this.txtTime.measureText(this.txtTime.text).height > this.height ) {
-					var fontSize:Number = Number(this.txtDate.getStyle("fontSize"));
-					
-					fontSize -= 1;
-					this.txtDate.setStyle("fontSize", fontSize.toString());
-					this.txtTime.y = this.txtDate.y + this.txtDate.measureText(this.txtDate.text).height - 8;
-	//				Logger.addEvent("re-adjusting fonts");
-				} else {
-					adjustingFonts = false;
-				}
-			} while( adjustingFonts && fontSize > 2 )
-	
-	
-			this.txtTime.width = this.width;
-			this.txtDate.width = this.width;
-			
-			this.resizing = false;
-		}
-	}
-	
 	
 	private function setupTimer():void {
 		if (_timer == null) {

@@ -19,8 +19,10 @@ package com.s3mer.mediaObjects
 			
 		}
 
-		public override function play(item:XML):void
+		public override function play(_item:XML):void
 		{
+			super.play(_item);
+			
 			this.internalObject.play();
 		}
 
@@ -28,7 +30,9 @@ package com.s3mer.mediaObjects
 		{
 			super.resize(scale);
 			
-			this.internalObject.resize(scale.scaleX, scale.scaleY);
+			this.internalObject.scaleX = scale.scaleX;
+			this.internalObject.scaleY = scale.scaleY;
+//			this.internalObject.resize(scale.scaleX, scale.scaleY);
 		}
 	}
 }
