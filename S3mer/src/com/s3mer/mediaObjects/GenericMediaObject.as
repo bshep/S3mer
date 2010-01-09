@@ -1,7 +1,10 @@
 package com.s3mer.mediaObjects
 {
+	import com.s3mer.events.MediaEvent;
 	import com.s3mer.util.LoggerManager;
 	import com.s3mer.util.Scale;
+	
+	import flash.events.Event;
 	
 	import mx.containers.Canvas;
 	import mx.core.ScrollPolicy;
@@ -9,9 +12,10 @@ package com.s3mer.mediaObjects
 	public class GenericMediaObject extends Canvas implements IMediaObject
 	{
 		private var configuration:XML;
+		private var item:XML;
 
 		public var mediaPath:String;
-
+		
 		public function GenericMediaObject()
 		{
 			super();
@@ -20,9 +24,15 @@ package com.s3mer.mediaObjects
 			this.verticalScrollPolicy = ScrollPolicy.OFF;
 		}
 		
-		public function play(item:XML):void
+		public function play(_item:XML):void
 		{
+			item = _item;
 		}
+		
+		public function play_complete(e:Event):void {
+			this.dispatchEvent(new MediaEvent(MediaEvent.PLAY_COMPLETE));
+		}
+
 		
 		public function stop():void
 		{
@@ -32,6 +42,7 @@ package com.s3mer.mediaObjects
 		{
 			var left:Number, width:Number, top:Number, height:Number;
 			this.configuration = _configuration;
+			this.id	= _configuration.@id;
 			
 			left = _configuration.@left;
 			top = _configuration.@top;

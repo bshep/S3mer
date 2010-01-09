@@ -3,7 +3,9 @@ package com.s3mer.mediaObjects
 	import com.s3mer.mediaObjects.customObjects.SmoothVideoDisplay;
 	import com.s3mer.util.FileIO;
 	
-	import mx.controls.VideoDisplay;
+	import flash.events.Event;
+	
+	import mx.events.VideoEvent;
 	
 	public class MovieObject extends GenericMediaObject
 	{
@@ -18,12 +20,13 @@ package com.s3mer.mediaObjects
 			this.internalObject.setStyle("top","0");
 			this.internalObject.setStyle("bottom","0");
 			this.internalObject.maintainAspectRatio = false;
+			this.internalObject.addEventListener(VideoEvent.COMPLETE, play_complete);
 		}
 		
-		public override function play(item:XML):void {
-			super.play(item);
+		public override function play(_item:XML):void {
+			super.play(_item);
 			
-			this.internalObject.source = this.mediaPath + "/" + FileIO.Url2Filename(item.toString());
+			this.internalObject.source = this.mediaPath + "/" + FileIO.Url2Filename(_item.toString());
 		}
 		
 		public override function stop():void {
