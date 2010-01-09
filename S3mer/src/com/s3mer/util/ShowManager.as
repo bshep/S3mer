@@ -1,7 +1,6 @@
 package com.s3mer.util
 {
 	import com.s3mer.events.MediaEvent;
-	import com.s3mer.mediaObjects.GenericMediaObject;
 	import com.s3mer.ui.S3merWindow;
 	
 	import flash.display.Screen;
@@ -29,8 +28,8 @@ package com.s3mer.util
 			var _scale:Scale = this.scale;
 			
 			
-			for each( var showObject:GenericMediaObject in regionObjects ) {
-				showObject.resize(_scale);
+			for each( var regionObject:RegionManager in regionObjects ) {
+				regionObject.resize(_scale);
 			}
 		}
 		
@@ -67,6 +66,9 @@ package com.s3mer.util
 				
 				_region.configure(configRegion, this.layoutWidth, this.layoutHeight, _scale);
 				_region.addEventListener(MediaEvent.PLAY_COMPLETE, play_complete);
+				
+				regionObjects.push(_region);
+				
 				_region.play();
 			}
 		}

@@ -86,37 +86,67 @@ package com.s3mer.util
 			play_common();			
 		}
 		
-		private function play_common():void {
-			switch( currentItem.@type.toString() ) {
-				case 'image':
-					currentObject = new ImageObject();
+		
+		// This either returns a new object of the right type or returns one already in the mediaObjects array
+		private function newOrCachedObject():GenericMediaObject {
+			var type:String = currentItem.@type.toString();
+			var ret:GenericMediaObject = null;
+			
+			// Check if its cached...
+			for each( var mediaObject:GenericMediaObject in mediaObjects ) {
+				if( ( mediaObject is ImageObject && type == "image" ) ||
+				 	( mediaObject is MovieObject && type == "video" ) ||
+				 	( mediaObject is TimeObject && type == "timedate" ) ) 
+			 	{
+																		 	
+					ret = mediaObject;
 					break;
-				case 'video':
-					currentObject = new MovieObject();
-					break;
-				case 'timedate':
-					currentObject = new TimeObject();
-					break;
-				default:
-					break;
+				}
 			}
+			
+			// ... not cached so let create it
+			if( ret == null ) {
+				switch( currentItem.@type.toString() ) {
+					case 'image':
+						ret = new ImageObject();
+						break;
+					case 'video':
+						ret = new MovieObject();
+						break;
+					case 'timedate':
+						ret = new TimeObject();
+						break;
+					default:
+						break;
+				}
+				
+				if( ret == null ) {
+					LoggerManager.addEvent("RegionManager.as / newOrCachedObject : item type = " + currentItem.@type.toString() + " cannot handle yet");
+				} else {				
+					ret.mediaPath = FileIO.mediaPath(window.screenNumber);
+					ret.configure(this.configuration, this.layoutWidth, this.layoutHeight, this.scale);
+					this.mediaObjects.push(ret);
+				}
+			}
+			
+			return ret;
+		}
+		
+		private function play_common():void {
+			currentObject = newOrCachedObject();
 			
 			if( currentObject == null ) {
-				LoggerManager.addEvent("RegionManager.as / play : item type = " + currentItem.@type.toString() + " cannot handle yet");
 				return;
 			}
-			
-			currentObject.mediaPath = FileIO.mediaPath(window.screenNumber);
-			currentObject.configure(this.configuration, this.layoutWidth, this.layoutHeight, this.scale);
 			
 			window.addChild(currentObject);
 			
 			for each( var mediaObject:GenericMediaObject in mediaObjects ) {
-				window.removeChild(mediaObject);	
+				if( mediaObject.parent == window && mediaObject != currentObject ) { 
+					window.removeChild(mediaObject);	
+				}
 			}
-			this.mediaObjects.pop();
 			
-			this.mediaObjects.push(currentObject);
 			currentObject.addEventListener(MediaEvent.PLAY_COMPLETE, play_complete);
 			currentObject.play(currentItem);
 		}
