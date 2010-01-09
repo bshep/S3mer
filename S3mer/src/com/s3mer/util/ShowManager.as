@@ -1,23 +1,22 @@
 package com.s3mer.util
 {
+	import com.s3mer.events.MediaEvent;
 	import com.s3mer.mediaObjects.GenericMediaObject;
-	import com.s3mer.mediaObjects.ImageObject;
-	import com.s3mer.mediaObjects.MovieObject;
-	import com.s3mer.mediaObjects.TimeObject;
 	import com.s3mer.ui.S3merWindow;
 	
 	import flash.display.Screen;
+	import flash.events.Event;
 	
 	import mx.events.ResizeEvent;
-	
+
 	public class ShowManager
 	{
 		private var window:S3merWindow;
 
-		private var _layoutSizeX:int;
-		private var _layoutSizeY:int;
+		private var layoutWidth:int;
+		private var layoutHeight:int;
 		
-		private var mediaObjects:Array = new Array();
+		private var regionObjects:Array = new Array();
 		
 		public function ShowManager(_window:S3merWindow)
 		{
@@ -30,7 +29,7 @@ package com.s3mer.util
 			var _scale:Scale = this.scale;
 			
 			
-			for each( var showObject:GenericMediaObject in mediaObjects ) {
+			for each( var showObject:GenericMediaObject in regionObjects ) {
 				showObject.resize(_scale);
 			}
 		}
@@ -42,8 +41,8 @@ package com.s3mer.util
 			
 			screen = Screen.screens[window.screenNumber];
 			
-			scaleX = window.width / _layoutSizeX;
-			scaleY = window.height / _layoutSizeY;
+			scaleX = window.width / layoutWidth;
+			scaleY = window.height / layoutHeight;
 			
 			LoggerManager.addEvent("ShowManager.as scale: " + " scaleX = " + scaleX + " scaleY = " + scaleY );
 			
@@ -53,53 +52,28 @@ package com.s3mer.util
 		public function start():void {
 			LoggerManager.addEvent("ShowManager.as start: Started");
 			
-			var config:XML = PlayerState.configurations[window.screenNumber];
-			_layoutSizeX = config.show.@width;
-			_layoutSizeY = config.show.@height;
+			var config:XML = window.configuration;
+			
+			// Load the layoutsize into the showmanager so we can calculate the scale
+			layoutWidth = config.show.@width;
+			layoutHeight = config.show.@height;
 
 			var _scale:Scale = this.scale;
-			var imageObject:ImageObject = new ImageObject();
-			var movieObject:MovieObject = new MovieObject();
-			var timeObject:TimeObject = new TimeObject();
+			var _region:RegionManager;
 			
-			
-			
-			
-			var configRegion:XML = config.show.region.(@id == "rg952")[0];
-			var configPlaylist:XML = (config.playlist.(@id == "pl900")[0]).playlistitem[0];
-			
-			imageObject.mediaPath = FileIO.mediaPath(window.screenNumber);
-			imageObject.configure(configRegion,_layoutSizeX,_layoutSizeY, _scale);
-			
-			window.addChild(imageObject);
-			this.mediaObjects.push(imageObject);
-			
-			imageObject.play(configPlaylist);
-			
-			//******************
-			configRegion = config.show.region.(@id == "rg948")[0];
-			configPlaylist = (config.playlist.(@id == "pl896")[0]).playlistitem[0];
-			
-			movieObject.mediaPath = FileIO.mediaPath(window.screenNumber);
-			movieObject.configure(configRegion,_layoutSizeX,_layoutSizeY, _scale);
-			
-			window.addChild(movieObject);
-			this.mediaObjects.push(movieObject);
-			
-			movieObject.play(configPlaylist);
-			//******************
-			configRegion = config.show.region.(@id == "rg950")[0];
-//			configPlaylist = (config.playlist.(@id == "pl896")[0]).playlistitem[0];
-			
-//			timeObject.mediaPath = FileIO.mediaPath(window.screenNumber);
-			timeObject.configure(configRegion,_layoutSizeX,_layoutSizeY, _scale);
-			
-			window.addChild(timeObject);
-			this.mediaObjects.push(timeObject);
-			
-			timeObject.play(configPlaylist);
-			
-			
+			for each( var configRegion:XML in config.show.region ) {
+				LoggerManager.addEvent("ShowManager.as / start : " + "region.id = " + configRegion.@id);
+				_region = new RegionManager(window);
+				
+				_region.configure(configRegion, this.layoutWidth, this.layoutHeight, _scale);
+				_region.addEventListener(MediaEvent.PLAY_COMPLETE, play_complete);
+				_region.play();
+			}
+		}
+		
+		private function play_complete(e:Event):void {
+			var object:RegionManager = e.target as RegionManager;
+			LoggerManager.addEvent("ShowManager.as / play_complete: " + "id = " + object.id);
 		}
 
 	}

@@ -9,6 +9,13 @@ package com.s3mer.mediaObjects
 	import mx.containers.Canvas;
 	import mx.core.ScrollPolicy;
 
+	/**
+	 *  Dispatched when object is finished playing the current media
+	 * 
+	 *  @eventType mx.events.FlexEvent.ADD
+	 */
+	[Event(name="play_complete", type="com.s3mer.events.MediaEvent")]
+
 	public class GenericMediaObject extends Canvas implements IMediaObject
 	{
 		private var configuration:XML;

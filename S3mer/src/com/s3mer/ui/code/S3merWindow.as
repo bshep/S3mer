@@ -19,13 +19,16 @@
 	
 	public var applicationObject:Object;
 	
-	
 	public function get screenNumber():int {
 		return _screenNumber;
 	}
 	
 	public function set screenNumber(number:int):void {
 		_screenNumber=number;
+	}
+	
+	public function get configuration():XML {
+		return PlayerState.configurations[this.screenNumber];
 	}
 	
 	public function showWindow():void {

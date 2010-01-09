@@ -8,6 +8,13 @@ package com.s3mer.util
 	import flash.events.ProgressEvent;
 	
 	import mx.collections.ArrayCollection;
+
+	/**
+	 *  Dispatched when ...
+	 * 
+	 *  @eventType com.s3mer.events.DownloadEvent.QUEUE_COMPLETE
+	 */
+	[Event(name="queue_complete", type="com.s3mer.events.DownloadEvent")]
 	
 	public class DownloadQueue extends EventDispatcher
 	{

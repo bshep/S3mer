@@ -32,7 +32,6 @@ package com.s3mer.mediaObjects
 			
 			this.internalObject.scaleX = scale.scaleX;
 			this.internalObject.scaleY = scale.scaleY;
-//			this.internalObject.resize(scale.scaleX, scale.scaleY);
 		}
 	}
 }

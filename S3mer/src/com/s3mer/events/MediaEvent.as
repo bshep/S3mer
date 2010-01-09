@@ -11,5 +11,10 @@ package com.s3mer.events
 			super(type, bubbles, cancelable);
 		}
 		
+		public override function clone():Event {
+			return new MediaEvent(this.type, this.bubbles, this.cancelable);
+		}
+
+		
 	}
 }

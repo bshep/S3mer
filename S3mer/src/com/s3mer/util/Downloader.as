@@ -14,7 +14,29 @@ package com.s3mer.util
 	import flash.net.URLLoaderDataFormat;
 	import flash.net.URLRequest;
 	import flash.net.URLRequestMethod;
+
+	/**
+	 *  Dispatched when ...
+	 * 
+	 *  @eventType com.s3mer.events.DownloadEvent.DOWNLOAD_PROGRESS
+	 */
+	[Event(name="download_progress", type="com.s3mer.events.DownloadEvent")]
 	
+	/**
+	 *  Dispatched when ...
+	 * 
+	 *  @eventType com.s3mer.events.DownloadEvent.DOWNLOAD_COMPLETE
+	 */
+	[Event(name="download_complete", type="com.s3mer.events.DownloadEvent")]
+
+	/**
+	 *  Dispatched when ...
+	 * 
+	 *  @eventType com.s3mer.events.DownloadEvent.DOWNLOAD_ERROR
+	 */
+	[Event(name="download_error", type="com.s3mer.events.DownloadEvent")]
+
+
 	public class Downloader extends EventDispatcher
 	{
 		private var _queueItem:DownloadQueueItem;
