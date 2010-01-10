@@ -79,27 +79,6 @@ package com.s3mer.util
 			return true;
 		}
 		
-//		public function checkIfAlreadyDownloaded(_item:DownloadQueueItem):Boolean {
-//			var ret:Boolean = false;
-//			var file:File;
-////			var existFile:File;
-//			
-//			for each(var dest:String in _item.destinations) {
-//				file = new File(dest).resolvePath(FileIO.Url2Filename(_item.url));
-//				if( file.exists ) {
-//					ret = true;
-////					existFile = file;
-//				} else {
-////					if (ret == true && existFile != null) {
-////						existFile.copyTo(file);
-////					}
-//				}
-//			}
-//			
-//			
-//			return ret;
-//		}
-		
 		public function progressListener(e:ProgressEvent):void {
 			var event:DownloadEvent = new DownloadEvent(DownloadEvent.DOWNLOAD_PROGRESS, this._queueItem, e);
 			
