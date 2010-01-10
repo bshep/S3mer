@@ -1,8 +1,8 @@
 package com.s3mer.mediaObjects
 {
-	import com.s3mer.events.MediaEvent;
 	import com.s3mer.mediaObjects.customObjects.SmoothImage;
 	import com.s3mer.util.FileIO;
+	import com.s3mer.util.Scale;
 	
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
@@ -44,6 +44,14 @@ package com.s3mer.mediaObjects
 		public override function stop():void
 		{
 			super.stop();
+		}
+		
+		public override function resize(scale:Scale):void
+		{
+			super.resize(scale);
+			
+			this.internalObject.scaleX = scale.scaleX;
+			this.internalObject.scaleY = scale.scaleY;
 		}
 
 	}

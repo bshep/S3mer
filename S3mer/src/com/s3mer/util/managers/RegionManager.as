@@ -4,6 +4,7 @@ package com.s3mer.util.managers
 	import com.s3mer.mediaObjects.GenericMediaObject;
 	import com.s3mer.mediaObjects.HTMLObject;
 	import com.s3mer.mediaObjects.ImageObject;
+	import com.s3mer.mediaObjects.LiveVideoObject;
 	import com.s3mer.mediaObjects.MovieObject;
 	import com.s3mer.mediaObjects.RSSObject;
 	import com.s3mer.mediaObjects.SWFObject;
@@ -25,6 +26,8 @@ package com.s3mer.util.managers
 	public class RegionManager extends EventDispatcher
 	{
 		private var window:S3merWindow;
+		private var showManager:ShowManager;
+		
 		private var configuration:XML;
 		
 		private var playlistItems:XMLList;
@@ -42,10 +45,11 @@ package com.s3mer.util.managers
 			return configuration.@id;
 		}
 		
-		public function RegionManager(_window:S3merWindow)
+		public function RegionManager(_window:S3merWindow, _showManager:ShowManager)
 		{
 			super();
 			
+			showManager = _showManager;
 			window = _window;
 		}
 		
@@ -108,6 +112,7 @@ package com.s3mer.util.managers
 				 	( mediaObject is SWFObject && type == "swf" ) ||
 				 	( mediaObject is TimeObject && type == "timedate" ) || 
 				 	( mediaObject is HTMLObject && type == "url" ) || 
+				 	( mediaObject is LiveVideoObject && type == "livevideo" ) || 
 				 	( mediaObject is RSSObject && type == "rss" ) ) 
 			 	{
 																		 	
@@ -137,6 +142,9 @@ package com.s3mer.util.managers
 					case 'url':
 						ret = new HTMLObject();
 						break;
+					case 'livevideo':
+						ret = new LiveVideoObject();
+						break;
 					default:
 						break;
 				}
@@ -159,6 +167,8 @@ package com.s3mer.util.managers
 			if( currentObject == null ) {
 				return;
 			}
+			
+			currentObject.resize(showManager.scale);
 			
 			window.addChild(currentObject);
 			

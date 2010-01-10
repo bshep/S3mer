@@ -7,7 +7,7 @@ package com.s3mer.mediaObjects
 	
 	public class MovieObject extends GenericMediaObject
 	{
-		private var internalObject:SmoothVideoDisplay = new SmoothVideoDisplay();
+		protected var internalObject:SmoothVideoDisplay = new SmoothVideoDisplay();
 		
 		public function MovieObject() {
 			super();

@@ -37,9 +37,6 @@ package com.s3mer.util.managers
 		public function get scale():Scale {
 			var scaleX:Number;
 			var scaleY:Number;
-			var screen:Screen;
-			
-			screen = Screen.screens[window.screenNumber];
 			
 			scaleX = window.width / layoutWidth;
 			scaleY = window.height / layoutHeight;
@@ -63,7 +60,7 @@ package com.s3mer.util.managers
 			
 			for each( var configRegion:XML in config.show.region ) {
 				LoggerManager.addEvent("ShowManager.as / start : " + "region.id = " + configRegion.@id);
-				_region = new RegionManager(window);
+				_region = new RegionManager(window, this);
 				
 				_region.configure(configRegion, this.layoutWidth, this.layoutHeight, _scale);
 				_region.addEventListener(MediaEvent.PLAY_COMPLETE, play_complete);

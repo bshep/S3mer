@@ -1,6 +1,8 @@
 package com.s3mer.mediaObjects
 {
+	import flash.events.Event;
 	import flash.events.TimerEvent;
+	import flash.ui.Mouse;
 	import flash.utils.Timer;
 	
 	import mx.controls.HTML;
@@ -23,7 +25,15 @@ package com.s3mer.mediaObjects
 			this.displayTimer = new Timer(1000, 1);
 			this.displayTimer.addEventListener(TimerEvent.TIMER, play_complete);
 		}
-
+		
+		public override function play_complete(e:Event):void {
+			Mouse.hide();
+			
+			this.internalObject.location = "about:blank";
+			
+			super.play_complete(e);
+		}
+		
 		public override function play(_item:XML):void
 		{
 			super.play(_item);
@@ -36,6 +46,7 @@ package com.s3mer.mediaObjects
 				this.displayTimer.start();
 			}
 			
+			Mouse.show();
 		}
 
 		

@@ -55,6 +55,9 @@
 			}
 		}
 		
+		Mouse.show();
+		Mouse.hide();
+
 		this.addEventListener(ConfigurationEvent.REGISTRATION_COMPLETE, registrationComplete);
 	}
 	
@@ -118,10 +121,6 @@
 		LoggerManager.addEvent("S3merWindow.as downloadsComplete: Downloads COMPLETE");
 		
 		_showManager.start();
-		
-		Mouse.show();
-		Mouse.hide();
-		
 	}
 	
 	
