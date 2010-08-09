@@ -15,46 +15,46 @@ package com.s3mer.util
 	public class FileIO
 	{
 		private static const ENABLE_HASH:Boolean = false;
-		private static var _log:LoggerManager = new LoggerManager;	
+//		private static var _log:LoggerManager = new LoggerManager;	
 		
-		public static function isMacOs():Boolean {
-//			Logger.addEvent("OS is: " + Capabilities.os);
-			if (Capabilities.os.search("Mac") >= 0) {
-				return true;
-			} else {
-				return false;
-			}
-		}
-		
-		public static function isWindows():Boolean {
-//			Logger.addEvent("OS is: " + Capabilities.os);
-			if (Capabilities.os.search("Windows") >= 0) {
-				return true;
-			} else {
-				return false;
-			}
-		}
-		
-		public static function isLinux():Boolean {
-//			Logger.addEvent("OS is: " + Capabilities.os);
-			if (Capabilities.os.search("Linux") >= 0) {
-				return true;
-			} else {
-				return false;
-			}
-		}
-		
-		public static function getOs():String {
-			if (isMacOs()) {
-				return "MAC";
-			} else if (isWindows()) {
-				return "WINDOWS";
-			} else if (isLinux()) {
-				return "LINUX";
-			} else {
-				return "UNKNOWN";
-			}
-		}
+//		public static function isMacOs():Boolean {
+////			Logger.addEvent("OS is: " + Capabilities.os);
+//			if (Capabilities.os.search("Mac") >= 0) {
+//				return true;
+//			} else {
+//				return false;
+//			}
+//		}
+//		
+//		public static function isWindows():Boolean {
+////			Logger.addEvent("OS is: " + Capabilities.os);
+//			if (Capabilities.os.search("Windows") >= 0) {
+//				return true;
+//			} else {
+//				return false;
+//			}
+//		}
+//		
+//		public static function isLinux():Boolean {
+////			Logger.addEvent("OS is: " + Capabilities.os);
+//			if (Capabilities.os.search("Linux") >= 0) {
+//				return true;
+//			} else {
+//				return false;
+//			}
+//		}
+//		
+//		public static function getOs():String {
+//			if (isMacOs()) {
+//				return "MAC";
+//			} else if (isWindows()) {
+//				return "WINDOWS";
+//			} else if (isLinux()) {
+//				return "LINUX";
+//			} else {
+//				return "UNKNOWN";
+//			}
+//		}
 		
 //		public static function appPath():String {
 //			LoggerManager.addEvent("Resource Directory: " + File.applicationDirectory.nativePath);
@@ -82,14 +82,14 @@ package com.s3mer.util
 			tmpFile = tmpFile.resolvePath("screen" + screenId);
 			
 			var realPath:String = tmpFile.nativePath;
-			
-			if(isMacOs()) {
+//			
+//			if(isMacOs()) {
 				realPath = "file://" + realPath;
-			}
-			
-			if(isLinux()) {
-				realPath = "file://" + realPath;
-			}
+//			}
+//			
+//			if(isLinux()) {
+//				realPath = "file://" + realPath;
+//			}
 			
 			return realPath;
 		}

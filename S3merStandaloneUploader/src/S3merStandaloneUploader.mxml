@@ -63,11 +63,20 @@
 				return urlVariables;
 			}
 			
+			private function getCheckLoggedInVariables():URLVariables {
+				var urlVariables:URLVariables = new URLVariables();
+				
+				urlVariables["action"] = "check_loggedin";
+				
+				return urlVariables;
+			}
+			
 			private function getLoginVariables():URLVariables {
 				var urlVariables:URLVariables = new URLVariables();
 				
 				urlVariables["username"] = this._username;
 				urlVariables["password"] = this._password;
+				urlVariables["rememberme"] = "1";
 				
 				return urlVariables;
 			}
@@ -103,7 +112,7 @@
 					this._username = txtUsername.text;
 					this._password = txtPassword.text;
 										
-					doRequest(LOGIN_URL, checkLogin_complete, checkLogin_error, getLoginVariables());
+					doRequest(LOGIN_URL, checkLogin_complete, checkLogin_error, false, getLoginVariables());
 					
 					// Disable login controls give status
 					status = "Loggin in";
@@ -155,7 +164,7 @@
 			}
 			
 			private function loadPostParams():void {
-				doRequest(S3_PARAMS_URL, loadPostParams_complete, loadPostParams_error);
+				doRequest(S3_PARAMS_URL, loadPostParams_complete, loadPostParams_error, true);
 			}
 			
 			private function loadPostParams_complete(e:Event):void {
@@ -417,7 +426,7 @@
 			}
 			
 			private function addToDatabase(file:File):void {
-				doRequest(PROCESS_CMD_URL, addToDatabase_complete, addToDatabase_error,getProcessMediaVariables(file.name, file.size.toString()));
+				doRequest(PROCESS_CMD_URL, addToDatabase_complete, addToDatabase_error, true, getProcessMediaVariables(file.name, file.size.toString()));
 			}
 			
 			private function addToDatabase_complete(e:Event):void {				
@@ -431,7 +440,7 @@
 			}
 			
 			private function setLibraryFolder(folder:String):void {
-				doRequest(PROCESS_CMD_URL, setLibraryFolder_complete, setLibraryFolder_error, getSetLibraryFolderVariables(folder));
+				doRequest(PROCESS_CMD_URL, setLibraryFolder_complete, setLibraryFolder_error, true, getSetLibraryFolderVariables(folder));
 			}
 			
 			private function setLibraryFolder_complete(e:Event):void {				
@@ -443,7 +452,7 @@
 			}
 
 			private function loadLibraryFolderList():void {
-				doRequest(REMOTE_PROCEDURES_URL, loadLibraryFolderList_complete, loadLibraryFolderList_error, getFolderListVariables());
+				doRequest(REMOTE_PROCEDURES_URL, loadLibraryFolderList_complete, loadLibraryFolderList_error, true, getFolderListVariables());
 			}
 			
 			private function loadLibraryFolderList_complete(e:Event):void {
@@ -503,7 +512,13 @@
 				btnUpload.addEventListener(NativeDragEvent.NATIVE_DRAG_EXIT, dragExitHandler);
 			}
 			
-			private function doRequest(url:Array, complete:Function, error:Function, urlVars:URLVariables = null ):void {
+        	private function createdoRequest_CallBack(fn:Function, url:Array, complete:Function, error:Function, mustBeLoggeIn:Boolean, urlVars:URLVariables):Function {
+			   return function(event:*):void {
+			      fn(url, complete, error, mustBeLoggeIn, urlVars);
+			   }
+			}
+			
+			private function doRequest(url:Array, complete:Function, error:Function, mustBeLoggeIn:Boolean = true, urlVars:URLVariables = null ):void {
 				var urlRequest:URLRequest = new URLRequest()
 				var urlLoader:URLLoader;
 
@@ -513,13 +528,43 @@
 				if( urlRequest != null ) {
 					urlRequest.data = urlVars;
 				}
-
+				
+				if( mustBeLoggeIn ) {
+					check_loggedIn(createdoRequest_CallBack(doRequest, url, complete, error, false, urlVars ));
+					return;
+				}
 				
 				urlLoader  = new URLLoader()
 				urlLoader.addEventListener(Event.COMPLETE, complete);
 				urlLoader.addEventListener(IOErrorEvent.IO_ERROR, error);
 				
 				urlLoader.load(urlRequest);
+			}
+			
+        	private function createcheck_loggedIn_CallBack(fn:Function, retFun:Function):Function {
+			   return function(event:*):void {
+			      fn(event, retFun);
+			   }
+			}
+
+			private function check_loggedIn(returnFunc:Function):void {
+				if(returnFunc == null) {
+					return;
+				}
+				
+				doRequest(REMOTE_PROCEDURES_URL, createcheck_loggedIn_CallBack(check_loggedIn_complete, returnFunc), check_loggedIn_error, false, getCheckLoggedInVariables());
+			}
+			
+			private function check_loggedIn_complete(event:Event, returnFunction:Function):void {
+				if( (event.target as URLLoader).data == "1") {
+					returnFunction(event);
+				} else {
+					doRequest(LOGIN_URL, returnFunction, checkLogin_error, false, getLoginVariables());
+				}
+			}
+			
+			private function check_loggedIn_error(event:IOErrorEvent):void {
+				Alert.show("Could not check status","API Error");
 			}
 			
 			private function extendedView_enter(event:FlexEvent):void {
@@ -597,7 +642,7 @@
 			}
 			
 			private function updateQuota():void {
-				doRequest(REMOTE_PROCEDURES_URL, updateQuota_complete, updateQuota_error, getUserStatsVariables());	
+				doRequest(REMOTE_PROCEDURES_URL, updateQuota_complete, updateQuota_error, true, getUserStatsVariables());	
 			}
 			
 			private function updateQuota_complete(e:Event):void {
@@ -691,6 +736,7 @@
         	private function navigateToSite_closed(e:Event):void {
         		this.wndBrowser = null;
         	}
+        	
           			
 		]]>
 	</mx:Script>

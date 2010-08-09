@@ -18,6 +18,7 @@ public static var SpinnerSwf:Class;
 
 
 public function show():void {
+	LoggerManager.addEvent("LoginhWindow.as: show()")
 	this.cmbLanguage.selectedIndex = localeListIndex(resourceManager.localeChain[0]);
 
 	updateLocaleStrings();

@@ -34,6 +34,7 @@
 	}
 	
 	public function showWindow():void {
+		LoggerManager.addEvent("S3merWindow.as: showWindow()");
 		this.visible = true;
 	
 		var _screen:Screen = Screen.screens[this._screenNumber];
@@ -66,6 +67,7 @@
 	}
 	
 	public function start():void {
+		LoggerManager.addEvent("S3merWindow.as: start()");
 		var configId:String;
 		
 		configId = ApplicationSettings.getValue("screen" + this.screenNumber + ".channel.id","");
