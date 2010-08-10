@@ -1,0 +1,197 @@
+/*
+ * ADOBE SYSTEMS INCORPORATED
+ * Copyright 2007 Adobe Systems Incorporated
+ * All Rights Reserved
+ * 
+ * NOTICE:  Adobe permits you to use, modify, and distribute this file in accordance with the 
+ * terms of the Adobe license agreement accompanying it. If you have received this file from a 
+ * source other than Adobe, then your use, modification, or distribution of it requires the prior 
+ * written permission of Adobe.
+ */
+
+/* Most usual classes */
+
+/* th, td.KT_th
+ * 		the top row on Dynamic List
+ * 		labels container on Dynamic Form
+ * 		As on the form table headings are semantically incorrect, we have td.KT_th */
+.KT_tngtable th, .KT_tngtable td.KT_th {
+	font-weight: bold;
+}
+/* the plain cells   */
+.KT_tngtable td {
+	padding-top: 5px;
+	border-bottom: solid 1px #d6d3ce;
+	border-top-width: 0;
+	border-left-width: 0;
+	vertical-align: baseline;
+}
+
+
+/* *
+ * recommmended css attribute order
+	* layout:            display, list-style
+	* box positioning:   position, float, clear
+	* box position:      top, right, bottom, left
+	* box clipping:      overflow, clip
+	* box size:          width, height
+	* box style:         margin, padding, border, background
+	* text:              color, font, text-decoration, text-transform
+	* text positioning:  text-align, vertical-align
+	* other text:        white-space, ...
+ * */
+
+/* Table and cell look and feel */
+.KT_tng .input_text {
+	/*border: 0 ! important;*/
+	border: 1px solid #dedede ! important;
+}
+.KT_tngtable {
+}
+	.KT_tngtable tfoot, .KT_tngtable thead {
+	}
+	.KT_tngtable td, .KT_tngtable th, .KT_tngtable caption {
+		padding: 2px;
+		white-space: nowrap;
+	}
+	/* HACK: to make ktml skin work properly */
+	.KT_tngtable .ktml * td {
+		border: 0px;
+		white-space: normal ! important;
+	}
+		.KT_tngtable .ktml span.lcontainer table {
+		}
+		.KT_tngtable .ktml span.lcontainer td {
+			padding: 0px ! important;
+			margin: 0px ! important;
+			vertical-align: middle;
+		}
+	
+/* Buttons area for tNG form */
+.KT_buttons td {
+	padding: 4px;
+	text-align: right;
+}
+
+/* Fonts for the table, table headings, table cells */
+	.KT_tngtable td, .KT_tngtable th, .KT_tngtable caption {
+		font-family: Arial, Helvetica, sans-serif;
+	}
+	.KT_tngtable th, .KT_tngtable td.KT_th, .KT_tngtable caption {
+		font-size: 12px;
+		text-align: left;
+	}
+	.KT_tngtable td {
+		font-size: 11px;
+	}
+
+/* Active Form Elements :font-sizes */
+	.KT_tngtable input, .KT_tngtable select {
+		font-size: 10px;
+	}
+
+	.KT_tngtable textarea {
+		font-size: 12px;
+	}
+
+/* Special items : error containers, field hints, required table cell  */
+	.KT_field_error {
+		color: #cc0000;
+	}
+	.KT_field_hint {
+		color:#0000cc;
+		font-size: 10px;
+	}
+	.KT_tngtable td.KT_required {
+	}
+	/* span containing the "*" for required field labels */
+	.KT_tngtable label span.KT_required {
+		padding: 0 2px;
+		color: #cc0000;
+		font-family: Courier New, Courier, monospace;
+		font-weight: normal;
+	}
+
+
+/* The client-side error displaying */
+
+	/* How the label should change on error */
+	.form_validation_field_error_label {
+		/* color:#cc0000; */
+	}
+
+	/* How the input's container (TD) should change on error */
+	.form_validation_field_error_container {
+		/* border: 2px solid black; */
+	}
+
+	/* How the input textfield should change on error */
+	.form_validation_field_error_text {
+		/* border:2px solid #cc0000; */
+	}
+
+	/* The actual error message style */
+	.form_validation_field_error_error_message {
+		color:#cc0000;
+		font-weight: bold;
+		clear:left;
+	}
+	form.form_validation_form_error table {
+		border: 2px solid red;
+	}
+
+/* The server-side error displaying */
+/* topmost error div */
+#KT_tngerror {
+	padding: 5px 10px 5px 50px;
+	margin:5px;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	color: #CC0000;
+	font-size: 12px;
+	border:1px solid red;
+	background-color:#FFFFE4;
+	background-image:url(images/error.gif);
+	background-repeat:no-repeat;
+	background-position:left;
+}
+
+/* trace container ( initially collapsed) area */
+#KT_tngdeverror, #KT_tngtrace {
+	padding: 5px 10px 5px 5px;
+	margin:5px;
+	font-family:Courier, sans-serif;
+	font-size: 12px;
+	background-color:#FAFAFA;
+}
+
+	/* alignment and borders for the form submit buttons */
+	#KT_tngdeverror label, #KT_tngtrace label {
+		display: block;
+		font-family:Verdana, Arial, Helvetica, sans-serif;
+		font-weight:bold;
+	}
+
+	#KT_tngtrace ul {
+		padding-left:10px;
+		margin-left:10px;
+	}
+
+	#KT_tngtrace_details {
+		display: none;
+	}
+
+#KT_tngwarning {
+	padding: 10px 10px 10px 50px;
+	margin:5px;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	color: #0000CC;
+	font-size: 12px;
+	border:1px solid blue;
+	background-color:#E4FFFF;
+	background-image:url(images/warning.gif) ;
+	background-repeat:no-repeat;
+	background-position:left;
+}
+

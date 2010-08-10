@@ -1,0 +1,60 @@
+<div class="previous_button"></div> 
+	<div id="folder_container" class="container">
+		<ul>
+			
+			<li>
+				<div class="folder-tile-selected" id="All" onclick="selectFolder('All')">
+		            <div class="thumb">
+						<img src="images/icons/folder-search.png" alt="New Folder" class="library-icon" />
+					</div>
+		            <div class="filename">{t}All{/t}</div>
+		        </div>
+			</li>
+			<li>
+				<div class="folder-tile" id="Videos" onclick="selectFolder('Videos')">
+		            <div class="thumb">
+						<img src="images/icons/folder-search.png" alt="New Folder" class="library-icon" />
+					</div>
+		        	<div class="filename">{t}All Videos{/t}</div>
+		        </div>
+			</li>
+			<li>
+				<div class="folder-tile" id="Images" onclick="selectFolder('Images')">
+		            <div class="thumb">
+						<label for="images"><img src="images/icons/folder-search.png" alt="New Folder" class="library-icon" /></label>
+					</div>
+		            <div class="filename">{t}All Images{/t}</div>
+		        </div>
+			</li>
+			<li>
+				<div class="folder-tile" id="Public" onclick="selectFolder('Public')">
+		            <div class="thumb">
+						<img src="images/icons/folder-public.png" alt="New Folder" class="library-icon" />
+					</div>
+		            <div class="filename">{t}Public{/t}</div>
+		        </div>
+			</li>
+			<li>
+				<div class="folder-tile" id="Main" onclick="selectFolder('Main')">
+		            <div class="thumb">
+						<img src="images/icons/folder-default.png" alt="New Folder" class="library-icon" />
+					</div>
+		            <div class="filename">{t}Main{/t}</div>
+		        </div>
+			</li>
+			
+			{section name=i loop=$mediafolders}
+				<li>
+					<div class="folder-tile" id="mediafolder_{$mediafolders[i].id}" onclick="selectFolder('mediafolder_{$mediafolders[i].id}')">
+						<div class="thumb">
+							<label for="{$mediafolders[i].id}"><img src="images/icons/folder.png" alt="New Folder" class="library-icon" /></label>
+						</div>
+			            <div class="filename">{$mediafolders[i].folder}</div>
+		            </div>
+				</li>
+			{/section}
+
+		  </ul>
+
+	</div>
+<div class="next_button"></div>

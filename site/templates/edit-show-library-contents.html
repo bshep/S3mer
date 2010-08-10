@@ -1,0 +1,16 @@
+{section name=i loop=$mediaitems}
+	<div id="mlFile" class="mlFile">
+		<div id="mlCheckbox" class="mlCheckbox">
+			<input name="{$mediaitems[i].id}" type="checkbox" {if $buttonselect eq 1}onclick="unselectallbut({$mediaitems[i].id})"{/if} id="{$mediaitems[i].id}" class="checkitem" value="1"/>
+		</div>		
+		<div id="mlThumb" class="mlThumb">
+			<label for="{$mediaitems[i].id}">
+				<img src="{if $mediaitems[i].mediatype eq 2}http://media1.s3mer.com.s3.amazonaws.com/user/{$loggeduser.username}/thumbs/{$mediaitems[i].name}{elseif $mediaitems[i].mediatype eq 1}images/icons/video.png{else}images/icons/animation.png{/if}" alt="" {if $mediaitems[i].mediatype eq 2}width="42" height="42"{/if} />
+			</label>
+		</div>
+		
+		<div id="mlFilename" class="mlFilename">
+			{$mediaitems[i].name}
+		</div>	
+	</div>
+{/section}

@@ -1,0 +1,37 @@
+/*
+ * ADOBE SYSTEMS INCORPORATED
+ * Copyright 2007 Adobe Systems Incorporated
+ * All Rights Reserved
+ * 
+ * NOTICE:  Adobe permits you to use, modify, and distribute this file in accordance with the 
+ * terms of the Adobe license agreement accompanying it. If you have received this file from a 
+ * source other than Adobe, then your use, modification, or distribution of it requires the prior 
+ * written permission of Adobe.
+ */
+
+/* The client-side error displaying */
+
+	/* How the label should change on error */
+	.form_validation_field_error_label {
+		/* color:#cc0000; */
+	}
+
+	/* How the input's container (TD) should change on error */
+	.form_validation_field_error_container {
+		/* border: 2px solid black; */
+	}
+
+	/* How the input textfield should change on error */
+	.form_validation_field_error_text {
+		/* border:2px solid #cc0000; */
+	}
+
+	/* The actual error message style */
+	.form_validation_field_error_error_message {
+		color:#ff0000;
+		clear:left;
+	}
+	form.form_validation_form_error table {
+		border: 2px solid red;
+	} 
+

@@ -1,0 +1,40 @@
+<style>
+  #content #examplelist { 
+      list-style-type:none;
+      margin:0;
+      padding:0;
+   }
+   #content #examplelist li {
+     width:200px;
+     font:13px Verdana;
+     margin:0;
+     margin-left:20px;
+     padding-left:20px;
+     padding:4px;
+     cursor:move;
+   }
+  div.dropmarker {
+      height:6px;
+      width:200px;
+      background: url(/images/dropmarker.png) left top;
+      margin-top:-3px;
+      margin-left:-5px;
+      z-index:1000;
+      overflow: hidden;
+   }
+</style>
+
+<ul id="examplelist">
+<li>Lorem ipsum dolor</li>
+<li>sit amet</li>
+<li>consectetur adipisicing</li>
+<li>elit</li>
+<li>sed do eiusmod</li>
+<li>tempor incididunt</li>
+<li>ut labore et dolore</li>
+<li>magna aliqua</li>
+</ul>
+
+<script type="text/javascript" language="javascript">
+  Sortable.create('examplelist',{ghosting:true,constraint:false})
+</script>

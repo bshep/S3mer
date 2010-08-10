@@ -1,0 +1,89 @@
+/*
+ * ADOBE SYSTEMS INCORPORATED
+ * Copyright 2007 Adobe Systems Incorporated
+ * All Rights Reserved
+ * 
+ * NOTICE:  Adobe permits you to use, modify, and distribute this file in accordance with the 
+ * terms of the Adobe license agreement accompanying it. If you have received this file from a 
+ * source other than Adobe, then your use, modification, or distribution of it requires the prior 
+ * written permission of Adobe.
+ */
+
+/*
+ * the navigation markup : container div with a ul inside. 
+ * each list element has a class to differentiate it ( prev, next etc)
+ * inside each list element there is a link.
+ */
+div.KT_textnav_AZ {
+	display: inline;
+	font-size: 0.95em !important; 
+	font-family: verdana,arial,sans-serif;
+}
+div.KT_textnav, div.KT_textnav div {
+	display: inline;
+	text-align: center;
+	/*padding: 5px 0px 5px 0px;*/
+}
+	/* hide list markers  and padding / margin */
+	div.KT_textnav ul {
+		text-align: center;
+		display: inline;
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+	}
+		/* make list display "inline" */
+		div.KT_textnav ul li {
+			display: inline;
+			width: 60px;
+	    padding: 0px 5px 0px 12px;
+      white-space: nowrap;		  
+			/* float: left; */
+		}
+		/* make list display "inline" */
+		div.KT_textnav_AZ ul li {
+			display: inline;
+		    padding: 0;
+			margin: 0;
+			width: auto;
+			/* float: left; */
+		}
+
+			div.KT_textnav ul li a, div.KT_textnav ul li a:hover, div.KT_textnav ul li a:visited, div.KT_textnav ul li a:active {
+				padding: 0; 
+				margin: 0;
+			}
+			div.KT_textnav ul li a.disabled {
+				text-decoration: none;
+				color: #AAAAAA;
+				cursor: default;
+			}
+
+div.KT_textnav ul li a.NAV_selected {
+	font-weight: bold;
+	color: #000000;
+	padding: 0px 0px 0px 4px !important;
+	cursor: default;
+}
+div.KT_textnav ul li.NAV_selected {
+	font-weight: bold;
+	color: #000000;
+	padding: 0px 0px 0px 4px !important;
+	cursor: default;
+}
+div.KT_textnav ul li.NAV_disabled {
+	color: #AAAAAA;
+	padding: 0px 0px 0px 4px !important;
+	cursor: default;
+}
+div.KT_nav_statistics{
+	display: inline;
+	font-size: 0.85em !important; 
+	font-family: verdana,arial,sans-serif;
+}
+div.KT_nav_form{
+	display: inline;
+	font-size: 0.85em !important; 
+	font-family: verdana,arial,sans-serif;
+}
+

@@ -1,0 +1,190 @@
+{include file="header.html" title="Settings"
+                            additional_scripts="<script src=\"js/s3mer_tilelist.js\" type=\"text/javascript\"></script>
+                            <script src=\"js/s3mer_settings.js\" type=\"text/javascript\"></script>
+							<script src=\"js/calendar.js\" type=\"text/javascript\"></script>
+							<script src=\"js/control.modal.js\" type=\"text/javascript\"></script>
+							<link href=\"../buttons_tmp/buttons.css\" rel=\"stylesheet\" type=\"text/css\" />"
+                            onload_function=""
+							onUnload_function=""
+}
+
+
+
+<div class="container">
+	<div class="main-nav">
+   	  	<div class="main-nav-top">
+        	<img src="images/borderL.gif" class="corner" style="display:none" />
+      	</div>
+        <p>
+        	<ul>
+	            {section name=mitem loop=$navmenus}
+	            	<li><a href="{$navmenus[mitem].link}" {if $navmenus[mitem].selected eq 1}class="tab-selected"{/if}>{$navmenus[mitem].menu}</a></li>
+	            {/section}
+   	  		</ul>
+		</p>
+    </div>
+
+<div class="content">
+	<p>&nbsp;</p>
+
+    <p>
+	
+		<div id="register-error-box" class="register-error-box" style="display:none"></div>
+
+		{if $prouser eq 1} <div id="modifySubscription">
+
+		          <p><span class="productName">{t}Subscription Information{/t}</span></p>
+		          <p><strong>{t}Registered Players{/t}: {$userinfo.prosubscriptions}</strong></p>
+		          <p><strong>{t}Amount{/t}: $ {$userinfo.paymentamount}.00</strong></p>
+		          <p><strong>{t}Last Payment{/t}: {$lastpayment} </strong></p>
+
+		          <div class="modifySubscriptionBtns">
+		              <div class="buttons">
+
+		                  <a href="editunsubscribe.php">
+		                      <img src="images/icons/pencil.png"/> 
+		                      {t}Remove Pro Players{/t}
+		                  </a>
+
+		                  <a  href="https://www.paypal.com/cgi-bin/webscr?cmd=_subscr-find&alias=payments%40s3mer.com">
+		                      <img src="images/icons/pencil.png"/>
+		                      {t}Change / Cancel Subscription{/t}
+		                  </a>
+		              </div>
+		          </div>
+		      </div>{/if}
+      		
+        <form name="settings" action="savesettings.php" method="post">
+      		<table width="302" border="0" align="center" cellpadding="0" cellspacing="0">
+
+	
+		        <tr>
+		          	<td width="302">
+						<input name="lastpage" type="hidden" value="{$lastpage}">
+						<label>Type new password:</label><br />
+						<input name="password1" type="password" class="form-items" id="pass1" />
+					</td>
+		        </tr>
+	       	 	<tr>
+		          <td><label>Re-type new password:</label><br /><input name="password2" type="password" class="form-items" id="pass2" /></td>
+		        </tr>
+		        <tr>
+		          <td>&nbsp;</td>
+		        </tr>
+		        <tr>
+		          <td><label>First Name:</label><br /><input name="firstname" type="text" class="form-items" id="first" value="{$userinfo.firstname}"  /></td>
+		        </tr>
+		        <tr>
+		          <td><label>Last Name:</label><br /><input name="lastname" type="text" class="form-items" id="last" value="{$userinfo.lastname}"  /></td>
+		        </tr>
+		        <tr>
+		          <td>&nbsp;</td>
+		        </tr>
+		        <tr>
+		          <td><label>Address:</label><br /><input name="address1" type="text" class="form-items" id="address1" value="{$userinfo.address1}"  /></td>
+		        </tr>
+		        <tr>
+		          <td><input name="address2" type="text" class="form-items" id="address2" value="{$userinfo.address2}"  /></td>
+		        </tr>
+		        <tr>
+		          <td><label>City:</label><br /><input name="city" type="text" class="form-items" id="city" value="{$userinfo.city}"  /></td>
+		        </tr>
+	        	<tr>
+		          <td><label>State:</label><br /><input name="state" type="text" class="form-items" id="state" value="{$userinfo.stateprovince}"  /></td>
+		        </tr>
+		        <tr>
+		          	<td>
+						    <label>Country:</label><br />
+							<select name="country" class="form-items" id="country">
+									<option label="{t}Country{/t}" value="0">{t}Country{/t}</option>
+		            				{html_options values=$countryids output=$countrynames selected=$userinfo.country}
+		          			</select>          
+					</td>
+		        </tr>
+	        	<tr>
+		          <td><label>Zipcode:</label><br /><input name="zip" type="text" class="form-items" id="zip" value="{$userinfo.postalcode}"  /></td>
+		        </tr>
+		        <tr>
+		          <td>&nbsp;</td>
+		        </tr>
+		        <tr>
+		          		<td>    <label>Venue type:</label><br />
+								<select name="venue" class="form-items" id="venue" onchange="otherIndustryShow(this.form)">
+						            <option label="{t}Industry{/t} ({t}Other{/t})" value="0">{t}Industry{/t} ({t}Other{/t})</option>
+						            {html_options values=$venueids output=$venuenames selected=$userinfo.venue}
+					          	</select>
+						</td>
+		        </tr>
+		        <tr>
+		          		<td>
+							<div id="venue_explain" name="venue_explain">
+								<label>Please explain:</label><br />
+								<textarea name="explain" class="form-items" id="explain"  >{$userinfo.othervenue}</textarea>
+							</div>
+						</td>
+		        </tr>
+		        <tr>
+		          <td>&nbsp;</td>
+		        </tr>
+		        <tr>
+		          	<td><label>Date format:</label><br />
+						<select name="dateformat" class="form-items" id="date">
+		            		{html_options values=$dateformatids output=$dateformats selected=$userinfo.dateformat}
+		                </select>
+					</td>
+		        </tr>
+	        	<tr>
+		          	<td><label>Time format:</label><br />
+						<select name="timeformat" class="form-items" id="time">
+		            		{html_options values=$timeformatids output=$timeformats selected=$userinfo.timeformat}
+						</select>
+					</td>
+		        </tr>
+		        <tr>
+		          <td>&nbsp;</td>
+		        </tr>
+        
+		        <tr>
+		          <td>	<input type="checkbox" name="newsletter" id="checkbox2" value="1" {$userinfo.newsletterchecked}/> 
+			            {t}I want to recieve a periodical newsletter{/t}</td>
+		        </tr>
+		        <tr>
+		          <td>&nbsp;</td>
+		        </tr>
+		        <tr>
+		          <td>
+		              <div class="buttons" id="btnEnableGears" style="float:right">
+                            <a href="javascript:installGears()">
+                    	    	<img alt="Enable Gears" src="images/icons/cog_go.png"/>
+                    	    	Enable Gears for s3mer.com
+                    		</a>
+                		</div>
+		          </td>
+		        </tr>
+		        <tr>
+		          <td>&nbsp;</td>
+		        </tr>
+		        <tr>
+		          <td>
+		          	<div class="buttons" style="float:right">
+							<button class="negative" type="button" onclick="location.href=document.settings.lastpage.value;" >
+								<img alt="" src="images/icons/cancel.png"/> 
+								{t}Cancel{/t}
+							</button>
+							<button class="positive" type="button" onclick="deactivateOnUnload();saveSettings('{$lang}')" >
+								<img alt="" src="images/icons/key_add.png"/> 
+								{t}Save{/t}
+							</button>
+					</div>
+		          </td>
+		        </tr>
+	        	<tr>
+		          <td>&nbsp;</td>
+		        </tr>
+		      </table> 
+    	</form>
+   </p>
+	
+</div>
+
+{include file="footer.html"}

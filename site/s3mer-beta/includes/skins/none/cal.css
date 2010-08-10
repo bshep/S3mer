@@ -1,0 +1,176 @@
+/*
+ * ADOBE SYSTEMS INCORPORATED
+ * Copyright 2007 Adobe Systems Incorporated
+ * All Rights Reserved
+ * 
+ * NOTICE:  Adobe permits you to use, modify, and distribute this file in accordance with the 
+ * terms of the Adobe license agreement accompanying it. If you have received this file from a 
+ * source other than Adobe, then your use, modification, or distribution of it requires the prior 
+ * written permission of Adobe.
+ */
+
+/* CSS classes flow
+ * .main_cal (.nugget_cal|(.detail_cal (.year_cal|.month_cal|.week_cal|.day_cal)))
+ *  .nav_cal
+ *  .days_cal
+ *  .weeks_cal
+ *   (|.othermonth_cal|.hasevent_cal|.selected_cal|.today_cal)
+ *  .weeks_cal
+ *  .weeks_cal
+ *  .weeks_cal
+ */
+
+/* Generic Calendar Settings */
+.main_cal {
+}
+
+/* All calendar links should be displayed as regular text */
+.main_cal a {
+}
+
+/* All the calendar cells should be valigned at top */
+.main_cal td {
+}
+
+/* The calendar navigation */
+.nav_cal {
+}
+
+/* Extend the next/previous links to 100% so one can click arround */
+.nav_cal .np_cal a {
+}
+
+/* The week days style */
+.days_cal th {
+}
+
+/* How the days from the other months should be styled when viewing the curent month */
+.othermonth_cal, .othermonth_cal a {
+}
+
+/* How the selected day/week should be styled */
+.selected_cal {
+}
+
+/* Today */
+.main_cal .today_cal {
+}
+
+/* 
+*
+*
+* Start Nugget-Specific styles 
+*
+*
+*/
+/*the week number */
+.nugget_cal .wkno_cal {
+}
+
+/* all cells should have padding and should be aligned to the right */
+.nugget_cal .days_cal th, .nugget_cal .weeks_cal td {
+}
+
+/* if we have a event, bold the day number */
+.nugget_cal .weeks_cal .hasevent_cal {
+}
+
+/* The weekend days should be colored in red */
+.nugget_cal .weekend_cal, .nugget_cal .weekend_cal a {
+}
+
+/* 
+*
+*
+* Start Detail-Specific styles 
+*
+*
+*/
+.detail_cal {
+	width: 100%;
+}
+
+/* Set the borders to create a grid */
+.detail_cal td, .detail_cal th {
+}
+
+/* Set the detail cells paddings */
+.detail_cal .days_cal th, .detail_cal .weeks_cal td {
+}
+
+/* 
+*
+*
+* Start Year View-specific styles 
+*
+*
+*/
+.year_cal {
+}
+
+/* 
+*
+*
+* Start Month And Week View-Specific styles 
+*
+*
+*/
+/* The add / day link should have a bottom spacing */
+.main_cal .mw_top_cal {
+}
+
+/* The day link should be on the right */
+.main_cal .mw_top_cal div {
+}
+
+/* The "See more..." link */
+.detail_cal .weeks_cal .seemore_cal {
+}
+
+/* 
+*
+*
+* Start Month View-Specific styles 
+*
+*
+*/
+/* Set the width and the height of the cells */
+.month_cal .weeks_cal td {
+}
+
+/* 
+*
+*
+* Start Week View-Specific styles 
+*
+*
+*/
+/* Set the width and the height of the cells */
+.week_cal .weeks_cal td {
+}
+
+/* 
+*
+*
+* Start Day View-Specific styles 
+*
+*
+*/
+/* The padding for the cells */
+.day_cal .hour_cal td {
+}
+
+/* The hours, displayed on the left side */
+.day_cal .htitle_cal {
+}
+
+/* 
+*
+*
+* Year/Month/Week/Day/Today switcher styles 
+*
+*
+*/
+.view_switch_cal {
+}
+

@@ -1,0 +1,79 @@
+{include file="header.html" title="Download"
+
+additional_scripts="<script src=\"js/s3mer_common.js\" type=\"text/javascript\"></script>"
+onload_function="onload=\"\" "
+}
+
+    <div class="main-nav">
+   	  <div class="main-nav-top">
+        	<img src="images/borderL.gif" class="corner" style="display:none" />
+      </div>
+        <p>
+        	<ul>
+	   
+	            
+	            {section name=mitem loop=$navmenus}
+	            	<li><a href="{$navmenus[mitem].link}" {if $navmenus[mitem].selected eq 1}class="tab-selected"{/if}>{$navmenus[mitem].menu}</a></li>
+	            {/section}
+		
+   	  		</ul>
+      </p>
+  </div>
+    <div class="content">
+	  <p>&nbsp;</p>
+	  <table width="630" border="0" align="center" cellpadding="0" cellspacing="0">
+        <tr>
+          <td width="532" height="67" valign="top">{t}ToDownloadInstall{/t}<!-- To download and install the player software <span class="hilite">click on Install Now</span> below. Only press this button if you are on the computer that will be used as a player and connected to the monitors. --></td>
+        </tr>
+        <tr>
+        	<td height="99"><div align="center">
+				<iframe src="badge/index.html" frameborder="0" scrolling="no" height="190"></iframe>
+      		</div></td>
+			<tr><td>{t}OptionalDownload{/t}</td></td>
+        </tr>
+      </table>
+	<p>&nbsp;</p>
+      <hr />
+      
+      <p>&nbsp;</p>
+      <table width="630" border="0" align="center" cellpadding="0" cellspacing="0">
+        <tr>
+          <td height="34" colspan="2" class="cell-head">&nbsp;{t}System Requirements{/t}:</td>
+        </tr>
+        <tr>
+          <td width="266" height="37"><div align="center"><strong><span class="hilite">Windows</span></strong></div></td>
+          <td width="266"><div align="center"><strong><span class="hilite">Mac OS X</span></strong></div></td>
+        </tr>
+        <tr>
+          <td height="12" valign="top"><div align="left">
+            <p>{t}Intel Pentium 2GHz or faster processor{/t}</p>
+            <p>&nbsp;</p>
+            <p>{t}Windows 2000 with Service Pack 4; Windows XP with Service Pack 2; or Windows Vista Home Premium, Business, Ultimate, or Enterprise{/t}</p>
+            <p>&nbsp;</p>
+            <p>{t}DirectX 8.0 or higher{/t}</p>
+            <p>&nbsp;</p>
+            <p>{t}512MB of RAM; 32MB of VRAM{/t}</p>
+          </div></td>
+          <td valign="top"><div align="left">
+            <p>{t}PowerPC G4 1.8GHz or faster processor or Intel Core Duo 1.33GHz or faster processor{/t}</p>
+            <p>&nbsp;</p>
+            <p>{t}Mac OS X v.10.4.9 or later or 10.5.1 (Intel or PowerPC; Intel processor required for H.264 video){/t}</p>
+            <p>&nbsp;</p>
+            <p>{t}512MB of RAM; 32MB of VRAM{/t}</p>
+          </div></td>
+        </tr>
+        <tr>
+          <td height="3" colspan="2" valign="top" class="cell-subhead">&nbsp;{t}Live Video Playback{/t}</td>
+        </tr>
+        <tr>
+          <td height="3" colspan="2" valign="top"><br />
+          {t}ForLiveVideo{/t}<!-- For live video playback your system must be equipped with a <span class="hilite">Firewire</span> connection and you must get the <span class="hilite">Canopus ADVC55</span> for converting analog video.--></td>
+        </tr>
+      </table>
+      <p>&nbsp;</p>
+    </div>
+
+<div id="tutLocation" style="display:none">downloads</div>
+
+
+{include file="footer.html"}

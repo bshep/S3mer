@@ -1,0 +1,341 @@
+/*
+ * ADOBE SYSTEMS INCORPORATED
+ * Copyright 2007 Adobe Systems Incorporated
+ * All Rights Reserved
+ * 
+ * NOTICE:  Adobe permits you to use, modify, and distribute this file in accordance with the 
+ * terms of the Adobe license agreement accompanying it. If you have received this file from a 
+ * source other than Adobe, then your use, modification, or distribution of it requires the prior 
+ * written permission of Adobe.
+ */
+
+/* Most usual classes */
+
+/*
+ * this list of classes refers to ALL the generated buttons inside the list; 
+ * if you modify it, all the generated buttons will take on the new look */
+.button_big, 
+.KT_tngtable tbody tr.KT_buttons input, 
+.KT_row_filter_submit_button, 
+div.KT_bottombuttons input, 
+div.KT_topbuttons input {
+	font-family: 'Lucida Grande', Geneva, Arial, Verdana, sans-serif;
+	font-size: 12px;
+	width: 110px;
+	height: 20px;
+	border: 0px;
+	background-image: url(images/button_big.gif);
+	background-position: 0% 50%;
+}
+/*
+ * Aqua and all the skins have two button dimensions : button_big ( using the bov declaration) and butyton_smallest : which uses another background-image
+ */
+.KT_tngtable th.KT_sorter input, 
+.button_smallest {
+	font-family: 'Lucida Grande', Geneva, Arial, Verdana, sans-serif;
+	font-size: 12px;
+	width: 50px;
+	height: 20px;
+	border: 0px;
+	background-image: url(images/button_smallest.gif);
+	background-position: 0% 50%;
+}
+
+
+/* *
+ * recommmended css attribute order
+ *
+ * layout:            display, list-style
+ * box positioning:   position, float, clear
+ * box position:      top, right, bottom, left
+ * box clipping:      overflow, clip
+ * box size:          width, height
+ * box style:         margin, padding, border, background
+ * text:              color, font, text-decoration, text-transform
+ * text positioning:  text-align, vertical-align
+ * other text:        white-space, ...
+ *
+ * */
+/*
+
+general elements
+	container elements
+		div, p
+	a
+	lists
+		ul, li
+	form elements
+		input
+		select
+
+structural markup
+
+*/
+
+/* Main div container for any ImpAKT / Dynamic List/Form generated page
+ * declares general options like font */
+.KT_tng, .KT_tng textarea {
+	font-family: 'Lucida Grande', Geneva, Arial, Verdana, sans-serif;
+	font-size: 12px;
+}
+/*
+ * Expand the container on IE7, the clearing is not working correctly
+ */
+.KT_tng{
+	min-width:1%;
+}
+/* Form / List look and feel 
+ * KT_tngform
+ * 		the main container for a Dynamic Form
+ * KT_tnglist
+ * 		the main container for a Dynamic List */
+ 
+.KT_tngform, .KT_tnglist {
+	float: left;
+	background-color: #ffffff;
+	border: solid 1px #4F72B4;
+}
+
+	/* the main form tag inside a next list / form */
+	.KT_tng .KT_tngform form, .KT_tng .KT_tnglist form {
+		padding: 0;
+		margin: 0;
+	}
+	/* HACK : added to prevent clipping of bottom border in ie */
+	* html .KT_tng form { /* ie */
+		padding-bottom: 1px;
+	}
+
+	/* List / Form Headers */
+	.KT_tng h1 {
+		margin-left: 4px;
+	}
+	.KT_tng h2 {
+		margin-left: 4px;
+	}
+	/*
+	 * KT_tngtable
+	 * 		tabular content generated for NeXT List / Form */
+	.KT_tngtable, .KT_tng .KT_options {
+		margin: 5px 30px 20px 40px;
+	}
+	.KT_tngtable {
+		margin: 5px 5px 20px 5px;
+	}
+
+	/* style for each content cell */
+	.KT_tngtable tbody td {
+		vertical-align:top;
+	}
+
+	/* 
+	 * KT_options
+	 * 		div generated inside the Dynamic List with  "Show all records ..."
+	 * */
+	.KT_tng .KT_options {
+	}
+		.KT_tng .KT_options a {
+		}
+
+/* KT_topbuttons, KT_bottombuttons
+ * 		the up / down generated area with the edit, delete, add new links / buttons */
+.KT_topbuttons, .KT_bottombuttons {
+	text-align: right;
+	background-color: #dadadc;
+	padding: 4px;
+	min-height: 20px;
+	/* background-image: url(images/button_big.gif); */
+}
+	/*
+	 * KT_operations
+	 * 		coontains only the Edit / Delete buttons
+	 * */
+	.KT_topbuttons div.KT_operations, .KT_bottombuttons div.KT_operations {
+		display: inline;
+	}
+	.KT_topbuttons div.KT_left, .KT_bottombuttons div.KT_left {
+		float: left;
+	}
+
+.KT_topbuttons {
+	border-bottom: solid 1px #4F72B4;
+}
+.KT_bottombuttons {
+	border-top: solid 1px #4F72B4;
+}
+	.KT_bottombuttons div {
+	}
+
+		/* remove padding / margin on all links */
+		.KT_tnglist .KT_tngtable tbody tr a,
+		.KT_tnglist .KT_tngtable tbody tr a:hover, .KT_tnglist .KT_tngtable tbody tr a:active, .KT_tnglist .KT_tngtable tbody tr a:visited, 
+		.KT_tng .KT_bottombuttons a, 
+		.KT_tng .KT_bottombuttons a:hover, .KT_tng .KT_bottombuttons a:active, .KT_tng .KT_bottombuttons a:visited, 
+		.KT_tng .KT_topbuttons a, 
+		.KT_tng .KT_topbuttons a:hover, .KT_tng .KT_topbuttons a:active, .KT_tng .KT_topbuttons a:visited {
+			padding: 0;
+			margin: 0;
+		}
+
+.KT_bottombuttons a, .KT_topbuttons a {
+	font-family: 'Lucida Grande', Geneva, Arial, Verdana, sans-serif;
+	font-size: 12px;
+}
+
+.KT_bottombuttons input{
+	margin: 1px;
+}
+.KT_topbuttons input{
+	margin: 1px;
+}
+
+/* list specific */
+.KT_tnglist .KT_options {
+	padding-right: 4px;
+	text-align: right;
+	font-size: 10px;
+}
+.KT_tnglist .KT_options {
+	margin-bottom: 0px;
+}
+/*
+ * th.KT_order
+ * 		contains the ordering sorter link (Order) and the "save" link / button
+ * td.KT_order
+ * 		contains the move up / down buttons on each row
+ * 	*/
+
+.KT_tnglist th.KT_order, 
+.KT_tnglist td.KT_order {
+	text-align: center;
+	white-space: nowrap ! important;
+}
+/*
+ * change the appearance of the move up/down list buttons here
+ *  if you specify a background-image, the buttons will lose their value attribute
+ */
+	.KT_tnglist td.KT_order .KT_button_move_down{
+		background-repeat: no-repeat;
+		background-position: 50% 50%;
+		background-image:url(images/down.gif);
+	}
+
+	.KT_tnglist td.KT_order .KT_button_move_up{
+		background-repeat: no-repeat;
+		background-position: 50% 50%;
+		background-image:url(images/up.gif);
+		margin-right: 0px;
+	}
+
+	.KT_tnglist th.KT_order_selected, 
+	.KT_tnglist td.KT_order_selected {
+		padding: 0px; 
+		margin: 0px;
+		background-color: #cadaeb ! important;
+		white-space: nowrap ! important;
+	}
+.KT_tnglist th.KT_sorter a, .KT_tnglist th.KT_sorter a:hover, .KT_tnglist th.KT_sorter a:visited, .KT_tnglist th.KT_sorter a:active {
+	padding-right: 15px;
+}
+	/* th.KT_asc
+	 * 		modify the links inside the table cell which has the active ordering
+	 * */
+	.KT_tnglist th.KT_asc a {
+		background: url(images/up.gif) no-repeat 100% 50%;
+	}
+	.KT_tnglist th.KT_desc a {
+		background: url(images/down.gif) no-repeat 100% 50%;
+	}
+	/*
+	 * KT_move_op_link 
+	 * 		the link for saving the moved rows
+	 * */
+	.KT_tnglist th.KT_asc a.KT_move_op_link, 
+	.KT_tnglist th.KT_desc a.KT_move_op_link {
+		padding: 0; margin: 0;
+		background-image: none;
+	}
+
+	/* row colors */
+	/* row alternative color */
+	.KT_tnglist tr.KT_even, tr.KT_even {
+		background-color: #F2F2F2;
+	}
+	/* selected row (checkbox is clicked) */
+	.KT_tnglist tr.KT_highlight {
+		background-color: #E2E2E2;
+	}
+	/* selected row (checkbox is clicked) */
+	.KT_tnglist tr.KT_movehighlight {
+		background-color: #E4EDE0;
+	}
+
+	/* the following two classes do the same thing : one for mozilla which can interpret :hover on any element
+	 * and one set by script on mouseover/out for ie
+	 * */
+	/*
+	.KT_tnglist tbody tr:hover {
+		background-color: #E2E2E2;
+	}
+	*/
+	.KT_tnglist tbody tr.KT_over {
+		background-color: #E2E2E2 ! important;
+	}
+
+
+/* KT_bottomnav, KT_topnav
+ * 		list navigation container */
+.KT_tng .KT_tnglist .KT_bottomnav, 
+.KT_tng .KT_tnglist .KT_topnav {
+	text-align: center;
+	font-size: 12px;
+	margin-left: 5px ! important;
+}
+	/* HACK : mozilla to ensure it doesn't float all the way to the right */
+	/*
+	.KT_tng .KT_tnglist .KT_bottomnav>div, .KT_tng .KT_tnglist .KT_topnav>div {
+		width: 100px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+	*/
+
+.KT_tng .KT_tnglist .KT_bottomnav {
+	margin: 0 0 10px 0;
+}
+.KT_tng .KT_tnglist .KT_topnav {
+	margin: 10px 0 0 0;
+}
+/* for styling the actual links inside the navigation area, please see the nav.css file */
+
+/* form specific */
+.merge_down {
+
+}
+
+.KT_tng h1 {
+	font-size: 18px;
+	padding: 4px 0px 4px 4px;
+	margin: 0px 0px 0px 0px;
+}
+	/* Form "Record x" tag when editing multiple records */
+	.KT_tng .KT_tngform h2 {
+		font-size: 16px;
+		padding: 4px 0px 4px 4px;
+		margin: 0px 0px 0px 0px;
+	}
+
+	/* buttons redeclared specifically for form */
+	.KT_tng .KT_tngform .KT_topbuttons input, .KT_tng .KT_tngform .KT_bottombuttons input{
+		font-family: 'Lucida Grande', Geneva, Arial, Verdana, sans-serif;
+		font-size: 12px;
+		width: 110px;
+		height: 20px;
+		border: 0px;
+		background-image: url(images/button_big.gif);
+		background-position: 0% 50%;
+	}
+
+.KT_tng .KT_tnglist  .KT_masterlink {
+
+}

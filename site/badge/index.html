@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>S3mer Installer Demo</title>
+	
+	<style  type="text/css">
+		body {
+
+			background-color: <airTag id="backgroundColor"/>;
+			margin:0px;
+			padding:0px;
+
+		}
+	</style>
+	
+	<!-- SWFObject embed by Geoff Stearns geoff@deconcept.com http://blog.deconcept.com/swfobject/ -->
+	<script type="text/javascript" src="swfobject.js"></script>
+	
+</head>
+<body>
+
+<!-- BEGIN EMBED CODE -->
+	
+	<!-- IMPORTANT: Make sure you also copy the swfobject script tag from the head above -->
+	
+	<div id="flashcontent" style="width:215px; height:180px; margin-left:40px">
+		<strong>Please upgrade your Flash Player</strong>
+		This is the content that would be shown if the user does not have Flash Player 6.0.65 or higher installed.
+	</div>
+
+	<script type="text/javascript">
+		// <![CDATA[
+		// version 9.0.115 or greater is required for launching AIR apps.
+		
+			var so = new SWFObject("AIRInstallBadge.swf", "", "215", "180", "9.0.115", "#000000");
+		so.useExpressInstall("expressinstall.swf");
+
+
+		so.addVariable("airversion", "1.5");
+
+		so.addVariable("appname", "S3mer");
+
+		so.addVariable("appurl", "http://media1.s3mer.com/app/S3mer_latest.air");
+
+		so.addVariable("image", "badgelogo.png");
+
+		so.addVariable("appid", "S3merApp");
+
+		so.addVariable("pubid", "51C9879E69A6FA355CEF3B1DF36C02EF731E0D47.1");
+
+		so.addVariable("appversion", "1.000");
+
+		so.write("flashcontent");
+		
+		// ]]>
+	</script>
+
+	</body>
+</html>

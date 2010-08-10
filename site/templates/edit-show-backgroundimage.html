@@ -1,0 +1,9 @@
+{if $show.backgroundimage neq 0}
+	<img src="http://media1.s3mer.com.s3.amazonaws.com/user/{$uname}/thumbs/{$backgroundthumbnailimage}">
+	<p class="filename">{$backgroundthumbnailimage}</p>		
+	<a href="javascript:resetshowbackground();" class="resetlink">{t}Reset Background{/t}</a>						
+{else}
+
+    <p class="filename">Default Background</p>	
+    
+{/if}

@@ -1,0 +1,185 @@
+body {
+	margin-left:5px;
+	margin-top:5px;
+	padding:0px;
+}
+.container {
+	
+}
+.tile {
+	height:200px;
+	width:200px;
+	float:left;
+	margin: 2px 2px;
+	overflow:hidden;
+	text-align: left;
+}
+.color1 {
+	background-color: #DA3583;
+}
+.color2 {
+	background-color: #E57C30;
+}
+.color3 {
+	background-color: #DF9C36;
+}
+.color4 {
+	background-color: #94C138;
+}
+.color5 {
+	background-color: #347FD8;
+}
+.color6 {
+	background-color: #915297;
+}
+.color7 {
+	background-color: #494949;
+}
+.pic,.pic img {
+	height:200px;
+	width:200px;
+	margin: 1px 1px;
+}
+.txtContainerPhoto {
+	position:relative;
+	top:-70px;
+	left:3px;
+}
+.txtContainerVid {
+	position:relative;
+	top:-204px;
+	z-index: 100;
+}
+.txtContainerPhoto .txt {
+	font-size: 20px;
+	font-family: Arial;
+	background-image: url(../images/blackbkg.png);
+	color:#FFF;
+	position:relative;
+	top:-30px;
+}
+.txtContainerTxt .txt {
+	font-size: 20px;
+	font-family: Arial;
+	color:#FFF;
+}
+.txtContainerPhoto .category {
+	font-size: 15px;
+	font-family: Arial;
+	background-image: url(../images/blackbkg.png);
+	color:#FF6800;
+	position:relative;
+	top:-30px;
+}
+.txtContainerTxt .category {
+	font-size: 15px;
+	font-family: Arial;
+	background-image: url(../images/blackbkg.png);
+	color:#FF6800;
+}
+.txtContainerVid .category {
+	font-size: 15px;
+	font-family: Arial;
+	background-image: url(../images/blackbkg.png);
+	color:#FF6800;
+}
+.video {
+	background-color: #000;
+}
+
+/* ========= */
+/* = Admin = */
+/* ========= */
+.adminContainer {
+	width:500px;
+	height:350px;
+	margin: 0px auto 0px auto;
+	background-color: #DDD;
+	border: 1px solid #727272;
+}
+.headerTxt {
+	font-size: 25px;
+	color: #1297D0;
+	margin: 0px 5px;
+	border-bottom: 1px solid #999;
+	float:right;
+	clear: both;
+}
+.fields {
+	position:relative;
+	top:25px;
+}
+select, textarea, input {
+	width:412px;
+	margin-bottom: 10px;
+}
+.tileList {
+	margin-top:50px;
+	width:90%;
+	margin-left:auto;
+	margin-right:auto;
+	margin-bottom:50px;
+	text-align: left;
+}
+.tileList input{
+	width:30px;
+}
+.tileRow {
+	background-color: #DDD;
+	border: 1px solid #727272;
+	clear:both;
+	margin-bottom:1px;
+	overflow: hidden;
+	height:20px;
+	padding:5px;
+}
+.tileContents {
+	float:left;
+/*	background-color: blue;*/
+	width:300px;
+	overflow: hidden;
+	margin-right:5px;
+	border-right: 1px solid #727272;
+	
+}
+.tileCategory {
+	float:left;
+/*	background-color: aqua;*/
+	width:100px;
+	overflow: hidden;
+	margin-right:5px;
+	border-right: 1px solid #727272;
+	
+}
+.tileURL {
+	float:left;
+/*	background-color: yellow;*/
+	width:300px;
+	overflow: hidden;
+	margin-right:5px;
+	
+}
+.tileDelete {
+	float:left;
+/*	background-color: red;*/
+	width:50px;
+	overflow: hidden;
+	float:right;
+	
+}
+.tileType {
+	float:left;
+/*	background-color: green;*/
+	width:100px;
+	overflow: hidden;
+	margin-right:5px;
+	border-right: 1px solid #727272;
+	
+}
+
+
+
+
+
+
+

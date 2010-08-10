@@ -1,0 +1,83 @@
+
+<html>
+	<head>
+		<script src="js/s3mer_minilibrary.js" type="text/javascript"></script>
+		<script src="js/scriptaculous/prototype.js" type="text/javascript"></script>
+		<link rel="stylesheet" type="text/css" href="styles/reset-fonts-grids.css">
+		<link href="styles/main.css" rel="stylesheet" type="text/css" />
+		<!--[if IE 6]>
+			<link href="styles/ieFixes.css" rel="stylesheet" type="text/css" />
+		<![endif]-->
+	</head>
+	<body>
+		<div id="minilibrary" class="overlay" style="left:-2px">
+			<div id="miniLibraryContainer" class="miniLibraryContainer">
+				<div id="mlHeader" class="mlHeader">
+					<div id="mlTitle" class="mlTitle">
+						<img src="images/icons/folder_picture.png" width="16" height="16"> {t}Library{/t}
+					</div>
+				</div>
+				<form>
+					<input type="hidden" id="buttonselect" value="{$buttonselect}">
+				</form>
+				<div id="mlSearchArea" class="mlSearchArea">
+					<div id="mlFolderSelect" class="mlFolderSelect">
+						<select id="ml_folderSelect" class="form-items" style="width:270px" onchange="processSearch()	">
+							<option value="All">{t}All Files{/t}</option>
+							<option value="Videos">{t}All Videos{/t}</option>
+							<option value="Images">{t}All Images{/t}</option>
+							<option value="Public">{t}Public{/t}</option>
+
+							{html_options values=$mediafolderids selected="0" output=$mediafoldernames}
+
+						</select>
+					</div>
+					<div id="mlSearchField" class="mlSearchField">
+						<input type="text" name="mlSearchQuery" value="Type to search files" id="mlSearchQuery" class="form-items-disabled" style="width:270px"/ onclick="clearSearchField()" onkeyup="processSearch()">
+					</div>
+					<div id="mlSearchSpinner" class="mlSearchSpinner" style="display:none">
+						<img src="images/spinner3.gif" alt="" />
+					</div>
+				</div>
+				<div id="mlFilePages" class="mlFilePages">
+					<div id="mlNavigation" class="mlNavigation">
+						<div id="mlAllNone" class="mlAllNone">
+							{if $buttonselect eq 0}{t}Select{/t}: <a href="javascript:mlSelectAll()">{t}All{/t}</a> | <a href="javascript:mlSelectNone()">{t}None{/t}</a>{/if}
+						</div>
+						<div id="mlNextPrev" class="mlNextPrev">
+							<div id="mlnext" class="mlnext">
+								<a href="javascript:goNext()">{t}Next{/t}</a>
+							</div>
+							<div id="mlprevious" class="mlprevious" style="display:none">
+								<a href="javascript:goPrevious()">{t}Previous{/t}</a> |&nbsp;
+							</div>
+						</div>
+					</div>
+					<div id="mlFileContainer" class="mlFileContainer">
+						
+					</div>
+				</div>
+				<div id="mlFooter" class="mlFooter">
+					<div class="buttons mlFooterBtns">
+						<a class="negative" href="#" onclick={if $buttonselect eq 1}"parent.minilibrary.close();"{else}"parent.minilibrary2.close();"{/if}>
+					    	<img alt="" src="images/icons/cancel.png"/>
+					    	{t}Cancel{/t}
+						</a>
+						<a class="positive" href="#" onclick={if $buttonselect eq 1}"setBackgroundImage();"{else}"addItemPlaylist();"{/if}>
+					    	<img alt="" src="images/icons/add.png"/>
+					    	{t}Add{/t}
+						</a>
+					</div>
+				</div>
+			</div>
+	
+		</div>
+		
+		{literal}
+			<script>
+				searchLibraryImages();
+			</script>
+		{/literal}
+		
+	</body>
+</html>

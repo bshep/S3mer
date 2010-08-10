@@ -1,0 +1,77 @@
+img, div {
+	behavior: url(js/iepngfix/iepngfix.htc);
+}
+.login-form {
+	left:8px;
+	top:9px;
+}
+.login-bubble{
+	top:-5px;
+}
+.language-bubble{
+	top:3px;
+	left:-14px;
+}
+.serviceLogo img {
+	width:162px;
+	height:65px;
+}
+.topmenu-box p {
+	position:relative;
+	top:15px;
+}
+.topmenu-box {
+	top:-80px;
+}
+.main-nav {
+	margin-top:-45px;
+}
+.deleteFiles {
+	margin-left:140px;
+}
+.container .content .box-positive {
+	margin-left:2px;
+	margin-right:2px;
+	margin-bottom:4px;
+}
+.container .content .box-negative{
+	margin-left:2px;
+	margin-right:2px;
+	margin-bottom:4px;
+}
+.container .content .box-neutral {
+	margin-left:2px;
+	margin-right:2px;
+	margin-bottom:4px;
+}
+.container  .content  .box-selected {
+	margin-left:2px;
+	margin-right:2px;
+	margin-bottom:4px;
+}
+#horizontal_carousel {
+  width: 550px;
+}         
+
+#horizontal_carousel .container { 
+  width: 470px;
+}
+#horizontal_carousel ul li {
+  padding:8px 2px 2px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

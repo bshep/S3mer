@@ -1,0 +1,3 @@
+{section name=r loop=$layoutregions}
+	<div onClick="clickLayoutRegion({$showid},{$layoutregions[r].regiontype},{$layoutregions[r].id})" showRegion="region{$layoutregions[r].id}" class="{if $layoutregions[r].reserved eq 0}region{else}region-reserved{/if}" style="width: {$layoutregions[r].webwidth}px; height: {$layoutregions[r].webheight}px; position: relative; left: {$layoutregions[r].left}px; top: {$layoutregions[r].top}px;"></div>
+{/section}

@@ -1,0 +1,107 @@
+@charset "UTF-8";
+.file-tile {
+	display: block;
+	height: 85px;
+	width: 80px;
+	float: left;
+	margin: 2px;
+	overflow: hidden;
+	border: 1px solid #CCCCCC;
+	z-index: 1;
+	cursor: pointer;
+}
+.file-tile:hover {
+	border: 1px solid #00CC66;
+	background-color: #EDFFED;
+}
+
+.folder-tile-selected {
+	display: block;
+	height: 85px;
+	width: 80px;
+	float: left;
+	margin: 2px;
+	overflow: hidden;
+	border: 1px solid #CCCCCC;
+	z-index: 1;
+	cursor: pointer;
+	background-color:#F9F5CC;
+	border: 1px solid #DFD869;
+}
+
+
+.folder-tile {
+	display: block;
+	height: 85px;
+	width: 80px;
+	float: left;
+	margin: 2px;
+	overflow: hidden;
+	border: 1px solid #CCCCCC;
+	z-index: 1;
+	cursor: pointer;
+}
+.folder-tile:hover {
+	border: 1px solid #00CC66;
+	background-color: #EDFFED;
+}
+
+
+.checkbox {
+	z-index: 4;
+	position: relative;
+	float: left;
+	top: -85px;
+	left: 62px;
+}
+.thumb {
+	display: block;
+	height: 70px;
+	width: 80px;
+	float: left;
+	z-index: 2;
+}
+
+.thumb-icon {
+	position: relative;
+	top: 24px;
+	left: 24px;
+}
+.filename {
+	font-size: 9px;
+	display: block;
+	float: left;
+	height: 15px;
+	width: 80px;
+	text-align: center;
+	overflow: hidden;
+	padding-top: 3px;
+	z-index: 3;
+}
+.library-icon {
+	margin-left: 18px;
+	margin-top: 12px;
+}
+.file-tile-selected {
+	display: block;
+	height: 85px;
+	width: 80px;
+	float: left;
+	margin: 2px;
+	overflow: hidden;
+	z-index: 1;
+	cursor: pointer;
+	background-color:#F9F5CC;
+	border: 1px solid #DFD869;
+}
+.library-icon-media {
+	margin-left: 22px;
+	margin-top: 18px;
+}
+.storage {
+	font-size: 10px;
+	text-align: right;
+	color: #7E7E7E;
+	position: relative;
+	top: -14px;
+}

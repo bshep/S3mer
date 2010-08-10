@@ -1,0 +1,77 @@
+{include file="header.html" title="Login" 
+                            additional_scripts="<script src=\"js/s3mer_login.js\" type=\"text/javascript\"></script>"
+}
+
+    <div class="main-nav">
+   	  <div class="main-nav-top">
+        	<img src="images/borderL.gif" class="corner" style="display:none" />
+      </div>
+        <p>
+        	<ul>
+	            
+	            {section name=mitem loop=$navmenus}
+	            	<li><a href="{$navmenus[mitem].link}" {if $navmenus[mitem].selected eq 1}class="tab-selected"{/if}>{if $navmenus[mitem].selected eq 1}<span>{/if}{$navmenus[mitem].menu}{if $navmenus[mitem].selected eq 1}</span>{/if}</a></li>
+	            {/section}
+		
+   	  		</ul>
+      </p>
+
+  </div>
+    <div class="content">
+    <p>&nbsp;</p>
+	
+	<div id="ie-issues-wrapper" style="display:none">
+		<div id="ie-issues" class="register-error-box">
+			<p>
+				{t}IEissues{/t}
+			</p>
+		</div>
+	</div>
+
+    <table width="630" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td><!-- {t}EnterAdmin{/t} --></td>
+      </tr>
+    </table>
+    <p>&nbsp;</p>
+    <p>
+	
+	<div id="we-are-open-box" class="login-info-box">
+		<img src="images/icons/newspaper.png"> <strong style="text-decoration:underline">s3mer v1.0 Free
+</strong> &amp; <strong style="text-decoration:underline">s3mer v1.0 Pro</strong> <span style="color:red">Available Now!</span> <a href="http://blog.s3mer.com/post/73122074/s3mer-1-0-is-out-time-to-upgrade">Read this to upgrade</a> <img src="images/icons/emoticon_grin.png">
+   	</div>
+
+
+	<div id="login-error-box" class="register-error-box" style="display:none">
+		
+   	</div>
+	
+    <form name="processlogin" id="login-form" action="processlogin.php" method="post">
+      <table width="300" border="0" align="center" cellpadding="0" cellspacing="0">
+        <tr>
+          <td colspan="2"><label>Email:</label><br /><input name="username" type="text" class="form-items" id="txtUsername" /></td>
+        </tr>
+        <tr>
+          <td height="42" colspan="2"><label>{t}Password{/t}:</label><br /><input name="password" type="password" class="form-items" id="txtPassword" /></td>
+        </tr>
+        <tr>
+          <td width="151"><input type="checkbox" name="rememberme" id="rememberme" value="1"/>
+          {t}Remember Me{/t}</td>
+          <td width="151"><div align="right"><a href="lostpassword.php">{t}Lost Password?{/t}</a></div></td>
+        </tr>
+        <tr>
+          <td height="42" colspan="2">
+			<div class="buttons">
+				<button class="positive" type="submit" style="width:300px">
+					<img alt="" src="images/icons/key-go-up.gif"/> 
+					{t}Login{/t}
+				</button>
+			</div>
+			</td>
+        </tr>
+      </table>
+      </form>
+      </p>
+    </div>
+
+{include file="footer.html"}

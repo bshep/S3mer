@@ -1,0 +1,37 @@
+<div id="file-tile-collection" class="file-tile-collection">	
+	{section name=t loop=$mediaitems}
+		<div class="file-tile">
+			{if $mediaitems[t].mediatype eq 2}
+				{if $mediaitems[t].thumbnailstate eq 0}
+		          	<div class="thumb thumb-icon">
+						<label for="{$mediaitems[t].id}">
+							<img src="images/icons/image.png"/>
+						</label>
+					</div>
+				{else}
+		          	<div class="thumb">
+						<label for="{$mediaitems[t].id}">
+							<img src="http://media1.s3mer.com.s3.amazonaws.com/user/{$loggeduser.username}/thumbs/{$mediaitems[t].name}" width="80" height="70"/>
+						</label>
+					</div>
+				{/if}
+			{elseif $mediaitems[t].mediatype eq 1}	
+	          	<div class="thumb thumb-icon">
+					<label for="{$mediaitems[t].id}">
+						<img src="images/icons/video.png"/>
+					</label>
+				</div>	
+			{else}	
+	          	<div class="thumb thumb-icon">
+					<label for="{$mediaitems[t].id}">
+						<img src="images/icons/animation.png"/>
+					</label>
+				</div>		
+			{/if}
+            <div id="fn{$mediaitems[t].id}" class="filename">{$mediaitems[t].name}</div>
+            <div class="checkbox"><input name="{$mediaitems[t].id}" type="checkbox" id="{$mediaitems[t].id}" class="checkitem" value="1"/></div>
+		</div>
+	{/section}
+</div>
+<input type="hidden" id="shownext" value="{$shownext}">
+

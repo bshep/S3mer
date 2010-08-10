@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?> 
+     <update xmlns="http://ns.adobe.com/air/framework/update/description/1.0"> 
+       <version>1.8</version> 
+       <url>http://media1.s3mer.com/app/S3merStandaloneUploader_18.air</url> 
+       <description><![CDATA[
+* Added a custom menu bar
+* Added an integrated browser, the site can be used directly from there, no need to fire up a separate browser.
+        ]]></description> 
+    </update>

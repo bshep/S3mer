@@ -1,0 +1,259 @@
+/*
+ * ADOBE SYSTEMS INCORPORATED
+ * Copyright 2007 Adobe Systems Incorporated
+ * All Rights Reserved
+ * 
+ * NOTICE:  Adobe permits you to use, modify, and distribute this file in accordance with the 
+ * terms of the Adobe license agreement accompanying it. If you have received this file from a 
+ * source other than Adobe, then your use, modification, or distribution of it requires the prior 
+ * written permission of Adobe.
+ */
+
+/* CSS classes flow
+ * .main_cal (.nugget_cal|(.detail_cal (.year_cal|.month_cal|.week_cal|.day_cal)))
+ *  .nav_cal
+ *  .days_cal
+ *  .weeks_cal
+ *   (|.othermonth_cal|.hasevent_cal|.selected_cal|.today_cal)
+ *  .weeks_cal
+ *  .weeks_cal
+ *  .weeks_cal
+ */
+
+/* Generic Calendar Settings */
+.main_cal {
+  border: 1px solid #bdb2bf;
+  font-size: 11px;
+  color: #000000;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  margin: 5px;
+}
+
+/* All calendar links should be displayed as regular text */
+.nugget_cal a, .detail_cal a, .year_cal a {
+  text-decoration: none;
+  color: #555555;
+}
+.nugget_cal a:hover, .detail_cal a:hover, .year_cal a:hover {
+	color: #3c63a2;
+}
+
+/* All the calendar cells should be valigned at top */
+.main_cal td {
+  vertical-align: top;
+}
+
+/* The calendar navigation */
+.nav_cal {
+  background-color: #D6D3CE;
+}
+
+/* Extend the next/previous links to 100% so one can click arround */
+.nav_cal .np_cal a {
+  width: 100%;
+  display: block;
+}
+
+/* The week days style */
+.days_cal th {
+  border-bottom: 1px solid #DDDDDD;
+  font-weight: normal;
+}
+
+/* How the days from the other months should be styled when viewing the curent month */
+.othermonth_cal, .othermonth_cal a {
+  color: #999999;
+}
+
+/* How the selected day/week should be styled */
+.selected_cal {
+  background-color: #EAF0FF;
+  font-weight: bold;
+}
+
+/* Today */
+.main_cal .today_cal {
+  border: 1px solid #5555AA;
+}
+
+/* 
+*
+*
+* Start Nugget-Specific styles 
+*
+*
+*/
+/*the week number */
+.nugget_cal .wkno_cal {
+  border-right: 1px solid #DDDDDD;
+}
+
+/* Change the font to Courier for a better looking for the cells */
+.nugget_cal .weeks_cal {
+}
+
+/* all cells should have padding and should be aligned to the right */
+.nugget_cal .days_cal th, .nugget_cal .weeks_cal td {
+  padding: 2px 4px;
+  text-align: right;
+}
+
+/* if we have a event, bold the day number */
+.hasevent_cal {
+  background-color:#9EC7F5;
+}
+
+/* The weekend days should be colored in red */
+.nugget_cal .weekend_cal, .nugget_cal .weekend_cal a {
+  color: #992222;
+}
+
+/* 
+*
+*
+* Start Detail-Specific styles 
+*
+*
+*/
+.detail_cal {
+  width: 100%;
+  border-top: 1px solid #afafaf;
+  border-left: 1px solid #afafaf;
+  border-right-width: 0;
+  border-bottom-width: 0;
+  background-image: url(images/bg.gif) ! important;
+  background-repeat: repeat-y;
+}
+
+/* Set the borders to create a grid */
+.detail_cal td, .detail_cal th {
+  border-right: 1px solid #afafaf;
+  border-bottom: 1px solid #afafaf;
+}
+
+/* Set the detail cells paddings */
+.detail_cal .days_cal th, .detail_cal .weeks_cal td {
+  padding: 3px;
+}
+
+/* 
+*
+*
+* Start Year View-specific styles 
+*
+*
+*/
+.year_cal {
+  border: 1px solid #afafaf;
+  margin: 5px;
+}
+.year_cal .nav_cal {
+  border: 1px solid #afafaf;
+  font-size: 11px;
+  color: #000000;
+  font-family: Arial, Verdana, Geneva, Arial, Helvetica, sans-serif;
+}
+
+/* 
+*
+*
+* Start Month And Week View-Specific styles 
+*
+*
+*/
+/* The add / day link should have a bottom spacing */
+.main_cal .mw_top_cal {
+  margin-bottom: 5px;
+}
+
+/* The day link should be on the right */
+.main_cal .mw_top_cal div {
+  float: right;
+  font-weight: bold;
+}
+
+/* The "See more..." link */
+.detail_cal .weeks_cal .seemore_cal {
+  padding-top: 10px;
+  text-align: right;
+}
+
+/* The hours, displayed on the left side */
+.detail_cal .event_cal {
+  margin-top: 4px;
+}
+.detail_cal .event_cal div {
+  margin-left: 10px;
+}
+.detail_cal .event_cal .htitle_cal {
+  font-size: 10px;
+  margin-left: 0px;
+  width: auto;
+  text-align: left;
+  font-weight: normal;
+}
+
+
+/* 
+*
+*
+* Start Month View-Specific styles 
+*
+*
+*/
+/* Set the width and the height of the cells */
+.month_cal .weeks_cal td {
+  height: 83px;
+  width: 14%;
+}
+
+/* 
+*
+*
+* Start Week View-Specific styles 
+*
+*
+*/
+/* Set the width and the height of the cells */
+.week_cal .weeks_cal td {
+  height: 120px;
+  width: 33%;
+}
+
+/* 
+*
+*
+* Start Day View-Specific styles 
+*
+*
+*/
+/* The padding for the cells */
+.day_cal .hour_cal td {
+  padding: 2px;
+}
+
+/* The hours, displayed on the left side */
+.day_cal .htitle_cal {
+  width: 60px;
+  text-align: right;
+  font-weight: bold;
+}
+
+/* The day events */
+.day_cal .event_cal {
+  background-color: #9EC7F5;
+}
+
+/* 
+*
+*
+* Year/Month/Week/Day/Today switcher styles 
+*
+*
+*/
+.view_switch_cal {
+  font-family: "trebuchet ms",verdana,tahoma,sans-serif;
+  margin: 5px;
+  font-size: 13px;
+}
+

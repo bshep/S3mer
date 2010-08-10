@@ -1,0 +1,32 @@
+//sample config file for HTML tidy
+quiet: yes
+show-warnings: no
+force-output: yes
+
+//HTML, XHTML, XML
+tidy-mark: no
+show-body-only: yes
+enclose-text: no
+join-styles: yes
+merge-divs: no
+logical-emphasis: yes
+drop-font-tags: no
+drop-empty-paras: yes
+literal-attributes: yes
+lower-literals: yes
+output-xhtml: yes
+alt-text: ''
+drop-proprietary-attributes: yes
+word-2000: yes
+bare: yes
+clean: no
+
+//Pretty Print
+break-before-br: no
+indent: auto
+indent-spaces: 2
+markup: yes
+wrap: 0
+
+//Character Encoding
+ascii-chars: no

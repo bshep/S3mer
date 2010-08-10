@@ -1,0 +1,41 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+	"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+	<title>index</title>
+	<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.5.0/build/reset-fonts-grids/reset-fonts-grids.css">
+	<link rel="stylesheet" href="buttons.css" type="text/css" media="screen" />
+	<script language="javascript">
+	window.onbeforeunload = function() {
+		if (confirm('Are you Shure? 1')){
+			alert('data saved');
+		}else{
+			return "Are you Shure?";
+		}
+	}
+	</script>
+</head>
+<body>
+	<div class="buttons">
+		<button class="positive" type="button">
+			<img alt="" src="../images/icons/{t}add{/t}.png"/> 
+			Save
+		</button>
+
+		<a href="http://google.com">
+	    	<img alt="" src="../images/icons/{t}edit{/t}.png"/> 
+	    	Change Password
+		</a>
+
+		<a class="negative" href="../index.php">
+	    	<img alt="" src="../images/icons/{t}delete{/t}.png"/>
+	    	Submit
+		</a>
+	</div>
+	<div style="height:3em;width:3em;background-color:red;position:relative;top:3em;" id="cua" >	
+	</div>
+	<br><br><br><br><br>
+	<a href="http://yahoo.com" id="2">Something</a>
+</body>
+</html>

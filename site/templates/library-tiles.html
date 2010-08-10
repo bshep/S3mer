@@ -1,0 +1,191 @@
+    
+    {include file="header.html" title="Library"
+                            additional_scripts="<script src=\"js/s3mer_library.js\" type=\"text/javascript\"></script>
+							<script src=\"js/scriptaculous/effects.js\" type=\"text/javascript\"></script>
+							<script src=\"js/carousel.js\" type=\"text/javascript\"></script>
+							<script src=\"js/s3mer_library.js\" type=\"text/javascript\"></script>
+							<script src=\"js/swfuploader/swfupload.js\" type=\"text/javascript\"></script>
+							<script src=\"js/swfuploader/handlers.js\" type=\"text/javascript\"></script>
+							<script src=\"js/control.modal.js\" type=\"text/javascript\"></script>
+							<link href=\"styles/library.css\" rel=\"stylesheet\" type=\"text/css\" />
+							<link href=\"styles/classic-carousel/classic-library.css\" rel=\"stylesheet\" type=\"text/css\" />
+							<link href=\"js/swfuploader/default.css\" rel=\"stylesheet\" type=\"text/css\" />"
+                            onload_function=""
+	}
+    
+   
+	
+    <div class="main-nav">
+   	  <div class="main-nav-top">
+        	<img src="images/borderL.gif" class="corner" style="display:none" />
+      </div>
+      	<ul>
+	   		    
+	            {section name=mitem loop=$navmenus}
+	            	<li><a href="{$navmenus[mitem].link}" {if $navmenus[mitem].selected eq 1}class="tab-selected"{/if}>{if $navmenus[mitem].selected eq 1}<span>{/if}{$navmenus[mitem].menu}{if $navmenus[mitem].selected eq 1}</span>{/if}</a></li>
+	            {/section}
+		
+ 	  		</ul>
+
+	<div class="toggle"><a href="#"><img src="images/buttons/tiles-d.gif" alt="tiles" /></a>&nbsp;<a href="#"><img src="images/buttons/list.gif" alt="list" /></a></div>
+
+  </div>
+
+    <div class="content">
+	
+	
+	<!--Modal FILE PROGRESS Window-->
+	
+	
+	<a href="#ModalUploaderProgress" id="ModalUploaderProgress"><div id="ModalUploaderProgress"><div id="divFileProgressContainer"></div></div></a>
+	{literal}
+		<script>
+		    var modal1 = new Control.Modal('ModalUploaderProgress',{
+						fade: true,
+						width: 357,
+						height: 52
+		    });
+		</script>
+	{/literal}
+	
+	
+	
+	<!--Modal FILE PROGRESS Window-->
+	
+	
+	
+      <table width="680" height="162" border="0" align="center" cellpadding="0" cellspacing="0">
+        <tr>
+          <td width="567" height="90">
+		  
+
+		  	<div id="horizontal_carousel">
+				{include file="folderlist.html"} 	
+			</div>
+
+		
+		  </td>
+          <td width="5">&nbsp;</td>
+          <td width="108"><p>
+	
+			<div class="buttons">
+				<!--<a class="positive" href="javascript:uploadFile(this,'{$lang}');" style="width:90px; margin-bottom:2px;">    
+				                              <img alt="" src="images/icons/arrow_up.png"/>    
+				                              {t}Upload{/t}    
+				                      </a>-->    
+
+				                      <!-- <div id="spanSWFUploadButton"></div> --> 
+				
+				
+				<div id="fsUploadProgress" class="fieldset flash"></div>
+
+			 	<span id="spanSWFUploadButton"></span>
+				
+				
+				<a onclick="return false" href="#newFolderNameContainer" id="modal_link_one" class="positive" style="width:90px; margin-bottom:2px;margin-top:2px">
+			    	<img alt="" src="images/icons/folder_add.png"/> 
+			    	{t}New{/t}
+				</a>
+				<a class="negative" href="javascript:deleteFolder('{$lang}')" style="width:90px;">
+			    	<img alt="" src="images/icons/folder_delete.png"/>
+			    	{t}Delete{/t}
+				</a>
+			</div>
+	
+	
+		</p></td>
+        </tr>
+        <tr>
+          <td height="18" colspan="4">&nbsp;</td>
+        </tr>
+        <tr>
+			
+		<td height="52" colspan="4">
+			<input name="filesearch" type="text" class="form-items-disabled" id="filesearch" value="{t}Type to search files{/t}" onkeyup="searchImages(this.form)"/>
+
+			<div id="spinnerContainer" class="spinner">
+            	<img src="images/spinner.gif" id="spinner" width="16" height="16" class="spinner" style="display:none"/>
+			</div>
+
+			
+			<div id="user_storage" class="storage">{t}Disk Space{/t}: {$usedspace} MB {t}available of{/t} {$totalspace} MB {t}total{/t}</div></td>
+
+
+		</tr>
+      </table>
+      <hr />
+			
+		<div id="pagination" class="pagination">
+			<div id="select_all_none" class="select_all_none">
+				{t}Select{/t}: <a href="javascript:selectAll()">{t}All{/t}</a> | <a href="javascript:selectNone()">{t}None{/t}</a>
+			</div>
+			<div id="deleteFiles" class="deleteFiles"><a href="javascript:deleteSelected()">{t}Delete Selected Files{/t}</a></div>
+
+			<div id="next" class="next" style="display:none"><a href="javascript:nextPage()">{t}Next{/t}</a></div>
+			
+			<div id="previous" class="previous" style="display:none"><a href="javascript:previousPage()">{t}Previous{/t}</a></div>
+			
+		</div>	
+		
+	  	<div id="tile_contents" class="tile_contents"></div>   
+  </div>
+
+
+	<form name="newFolderName_f" method="post" action="">
+		<div id="newFolderNameContainer" class="newFolderNameContainer">
+			<div id="newFolderTitle" class="newFolderTitle">
+				<div id="newFolderContents" class="newFolderContents">
+					<input type="text" value="" id="newFolderName" class="form-items" style="margin-left:5px;margin-top:15px">
+				</div>
+				<div id="newFolderButton" class="newFolderButton" style="float:right;margin-right:4px;margin-top:4px">
+					<div class="buttons">
+						<a class="negative" onClick="newFolderNameContainer.close()">
+					    	<img alt="" src="images/icons/cancel.png"/>
+					    	{t}Cancel{/t}
+						</a>
+						<a onClick="addFolder(this.form);newFolderNameContainer.close();">
+					    	<img alt="" src="images/icons/folder_add.png"/>
+					    	{t}Create New Folder{/t}
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+	{literal}
+      	<script>
+	    	var newFolderNameContainer = new Control.Modal('modal_link_one',{
+		        opacity: 0.8,
+		        fade: true,
+		        width: 320,
+		        height: 90
+	    	});
+		</script>
+  	{/literal}
+
+
+
+
+<div id="tutLocation" style="display:none">library</div>
+
+<script type="text/javascript">
+
+    new UI.Carousel("horizontal_carousel");
+
+	{literal}var currentuser = '{/literal} {$loggedusername} {literal}';{/literal}
+	
+    {literal}
+    function setUploaderPostParams() {
+        swfu.setPostParams({
+        {/literal}
+          {$uploaderPostParams}
+        {literal}
+        });
+    }
+    {/literal}
+</script>
+
+{include file="footer.html"}
+
+
+

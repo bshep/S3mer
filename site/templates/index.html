@@ -1,0 +1,26 @@
+{include file="header.html" title="Easy to use, Dynamic Digital Signage Software for Mac, PC and Linux"
+							additional_scripts="
+							<script src=\"js/control.modal.js\" type=\"text/javascript\"></script>"
+                            onload_function=" "
+}
+
+    <div class="main-nav">
+   	  <div class="main-nav-top">
+        	<img src="images/borderL.gif" class="corner" style="display:none" />
+      </div>
+        <p>
+        	<ul>
+          
+	            {section name=mitem loop=$navmenus}
+	            	<li><a href="{$navmenus[mitem].link}" {if $navmenus[mitem].selected eq 1}class="tab-selected"{/if}>{if $navmenus[mitem].selected eq 1}<span>{/if}{$navmenus[mitem].menu}{if $navmenus[mitem].selected eq 1}</span>{/if}</a></li>
+	            {/section}
+		
+   	  		</ul>
+      	</p>
+
+  	</div>
+	<div class="content">
+		{t}Homepage2{/t}
+	</div>
+
+{include file="footer.html"}

@@ -1,0 +1,42 @@
+{include file="header.html" title="Edit Subscription" onload_function=" "}
+    <div class="main-nav">
+   	  <div class="main-nav-top">
+        	<img src="images/borderL.gif" class="corner" style="display:none" />
+      </div>
+        <p>
+        	<ul>
+	   		    
+	            {section name=mitem loop=$navmenus}
+	            	<li><a href="{$navmenus[mitem].link}" {if $navmenus[mitem].selected eq 1}class="tab-selected"{/if}>{$navmenus[mitem].menu}</a></li>
+	            {/section}
+		
+   	  		</ul>
+      </p>
+
+  </div>
+    <div class="content"><br />
+
+			<div id="modifySubscription">
+				<p><span class="productName">{t}Remove Pro Players{/t}</span></p><br />
+				<p><strong>{t}Total Registered Players{/t}: </strong>{$prosubscriptions}</p>
+				<p></p>{t}EditSubscriptionStatement{/t}<br /><br />
+				<form action="checkout.php" method="post" accept-charset="utf-8">
+					
+					{section name=player loop=$players}
+						<input type="checkbox" name="selectedplayers[]" value="{$players[player].id}">{$players[player].id} / {$players[player].playername}<br />
+					{/section}
+					
+				<div class="modifySubscriptionBtns">
+					<div class="buttons" style="float:right">
+						<button type="submit">
+					    	<img src="images/icons/pencil.png"/> 
+					    	{t}Apply Changes{/t}
+						</button>
+						</form>
+					</div>
+				</div>
+			</div>
+
+
+    </div>
+{include file="footer.html"}

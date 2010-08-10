@@ -1,0 +1,54 @@
+<div class="bottom-menu">
+    	<ul>
+        
+            {section name=mitem loop=$bottommenus}
+            	<li><a href="{$bottommenus[mitem].link}">{$bottommenus[mitem].menu}</a></li>
+            {/section}
+            {if $DEPLOYMENT_TYPE neq 'production'}
+            <li>DB Server: {$dbserver}</li>
+            <li>Deployment: {$DEPLOYMENT_TYPE}</li>
+            {/if}
+        </ul>
+    </div>
+</div>
+{$additional_scripts_footer|default:""}
+
+<!-- Feedback tab -->
+{php}
+if ($_GET['uv']=='0'){
+    echo '';
+} else {
+    echo '<script src="https://s3mer.uservoice.com/pages/general/widgets/tab.js?alignment=left&amp;color=59A700" type="text/javascript"></script>';
+}
+{/php}
+
+<!-- IE6 Update -->
+{literal}
+<!--[if IE 6]>
+<script type="text/javascript"> 
+	/*Load jQuery if not already loaded*/ if(typeof jQuery == 'undefined'){ document.write("<script type=\"text/javascript\"   src=\"http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js\"></"+"script>"); var __noconflict = true; } 
+	var IE6UPDATE_OPTIONS = {
+		icons_path: "http://static.ie6update.com/hosted/ie6update/images/"
+	}
+</script>
+<script type="text/javascript" src="http://static.ie6update.com/hosted/ie6update/ie6update.js"></script>
+<![endif]-->
+{/literal}
+
+<!--GOOGLE ANALYTICS-->
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-4000880-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+</script>
+<!--GOOGLE ANALYTICS-->
+
+</body>
+
+
+
+</html>

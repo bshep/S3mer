@@ -1,0 +1,62 @@
+html {
+	font-family:"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
+}
+
+body {
+	background: #262626 url(../images/coopback.png) repeat-x;
+}
+
+.container {
+	margin: 0px auto 0px auto;
+	height:900px;
+	width:100%;
+}
+
+.head {
+	float:left;
+	width:100%;
+}
+.salonName {
+	margin: 15px 0px 0px 20px;
+	color: #0f6684;
+	font-size: 700%;
+	float: left;
+}
+
+.logoCoop {
+	margin: 50px 20px 0px 0px;
+	float: right;
+}
+
+.horaFecha {
+	width:100%;
+	margin-top:35px;
+	float: left;
+	color: #0f6684;
+	font-size: 200%;
+	text-align: center;
+}
+
+.diaBig {
+	width:90%;
+	padding: 20px 0px 0px 20px;
+	text-align: left;
+	color: #b4ecff;
+	font-size: 500%;
+	float: left;
+	margin-bottom:20px;
+}
+.actividades {
+	float:left;
+	text-align: left;
+	padding: 0px 80px 0px 80px;
+}
+.actividades li {
+	font-size: 200%;
+	color:white;
+	margin-bottom:20px;
+}
+.hora {
+	color: #b4ecff;
+	margin-right:20px;
+}

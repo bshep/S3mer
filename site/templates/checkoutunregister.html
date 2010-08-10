@@ -1,0 +1,76 @@
+{include file="header.html" title="Checkout" onload_function=" "}
+	{$modifyflag}
+    <div class="main-nav">
+   	  <div class="main-nav-top">
+        	<img src="images/borderL.gif" class="corner" style="display:none" />
+      </div>
+        <p>
+        	<ul>
+	   		    
+	            {section name=mitem loop=$navmenus}
+	            	<li><a href="{$navmenus[mitem].link}" {if $navmenus[mitem].selected eq 1}class="tab-selected"{/if}>{$navmenus[mitem].menu}</a></li>
+	            {/section}
+		
+   	  		</ul>
+      </p>
+
+  </div>
+    <div class="content">
+    <p>&nbsp;</p>
+    <table width="630" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td width="630"><p class="bigtextINDEX">{t}{$title}{/t}</p></td>
+      </tr>
+      <tr>
+        <td>
+			
+					<div id="modifySubscription">
+						
+						<p><span class="productName">{t}Unsubscribe Details{/t}</span></p>
+						<p>{t}UnregisteringPlayers{/t}</p>
+						<br />
+						<p><strong>{t}Total Players{/t}: {$proplayerstobuy}</strong></p>
+						<p><strong>{t}Total Monthly Amount{/t}: ${$amount}.00 USD</strong></p>
+						<br />
+
+						<div class="modifySubscriptionBtns">
+							<div class="buttons">
+
+								<a href="store.php">
+							    	<img src="images/icons/pencil.png"/> 
+							    	{t}Edit Order{/t}
+								</a>
+
+								<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+								<input type="image" src="http://www.s3mer.com/images/checkoutBtn.png" border="0" name="submit" alt="">
+								<img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
+								<input type="hidden" name="cmd" value="_xclick-subscriptions">
+								<input type="hidden" name="business" value="payments@s3mer.com">
+								<input type="hidden" name="item_name" value="s3mer">
+								<input type="hidden" name="no_shipping" value="1">
+								<input type="hidden" name="no_note" value="1">
+								<input type="hidden" name="currency_code" value="USD">
+								<input type="hidden" name="lc" value="US">
+								<input type="hidden" name="bn" value="PP-SubscriptionsBF">
+								<input type="hidden" name="a3" value="{$amount}">
+								<input type="hidden" name="p3" value="1">
+								<input type="hidden" name="t3" value="M">
+								<input type="hidden" name="src" value="1">
+								<input type="hidden" name="sra" value="1">
+								
+									<input type="hidden" name="modify" value="2">
+							
+								<input type="hidden" name="custom" value="{$uid}">
+								</form>
+							</div>
+						</div>
+					</div>
+	
+		</td>
+      </tr>
+      
+      
+    </table>
+    <p>&nbsp;</p>
+    </div>
+{include file="footer.html"}

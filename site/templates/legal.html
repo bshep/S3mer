@@ -1,0 +1,31 @@
+{include file="header.html" title="Legal" onload_function=" "}
+    <div class="main-nav">
+   	  <div class="main-nav-top">
+        	<img src="images/borderL.gif" class="corner" style="display:none" />
+      </div>
+        <p>
+        	<ul>
+	   		    
+	            {section name=mitem loop=$navmenus}
+	            	<li><a href="{$navmenus[mitem].link}" {if $navmenus[mitem].selected eq 1}class="tab-selected"{/if}>{$navmenus[mitem].menu}</a></li>
+	            {/section}
+		
+   	  		</ul>
+      </p>
+
+  </div>
+    <div class="content">
+    <p>&nbsp;</p>
+    <table width="630" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td width="630"><p class="bigtextINDEX">{t}{$title}{/t}</p></td>
+      </tr>
+      <tr>
+        <td>{t}{$content}{/t}</td>
+      </tr>
+      
+      
+    </table>
+    <p>&nbsp;</p>
+    </div>
+{include file="footer.html"}

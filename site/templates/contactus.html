@@ -1,0 +1,82 @@
+{include file="header.html" title="Contact Information"
+	onload_function=" "
+}
+    <div class="main-nav">
+   	  <div class="main-nav-top">
+        	<img src="images/borderL.gif" class="corner" style="display:none" />
+      </div>
+        <p>
+        	<ul>
+	            {section name=mitem loop=$navmenus}
+	            	<li><a href="{$navmenus[mitem].link}" {if $navmenus[mitem].selected eq 1}class="tab-selected"{/if}>{if $navmenus[mitem].selected eq 1}<span>{/if}{$navmenus[mitem].menu}{if $navmenus[mitem].selected eq 1}</span>{/if}</a></li>
+	            {/section}
+		
+   	  		</ul>
+      </p>
+
+  </div>
+    <div class="content">
+    <p>&nbsp;</p>
+    <table width="630" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td colspan="2"><p>{t}WeWantHearYou{/t}</p></td>
+      </tr>
+      <tr>
+        <td colspan="2">&nbsp;</td>
+      </tr>
+      <tr>
+        <td width="315" class="bigtext">{t}Address{/t}</td>
+        <td width="315" class="bigtext">{t}Emails{/t}</td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td width="315">&nbsp;</td>
+      </tr>
+      <tr>
+        <td valign="top"><p>529 Andalucía Ave. Puerto Nuevo</p>
+        <p>San Juan, Puerto Rico</p>
+        <p>00920</p>
+        <p><a href="http://maps.google.com/maps?f=q&amp;hl=en&amp;geocode=&amp;q=526+Andalucia+San+Juan,+Puerto+Rico+00920&amp;sll=37.0625,-95.677068&amp;sspn=44.744674,61.699219&amp;ie=UTF8&amp;ll=18.411867,-66.077271&amp;spn=0.841727,0.96405&amp;z=10&amp;iwloc=addr">{t}Show Map{/t}</a></p></td>
+        <td width="315" valign="top"><p><a href="mailto:sales.service@s3mer.com">sales.service@s3mer.com</a></p>
+          <p><a href="mailto:corporate.affairs@s3mer.com">corporate.affairs@s3mer.com</a></p>
+          <p><a href="mailto:public.relations@s3mer.com">public.relations@s3mer.com</a></p>
+          <p><a href="mailto:tech.support@s3mer.com">tech.support@s3mer.com</a></p>
+          <p><a href="mailto:bugs.report@s3mer.com">bugs.report@s3mer.com</a></p>
+        </td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td width="315">&nbsp;</td>
+      </tr>
+      <tr>
+        <td class="bigtext">{t}Phones{/t}</td>
+        <td width="315" class="bigtext">IM &amp; {t}Social Nets{/t}</td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td width="315">&nbsp;</td>
+      </tr>
+      <tr>
+        <td valign="top"><p>+1-787-793-8091</p>
+          <p>+1-787-273-3639</p></td>
+        <td width="315" valign="top">
+        	<p>twitter: <a href="http://twitter.com/s3mer">http://twitter.com/s3mer</a></p>
+			<p>Google Talk / iChat: s3mer.team@s3mer.com</p>
+			<p>AIM Screename / iChat: <a href="aim:goim?screenname=s3merteam">s3merteam</a></p>
+			<p>
+                <script type="text/javascript" src="http://o.aolcdn.com/aim/web-aim/aimapi.js">
+                </script>
+                <script type="text/javascript">
+                AIM.util.createStyleSheet(
+                "http://o.aolcdn.com/aim/wimzi/morningmist_standard.css");</script>
+                <script type="text/javascript" 
+                src="http://o.aolcdn.com/aim/web-aim/wimzi.js"></script>
+                <div id="wimziContainer" wimzi_key="s31yT551kBMOBSlS"></div>                
+            </p>
+		</td>
+      </tr>
+    </table>
+    <p>&nbsp;</p>
+    </div>
+
+{include file="footer.html"}

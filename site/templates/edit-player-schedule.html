@@ -1,0 +1,164 @@
+
+			
+			{section name=schedule loop=$channelschedule}     
+				<div class="row_container" id="wholerow_{$channelschedule[schedule].id}">
+					<div id="row{$channelschedule[schedule].id}" class="sh-playlist-row-uselected-even">
+				  		<div class="sh-order" onclick="toggleDetail('{$channelschedule[schedule].id}')"><img src="images/icons/magnifier.png"></div>
+			      		<div class="sh-name">{$channelschedule[schedule].showname}</div>
+			      		<div class="sh-sheduele"></div>
+			      		<div class="sh-transition" id="effect_{$channelschedule[schedule].id}">{$channelschedule[schedule].effectname}</div>
+			      		
+			      			<div class="sh-edit"><a href="edit-show.php?showid={$channelschedule[schedule].showid}"><img src="images/icons/edit.png" alt="edit" width="16" height="16" /></a></div>
+			      		
+			      		<div class="sh-delete"><a href="javascript:deleteShow({$channelschedule[schedule].id},{$player.id})"><img src="images/icons/delete.png" alt="delete" width="16" height="16" /></a></div>
+					</div>
+					<div id="row_detail{$channelschedule[schedule].id}" class="sh-detail" style="display: none;">
+						<form id="formsched{$channelschedule[schedule].id}" name="formsched{$channelschedule[schedule].id}" method="post" action="">
+							<input type=hidden id='scheduleid' value='{$channelschedule[schedule].id}'>
+							<div class="shd-transition">
+		    	  				<select name="transition" class="form-items" id="transition">
+		    	     				{html_options values=$effectids output=$effects selected=$channelschedule[schedule].effect}
+		    	    			</select>
+		          			</div>
+		          			<div class="shd-calendar">
+					       		<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+					            	<tr>
+						                <td width="5%"><div align="center">{t}S{/t}</div></td>
+						                <td width="5%"><div align="center">{t}M{/t}</div></td>
+						                <td width="5%"><div align="center">{t}T{/t}</div></td>
+						                <td width="5%"><div align="center">{t}W{/t}</div></td>
+						                <td width="5%"><div align="center">{t}Th{/t}</div></td>
+						                <td width="5%"><div align="center">{t}F{/t}</div></td>
+						                <td width="5%"><div align="center">{t}Sa{/t}</div></td>
+						                <td width="15%"><div align="center"></div></td>
+						                <td width="5%"><div align="center">AM</div></td>
+						                <td width="1%"><div align="center"></div></td>
+						                <td width="5%"><div align="center">PM</div></td>
+					              	</tr>
+					              	<tr>
+					                	<td>
+					                		<div align="center">
+					                  			<input type="checkbox" name="sunday" id="sunday" value="1" {$channelschedule[schedule].SCH}/>
+					                		</div>
+					                	</td>
+					                	<td>
+					                		<div align="center">
+					                  			<input type="checkbox" name="monday" id="monday" value="1" {$channelschedule[schedule].MCH}/>
+				                			</div>
+				                		</td>
+					                	<td>
+					                		<div align="center">
+					                  			<input type="checkbox" name="tuesday" id="tuesday" value="1" {$channelschedule[schedule].TCH}/>
+					                		</div>
+					                	</td>
+					                	<td>
+					                		<div align="center">
+					                  			<input type="checkbox" name="wednesday" id="wednesday" value="1" {$channelschedule[schedule].WCH}/>
+					                		</div>
+					                	</td>
+					                	<td>
+					                		<div align="center">
+					                  			<input type="checkbox" name="thursday" id="thursday" value="1" {$channelschedule[schedule].ThCH}/>
+					                		</div>
+					                	</td>
+					                	<td>
+					                		<div align="center">
+					                  			<input type="checkbox" name="friday" id="friday" value="1" {$channelschedule[schedule].FCH}/>
+					                		</div>
+					                	</td>
+				                		<td>
+				                			<div align="center">
+					                  			<input type="checkbox" name="saturday" id="saturday" value="1" {$channelschedule[schedule].SaCH}/>
+					                		</div>
+					                	</td>
+				                		<td>
+				                			<div align="center"></div>
+				                		</td>
+					                	<td>
+					                		<div align="center">
+					                  			<input type="checkbox" name="am" id="am" value="1" {$channelschedule[schedule].AMCH}/>
+					                		</div>
+					                	</td>
+					                	<td>
+					                		<div align="center"></div>
+					                	</td>
+					                	<td>
+					                		<div align="center">
+					                  			<input type="checkbox" name="pm" id="pm" value="1" {$channelschedule[schedule].PMCH}/>
+					                		</div>
+					                	</td>
+					              	</tr>
+					        	</table>
+					        	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+					        		<tr height="40">
+					        			<td colspan="3">
+					        				&nbsp;&nbsp;{t}Dates and Times{/t}
+					        			</td>
+					        		</tr>
+					              	<tr>
+					                	<td>
+					                		<div id="fromdate{$channelschedule[schedule].id}"  align="center">
+					                			
+
+		
+												<select name="frommonth{$channelschedule[schedule].id}" id="frommonth{$channelschedule[schedule].id}">
+													{html_options values=$monthids output=$monthnames selected=$channelschedule[schedule].startmonth}
+												</select>
+												<input type="text" name="fromday{$channelschedule[schedule].id}" id="fromday{$channelschedule[schedule].id}" size="2" value="{$channelschedule[schedule].startday}">
+												<input type="text" name="fromyear{$channelschedule[schedule].id}" id="fromyear{$channelschedule[schedule].id}" size="4" value="{$channelschedule[schedule].startyear}">
+													
+					                		</div>
+					                	</td>
+					                	<td>
+					                		<div align="center">to</div>
+					                	</td>
+					                	<td>
+					                		<div id="todate{$channelschedule[schedule].id}" align="center">
+					                			
+					
+					
+						<select name="tomonth{$channelschedule[schedule].id}" id="tomonth{$channelschedule[schedule].id}">
+							{html_options values=$monthids output=$monthnames selected=$channelschedule[schedule].endmonth}
+						</select>
+						<input type="text" name="today{$channelschedule[schedule].id}" id="today{$channelschedule[schedule].id}" size="2" value="{$channelschedule[schedule].endday}">
+						<input type="text" name="toyear{$channelschedule[schedule].id}" id="toyear{$channelschedule[schedule].id}" size="4" value="{$channelschedule[schedule].endyear}">
+						
+					                			
+					                		</div>
+					                	</td>
+					                	<td>
+					                		<div align="center"></div>
+					                	</td>
+					                	<td>
+					                		<div align="center">
+					                  			<input name="fromtime" type="text" class="form-items-date" id="fromtime" value="{$channelschedule[schedule].starttime}" />
+					                		</div>
+					                	</td>
+					                	<td>
+					                		<div align="center">{t}to{/t}</div>
+					                	</td>
+					                	<td>
+					                		<div align="center">
+					                			<input name="totime" type="text" class="form-items-date" id="totime" value="{$channelschedule[schedule].endtime}" />
+					                		</div>
+					                	</td>
+				              		</tr>
+				            	</table>
+			       			</div>					    
+						
+						<div class="shd-buttons">
+					
+						   	<div class="buttons" style="float:right">
+									
+								<button class="positive" type="button" onClick="saveScheduleData(this.form,'{$lang}','{$channelschedule[schedule].id}');">
+									<img alt="" src="images/icons/add.png"/> 
+									{t}Save{/t}
+								</button>
+							</div>
+					   	</div>
+					   	
+					   	</form>
+					</div>
+				</div>
+			{/section}
+			</div>

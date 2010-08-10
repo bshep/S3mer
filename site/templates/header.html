@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+
+{if $comingpaypal eq 1}
+	<META http-equiv="refresh" content="30;URL=http://www.s3mer.com/player-tiles.php">
+{/if}
+	
+	
+<META NAME="Description" CONTENT="Finally! Digital signage software for Mac, PC and Linux that is easy to use, powerful and free. s3mer supports h.264, mov, m4v, mp4, flv video formats, swf animations, jpg, png and gif image files. With s3mer you can subscribe to RSS feeds and Video Podcast and get new content delivered automatically.">
+<META NAME="KEYWORDS" CONTENT="s3mer, s3mer inc, s3mer.com, free digital signage software, signage application, dynamic digital signage, digital signage for mac, multimedia player, digital signage software, digital signage, keynote, adobe air, linux, mac, pc">
+<link rel="SHORTCUT ICON" href="favicon.ico">
+<link rel="apple-touch-icon" href="images/iphone-ipod-icon.png"/>
+<title>s3mer - {t}{$title|default:"s3mer"}{/t}</title>
+<script src="js/scriptaculous/prototype.js" type="text/javascript"></script>
+<script src="js/scriptaculous/scriptaculous.js" type="text/javascript"></script>
+<script src="js/s3mer_common.js" type="text/javascript"></script>
+<script src="gears/gears_init.js" type="text/javascript" charset="utf-8"></script>
+<script src="gears/gears_s3mer.js" type="text/javascript" charset="utf-8"></script>
+
+{$additional_scripts|default:""}
+<link rel="stylesheet" type="text/css" href="styles/reset-fonts-grids.css">
+<link href="styles/main.css" rel="stylesheet" type="text/css" />
+<!--[if IE 6]>
+	<link href="styles/ieFixes.css" rel="stylesheet" type="text/css" />
+<![endif]-->
+</head>
+
+<body {$onload_function|default:"onload=\"onPageLoad()\""} {$onUnload_function} id="pageBodyid">
+
+<!-- START Gears Progress Bar -->
+<div id="gearSpinner" style="display:none">
+  <img src="images/spinner2.gif" alt="Please wait!"/>
+  <div class="spinnerMessage" id="gearsMessage">Gears Sync in progress. This can take a few minutes, Please wait...</div>
+  <div class="gProgWrapper">
+      <div class="gProgLabel" id="gPercent"></div>
+      <div class="gProg">
+          <div class="gProgBar" id="gBar"></div>
+      </div>
+  </div>
+</div>
+<!-- END Gears Progress Bar -->
+
+<form>
+    <input type="hidden" name="lang" id="lang" value="{$lang}">
+</form>
+
+<div class="container">
+
+<div id="phoneBox">
+    {t}phone_text{/t}
+</div>
+
+<div id="language-bubble" class="language-bubble" style="display:none" targetDiv="language-bubble" >
+	<div class="flag-box">
+		<a href="setlanguage.php?lang=en"><img src="images/icons/gb.png" alt="English" title="English"/></a>
+		<a href="setlanguage.php?lang=es"><img src="images/icons/es.png" alt="Espa&ntilde;ol" title="Espa&ntilde;ol" /></a>
+		<a href="setlanguage.php?lang=pt"><img src="images/icons/pt.png" alt="Portugu&ecirc;s" title="Portugu&ecirc;s" /></a>
+	</div>
+	<div class="language-txt">{$language}</div>
+	
+</div>
+
+<div id="login-bubble" class="login-bubble" style="display:none" targetDiv="login-bubble">
+		<div>
+		<form action="processlogin.php"  method="post" class="login-form">
+			<input type="text" name="username" value="email" class="login-bubble-fields-disabled-big" id="login_email">
+			<input type="password" name="password" value="password" class="login-bubble-fields-disabled" id="login_password">
+			<input type="submit" value="&#x2192;" style="height:27px;width: 35px; position: relative; left: 0px; top: 1px;">
+		</form>
+		</div>
+</div>
+
+  <div class="logo-box">
+    	<a href="index.php"><img src="images/s3mer_logo_blank.gif" alt="s3mer" /></a>
+  </div>
+    <div class="topmenu-box">
+		<p>{if $user_loggedin eq 'true'}{$loggeduser}{/if}</p>
+	  		<ul>
+                
+                {section name=mitem loop=$topmenus}
+                	<li><a href="{$topmenus[mitem].link}">{$topmenus[mitem].menu}</a></li>
+                {/section}
+                
+				<li><div id="language-button" targetDiv="language-bubble" style="display:inline"><img src="images/blanc16x16.gif" alt="Change Language" title="Change Language" class="world-icon" /></div></li>
+				
+				<li>{if $user_loggedin eq 'true'}<div id="login-button" style="display:inline"><a href="logoff.php"><img src="images/blanc16x16.gif" alt="Logout" title="Logout" class="logout-icon" /></a></div>{else}<div id="login-button" style="display:inline" targetDiv="login-bubble"><img src="images/blanc16x16.gif" alt="Login" title="Login" class="login-icon" />{/if}</li>
+            </ul>
+    </div>
+    <script type="text/javascript">
+      $('language-button').observe('click',toggleLanguageBar);
+      $('language-bubble').observe('click',toggleLanguageBar);
+      $('login-button').observe('click',toggleLanguageBar);
+      $('login-bubble').observe('click',toggleLanguageBar);
+      {if $language_selected neq 'true'}
+      {literal}
+      Effect.Appear($('language-bubble'), {delay:1.0, duration:1.0});
+	  Effect.Pulsate($('language-bubble'), {queue: 'end'});
+      {/literal}
+      //$('language-bubble').show();
+      {/if}
+	  $('login_email').observe('focus', onLoginFieldEnter);  
+	  $('login_password').observe('focus', onLoginFieldEnter);  
+	  $('login_email').observe('blur', onLoginFieldLeave);
+	  $('login_password').observe('blur', onLoginFieldLeave);
+    </script>

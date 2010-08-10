@@ -1,0 +1,22 @@
+@charset "UTF-8";
+.editor {
+	width: 678px;
+	text-align:left;
+	margin-right:auto;
+	margin-left:auto;
+}
+.edit-title {
+	font-size:20px;
+	line-height:35px;
+	margin-bottom:10px;
+}
+.edit-settings {
+	
+}
+.edit-buttons {
+	float:right;
+	margin-top:20px;
+}
+.rssRegions {
+	
+}

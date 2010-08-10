@@ -1,0 +1,76 @@
+.template-container {
+	width: 228px;
+	height: 136px;
+	float:left;
+	cursor: pointer;
+	background-color: #6f6f6f;
+	border: 1px solid #6f6f6f;
+}
+.template-container:hover {
+	width: 228px;
+	height: 136px;
+	margin-right: auto;
+	margin-left: auto;
+	cursor: pointer;
+	background-color: #6f6f6f;
+	border: 1px solid #6f6f6f;
+}
+.template-container-selected{
+	background-color: #f9f5cc;
+	width: 228px;
+	height: 136px;
+	margin-right: 5px;
+	margin-left: 5px;
+	cursor: pointer;
+	border: 1px solid #dfd869;
+}
+.template{
+	width: 208px;
+	height: 116px;
+	margin-left: 10px;
+	margin-top: 10px;
+	overflow: hidden;
+	display: block;
+	background-color: #d5d5d5;
+}
+.region {
+	background-color: #d5d5d5;
+	border: 2px solid #a3a3a3;
+	display: block;
+	float: left;
+}
+.region:hover {
+	background-color: #89ff00;
+	border: 2px solid #519600;
+}
+.region-selected {
+	background-color: #89ff00;
+	border: 2px solid #519600;
+	display: block;
+	float: left;
+}
+.region-reserved {
+	background-color: #d5d5d5;
+	border: 2px solid #a3a3a3;
+	display: block;
+	float: left;
+}
+.small-template-container{
+	height: 61px;
+	width: 110px;
+	padding-top: 5px;
+	border: 1px solid #FFF;
+	cursor: pointer;
+}
+.small-template-container:hover{
+	border: 1px dotted #B9B9B9;
+	cursor: pointer;
+}
+.small-template-container-selected{
+	height: 61px;
+	width: 110px;
+	padding-top: 5px;
+	border: 1px solid #dfd869;
+	background-color: #f9f5cc;
+	cursor: pointer;
+}

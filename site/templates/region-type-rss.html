@@ -1,0 +1,36 @@
+<div id="configuration-region" class="configuration-region">
+	<div id="editor" class="editor">
+		<div id="edit-title" class="edit-title">
+			{t}RSS Region{/t}
+		</div>
+		<form name="rss_select" id="rss_select">
+		<div id="edit-settings" class="edit-settings">
+			<div id="rssRegions" class="rssRegions">
+				<p>
+					<select id="rssFeeds" name="rssFeeds" class="form-items" onchange="renderURL(this.form)">
+						<option label="{t}Custom{/t}" value="0">{t}Custom URL{/t}</option>
+						{html_options values=$rssids output=$rssnames selected="$rssFeed"}
+					</select>
+				</p>
+				<p>
+					<input type="{if $rssFeed eq 0}text{else}hidden{/if}" name="SourceURL" id="SourceURL" value="{$rssURL}" class="form-items">
+				</p>
+			</div>
+		</div>
+		<div id="edit-buttons" class="edit-buttons">
+			<div class="buttons">
+				<!--<div id="selectUploadBtn">
+					<a onClick="" href="#">
+				    	<img alt="" src="images/icons/image.png"/> 
+				    	{t}Select or Upload Logo{/t}
+					</a>
+				</div>-->
+				<a href="javascript:saveRSS()" class="positive">
+			    	<img alt="" src="images/icons/accept.png"/> 
+			    	{t}Ok{/t}
+				</a>
+			</div>
+		</div>
+		</form>
+	</div>
+</div>

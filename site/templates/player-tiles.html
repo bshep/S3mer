@@ -1,0 +1,105 @@
+{include file="header.html" title="Players"
+                            additional_scripts="<script src=\"js/s3mer_tilelist.js\" type=\"text/javascript\"></script>"
+                            onload_function=" "
+}
+    <div class="main-nav">
+   	  <div class="main-nav-top">
+        	<img src="images/borderL.gif" class="corner" style="display:none" />
+      </div>
+        	
+		  	<ul>
+	            
+	            {section name=mitem loop=$navmenus}
+	            	<li><a href="{$navmenus[mitem].link}" {if $navmenus[mitem].selected eq 1}class="tab-selected"{/if}>{if $navmenus[mitem].selected eq 1}<span>{/if}{$navmenus[mitem].menu}{if $navmenus[mitem].selected eq 1}</span>{/if}</a></li>
+	            {/section}
+		
+   	  		</ul>
+
+	<div class="toggle"><a href="#"><img src="images/buttons/tiles-d.gif" alt="tiles" /></a>&nbsp;<a href="#"><img src="images/buttons/list.gif" alt="list" /></a></div>
+
+  </div>
+    <div class="content">
+	
+	
+		{if $comingpaypal eq 1}<div id="processing-order-box" class="login-info-box">
+			<img src="images/icons/lightbulb.png">{t}Your order is being processed. It may take up to 5 minutes in order to get completed{/t}
+	   	</div>
+		{/if}
+	
+        <div id="show-playlist">
+        	{section name=player loop=$players}
+		        <div id="box{$players[player].id}" class="box-{$players[player].negativepositive}" onclick="doSelect('box{$players[player].id}')">
+		       	  <div class="icon"><img src="images/icons/{if $players[player].pro eq 0}monitor16.png{else}monitor_add16.png{/if}" width="32" height="32"/></div>
+		          <div class="title">{$players[player].playername|truncate:29}</div>
+		          <div class="right-side-buttons">
+					<div class="buttons">
+						<a href="edit-player.php?playerid={$players[player].id}" style="width:94px; margin-bottom:2px;">
+					    	<img alt="" src="images/icons/edit.png"/> 
+					    	{t}Edit{/t}
+						</a>
+						<div class="player-disable"><p>
+						<a onclick="doDisable('box{$players[player].id}',{$players[player].id},'player')" class="disable" href="#" style="width:94px; margin-bottom:2px;">
+					    	<img alt="" src="images/icons/control_pause.png"/> 
+					    	{t}Disable{/t}
+						</a>
+						</p>
+						</div>
+						<div class="player-disable"><p class="player-enable">
+							<a onclick="doEnable('box{$players[player].id}',{$players[player].id},'player')" class="disable" href="#" style="width:94px; margin-bottom:2px;">
+						    	<img alt="" src="images/icons/control_play.png"/> 
+						    	{t}Enable{/t}
+							</a>
+						</p>
+						</div>
+						<!--<a class="negative" href="process_command.php?command=del&playerid={$players[player].id}" style="width:94px">
+					    	<img alt="" src="images/icons/delete.png"/>
+					    	{t}Delete{/t}
+						</a>-->
+						{if $players[player].pro eq 0}
+						<a class="negative" onClick="deletePlayer({$players[player].id})" style="width:94px">
+					    	<img alt="" src="images/icons/delete.png"/>
+					    	{t}Delete{/t}
+						</a>
+						{/if}
+					</div>
+		          </div>
+		       	  <div class="right-side-details">
+						<p>{if $players[player].neverplayed eq 1}
+								{t}Never Played{/t}
+							{else}
+								{t}Last Seen{/t}: {$players[player].lastuptime|date_format:"%D   %r"}
+							{/if}</p>
+						
+		            	<p>{$players[player].lastip}</p>
+						<p>{$players[player].description|truncate:50}</p>
+						
+		          </div>
+		      	</div>
+		     {/section}	
+       </div>
+
+		<a href="setnewplayer.php" class="neutralLink" {if $tutStatus.tutorial neq '0'}onClick="javascript:tutNext('player','5')"{/if}><div class="box-neutral">
+        	<div class="icon">
+        	  <div align="center"><img src="images/icons/monitor16.png" width="32" height="32" /></div>
+        	</div>
+        	<div class="title">{t}New Free Player{/t}</div>
+       	  <div class="right-side-details">
+			<p>{t}Click here to create a new free player{/t}</p>
+          </div>
+      </div></a>
+      
+      <a href="store.php" class="neutralLink"><div class="box-neutral">
+      	<div class="icon">
+      	  <div align="center"><img src="images/icons/monitor_add16.png" width="32" height="32" /></div>
+      	</div>
+      	<div class="title">{t}New Pro Player{/t}</div>
+     	  <div class="right-side-details">
+			<p>{t}Click here to buy a new pro player{/t}</p>
+        </div>
+    </div></a>
+      
+    </div>
+
+<div id="tutLocation" style="display:none">player</div>
+
+{include file="footer.html"}

@@ -1,0 +1,50 @@
+/*
+ * ADOBE SYSTEMS INCORPORATED
+ * Copyright 2007 Adobe Systems Incorporated
+ * All Rights Reserved
+ * 
+ * NOTICE:  Adobe permits you to use, modify, and distribute this file in accordance with the 
+ * terms of the Adobe license agreement accompanying it. If you have received this file from a 
+ * source other than Adobe, then your use, modification, or distribution of it requires the prior 
+ * written permission of Adobe.
+ */
+
+.clearfixplain {
+	clear: both;
+}
+.clearfix:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+
+/* Hides from IE-mac \*/
+* html .clearfix {
+	height: 1%;
+}
+
+/* HACK : Mozilla span.widget_container has display space */
+.widget_container {
+	border: 1px solid transparent;
+}
+/* End hide from IE-mac */ 
+
+/*
+ * Tooltip replacement for mozilla
+ *
+ */
+div.tooltip_div {
+	position: absolute;
+	display: none;
+	background-color: #ffffe1;
+	font: 11px Verdana, sans-serif;
+	border: 1px solid black;
+	padding: 2px 3px 2px 3px;
+}
+
+/* force content to automatically enlarge its container; for mozilla only, dynamically applied  */
+.fix_content_enlarge {
+	display: table;
+}

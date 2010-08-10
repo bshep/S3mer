@@ -1,0 +1,3070 @@
+Array
+(
+    [transaction_subject] => 
+    [payment_date] => 08:25:25 Jan 10, 2009 PST
+    [txn_type] => subscr_payment
+    [subscr_id] => S-8P404945B42838049
+    [last_name] => User
+    [residence_country] => US
+    [item_name] => s3mer
+    [payment_gross] => 240.00
+    [mc_currency] => USD
+    [business] => gio_1219170247_biz@s3mer.com
+    [payment_type] => instant
+    [protection_eligibility] => Ineligible
+    [verify_sign] => AJ-naJxGPGHbrqnID763p0Y2fy6TA2zyCst2P9gMLF95kAnWPOm7J4SW
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1222982268_per@s3mer.com
+    [txn_id] => 4R808156AV183521R
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [first_name] => Test
+    [payer_id] => 2XJH6UJBUTTGJ
+    [receiver_id] => 7PPDU8KKF7ALA
+    [payment_status] => Completed
+    [payment_fee] => 7.26
+    [mc_fee] => 7.26
+    [mc_gross] => 240.00
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+)
+
+[transaction_subject] - 
+[payment_date] - 08:25:25 Jan 10, 2009 PST
+[txn_type] - subscr_payment
+[subscr_id] - S-8P404945B42838049
+[last_name] - User
+[residence_country] - US
+[item_name] - s3mer
+[payment_gross] - 240.00
+[mc_currency] - USD
+[business] - gio_1219170247_biz@s3mer.com
+[payment_type] - instant
+[protection_eligibility] - Ineligible
+[verify_sign] - AJ-naJxGPGHbrqnID763p0Y2fy6TA2zyCst2P9gMLF95kAnWPOm7J4SW
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1222982268_per@s3mer.com
+[txn_id] - 4R808156AV183521R
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[first_name] - Test
+[payer_id] - 2XJH6UJBUTTGJ
+[receiver_id] - 7PPDU8KKF7ALA
+[payment_status] - Completed
+[payment_fee] - 7.26
+[mc_fee] - 7.26
+[mc_gross] - 240.00
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+08:25:25 Jan 10, 2009 PST - 2009-01-10 12:25:25
+INSERT INTO paypal_transactions(transaction_subject,payment_date,txn_type,subscr_id,last_name,residence_country,item_name,payment_gross,mc_currency,business,payment_type,protection_eligibility,verify_sign,payer_status,test_ipn,payer_email,txn_id,receiver_email,first_name,payer_id,receiver_id,payment_status,payment_fee,mc_fee,mc_gross,custom,charset,notify_version) VALUES('','2009-01-10 12:25:25','subscr_payment','S-8P404945B42838049','User','US','s3mer','240.00','USD','gio_1219170247_biz@s3mer.com','instant','Ineligible','AJ-naJxGPGHbrqnID763p0Y2fy6TA2zyCst2P9gMLF95kAnWPOm7J4SW','verified','1','gio_1222982268_per@s3mer.com','4R808156AV183521R','gio_1219170247_biz@s3mer.com','Test','2XJH6UJBUTTGJ','7PPDU8KKF7ALA','Completed','7.26','7.26','240.00','21','windows-1252','2.6')Array
+(
+    [txn_type] => subscr_signup
+    [subscr_id] => S-8P404945B42838049
+    [last_name] => User
+    [residence_country] => US
+    [mc_currency] => USD
+    [item_name] => s3mer
+    [business] => gio_1219170247_biz@s3mer.com
+    [amount3] => 240.00
+    [recurring] => 1
+    [verify_sign] => AX4NP9SqoBM9uoxXks8aqIaB90zEAZTpVVakpTzq5N9o8vtIF-gWDT15
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1222982268_per@s3mer.com
+    [first_name] => Test
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [payer_id] => 2XJH6UJBUTTGJ
+    [reattempt] => 1
+    [subscr_date] => 08:25:23 Jan 10, 2009 PST
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+    [period3] => 1 M
+    [mc_amount3] => 240.00
+)
+
+[txn_type] - subscr_signup
+[subscr_id] - S-8P404945B42838049
+[last_name] - User
+[residence_country] - US
+[mc_currency] - USD
+[item_name] - s3mer
+[business] - gio_1219170247_biz@s3mer.com
+[amount3] - 240.00
+[recurring] - 1
+[verify_sign] - AX4NP9SqoBM9uoxXks8aqIaB90zEAZTpVVakpTzq5N9o8vtIF-gWDT15
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1222982268_per@s3mer.com
+[first_name] - Test
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[payer_id] - 2XJH6UJBUTTGJ
+[reattempt] - 1
+[subscr_date] - 08:25:23 Jan 10, 2009 PST
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+[period3] - 1 M
+[mc_amount3] - 240.00
+ - 
+INSERT INTO paypal_transactions(txn_type,subscr_id,last_name,residence_country,mc_currency,item_name,business,amount3,recurring,verify_sign,payer_status,test_ipn,payer_email,first_name,receiver_email,payer_id,reattempt,subscr_date,custom,charset,notify_version,period3,mc_amount3) VALUES('subscr_signup','S-8P404945B42838049','User','US','USD','s3mer','gio_1219170247_biz@s3mer.com','240.00','1','AX4NP9SqoBM9uoxXks8aqIaB90zEAZTpVVakpTzq5N9o8vtIF-gWDT15','verified','1','gio_1222982268_per@s3mer.com','Test','gio_1219170247_biz@s3mer.com','2XJH6UJBUTTGJ','1','2009-01-10 12:25:23','21','windows-1252','2.6','1 M','240.00')Array
+(
+    [txn_type] => subscr_cancel
+    [subscr_id] => S-1HH38252TB1036337
+    [last_name] => User
+    [residence_country] => US
+    [mc_currency] => USD
+    [item_name] => s3mer
+    [business] => gio_1219170247_biz@s3mer.com
+    [amount3] => 360.00
+    [recurring] => 1
+    [verify_sign] => AVfG0BNaFrmmWX28uj8E8evn3cPCA7JlXovPkL-KohjZo5EvI3gGLzQ9
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1219170578_per@s3mer.com
+    [first_name] => Test
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [payer_id] => YGKZQ3A6WF9AL
+    [reattempt] => 1
+    [subscr_date] => 08:53:24 Jan 10, 2009 PST
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+    [period3] => 1 M
+    [mc_amount3] => 360.00
+)
+
+[txn_type] - subscr_cancel
+[subscr_id] - S-1HH38252TB1036337
+[last_name] - User
+[residence_country] - US
+[mc_currency] - USD
+[item_name] - s3mer
+[business] - gio_1219170247_biz@s3mer.com
+[amount3] - 360.00
+[recurring] - 1
+[verify_sign] - AVfG0BNaFrmmWX28uj8E8evn3cPCA7JlXovPkL-KohjZo5EvI3gGLzQ9
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1219170578_per@s3mer.com
+[first_name] - Test
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[payer_id] - YGKZQ3A6WF9AL
+[reattempt] - 1
+[subscr_date] - 08:53:24 Jan 10, 2009 PST
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+[period3] - 1 M
+[mc_amount3] - 360.00
+ - 
+INSERT INTO paypal_transactions(txn_type,subscr_id,last_name,residence_country,mc_currency,item_name,business,amount3,recurring,verify_sign,payer_status,test_ipn,payer_email,first_name,receiver_email,payer_id,reattempt,subscr_date,custom,charset,notify_version,period3,mc_amount3) VALUES('subscr_cancel','S-1HH38252TB1036337','User','US','USD','s3mer','gio_1219170247_biz@s3mer.com','360.00','1','AVfG0BNaFrmmWX28uj8E8evn3cPCA7JlXovPkL-KohjZo5EvI3gGLzQ9','verified','1','gio_1219170578_per@s3mer.com','Test','gio_1219170247_biz@s3mer.com','YGKZQ3A6WF9AL','1','2009-01-10 12:53:24','21','windows-1252','2.6','1 M','360.00')Array
+(
+    [transaction_subject] => 
+    [payment_date] => 08:55:07 Jan 10, 2009 PST
+    [txn_type] => subscr_payment
+    [subscr_id] => S-6LR145802L998430V
+    [last_name] => User
+    [residence_country] => US
+    [item_name] => s3mer
+    [payment_gross] => 120.00
+    [mc_currency] => USD
+    [business] => gio_1219170247_biz@s3mer.com
+    [payment_type] => instant
+    [protection_eligibility] => Ineligible
+    [verify_sign] => A5W2ndP0XUmBKmussGlaCwOXWSyZA.nzPuMIGt1Q7KZivWOevWCqv5xv
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1219170578_per@s3mer.com
+    [txn_id] => 7GG9531367521773C
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [first_name] => Test
+    [payer_id] => YGKZQ3A6WF9AL
+    [receiver_id] => 7PPDU8KKF7ALA
+    [payment_status] => Completed
+    [payment_fee] => 3.78
+    [mc_fee] => 3.78
+    [mc_gross] => 120.00
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+)
+
+[transaction_subject] - 
+[payment_date] - 08:55:07 Jan 10, 2009 PST
+[txn_type] - subscr_payment
+[subscr_id] - S-6LR145802L998430V
+[last_name] - User
+[residence_country] - US
+[item_name] - s3mer
+[payment_gross] - 120.00
+[mc_currency] - USD
+[business] - gio_1219170247_biz@s3mer.com
+[payment_type] - instant
+[protection_eligibility] - Ineligible
+[verify_sign] - A5W2ndP0XUmBKmussGlaCwOXWSyZA.nzPuMIGt1Q7KZivWOevWCqv5xv
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1219170578_per@s3mer.com
+[txn_id] - 7GG9531367521773C
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[first_name] - Test
+[payer_id] - YGKZQ3A6WF9AL
+[receiver_id] - 7PPDU8KKF7ALA
+[payment_status] - Completed
+[payment_fee] - 3.78
+[mc_fee] - 3.78
+[mc_gross] - 120.00
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+08:55:07 Jan 10, 2009 PST - 2009-01-10 12:55:07
+INSERT INTO paypal_transactions(transaction_subject,payment_date,txn_type,subscr_id,last_name,residence_country,item_name,payment_gross,mc_currency,business,payment_type,protection_eligibility,verify_sign,payer_status,test_ipn,payer_email,txn_id,receiver_email,first_name,payer_id,receiver_id,payment_status,payment_fee,mc_fee,mc_gross,custom,charset,notify_version) VALUES('','2009-01-10 12:55:07','subscr_payment','S-6LR145802L998430V','User','US','s3mer','120.00','USD','gio_1219170247_biz@s3mer.com','instant','Ineligible','A5W2ndP0XUmBKmussGlaCwOXWSyZA.nzPuMIGt1Q7KZivWOevWCqv5xv','verified','1','gio_1219170578_per@s3mer.com','7GG9531367521773C','gio_1219170247_biz@s3mer.com','Test','YGKZQ3A6WF9AL','7PPDU8KKF7ALA','Completed','3.78','3.78','120.00','21','windows-1252','2.6')Array
+(
+    [txn_type] => subscr_signup
+    [subscr_id] => S-6LR145802L998430V
+    [last_name] => User
+    [residence_country] => US
+    [mc_currency] => USD
+    [item_name] => s3mer
+    [business] => gio_1219170247_biz@s3mer.com
+    [amount3] => 120.00
+    [recurring] => 1
+    [verify_sign] => AuGGwuJASEOoPpcZ1CUeApdkuh1PAOitPaskm8kAneQi12dcxNBDVG3B
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1219170578_per@s3mer.com
+    [first_name] => Test
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [payer_id] => YGKZQ3A6WF9AL
+    [reattempt] => 1
+    [subscr_date] => 08:55:06 Jan 10, 2009 PST
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+    [period3] => 1 M
+    [mc_amount3] => 120.00
+)
+
+[txn_type] - subscr_signup
+[subscr_id] - S-6LR145802L998430V
+[last_name] - User
+[residence_country] - US
+[mc_currency] - USD
+[item_name] - s3mer
+[business] - gio_1219170247_biz@s3mer.com
+[amount3] - 120.00
+[recurring] - 1
+[verify_sign] - AuGGwuJASEOoPpcZ1CUeApdkuh1PAOitPaskm8kAneQi12dcxNBDVG3B
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1219170578_per@s3mer.com
+[first_name] - Test
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[payer_id] - YGKZQ3A6WF9AL
+[reattempt] - 1
+[subscr_date] - 08:55:06 Jan 10, 2009 PST
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+[period3] - 1 M
+[mc_amount3] - 120.00
+ - 
+INSERT INTO paypal_transactions(txn_type,subscr_id,last_name,residence_country,mc_currency,item_name,business,amount3,recurring,verify_sign,payer_status,test_ipn,payer_email,first_name,receiver_email,payer_id,reattempt,subscr_date,custom,charset,notify_version,period3,mc_amount3) VALUES('subscr_signup','S-6LR145802L998430V','User','US','USD','s3mer','gio_1219170247_biz@s3mer.com','120.00','1','AuGGwuJASEOoPpcZ1CUeApdkuh1PAOitPaskm8kAneQi12dcxNBDVG3B','verified','1','gio_1219170578_per@s3mer.com','Test','gio_1219170247_biz@s3mer.com','YGKZQ3A6WF9AL','1','2009-01-10 12:55:06','21','windows-1252','2.6','1 M','120.00')Array
+(
+    [txn_type] => subscr_cancel
+    [subscr_id] => S-6LR145802L998430V
+    [last_name] => User
+    [residence_country] => US
+    [mc_currency] => USD
+    [item_name] => s3mer
+    [business] => gio_1219170247_biz@s3mer.com
+    [amount3] => 120.00
+    [recurring] => 1
+    [verify_sign] => AzWSycBC.nZ390l8VndE9bsUJd-ZAEM-36Xm3XWeQfgpaaTdgcbpcgZg
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1219170578_per@s3mer.com
+    [first_name] => Test
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [payer_id] => YGKZQ3A6WF9AL
+    [reattempt] => 1
+    [subscr_date] => 08:57:09 Jan 10, 2009 PST
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+    [period3] => 1 M
+    [mc_amount3] => 120.00
+)
+
+[txn_type] - subscr_cancel
+[subscr_id] - S-6LR145802L998430V
+[last_name] - User
+[residence_country] - US
+[mc_currency] - USD
+[item_name] - s3mer
+[business] - gio_1219170247_biz@s3mer.com
+[amount3] - 120.00
+[recurring] - 1
+[verify_sign] - AzWSycBC.nZ390l8VndE9bsUJd-ZAEM-36Xm3XWeQfgpaaTdgcbpcgZg
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1219170578_per@s3mer.com
+[first_name] - Test
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[payer_id] - YGKZQ3A6WF9AL
+[reattempt] - 1
+[subscr_date] - 08:57:09 Jan 10, 2009 PST
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+[period3] - 1 M
+[mc_amount3] - 120.00
+
+INSERT INTO paypal_transactions(txn_type,subscr_id,last_name,residence_country,mc_currency,item_name,business,amount3,recurring,verify_sign,payer_status,test_ipn,payer_email,first_name,receiver_email,payer_id,reattempt,subscr_date,custom,charset,notify_version,period3,mc_amount3) VALUES('subscr_cancel','S-6LR145802L998430V','User','US','USD','s3mer','gio_1219170247_biz@s3mer.com','120.00','1','AzWSycBC.nZ390l8VndE9bsUJd-ZAEM-36Xm3XWeQfgpaaTdgcbpcgZg','verified','1','gio_1219170578_per@s3mer.com','Test','gio_1219170247_biz@s3mer.com','YGKZQ3A6WF9AL','1','2009-01-10 12:57:09','21','windows-1252','2.6','1 M','120.00')Array
+(
+    [transaction_subject] => 
+    [payment_date] => 09:26:36 Jan 10, 2009 PST
+    [txn_type] => subscr_payment
+    [subscr_id] => S-3WJ69910XV881351A
+    [last_name] => User
+    [residence_country] => US
+    [item_name] => s3mer
+    [payment_gross] => 300.00
+    [mc_currency] => USD
+    [business] => gio_1219170247_biz@s3mer.com
+    [payment_type] => instant
+    [protection_eligibility] => Ineligible
+    [verify_sign] => AnCH8rIW7rRIszsg1xADVLqMwNwtAN6U4bcKfkgaV.NDSSOLWH-dEQL3
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1219170578_per@s3mer.com
+    [txn_id] => 1KL92139DR506260T
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [first_name] => Test
+    [payer_id] => YGKZQ3A6WF9AL
+    [receiver_id] => 7PPDU8KKF7ALA
+    [payment_status] => Completed
+    [payment_fee] => 9.00
+    [mc_fee] => 9.00
+    [mc_gross] => 300.00
+    [custom] => 15
+    [charset] => windows-1252
+    [notify_version] => 2.6
+)
+
+[transaction_subject] - 
+[payment_date] - 09:26:36 Jan 10, 2009 PST
+[txn_type] - subscr_payment
+[subscr_id] - S-3WJ69910XV881351A
+[last_name] - User
+[residence_country] - US
+[item_name] - s3mer
+[payment_gross] - 300.00
+[mc_currency] - USD
+[business] - gio_1219170247_biz@s3mer.com
+[payment_type] - instant
+[protection_eligibility] - Ineligible
+[verify_sign] - AnCH8rIW7rRIszsg1xADVLqMwNwtAN6U4bcKfkgaV.NDSSOLWH-dEQL3
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1219170578_per@s3mer.com
+[txn_id] - 1KL92139DR506260T
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[first_name] - Test
+[payer_id] - YGKZQ3A6WF9AL
+[receiver_id] - 7PPDU8KKF7ALA
+[payment_status] - Completed
+[payment_fee] - 9.00
+[mc_fee] - 9.00
+[mc_gross] - 300.00
+[custom] - 15
+[charset] - windows-1252
+[notify_version] - 2.6
+09:26:36 Jan 10, 2009 PST - 2009-01-10 13:26:36
+INSERT INTO paypal_transactions(transaction_subject,payment_date,txn_type,subscr_id,last_name,residence_country,item_name,payment_gross,mc_currency,business,payment_type,protection_eligibility,verify_sign,payer_status,test_ipn,payer_email,txn_id,receiver_email,first_name,payer_id,receiver_id,payment_status,payment_fee,mc_fee,mc_gross,custom,charset,notify_version) VALUES('','2009-01-10 13:26:36','subscr_payment','S-3WJ69910XV881351A','User','US','s3mer','300.00','USD','gio_1219170247_biz@s3mer.com','instant','Ineligible','AnCH8rIW7rRIszsg1xADVLqMwNwtAN6U4bcKfkgaV.NDSSOLWH-dEQL3','verified','1','gio_1219170578_per@s3mer.com','1KL92139DR506260T','gio_1219170247_biz@s3mer.com','Test','YGKZQ3A6WF9AL','7PPDU8KKF7ALA','Completed','9.00','9.00','300.00','15','windows-1252','2.6')Array
+(
+    [txn_type] => subscr_signup
+    [subscr_id] => S-3WJ69910XV881351A
+    [last_name] => User
+    [residence_country] => US
+    [mc_currency] => USD
+    [item_name] => s3mer
+    [business] => gio_1219170247_biz@s3mer.com
+    [amount3] => 300.00
+    [recurring] => 1
+    [verify_sign] => A1jTgxW7LfVduJFSaTsqq3i0mkANACSAdpZXFaWjKbiXTQq9ZpFdY7pK
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1219170578_per@s3mer.com
+    [first_name] => Test
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [payer_id] => YGKZQ3A6WF9AL
+    [reattempt] => 1
+    [subscr_date] => 09:26:35 Jan 10, 2009 PST
+    [custom] => 15
+    [charset] => windows-1252
+    [notify_version] => 2.6
+    [period3] => 1 M
+    [mc_amount3] => 300.00
+)
+
+[txn_type] - subscr_signup
+[subscr_id] - S-3WJ69910XV881351A
+[last_name] - User
+[residence_country] - US
+[mc_currency] - USD
+[item_name] - s3mer
+[business] - gio_1219170247_biz@s3mer.com
+[amount3] - 300.00
+[recurring] - 1
+[verify_sign] - A1jTgxW7LfVduJFSaTsqq3i0mkANACSAdpZXFaWjKbiXTQq9ZpFdY7pK
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1219170578_per@s3mer.com
+[first_name] - Test
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[payer_id] - YGKZQ3A6WF9AL
+[reattempt] - 1
+[subscr_date] - 09:26:35 Jan 10, 2009 PST
+[custom] - 15
+[charset] - windows-1252
+[notify_version] - 2.6
+[period3] - 1 M
+[mc_amount3] - 300.00
+
+INSERT INTO paypal_transactions(txn_type,subscr_id,last_name,residence_country,mc_currency,item_name,business,amount3,recurring,verify_sign,payer_status,test_ipn,payer_email,first_name,receiver_email,payer_id,reattempt,subscr_date,custom,charset,notify_version,period3,mc_amount3) VALUES('subscr_signup','S-3WJ69910XV881351A','User','US','USD','s3mer','gio_1219170247_biz@s3mer.com','300.00','1','A1jTgxW7LfVduJFSaTsqq3i0mkANACSAdpZXFaWjKbiXTQq9ZpFdY7pK','verified','1','gio_1219170578_per@s3mer.com','Test','gio_1219170247_biz@s3mer.com','YGKZQ3A6WF9AL','1','2009-01-10 13:26:35','15','windows-1252','2.6','1 M','300.00')Array
+(
+    [transaction_subject] => 
+    [payment_date] => 08:41:11 Jan 10, 2009 PST
+    [txn_type] => subscr_payment
+    [subscr_id] => S-340286608F170153W
+    [last_name] => User
+    [residence_country] => US
+    [item_name] => s3mer
+    [payment_gross] => 240.00
+    [mc_currency] => USD
+    [business] => gio_1219170247_biz@s3mer.com
+    [payment_type] => instant
+    [protection_eligibility] => Ineligible
+    [verify_sign] => ANopALv1trHaQxyMEj2hqBGK-UuEAlgsPeYfeN7YT6LR9pu7lfwaKSz8
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1222982268_per@s3mer.com
+    [txn_id] => 6B118415WV1192256
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [first_name] => Test
+    [payer_id] => 2XJH6UJBUTTGJ
+    [receiver_id] => 7PPDU8KKF7ALA
+    [payment_status] => Completed
+    [payment_fee] => 7.26
+    [mc_fee] => 7.26
+    [mc_gross] => 240.00
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+)
+
+[transaction_subject] - 
+[payment_date] - 08:41:11 Jan 10, 2009 PST
+[txn_type] - subscr_payment
+[subscr_id] - S-340286608F170153W
+[last_name] - User
+[residence_country] - US
+[item_name] - s3mer
+[payment_gross] - 240.00
+[mc_currency] - USD
+[business] - gio_1219170247_biz@s3mer.com
+[payment_type] - instant
+[protection_eligibility] - Ineligible
+[verify_sign] - ANopALv1trHaQxyMEj2hqBGK-UuEAlgsPeYfeN7YT6LR9pu7lfwaKSz8
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1222982268_per@s3mer.com
+[txn_id] - 6B118415WV1192256
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[first_name] - Test
+[payer_id] - 2XJH6UJBUTTGJ
+[receiver_id] - 7PPDU8KKF7ALA
+[payment_status] - Completed
+[payment_fee] - 7.26
+[mc_fee] - 7.26
+[mc_gross] - 240.00
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+08:41:11 Jan 10, 2009 PST - 2009-01-10 12:41:11
+INSERT INTO paypal_transactions(transaction_subject,payment_date,txn_type,subscr_id,last_name,residence_country,item_name,payment_gross,mc_currency,business,payment_type,protection_eligibility,verify_sign,payer_status,test_ipn,payer_email,txn_id,receiver_email,first_name,payer_id,receiver_id,payment_status,payment_fee,mc_fee,mc_gross,custom,charset,notify_version) VALUES('','2009-01-10 12:41:11','subscr_payment','S-340286608F170153W','User','US','s3mer','240.00','USD','gio_1219170247_biz@s3mer.com','instant','Ineligible','ANopALv1trHaQxyMEj2hqBGK-UuEAlgsPeYfeN7YT6LR9pu7lfwaKSz8','verified','1','gio_1222982268_per@s3mer.com','6B118415WV1192256','gio_1219170247_biz@s3mer.com','Test','2XJH6UJBUTTGJ','7PPDU8KKF7ALA','Completed','7.26','7.26','240.00','21','windows-1252','2.6')Array
+(
+    [txn_type] => subscr_signup
+    [subscr_id] => S-340286608F170153W
+    [last_name] => User
+    [residence_country] => US
+    [mc_currency] => USD
+    [item_name] => s3mer
+    [business] => gio_1219170247_biz@s3mer.com
+    [amount3] => 240.00
+    [recurring] => 1
+    [verify_sign] => A8UNyUyZFgsCN5V8EiwFFeInnilNAkeSMbBWmJJxTlv1BBbO-pwQfj-m
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1222982268_per@s3mer.com
+    [first_name] => Test
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [payer_id] => 2XJH6UJBUTTGJ
+    [reattempt] => 1
+    [subscr_date] => 08:41:09 Jan 10, 2009 PST
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+    [period3] => 1 M
+    [mc_amount3] => 240.00
+)
+
+[txn_type] - subscr_signup
+[subscr_id] - S-340286608F170153W
+[last_name] - User
+[residence_country] - US
+[mc_currency] - USD
+[item_name] - s3mer
+[business] - gio_1219170247_biz@s3mer.com
+[amount3] - 240.00
+[recurring] - 1
+[verify_sign] - A8UNyUyZFgsCN5V8EiwFFeInnilNAkeSMbBWmJJxTlv1BBbO-pwQfj-m
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1222982268_per@s3mer.com
+[first_name] - Test
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[payer_id] - 2XJH6UJBUTTGJ
+[reattempt] - 1
+[subscr_date] - 08:41:09 Jan 10, 2009 PST
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+[period3] - 1 M
+[mc_amount3] - 240.00
+
+INSERT INTO paypal_transactions(txn_type,subscr_id,last_name,residence_country,mc_currency,item_name,business,amount3,recurring,verify_sign,payer_status,test_ipn,payer_email,first_name,receiver_email,payer_id,reattempt,subscr_date,custom,charset,notify_version,period3,mc_amount3) VALUES('subscr_signup','S-340286608F170153W','User','US','USD','s3mer','gio_1219170247_biz@s3mer.com','240.00','1','A8UNyUyZFgsCN5V8EiwFFeInnilNAkeSMbBWmJJxTlv1BBbO-pwQfj-m','verified','1','gio_1222982268_per@s3mer.com','Test','gio_1219170247_biz@s3mer.com','2XJH6UJBUTTGJ','1','2009-01-10 12:41:09','21','windows-1252','2.6','1 M','240.00')Array
+(
+    [txn_type] => subscr_cancel
+    [subscr_id] => S-8P404945B42838049
+    [last_name] => User
+    [residence_country] => US
+    [mc_currency] => USD
+    [item_name] => s3mer
+    [business] => gio_1219170247_biz@s3mer.com
+    [amount3] => 240.00
+    [recurring] => 1
+    [verify_sign] => AiPC9BjkCyDFQXbSkoZcgqH3hpacAEdJhFRE2VHdFF0Yu8SdKYWRs0LC
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1222982268_per@s3mer.com
+    [first_name] => Test
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [payer_id] => 2XJH6UJBUTTGJ
+    [reattempt] => 1
+    [subscr_date] => 08:43:03 Jan 10, 2009 PST
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+    [period3] => 1 M
+    [mc_amount3] => 240.00
+)
+
+[txn_type] - subscr_cancel
+[subscr_id] - S-8P404945B42838049
+[last_name] - User
+[residence_country] - US
+[mc_currency] - USD
+[item_name] - s3mer
+[business] - gio_1219170247_biz@s3mer.com
+[amount3] - 240.00
+[recurring] - 1
+[verify_sign] - AiPC9BjkCyDFQXbSkoZcgqH3hpacAEdJhFRE2VHdFF0Yu8SdKYWRs0LC
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1222982268_per@s3mer.com
+[first_name] - Test
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[payer_id] - 2XJH6UJBUTTGJ
+[reattempt] - 1
+[subscr_date] - 08:43:03 Jan 10, 2009 PST
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+[period3] - 1 M
+[mc_amount3] - 240.00
+
+INSERT INTO paypal_transactions(txn_type,subscr_id,last_name,residence_country,mc_currency,item_name,business,amount3,recurring,verify_sign,payer_status,test_ipn,payer_email,first_name,receiver_email,payer_id,reattempt,subscr_date,custom,charset,notify_version,period3,mc_amount3) VALUES('subscr_cancel','S-8P404945B42838049','User','US','USD','s3mer','gio_1219170247_biz@s3mer.com','240.00','1','AiPC9BjkCyDFQXbSkoZcgqH3hpacAEdJhFRE2VHdFF0Yu8SdKYWRs0LC','verified','1','gio_1222982268_per@s3mer.com','Test','gio_1219170247_biz@s3mer.com','2XJH6UJBUTTGJ','1','2009-01-10 12:43:03','21','windows-1252','2.6','1 M','240.00')Array
+(
+    [txn_type] => subscr_cancel
+    [subscr_id] => S-340286608F170153W
+    [last_name] => User
+    [residence_country] => US
+    [mc_currency] => USD
+    [item_name] => s3mer
+    [business] => gio_1219170247_biz@s3mer.com
+    [amount3] => 240.00
+    [recurring] => 1
+    [verify_sign] => AQU0e5vuZCvSg-XJploSa.sGUDlpAgvY3ACbMk7Q7jgs9C.im1x33mA4
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1222982268_per@s3mer.com
+    [first_name] => Test
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [payer_id] => 2XJH6UJBUTTGJ
+    [reattempt] => 1
+    [subscr_date] => 08:43:37 Jan 10, 2009 PST
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+    [period3] => 1 M
+    [mc_amount3] => 240.00
+)
+
+[txn_type] - subscr_cancel
+[subscr_id] - S-340286608F170153W
+[last_name] - User
+[residence_country] - US
+[mc_currency] - USD
+[item_name] - s3mer
+[business] - gio_1219170247_biz@s3mer.com
+[amount3] - 240.00
+[recurring] - 1
+[verify_sign] - AQU0e5vuZCvSg-XJploSa.sGUDlpAgvY3ACbMk7Q7jgs9C.im1x33mA4
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1222982268_per@s3mer.com
+[first_name] - Test
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[payer_id] - 2XJH6UJBUTTGJ
+[reattempt] - 1
+[subscr_date] - 08:43:37 Jan 10, 2009 PST
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+[period3] - 1 M
+[mc_amount3] - 240.00
+
+INSERT INTO paypal_transactions(txn_type,subscr_id,last_name,residence_country,mc_currency,item_name,business,amount3,recurring,verify_sign,payer_status,test_ipn,payer_email,first_name,receiver_email,payer_id,reattempt,subscr_date,custom,charset,notify_version,period3,mc_amount3) VALUES('subscr_cancel','S-340286608F170153W','User','US','USD','s3mer','gio_1219170247_biz@s3mer.com','240.00','1','AQU0e5vuZCvSg-XJploSa.sGUDlpAgvY3ACbMk7Q7jgs9C.im1x33mA4','verified','1','gio_1222982268_per@s3mer.com','Test','gio_1219170247_biz@s3mer.com','2XJH6UJBUTTGJ','1','2009-01-10 12:43:37','21','windows-1252','2.6','1 M','240.00')Array
+(
+    [transaction_subject] => 
+    [payment_date] => 09:42:25 Jan 10, 2009 PST
+    [txn_type] => subscr_payment
+    [subscr_id] => S-0XA16312J1429715V
+    [last_name] => User
+    [residence_country] => US
+    [item_name] => s3mer
+    [payment_gross] => 720.00
+    [mc_currency] => USD
+    [business] => gio_1219170247_biz@s3mer.com
+    [payment_type] => instant
+    [protection_eligibility] => Ineligible
+    [verify_sign] => AUHwg0YPhcQIbSsav0N.1GJp9-gNA6mS.11pxAU8yfcgFqPn7I323U6n
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1219170578_per@s3mer.com
+    [txn_id] => 0Y4879521H1564153
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [first_name] => Test
+    [payer_id] => YGKZQ3A6WF9AL
+    [receiver_id] => 7PPDU8KKF7ALA
+    [payment_status] => Completed
+    [payment_fee] => 21.18
+    [mc_fee] => 21.18
+    [mc_gross] => 720.00
+    [custom] => 15
+    [charset] => windows-1252
+    [notify_version] => 2.6
+)
+
+[transaction_subject] - 
+[payment_date] - 09:42:25 Jan 10, 2009 PST
+[txn_type] - subscr_payment
+[subscr_id] - S-0XA16312J1429715V
+[last_name] - User
+[residence_country] - US
+[item_name] - s3mer
+[payment_gross] - 720.00
+[mc_currency] - USD
+[business] - gio_1219170247_biz@s3mer.com
+[payment_type] - instant
+[protection_eligibility] - Ineligible
+[verify_sign] - AUHwg0YPhcQIbSsav0N.1GJp9-gNA6mS.11pxAU8yfcgFqPn7I323U6n
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1219170578_per@s3mer.com
+[txn_id] - 0Y4879521H1564153
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[first_name] - Test
+[payer_id] - YGKZQ3A6WF9AL
+[receiver_id] - 7PPDU8KKF7ALA
+[payment_status] - Completed
+[payment_fee] - 21.18
+[mc_fee] - 21.18
+[mc_gross] - 720.00
+[custom] - 15
+[charset] - windows-1252
+[notify_version] - 2.6
+09:42:25 Jan 10, 2009 PST - 2009-01-10 13:42:25
+INSERT INTO paypal_transactions(transaction_subject,payment_date,txn_type,subscr_id,last_name,residence_country,item_name,payment_gross,mc_currency,business,payment_type,protection_eligibility,verify_sign,payer_status,test_ipn,payer_email,txn_id,receiver_email,first_name,payer_id,receiver_id,payment_status,payment_fee,mc_fee,mc_gross,custom,charset,notify_version) VALUES('','2009-01-10 13:42:25','subscr_payment','S-0XA16312J1429715V','User','US','s3mer','720.00','USD','gio_1219170247_biz@s3mer.com','instant','Ineligible','AUHwg0YPhcQIbSsav0N.1GJp9-gNA6mS.11pxAU8yfcgFqPn7I323U6n','verified','1','gio_1219170578_per@s3mer.com','0Y4879521H1564153','gio_1219170247_biz@s3mer.com','Test','YGKZQ3A6WF9AL','7PPDU8KKF7ALA','Completed','21.18','21.18','720.00','15','windows-1252','2.6')Array
+(
+    [txn_type] => subscr_signup
+    [subscr_id] => S-0XA16312J1429715V
+    [last_name] => User
+    [residence_country] => US
+    [mc_currency] => USD
+    [item_name] => s3mer
+    [business] => gio_1219170247_biz@s3mer.com
+    [amount3] => 720.00
+    [recurring] => 1
+    [verify_sign] => Ai5ALtUVf.0HOwASXXSdmc.o00BkA.GJKlHBFbctS.cw6Dq2iZTh3do0
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1219170578_per@s3mer.com
+    [first_name] => Test
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [payer_id] => YGKZQ3A6WF9AL
+    [reattempt] => 1
+    [subscr_date] => 09:42:23 Jan 10, 2009 PST
+    [custom] => 15
+    [charset] => windows-1252
+    [notify_version] => 2.6
+    [period3] => 1 M
+    [mc_amount3] => 720.00
+)
+
+[txn_type] - subscr_signup
+[subscr_id] - S-0XA16312J1429715V
+[last_name] - User
+[residence_country] - US
+[mc_currency] - USD
+[item_name] - s3mer
+[business] - gio_1219170247_biz@s3mer.com
+[amount3] - 720.00
+[recurring] - 1
+[verify_sign] - Ai5ALtUVf.0HOwASXXSdmc.o00BkA.GJKlHBFbctS.cw6Dq2iZTh3do0
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1219170578_per@s3mer.com
+[first_name] - Test
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[payer_id] - YGKZQ3A6WF9AL
+[reattempt] - 1
+[subscr_date] - 09:42:23 Jan 10, 2009 PST
+[custom] - 15
+[charset] - windows-1252
+[notify_version] - 2.6
+[period3] - 1 M
+[mc_amount3] - 720.00
+
+INSERT INTO paypal_transactions(txn_type,subscr_id,last_name,residence_country,mc_currency,item_name,business,amount3,recurring,verify_sign,payer_status,test_ipn,payer_email,first_name,receiver_email,payer_id,reattempt,subscr_date,custom,charset,notify_version,period3,mc_amount3) VALUES('subscr_signup','S-0XA16312J1429715V','User','US','USD','s3mer','gio_1219170247_biz@s3mer.com','720.00','1','Ai5ALtUVf.0HOwASXXSdmc.o00BkA.GJKlHBFbctS.cw6Dq2iZTh3do0','verified','1','gio_1219170578_per@s3mer.com','Test','gio_1219170247_biz@s3mer.com','YGKZQ3A6WF9AL','1','2009-01-10 13:42:23','15','windows-1252','2.6','1 M','720.00')Array
+(
+    [transaction_subject] => 
+    [payment_date] => 09:15:41 Jan 10, 2009 PST
+    [txn_type] => subscr_payment
+    [subscr_id] => S-8JH06905DH826974R
+    [last_name] => User
+    [residence_country] => US
+    [item_name] => s3mer
+    [payment_gross] => 180.00
+    [mc_currency] => USD
+    [business] => gio_1219170247_biz@s3mer.com
+    [payment_type] => instant
+    [protection_eligibility] => Ineligible
+    [verify_sign] => ABW-h0fNjq047lTG2QfX5sv1wlH4AHEeQROqExrEsM9y0K8oSVsnZPvp
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1219170578_per@s3mer.com
+    [txn_id] => 095018402Y793171A
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [first_name] => Test
+    [payer_id] => YGKZQ3A6WF9AL
+    [receiver_id] => 7PPDU8KKF7ALA
+    [payment_status] => Completed
+    [payment_fee] => 5.52
+    [mc_fee] => 5.52
+    [mc_gross] => 180.00
+    [custom] => 15
+    [charset] => windows-1252
+    [notify_version] => 2.6
+)
+
+[transaction_subject] - 
+[payment_date] - 09:15:41 Jan 10, 2009 PST
+[txn_type] - subscr_payment
+[subscr_id] - S-8JH06905DH826974R
+[last_name] - User
+[residence_country] - US
+[item_name] - s3mer
+[payment_gross] - 180.00
+[mc_currency] - USD
+[business] - gio_1219170247_biz@s3mer.com
+[payment_type] - instant
+[protection_eligibility] - Ineligible
+[verify_sign] - ABW-h0fNjq047lTG2QfX5sv1wlH4AHEeQROqExrEsM9y0K8oSVsnZPvp
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1219170578_per@s3mer.com
+[txn_id] - 095018402Y793171A
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[first_name] - Test
+[payer_id] - YGKZQ3A6WF9AL
+[receiver_id] - 7PPDU8KKF7ALA
+[payment_status] - Completed
+[payment_fee] - 5.52
+[mc_fee] - 5.52
+[mc_gross] - 180.00
+[custom] - 15
+[charset] - windows-1252
+[notify_version] - 2.6
+09:15:41 Jan 10, 2009 PST - 2009-01-10 13:15:41
+INSERT INTO paypal_transactions(transaction_subject,payment_date,txn_type,subscr_id,last_name,residence_country,item_name,payment_gross,mc_currency,business,payment_type,protection_eligibility,verify_sign,payer_status,test_ipn,payer_email,txn_id,receiver_email,first_name,payer_id,receiver_id,payment_status,payment_fee,mc_fee,mc_gross,custom,charset,notify_version) VALUES('','2009-01-10 13:15:41','subscr_payment','S-8JH06905DH826974R','User','US','s3mer','180.00','USD','gio_1219170247_biz@s3mer.com','instant','Ineligible','ABW-h0fNjq047lTG2QfX5sv1wlH4AHEeQROqExrEsM9y0K8oSVsnZPvp','verified','1','gio_1219170578_per@s3mer.com','095018402Y793171A','gio_1219170247_biz@s3mer.com','Test','YGKZQ3A6WF9AL','7PPDU8KKF7ALA','Completed','5.52','5.52','180.00','15','windows-1252','2.6')Array
+(
+    [txn_type] => subscr_signup
+    [subscr_id] => S-8JH06905DH826974R
+    [last_name] => User
+    [residence_country] => US
+    [mc_currency] => USD
+    [item_name] => s3mer
+    [business] => gio_1219170247_biz@s3mer.com
+    [amount3] => 180.00
+    [recurring] => 1
+    [verify_sign] => ARpxpA56kVSIJB741NglQo2IULy7ALho6DJXEHNLv64Kn-OODn87nNWS
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1219170578_per@s3mer.com
+    [first_name] => Test
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [payer_id] => YGKZQ3A6WF9AL
+    [reattempt] => 1
+    [subscr_date] => 09:15:39 Jan 10, 2009 PST
+    [custom] => 15
+    [charset] => windows-1252
+    [notify_version] => 2.6
+    [period3] => 1 M
+    [mc_amount3] => 180.00
+)
+
+[txn_type] - subscr_signup
+[subscr_id] - S-8JH06905DH826974R
+[last_name] - User
+[residence_country] - US
+[mc_currency] - USD
+[item_name] - s3mer
+[business] - gio_1219170247_biz@s3mer.com
+[amount3] - 180.00
+[recurring] - 1
+[verify_sign] - ARpxpA56kVSIJB741NglQo2IULy7ALho6DJXEHNLv64Kn-OODn87nNWS
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1219170578_per@s3mer.com
+[first_name] - Test
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[payer_id] - YGKZQ3A6WF9AL
+[reattempt] - 1
+[subscr_date] - 09:15:39 Jan 10, 2009 PST
+[custom] - 15
+[charset] - windows-1252
+[notify_version] - 2.6
+[period3] - 1 M
+[mc_amount3] - 180.00
+
+INSERT INTO paypal_transactions(txn_type,subscr_id,last_name,residence_country,mc_currency,item_name,business,amount3,recurring,verify_sign,payer_status,test_ipn,payer_email,first_name,receiver_email,payer_id,reattempt,subscr_date,custom,charset,notify_version,period3,mc_amount3) VALUES('subscr_signup','S-8JH06905DH826974R','User','US','USD','s3mer','gio_1219170247_biz@s3mer.com','180.00','1','ARpxpA56kVSIJB741NglQo2IULy7ALho6DJXEHNLv64Kn-OODn87nNWS','verified','1','gio_1219170578_per@s3mer.com','Test','gio_1219170247_biz@s3mer.com','YGKZQ3A6WF9AL','1','2009-01-10 13:15:39','15','windows-1252','2.6','1 M','180.00')Array
+(
+    [transaction_subject] => 
+    [payment_date] => 09:01:06 Jan 10, 2009 PST
+    [txn_type] => subscr_payment
+    [subscr_id] => S-6MC31886P4657792S
+    [last_name] => User
+    [residence_country] => US
+    [item_name] => s3mer
+    [payment_gross] => 180.00
+    [mc_currency] => USD
+    [business] => gio_1219170247_biz@s3mer.com
+    [payment_type] => instant
+    [protection_eligibility] => Ineligible
+    [verify_sign] => A1DMm3sIa0mdXWQHtbVmHv8oU13zAKT3jL63CfKIo6rVVeMLjnk6XoGs
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1219170578_per@s3mer.com
+    [txn_id] => 75L76337T2353303L
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [first_name] => Test
+    [payer_id] => YGKZQ3A6WF9AL
+    [receiver_id] => 7PPDU8KKF7ALA
+    [payment_status] => Completed
+    [payment_fee] => 5.52
+    [mc_fee] => 5.52
+    [mc_gross] => 180.00
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+)
+
+[transaction_subject] - 
+[payment_date] - 09:01:06 Jan 10, 2009 PST
+[txn_type] - subscr_payment
+[subscr_id] - S-6MC31886P4657792S
+[last_name] - User
+[residence_country] - US
+[item_name] - s3mer
+[payment_gross] - 180.00
+[mc_currency] - USD
+[business] - gio_1219170247_biz@s3mer.com
+[payment_type] - instant
+[protection_eligibility] - Ineligible
+[verify_sign] - A1DMm3sIa0mdXWQHtbVmHv8oU13zAKT3jL63CfKIo6rVVeMLjnk6XoGs
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1219170578_per@s3mer.com
+[txn_id] - 75L76337T2353303L
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[first_name] - Test
+[payer_id] - YGKZQ3A6WF9AL
+[receiver_id] - 7PPDU8KKF7ALA
+[payment_status] - Completed
+[payment_fee] - 5.52
+[mc_fee] - 5.52
+[mc_gross] - 180.00
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+09:01:06 Jan 10, 2009 PST - 2009-01-10 13:01:06
+INSERT INTO paypal_transactions(transaction_subject,payment_date,txn_type,subscr_id,last_name,residence_country,item_name,payment_gross,mc_currency,business,payment_type,protection_eligibility,verify_sign,payer_status,test_ipn,payer_email,txn_id,receiver_email,first_name,payer_id,receiver_id,payment_status,payment_fee,mc_fee,mc_gross,custom,charset,notify_version) VALUES('','2009-01-10 13:01:06','subscr_payment','S-6MC31886P4657792S','User','US','s3mer','180.00','USD','gio_1219170247_biz@s3mer.com','instant','Ineligible','A1DMm3sIa0mdXWQHtbVmHv8oU13zAKT3jL63CfKIo6rVVeMLjnk6XoGs','verified','1','gio_1219170578_per@s3mer.com','75L76337T2353303L','gio_1219170247_biz@s3mer.com','Test','YGKZQ3A6WF9AL','7PPDU8KKF7ALA','Completed','5.52','5.52','180.00','21','windows-1252','2.6')Array
+(
+    [txn_type] => subscr_signup
+    [subscr_id] => S-6MC31886P4657792S
+    [last_name] => User
+    [residence_country] => US
+    [mc_currency] => USD
+    [item_name] => s3mer
+    [business] => gio_1219170247_biz@s3mer.com
+    [amount3] => 180.00
+    [recurring] => 1
+    [verify_sign] => A3Wv2bhI-RThEFBJcnCklqXNy9NmA1mMWMRTtmMPkHKLRX4RbhZKoLcu
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1219170578_per@s3mer.com
+    [first_name] => Test
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [payer_id] => YGKZQ3A6WF9AL
+    [reattempt] => 1
+    [subscr_date] => 09:01:05 Jan 10, 2009 PST
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+    [period3] => 1 M
+    [mc_amount3] => 180.00
+)
+
+[txn_type] - subscr_signup
+[subscr_id] - S-6MC31886P4657792S
+[last_name] - User
+[residence_country] - US
+[mc_currency] - USD
+[item_name] - s3mer
+[business] - gio_1219170247_biz@s3mer.com
+[amount3] - 180.00
+[recurring] - 1
+[verify_sign] - A3Wv2bhI-RThEFBJcnCklqXNy9NmA1mMWMRTtmMPkHKLRX4RbhZKoLcu
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1219170578_per@s3mer.com
+[first_name] - Test
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[payer_id] - YGKZQ3A6WF9AL
+[reattempt] - 1
+[subscr_date] - 09:01:05 Jan 10, 2009 PST
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+[period3] - 1 M
+[mc_amount3] - 180.00
+
+INSERT INTO paypal_transactions(txn_type,subscr_id,last_name,residence_country,mc_currency,item_name,business,amount3,recurring,verify_sign,payer_status,test_ipn,payer_email,first_name,receiver_email,payer_id,reattempt,subscr_date,custom,charset,notify_version,period3,mc_amount3) VALUES('subscr_signup','S-6MC31886P4657792S','User','US','USD','s3mer','gio_1219170247_biz@s3mer.com','180.00','1','A3Wv2bhI-RThEFBJcnCklqXNy9NmA1mMWMRTtmMPkHKLRX4RbhZKoLcu','verified','1','gio_1219170578_per@s3mer.com','Test','gio_1219170247_biz@s3mer.com','YGKZQ3A6WF9AL','1','2009-01-10 13:01:05','21','windows-1252','2.6','1 M','180.00')Array
+(
+    [transaction_subject] => 
+    [payment_date] => 09:05:03 Jan 10, 2009 PST
+    [txn_type] => subscr_payment
+    [subscr_id] => S-3DN28059FU168711N
+    [last_name] => User
+    [residence_country] => US
+    [item_name] => s3mer
+    [payment_gross] => 540.00
+    [mc_currency] => USD
+    [business] => gio_1219170247_biz@s3mer.com
+    [payment_type] => instant
+    [protection_eligibility] => Ineligible
+    [verify_sign] => ABCWLAAz9-qLWlONfZ.Wv4RegNDuANpSCW39RLtdTqF36dYsGyaBoDrX
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1219170578_per@s3mer.com
+    [txn_id] => 3K569283RR390345H
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [first_name] => Test
+    [payer_id] => YGKZQ3A6WF9AL
+    [receiver_id] => 7PPDU8KKF7ALA
+    [payment_status] => Completed
+    [payment_fee] => 15.96
+    [mc_fee] => 15.96
+    [mc_gross] => 540.00
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+)
+
+[transaction_subject] - 
+[payment_date] - 09:05:03 Jan 10, 2009 PST
+[txn_type] - subscr_payment
+[subscr_id] - S-3DN28059FU168711N
+[last_name] - User
+[residence_country] - US
+[item_name] - s3mer
+[payment_gross] - 540.00
+[mc_currency] - USD
+[business] - gio_1219170247_biz@s3mer.com
+[payment_type] - instant
+[protection_eligibility] - Ineligible
+[verify_sign] - ABCWLAAz9-qLWlONfZ.Wv4RegNDuANpSCW39RLtdTqF36dYsGyaBoDrX
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1219170578_per@s3mer.com
+[txn_id] - 3K569283RR390345H
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[first_name] - Test
+[payer_id] - YGKZQ3A6WF9AL
+[receiver_id] - 7PPDU8KKF7ALA
+[payment_status] - Completed
+[payment_fee] - 15.96
+[mc_fee] - 15.96
+[mc_gross] - 540.00
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+09:05:03 Jan 10, 2009 PST - 2009-01-10 13:05:03
+INSERT INTO paypal_transactions(transaction_subject,payment_date,txn_type,subscr_id,last_name,residence_country,item_name,payment_gross,mc_currency,business,payment_type,protection_eligibility,verify_sign,payer_status,test_ipn,payer_email,txn_id,receiver_email,first_name,payer_id,receiver_id,payment_status,payment_fee,mc_fee,mc_gross,custom,charset,notify_version) VALUES('','2009-01-10 13:05:03','subscr_payment','S-3DN28059FU168711N','User','US','s3mer','540.00','USD','gio_1219170247_biz@s3mer.com','instant','Ineligible','ABCWLAAz9-qLWlONfZ.Wv4RegNDuANpSCW39RLtdTqF36dYsGyaBoDrX','verified','1','gio_1219170578_per@s3mer.com','3K569283RR390345H','gio_1219170247_biz@s3mer.com','Test','YGKZQ3A6WF9AL','7PPDU8KKF7ALA','Completed','15.96','15.96','540.00','21','windows-1252','2.6')Array
+(
+    [txn_type] => subscr_signup
+    [subscr_id] => S-3DN28059FU168711N
+    [last_name] => User
+    [residence_country] => US
+    [mc_currency] => USD
+    [item_name] => s3mer
+    [business] => gio_1219170247_biz@s3mer.com
+    [amount3] => 540.00
+    [recurring] => 1
+    [verify_sign] => AmAaz8WFahOtLGsUuGYKa2M.0GoBAz9Aywf2p0-UYodp18-U8jt3qvEl
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1219170578_per@s3mer.com
+    [first_name] => Test
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [payer_id] => YGKZQ3A6WF9AL
+    [reattempt] => 1
+    [subscr_date] => 09:05:01 Jan 10, 2009 PST
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+    [period3] => 1 M
+    [mc_amount3] => 540.00
+)
+
+[txn_type] - subscr_signup
+[subscr_id] - S-3DN28059FU168711N
+[last_name] - User
+[residence_country] - US
+[mc_currency] - USD
+[item_name] - s3mer
+[business] - gio_1219170247_biz@s3mer.com
+[amount3] - 540.00
+[recurring] - 1
+[verify_sign] - AmAaz8WFahOtLGsUuGYKa2M.0GoBAz9Aywf2p0-UYodp18-U8jt3qvEl
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1219170578_per@s3mer.com
+[first_name] - Test
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[payer_id] - YGKZQ3A6WF9AL
+[reattempt] - 1
+[subscr_date] - 09:05:01 Jan 10, 2009 PST
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+[period3] - 1 M
+[mc_amount3] - 540.00
+
+INSERT INTO paypal_transactions(txn_type,subscr_id,last_name,residence_country,mc_currency,item_name,business,amount3,recurring,verify_sign,payer_status,test_ipn,payer_email,first_name,receiver_email,payer_id,reattempt,subscr_date,custom,charset,notify_version,period3,mc_amount3) VALUES('subscr_signup','S-3DN28059FU168711N','User','US','USD','s3mer','gio_1219170247_biz@s3mer.com','540.00','1','AmAaz8WFahOtLGsUuGYKa2M.0GoBAz9Aywf2p0-UYodp18-U8jt3qvEl','verified','1','gio_1219170578_per@s3mer.com','Test','gio_1219170247_biz@s3mer.com','YGKZQ3A6WF9AL','1','2009-01-10 13:05:01','21','windows-1252','2.6','1 M','540.00')Array
+(
+    [txn_type] => subscr_signup
+    [subscr_id] => S-79Y61154CC353004F
+    [last_name] => User
+    [residence_country] => US
+    [mc_currency] => USD
+    [item_name] => s3mer
+    [business] => gio_1219170247_biz@s3mer.com
+    [amount3] => 180.00
+    [recurring] => 1
+    [verify_sign] => AYUWRq2G0QpwdxRQP0tQ1y0b9ufbAa5tlsEX9TQJEO4.slSWtS9LlfuX
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1219170578_per@s3mer.com
+    [first_name] => Test
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [payer_id] => YGKZQ3A6WF9AL
+    [reattempt] => 1
+    [subscr_date] => 11:25:37 Jan 10, 2009 PST
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+    [period3] => 1 M
+    [mc_amount3] => 180.00
+)
+
+[txn_type] - subscr_signup
+[subscr_id] - S-79Y61154CC353004F
+[last_name] - User
+[residence_country] - US
+[mc_currency] - USD
+[item_name] - s3mer
+[business] - gio_1219170247_biz@s3mer.com
+[amount3] - 180.00
+[recurring] - 1
+[verify_sign] - AYUWRq2G0QpwdxRQP0tQ1y0b9ufbAa5tlsEX9TQJEO4.slSWtS9LlfuX
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1219170578_per@s3mer.com
+[first_name] - Test
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[payer_id] - YGKZQ3A6WF9AL
+[reattempt] - 1
+[subscr_date] - 11:25:37 Jan 10, 2009 PST
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+[period3] - 1 M
+[mc_amount3] - 180.00
+
+INSERT INTO paypal_transactions(txn_type,subscr_id,last_name,residence_country,mc_currency,item_name,business,amount3,recurring,verify_sign,payer_status,test_ipn,payer_email,first_name,receiver_email,payer_id,reattempt,subscr_date,custom,charset,notify_version,period3,mc_amount3) VALUES('subscr_signup','S-79Y61154CC353004F','User','US','USD','s3mer','gio_1219170247_biz@s3mer.com','180.00','1','AYUWRq2G0QpwdxRQP0tQ1y0b9ufbAa5tlsEX9TQJEO4.slSWtS9LlfuX','verified','1','gio_1219170578_per@s3mer.com','Test','gio_1219170247_biz@s3mer.com','YGKZQ3A6WF9AL','1','2009-01-10 15:25:37','21','windows-1252','2.6','1 M','180.00')Array
+(
+    [transaction_subject] => 
+    [payment_date] => 11:25:38 Jan 10, 2009 PST
+    [txn_type] => subscr_payment
+    [subscr_id] => S-79Y61154CC353004F
+    [last_name] => User
+    [residence_country] => US
+    [item_name] => s3mer
+    [payment_gross] => 180.00
+    [mc_currency] => USD
+    [business] => gio_1219170247_biz@s3mer.com
+    [payment_type] => instant
+    [protection_eligibility] => Ineligible
+    [verify_sign] => A1vEVObpaMPLUmJDmwgzt-lp1tEfAuZeO8EqDMtev5IcbTz0sgc9c-YY
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1219170578_per@s3mer.com
+    [txn_id] => 33L487300H548950G
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [first_name] => Test
+    [payer_id] => YGKZQ3A6WF9AL
+    [receiver_id] => 7PPDU8KKF7ALA
+    [payment_status] => Completed
+    [payment_fee] => 5.52
+    [mc_fee] => 5.52
+    [mc_gross] => 180.00
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+)
+
+[transaction_subject] - 
+[payment_date] - 11:25:38 Jan 10, 2009 PST
+[txn_type] - subscr_payment
+[subscr_id] - S-79Y61154CC353004F
+[last_name] - User
+[residence_country] - US
+[item_name] - s3mer
+[payment_gross] - 180.00
+[mc_currency] - USD
+[business] - gio_1219170247_biz@s3mer.com
+[payment_type] - instant
+[protection_eligibility] - Ineligible
+[verify_sign] - A1vEVObpaMPLUmJDmwgzt-lp1tEfAuZeO8EqDMtev5IcbTz0sgc9c-YY
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1219170578_per@s3mer.com
+[txn_id] - 33L487300H548950G
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[first_name] - Test
+[payer_id] - YGKZQ3A6WF9AL
+[receiver_id] - 7PPDU8KKF7ALA
+[payment_status] - Completed
+[payment_fee] - 5.52
+[mc_fee] - 5.52
+[mc_gross] - 180.00
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+11:25:38 Jan 10, 2009 PST - 2009-01-10 15:25:38
+INSERT INTO paypal_transactions(transaction_subject,payment_date,txn_type,subscr_id,last_name,residence_country,item_name,payment_gross,mc_currency,business,payment_type,protection_eligibility,verify_sign,payer_status,test_ipn,payer_email,txn_id,receiver_email,first_name,payer_id,receiver_id,payment_status,payment_fee,mc_fee,mc_gross,custom,charset,notify_version) VALUES('','2009-01-10 15:25:38','subscr_payment','S-79Y61154CC353004F','User','US','s3mer','180.00','USD','gio_1219170247_biz@s3mer.com','instant','Ineligible','A1vEVObpaMPLUmJDmwgzt-lp1tEfAuZeO8EqDMtev5IcbTz0sgc9c-YY','verified','1','gio_1219170578_per@s3mer.com','33L487300H548950G','gio_1219170247_biz@s3mer.com','Test','YGKZQ3A6WF9AL','7PPDU8KKF7ALA','Completed','5.52','5.52','180.00','21','windows-1252','2.6')Array
+(
+    [txn_type] => subscr_modify
+    [subscr_id] => S-6MC31886P4657792S
+    [last_name] => User
+    [residence_country] => US
+    [mc_currency] => USD
+    [item_name] => s3mer
+    [business] => gio_1219170247_biz@s3mer.com
+    [amount3] => 300.00
+    [subscr_effective] => 02:00:00 Feb 10, 2009 PST
+    [recurring] => 1
+    [verify_sign] => AFcWxV21C7fd0v3bYYYRCpSSRl31AU2MBn85dyEgawLooyFzRQWcLZ4.
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1219170578_per@s3mer.com
+    [first_name] => Test
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [payer_id] => YGKZQ3A6WF9AL
+    [reattempt] => 1
+    [subscr_date] => 11:42:12 Jan 10, 2009 PST
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+    [period3] => 1 M
+    [mc_amount3] => 300.00
+)
+
+[txn_type] - subscr_modify
+[subscr_id] - S-6MC31886P4657792S
+[last_name] - User
+[residence_country] - US
+[mc_currency] - USD
+[item_name] - s3mer
+[business] - gio_1219170247_biz@s3mer.com
+[amount3] - 300.00
+[subscr_effective] - 02:00:00 Feb 10, 2009 PST
+[recurring] - 1
+[verify_sign] - AFcWxV21C7fd0v3bYYYRCpSSRl31AU2MBn85dyEgawLooyFzRQWcLZ4.
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1219170578_per@s3mer.com
+[first_name] - Test
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[payer_id] - YGKZQ3A6WF9AL
+[reattempt] - 1
+[subscr_date] - 11:42:12 Jan 10, 2009 PST
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+[period3] - 1 M
+[mc_amount3] - 300.00
+
+INSERT INTO paypal_transactions(txn_type,subscr_id,last_name,residence_country,mc_currency,item_name,business,amount3,subscr_effective,recurring,verify_sign,payer_status,test_ipn,payer_email,first_name,receiver_email,payer_id,reattempt,subscr_date,custom,charset,notify_version,period3,mc_amount3) VALUES('subscr_modify','S-6MC31886P4657792S','User','US','USD','s3mer','gio_1219170247_biz@s3mer.com','300.00','02:00:00 Feb 10, 2009 PST','1','AFcWxV21C7fd0v3bYYYRCpSSRl31AU2MBn85dyEgawLooyFzRQWcLZ4.','verified','1','gio_1219170578_per@s3mer.com','Test','gio_1219170247_biz@s3mer.com','YGKZQ3A6WF9AL','1','2009-01-10 15:42:12','21','windows-1252','2.6','1 M','300.00')Array
+(
+    [transaction_subject] => 
+    [payment_date] => 11:49:33 Jan 10, 2009 PST
+    [txn_type] => subscr_payment
+    [subscr_id] => S-1YE131584X5783122
+    [last_name] => User
+    [residence_country] => US
+    [item_name] => s3mer
+    [payment_gross] => 120.00
+    [mc_currency] => USD
+    [business] => gio_1219170247_biz@s3mer.com
+    [payment_type] => instant
+    [protection_eligibility] => Ineligible
+    [verify_sign] => AQVm.vuHBflLkRjfMyk-yeyjggnJA9P0XJDJGA2h89Dst.kfHdSXJcfy
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1231616691_per@s3mer.com
+    [txn_id] => 3LB743597J128825F
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [first_name] => Test
+    [payer_id] => 7LQW3CGN5ZLZN
+    [receiver_id] => 7PPDU8KKF7ALA
+    [payment_status] => Completed
+    [payment_fee] => 3.78
+    [mc_fee] => 3.78
+    [mc_gross] => 120.00
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+)
+
+[transaction_subject] - 
+[payment_date] - 11:49:33 Jan 10, 2009 PST
+[txn_type] - subscr_payment
+[subscr_id] - S-1YE131584X5783122
+[last_name] - User
+[residence_country] - US
+[item_name] - s3mer
+[payment_gross] - 120.00
+[mc_currency] - USD
+[business] - gio_1219170247_biz@s3mer.com
+[payment_type] - instant
+[protection_eligibility] - Ineligible
+[verify_sign] - AQVm.vuHBflLkRjfMyk-yeyjggnJA9P0XJDJGA2h89Dst.kfHdSXJcfy
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1231616691_per@s3mer.com
+[txn_id] - 3LB743597J128825F
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[first_name] - Test
+[payer_id] - 7LQW3CGN5ZLZN
+[receiver_id] - 7PPDU8KKF7ALA
+[payment_status] - Completed
+[payment_fee] - 3.78
+[mc_fee] - 3.78
+[mc_gross] - 120.00
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+11:49:33 Jan 10, 2009 PST - 2009-01-10 15:49:33
+INSERT INTO paypal_transactions(transaction_subject,payment_date,txn_type,subscr_id,last_name,residence_country,item_name,payment_gross,mc_currency,business,payment_type,protection_eligibility,verify_sign,payer_status,test_ipn,payer_email,txn_id,receiver_email,first_name,payer_id,receiver_id,payment_status,payment_fee,mc_fee,mc_gross,custom,charset,notify_version) VALUES('','2009-01-10 15:49:33','subscr_payment','S-1YE131584X5783122','User','US','s3mer','120.00','USD','gio_1219170247_biz@s3mer.com','instant','Ineligible','AQVm.vuHBflLkRjfMyk-yeyjggnJA9P0XJDJGA2h89Dst.kfHdSXJcfy','verified','1','gio_1231616691_per@s3mer.com','3LB743597J128825F','gio_1219170247_biz@s3mer.com','Test','7LQW3CGN5ZLZN','7PPDU8KKF7ALA','Completed','3.78','3.78','120.00','21','windows-1252','2.6')Array
+(
+    [txn_type] => subscr_signup
+    [subscr_id] => S-1YE131584X5783122
+    [last_name] => User
+    [residence_country] => US
+    [mc_currency] => USD
+    [item_name] => s3mer
+    [business] => gio_1219170247_biz@s3mer.com
+    [amount3] => 120.00
+    [recurring] => 1
+    [verify_sign] => AyKdPJl.PH-IcCfe-Da-ZfdLJUhuAmeeCOw95604qg8srFO7oZQ0k01E
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1231616691_per@s3mer.com
+    [first_name] => Test
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [payer_id] => 7LQW3CGN5ZLZN
+    [reattempt] => 1
+    [subscr_date] => 11:49:31 Jan 10, 2009 PST
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+    [period3] => 1 M
+    [mc_amount3] => 120.00
+)
+
+[txn_type] - subscr_signup
+[subscr_id] - S-1YE131584X5783122
+[last_name] - User
+[residence_country] - US
+[mc_currency] - USD
+[item_name] - s3mer
+[business] - gio_1219170247_biz@s3mer.com
+[amount3] - 120.00
+[recurring] - 1
+[verify_sign] - AyKdPJl.PH-IcCfe-Da-ZfdLJUhuAmeeCOw95604qg8srFO7oZQ0k01E
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1231616691_per@s3mer.com
+[first_name] - Test
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[payer_id] - 7LQW3CGN5ZLZN
+[reattempt] - 1
+[subscr_date] - 11:49:31 Jan 10, 2009 PST
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+[period3] - 1 M
+[mc_amount3] - 120.00
+
+INSERT INTO paypal_transactions(txn_type,subscr_id,last_name,residence_country,mc_currency,item_name,business,amount3,recurring,verify_sign,payer_status,test_ipn,payer_email,first_name,receiver_email,payer_id,reattempt,subscr_date,custom,charset,notify_version,period3,mc_amount3) VALUES('subscr_signup','S-1YE131584X5783122','User','US','USD','s3mer','gio_1219170247_biz@s3mer.com','120.00','1','AyKdPJl.PH-IcCfe-Da-ZfdLJUhuAmeeCOw95604qg8srFO7oZQ0k01E','verified','1','gio_1231616691_per@s3mer.com','Test','gio_1219170247_biz@s3mer.com','7LQW3CGN5ZLZN','1','2009-01-10 15:49:31','21','windows-1252','2.6','1 M','120.00')Array
+(
+    [txn_type] => subscr_cancel
+    [subscr_id] => S-1YE131584X5783122
+    [last_name] => User
+    [residence_country] => US
+    [mc_currency] => USD
+    [item_name] => s3mer
+    [business] => gio_1219170247_biz@s3mer.com
+    [amount3] => 120.00
+    [recurring] => 1
+    [verify_sign] => AFcWxV21C7fd0v3bYYYRCpSSRl31A0t-Mfiwevq.vHS.MTGJuQTRcbJV
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1231616691_per@s3mer.com
+    [first_name] => Test
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [payer_id] => 7LQW3CGN5ZLZN
+    [reattempt] => 1
+    [subscr_date] => 12:02:29 Jan 10, 2009 PST
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+    [period3] => 1 M
+    [mc_amount3] => 120.00
+)
+
+[txn_type] - subscr_cancel
+[subscr_id] - S-1YE131584X5783122
+[last_name] - User
+[residence_country] - US
+[mc_currency] - USD
+[item_name] - s3mer
+[business] - gio_1219170247_biz@s3mer.com
+[amount3] - 120.00
+[recurring] - 1
+[verify_sign] - AFcWxV21C7fd0v3bYYYRCpSSRl31A0t-Mfiwevq.vHS.MTGJuQTRcbJV
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1231616691_per@s3mer.com
+[first_name] - Test
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[payer_id] - 7LQW3CGN5ZLZN
+[reattempt] - 1
+[subscr_date] - 12:02:29 Jan 10, 2009 PST
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+[period3] - 1 M
+[mc_amount3] - 120.00
+
+INSERT INTO paypal_transactions(txn_type,subscr_id,last_name,residence_country,mc_currency,item_name,business,amount3,recurring,verify_sign,payer_status,test_ipn,payer_email,first_name,receiver_email,payer_id,reattempt,subscr_date,custom,charset,notify_version,period3,mc_amount3) VALUES('subscr_cancel','S-1YE131584X5783122','User','US','USD','s3mer','gio_1219170247_biz@s3mer.com','120.00','1','AFcWxV21C7fd0v3bYYYRCpSSRl31A0t-Mfiwevq.vHS.MTGJuQTRcbJV','verified','1','gio_1231616691_per@s3mer.com','Test','gio_1219170247_biz@s3mer.com','7LQW3CGN5ZLZN','1','2009-01-10 16:02:29','21','windows-1252','2.6','1 M','120.00')Array
+(
+    [txn_type] => subscr_signup
+    [subscr_id] => S-4PR211182B1952103
+    [last_name] => User
+    [residence_country] => US
+    [mc_currency] => USD
+    [item_name] => s3mer
+    [business] => gio_1219170247_biz@s3mer.com
+    [amount3] => 240.00
+    [recurring] => 1
+    [verify_sign] => Ai.ctzO6ZcvgDHMlSf.ztgWwVS6jAxG9AzXyAzEi7QguEclc4SU0ibcu
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1231616691_per@s3mer.com
+    [first_name] => Test
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [payer_id] => 7LQW3CGN5ZLZN
+    [reattempt] => 1
+    [subscr_date] => 12:13:48 Jan 10, 2009 PST
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+    [period3] => 1 M
+    [mc_amount3] => 240.00
+)
+
+[txn_type] - subscr_signup
+[subscr_id] - S-4PR211182B1952103
+[last_name] - User
+[residence_country] - US
+[mc_currency] - USD
+[item_name] - s3mer
+[business] - gio_1219170247_biz@s3mer.com
+[amount3] - 240.00
+[recurring] - 1
+[verify_sign] - Ai.ctzO6ZcvgDHMlSf.ztgWwVS6jAxG9AzXyAzEi7QguEclc4SU0ibcu
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1231616691_per@s3mer.com
+[first_name] - Test
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[payer_id] - 7LQW3CGN5ZLZN
+[reattempt] - 1
+[subscr_date] - 12:13:48 Jan 10, 2009 PST
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+[period3] - 1 M
+[mc_amount3] - 240.00
+
+INSERT INTO paypal_transactions(txn_type,subscr_id,last_name,residence_country,mc_currency,item_name,business,amount3,recurring,verify_sign,payer_status,test_ipn,payer_email,first_name,receiver_email,payer_id,reattempt,subscr_date,custom,charset,notify_version,period3,mc_amount3) VALUES('subscr_signup','S-4PR211182B1952103','User','US','USD','s3mer','gio_1219170247_biz@s3mer.com','240.00','1','Ai.ctzO6ZcvgDHMlSf.ztgWwVS6jAxG9AzXyAzEi7QguEclc4SU0ibcu','verified','1','gio_1231616691_per@s3mer.com','Test','gio_1219170247_biz@s3mer.com','7LQW3CGN5ZLZN','1','2009-01-10 16:13:48','21','windows-1252','2.6','1 M','240.00')Array
+(
+    [transaction_subject] => 
+    [payment_date] => 12:13:50 Jan 10, 2009 PST
+    [txn_type] => subscr_payment
+    [subscr_id] => S-4PR211182B1952103
+    [last_name] => User
+    [residence_country] => US
+    [item_name] => s3mer
+    [payment_gross] => 240.00
+    [mc_currency] => USD
+    [business] => gio_1219170247_biz@s3mer.com
+    [payment_type] => instant
+    [protection_eligibility] => Ineligible
+    [verify_sign] => A1E491LXL.SMtQMvTCkpJAflHZYHArBY4B5QqfeZYZZ6G5d3RBQzd7yj
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1231616691_per@s3mer.com
+    [txn_id] => 10T46270UL0655027
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [first_name] => Test
+    [payer_id] => 7LQW3CGN5ZLZN
+    [receiver_id] => 7PPDU8KKF7ALA
+    [payment_status] => Completed
+    [payment_fee] => 7.26
+    [mc_fee] => 7.26
+    [mc_gross] => 240.00
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+)
+
+[transaction_subject] - 
+[payment_date] - 12:13:50 Jan 10, 2009 PST
+[txn_type] - subscr_payment
+[subscr_id] - S-4PR211182B1952103
+[last_name] - User
+[residence_country] - US
+[item_name] - s3mer
+[payment_gross] - 240.00
+[mc_currency] - USD
+[business] - gio_1219170247_biz@s3mer.com
+[payment_type] - instant
+[protection_eligibility] - Ineligible
+[verify_sign] - A1E491LXL.SMtQMvTCkpJAflHZYHArBY4B5QqfeZYZZ6G5d3RBQzd7yj
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1231616691_per@s3mer.com
+[txn_id] - 10T46270UL0655027
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[first_name] - Test
+[payer_id] - 7LQW3CGN5ZLZN
+[receiver_id] - 7PPDU8KKF7ALA
+[payment_status] - Completed
+[payment_fee] - 7.26
+[mc_fee] - 7.26
+[mc_gross] - 240.00
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+12:13:50 Jan 10, 2009 PST - 2009-01-10 16:13:50
+INSERT INTO paypal_transactions(transaction_subject,payment_date,txn_type,subscr_id,last_name,residence_country,item_name,payment_gross,mc_currency,business,payment_type,protection_eligibility,verify_sign,payer_status,test_ipn,payer_email,txn_id,receiver_email,first_name,payer_id,receiver_id,payment_status,payment_fee,mc_fee,mc_gross,custom,charset,notify_version) VALUES('','2009-01-10 16:13:50','subscr_payment','S-4PR211182B1952103','User','US','s3mer','240.00','USD','gio_1219170247_biz@s3mer.com','instant','Ineligible','A1E491LXL.SMtQMvTCkpJAflHZYHArBY4B5QqfeZYZZ6G5d3RBQzd7yj','verified','1','gio_1231616691_per@s3mer.com','10T46270UL0655027','gio_1219170247_biz@s3mer.com','Test','7LQW3CGN5ZLZN','7PPDU8KKF7ALA','Completed','7.26','7.26','240.00','21','windows-1252','2.6')Array
+(
+    [txn_type] => subscr_cancel
+    [subscr_id] => S-4PR211182B1952103
+    [last_name] => User
+    [residence_country] => US
+    [mc_currency] => USD
+    [item_name] => s3mer
+    [business] => gio_1219170247_biz@s3mer.com
+    [amount3] => 240.00
+    [recurring] => 1
+    [verify_sign] => AA.g-PjudlwRHC3x02ccJEHS7W.RA9t782Qc2OENXIVA0QlCTjO3jhP0
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1231616691_per@s3mer.com
+    [first_name] => Test
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [payer_id] => 7LQW3CGN5ZLZN
+    [reattempt] => 1
+    [subscr_date] => 13:10:57 Jan 10, 2009 PST
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+    [period3] => 1 M
+    [mc_amount3] => 240.00
+)
+
+[txn_type] - subscr_cancel
+[subscr_id] - S-4PR211182B1952103
+[last_name] - User
+[residence_country] - US
+[mc_currency] - USD
+[item_name] - s3mer
+[business] - gio_1219170247_biz@s3mer.com
+[amount3] - 240.00
+[recurring] - 1
+[verify_sign] - AA.g-PjudlwRHC3x02ccJEHS7W.RA9t782Qc2OENXIVA0QlCTjO3jhP0
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1231616691_per@s3mer.com
+[first_name] - Test
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[payer_id] - 7LQW3CGN5ZLZN
+[reattempt] - 1
+[subscr_date] - 13:10:57 Jan 10, 2009 PST
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+[period3] - 1 M
+[mc_amount3] - 240.00
+
+INSERT INTO paypal_transactions(txn_type,subscr_id,last_name,residence_country,mc_currency,item_name,business,amount3,recurring,verify_sign,payer_status,test_ipn,payer_email,first_name,receiver_email,payer_id,reattempt,subscr_date,custom,charset,notify_version,period3,mc_amount3) VALUES('subscr_cancel','S-4PR211182B1952103','User','US','USD','s3mer','gio_1219170247_biz@s3mer.com','240.00','1','AA.g-PjudlwRHC3x02ccJEHS7W.RA9t782Qc2OENXIVA0QlCTjO3jhP0','verified','1','gio_1231616691_per@s3mer.com','Test','gio_1219170247_biz@s3mer.com','7LQW3CGN5ZLZN','1','2009-01-10 17:10:57','21','windows-1252','2.6','1 M','240.00')Array
+(
+    [txn_type] => subscr_signup
+    [subscr_id] => S-5GN11071W1819214C
+    [last_name] => User
+    [residence_country] => US
+    [mc_currency] => USD
+    [item_name] => s3mer
+    [business] => gio_1219170247_biz@s3mer.com
+    [amount3] => 120.00
+    [recurring] => 1
+    [verify_sign] => AbCuhVotYH.Ljys0MbDfy9-zblsmAdbTyCyHjMq3gIogPLbLcpEFlNPj
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1231616691_per@s3mer.com
+    [first_name] => Test
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [payer_id] => 7LQW3CGN5ZLZN
+    [reattempt] => 1
+    [subscr_date] => 13:11:42 Jan 10, 2009 PST
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+    [period3] => 1 M
+    [mc_amount3] => 120.00
+)
+
+[txn_type] - subscr_signup
+[subscr_id] - S-5GN11071W1819214C
+[last_name] - User
+[residence_country] - US
+[mc_currency] - USD
+[item_name] - s3mer
+[business] - gio_1219170247_biz@s3mer.com
+[amount3] - 120.00
+[recurring] - 1
+[verify_sign] - AbCuhVotYH.Ljys0MbDfy9-zblsmAdbTyCyHjMq3gIogPLbLcpEFlNPj
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1231616691_per@s3mer.com
+[first_name] - Test
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[payer_id] - 7LQW3CGN5ZLZN
+[reattempt] - 1
+[subscr_date] - 13:11:42 Jan 10, 2009 PST
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+[period3] - 1 M
+[mc_amount3] - 120.00
+
+INSERT INTO paypal_transactions(txn_type,subscr_id,last_name,residence_country,mc_currency,item_name,business,amount3,recurring,verify_sign,payer_status,test_ipn,payer_email,first_name,receiver_email,payer_id,reattempt,subscr_date,custom,charset,notify_version,period3,mc_amount3) VALUES('subscr_signup','S-5GN11071W1819214C','User','US','USD','s3mer','gio_1219170247_biz@s3mer.com','120.00','1','AbCuhVotYH.Ljys0MbDfy9-zblsmAdbTyCyHjMq3gIogPLbLcpEFlNPj','verified','1','gio_1231616691_per@s3mer.com','Test','gio_1219170247_biz@s3mer.com','7LQW3CGN5ZLZN','1','2009-01-10 17:11:42','21','windows-1252','2.6','1 M','120.00')Array
+(
+    [transaction_subject] => 
+    [payment_date] => 13:11:44 Jan 10, 2009 PST
+    [txn_type] => subscr_payment
+    [subscr_id] => S-5GN11071W1819214C
+    [last_name] => User
+    [residence_country] => US
+    [item_name] => s3mer
+    [payment_gross] => 120.00
+    [mc_currency] => USD
+    [business] => gio_1219170247_biz@s3mer.com
+    [payment_type] => instant
+    [protection_eligibility] => Ineligible
+    [verify_sign] => Ar-q5kkahFB95esxp0zpEsqhwWhlACgLIG0UfnTF6MaKdbU1CyX9Y5Xn
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1231616691_per@s3mer.com
+    [txn_id] => 7FF340924S3966930
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [first_name] => Test
+    [payer_id] => 7LQW3CGN5ZLZN
+    [receiver_id] => 7PPDU8KKF7ALA
+    [payment_status] => Completed
+    [payment_fee] => 3.78
+    [mc_fee] => 3.78
+    [mc_gross] => 120.00
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+)
+
+[transaction_subject] - 
+[payment_date] - 13:11:44 Jan 10, 2009 PST
+[txn_type] - subscr_payment
+[subscr_id] - S-5GN11071W1819214C
+[last_name] - User
+[residence_country] - US
+[item_name] - s3mer
+[payment_gross] - 120.00
+[mc_currency] - USD
+[business] - gio_1219170247_biz@s3mer.com
+[payment_type] - instant
+[protection_eligibility] - Ineligible
+[verify_sign] - Ar-q5kkahFB95esxp0zpEsqhwWhlACgLIG0UfnTF6MaKdbU1CyX9Y5Xn
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1231616691_per@s3mer.com
+[txn_id] - 7FF340924S3966930
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[first_name] - Test
+[payer_id] - 7LQW3CGN5ZLZN
+[receiver_id] - 7PPDU8KKF7ALA
+[payment_status] - Completed
+[payment_fee] - 3.78
+[mc_fee] - 3.78
+[mc_gross] - 120.00
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+13:11:44 Jan 10, 2009 PST - 2009-01-10 17:11:44
+INSERT INTO paypal_transactions(transaction_subject,payment_date,txn_type,subscr_id,last_name,residence_country,item_name,payment_gross,mc_currency,business,payment_type,protection_eligibility,verify_sign,payer_status,test_ipn,payer_email,txn_id,receiver_email,first_name,payer_id,receiver_id,payment_status,payment_fee,mc_fee,mc_gross,custom,charset,notify_version) VALUES('','2009-01-10 17:11:44','subscr_payment','S-5GN11071W1819214C','User','US','s3mer','120.00','USD','gio_1219170247_biz@s3mer.com','instant','Ineligible','Ar-q5kkahFB95esxp0zpEsqhwWhlACgLIG0UfnTF6MaKdbU1CyX9Y5Xn','verified','1','gio_1231616691_per@s3mer.com','7FF340924S3966930','gio_1219170247_biz@s3mer.com','Test','7LQW3CGN5ZLZN','7PPDU8KKF7ALA','Completed','3.78','3.78','120.00','21','windows-1252','2.6')Array
+(
+    [txn_type] => subscr_cancel
+    [subscr_id] => S-5GN11071W1819214C
+    [last_name] => User
+    [residence_country] => US
+    [mc_currency] => USD
+    [item_name] => s3mer
+    [business] => gio_1219170247_biz@s3mer.com
+    [amount3] => 120.00
+    [recurring] => 1
+    [verify_sign] => AR75O3.-nXIhJ-qyjogtRZ5q1cIGAFe51.A4dxSAqzPiHIs-t7cva0yH
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1231616691_per@s3mer.com
+    [first_name] => Test
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [payer_id] => 7LQW3CGN5ZLZN
+    [reattempt] => 1
+    [subscr_date] => 13:27:29 Jan 10, 2009 PST
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+    [period3] => 1 M
+    [mc_amount3] => 120.00
+)
+
+[txn_type] - subscr_cancel
+[subscr_id] - S-5GN11071W1819214C
+[last_name] - User
+[residence_country] - US
+[mc_currency] - USD
+[item_name] - s3mer
+[business] - gio_1219170247_biz@s3mer.com
+[amount3] - 120.00
+[recurring] - 1
+[verify_sign] - AR75O3.-nXIhJ-qyjogtRZ5q1cIGAFe51.A4dxSAqzPiHIs-t7cva0yH
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1231616691_per@s3mer.com
+[first_name] - Test
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[payer_id] - 7LQW3CGN5ZLZN
+[reattempt] - 1
+[subscr_date] - 13:27:29 Jan 10, 2009 PST
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+[period3] - 1 M
+[mc_amount3] - 120.00
+
+INSERT INTO paypal_transactions(txn_type,subscr_id,last_name,residence_country,mc_currency,item_name,business,amount3,recurring,verify_sign,payer_status,test_ipn,payer_email,first_name,receiver_email,payer_id,reattempt,subscr_date,custom,charset,notify_version,period3,mc_amount3) VALUES('subscr_cancel','S-5GN11071W1819214C','User','US','USD','s3mer','gio_1219170247_biz@s3mer.com','120.00','1','AR75O3.-nXIhJ-qyjogtRZ5q1cIGAFe51.A4dxSAqzPiHIs-t7cva0yH','verified','1','gio_1231616691_per@s3mer.com','Test','gio_1219170247_biz@s3mer.com','7LQW3CGN5ZLZN','1','2009-01-10 17:27:29','21','windows-1252','2.6','1 M','120.00')Array
+(
+    [test_ipn] => 1
+    [payment_type] => echeck
+    [payment_date] => 14:03:22 Jan. 10, 2009 PST
+    [payment_status] => Completed
+    [address_status] => confirmed
+    [payer_status] => verified
+    [first_name] => John
+    [last_name] => Smith
+    [payer_email] => buyer@paypalsandbox.com
+    [payer_id] => TESTBUYERID01
+    [address_name] => John Smith
+    [address_country] => United States
+    [address_country_code] => US
+    [address_zip] => 95131
+    [address_state] => CA
+    [address_city] => San Jose
+    [address_street] => 123, any street
+    [business] => seller@paypalsandbox.com
+    [receiver_email] => seller@paypalsandbox.com
+    [receiver_id] => TESTSELLERID1
+    [residence_country] => US
+    [item_name] => something
+    [item_number] => AK-1234
+    [quantity] => 1
+    [shipping] => 3.04
+    [tax] => 2.02
+    [mc_currency] => USD
+    [mc_fee] => 0.44
+    [mc_gross] => 12.34
+    [txn_type] => web_accept
+    [txn_id] => 22110223
+    [notify_version] => 2.1
+    [custom] => xyz123
+    [invoice] => abc1234
+    [charset] => windows-1252
+    [verify_sign] => A8pgq2Y8WgFP9A0COckaqpC1999MAklbmDOeA1fkYyb2oh5ysGDcm.Y.
+)
+
+[test_ipn] - 1
+[payment_type] - echeck
+[payment_date] - 14:03:22 Jan. 10, 2009 PST
+[payment_status] - Completed
+[address_status] - confirmed
+[payer_status] - verified
+[first_name] - John
+[last_name] - Smith
+[payer_email] - buyer@paypalsandbox.com
+[payer_id] - TESTBUYERID01
+[address_name] - John Smith
+[address_country] - United States
+[address_country_code] - US
+[address_zip] - 95131
+[address_state] - CA
+[address_city] - San Jose
+[address_street] - 123, any street
+[business] - seller@paypalsandbox.com
+[receiver_email] - seller@paypalsandbox.com
+[receiver_id] - TESTSELLERID1
+[residence_country] - US
+[item_name] - something
+[item_number] - AK-1234
+[quantity] - 1
+[shipping] - 3.04
+[tax] - 2.02
+[mc_currency] - USD
+[mc_fee] - 0.44
+[mc_gross] - 12.34
+[txn_type] - web_accept
+[txn_id] - 22110223
+[notify_version] - 2.1
+[custom] - xyz123
+[invoice] - abc1234
+[charset] - windows-1252
+[verify_sign] - A8pgq2Y8WgFP9A0COckaqpC1999MAklbmDOeA1fkYyb2oh5ysGDcm.Y.
+14:03:22 Jan. 10, 2009 PST - 2009-01-10 18:03:22
+INSERT INTO paypal_transactions(test_ipn,payment_type,payment_date,payment_status,address_status,payer_status,first_name,last_name,payer_email,payer_id,address_name,address_country,address_country_code,address_zip,address_state,address_city,address_street,business,receiver_email,receiver_id,residence_country,item_name,item_number,quantity,shipping,tax,mc_currency,mc_fee,mc_gross,txn_type,txn_id,notify_version,custom,invoice,charset,verify_sign) VALUES('1','echeck','2009-01-10 18:03:22','Completed','confirmed','verified','John','Smith','buyer@paypalsandbox.com','TESTBUYERID01','John Smith','United States','US','95131','CA','San Jose','123, any street','seller@paypalsandbox.com','seller@paypalsandbox.com','TESTSELLERID1','US','something','AK-1234','1','3.04','2.02','USD','0.44','12.34','web_accept','22110223','2.1','xyz123','abc1234','windows-1252','A8pgq2Y8WgFP9A0COckaqpC1999MAklbmDOeA1fkYyb2oh5ysGDcm.Y.')Array
+(
+    [test_ipn] => 1
+    [payment_type] => echeck
+    [payment_date] => 14:03:22 Jan. 10, 2009 PST
+    [payment_status] => Completed
+    [address_status] => confirmed
+    [payer_status] => verified
+    [first_name] => John
+    [last_name] => Smith
+    [payer_email] => buyer@paypalsandbox.com
+    [payer_id] => TESTBUYERID01
+    [address_name] => John Smith
+    [address_country] => United States
+    [address_country_code] => US
+    [address_zip] => 95131
+    [address_state] => CA
+    [address_city] => San Jose
+    [address_street] => 123, any street
+    [business] => seller@paypalsandbox.com
+    [receiver_email] => seller@paypalsandbox.com
+    [receiver_id] => TESTSELLERID1
+    [residence_country] => US
+    [item_name] => something
+    [item_number] => AK-1234
+    [quantity] => 1
+    [shipping] => 3.04
+    [tax] => 2.02
+    [mc_currency] => USD
+    [mc_fee] => 0.44
+    [mc_gross] => 12.34
+    [txn_type] => web_accept
+    [txn_id] => 22110223
+    [notify_version] => 2.1
+    [custom] => xyz123
+    [invoice] => abc1234
+    [charset] => windows-1252
+    [verify_sign] => An5ns1Kso7MWUdW4ErQKJJJ4qi4-ATqMMvkY03TkYgV3sR-6.fIKtgVx
+)
+
+[test_ipn] - 1
+[payment_type] - echeck
+[payment_date] - 14:03:22 Jan. 10, 2009 PST
+[payment_status] - Completed
+[address_status] - confirmed
+[payer_status] - verified
+[first_name] - John
+[last_name] - Smith
+[payer_email] - buyer@paypalsandbox.com
+[payer_id] - TESTBUYERID01
+[address_name] - John Smith
+[address_country] - United States
+[address_country_code] - US
+[address_zip] - 95131
+[address_state] - CA
+[address_city] - San Jose
+[address_street] - 123, any street
+[business] - seller@paypalsandbox.com
+[receiver_email] - seller@paypalsandbox.com
+[receiver_id] - TESTSELLERID1
+[residence_country] - US
+[item_name] - something
+[item_number] - AK-1234
+[quantity] - 1
+[shipping] - 3.04
+[tax] - 2.02
+[mc_currency] - USD
+[mc_fee] - 0.44
+[mc_gross] - 12.34
+[txn_type] - web_accept
+[txn_id] - 22110223
+[notify_version] - 2.1
+[custom] - xyz123
+[invoice] - abc1234
+[charset] - windows-1252
+[verify_sign] - An5ns1Kso7MWUdW4ErQKJJJ4qi4-ATqMMvkY03TkYgV3sR-6.fIKtgVx
+14:03:22 Jan. 10, 2009 PST - 2009-01-10 18:03:22
+INSERT INTO paypal_transactions(test_ipn,payment_type,payment_date,payment_status,address_status,payer_status,first_name,last_name,payer_email,payer_id,address_name,address_country,address_country_code,address_zip,address_state,address_city,address_street,business,receiver_email,receiver_id,residence_country,item_name,item_number,quantity,shipping,tax,mc_currency,mc_fee,mc_gross,txn_type,txn_id,notify_version,custom,invoice,charset,verify_sign) VALUES('1','echeck','2009-01-10 18:03:22','Completed','confirmed','verified','John','Smith','buyer@paypalsandbox.com','TESTBUYERID01','John Smith','United States','US','95131','CA','San Jose','123, any street','seller@paypalsandbox.com','seller@paypalsandbox.com','TESTSELLERID1','US','something','AK-1234','1','3.04','2.02','USD','0.44','12.34','web_accept','22110223','2.1','xyz123','abc1234','windows-1252','An5ns1Kso7MWUdW4ErQKJJJ4qi4-ATqMMvkY03TkYgV3sR-6.fIKtgVx')Array
+(
+    [transaction_subject] => 
+    [payment_date] => 13:54:10 Jan 10, 2009 PST
+    [txn_type] => subscr_payment
+    [subscr_id] => S-6G497795HT199621M
+    [last_name] => User
+    [residence_country] => US
+    [item_name] => s3mer
+    [payment_gross] => 360.00
+    [mc_currency] => USD
+    [business] => gio_1219170247_biz@s3mer.com
+    [payment_type] => instant
+    [protection_eligibility] => Ineligible
+    [verify_sign] => An5ns1Kso7MWUdW4ErQKJJJ4qi4-AopG7akqvny1PxoQ3b93j4amIDBM
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1231616691_per@s3mer.com
+    [txn_id] => 5RH41507FU4488440
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [first_name] => Test
+    [payer_id] => 7LQW3CGN5ZLZN
+    [receiver_id] => 7PPDU8KKF7ALA
+    [payment_status] => Completed
+    [payment_fee] => 10.74
+    [mc_fee] => 10.74
+    [mc_gross] => 360.00
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+)
+
+[transaction_subject] - 
+[payment_date] - 13:54:10 Jan 10, 2009 PST
+[txn_type] - subscr_payment
+[subscr_id] - S-6G497795HT199621M
+[last_name] - User
+[residence_country] - US
+[item_name] - s3mer
+[payment_gross] - 360.00
+[mc_currency] - USD
+[business] - gio_1219170247_biz@s3mer.com
+[payment_type] - instant
+[protection_eligibility] - Ineligible
+[verify_sign] - An5ns1Kso7MWUdW4ErQKJJJ4qi4-AopG7akqvny1PxoQ3b93j4amIDBM
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1231616691_per@s3mer.com
+[txn_id] - 5RH41507FU4488440
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[first_name] - Test
+[payer_id] - 7LQW3CGN5ZLZN
+[receiver_id] - 7PPDU8KKF7ALA
+[payment_status] - Completed
+[payment_fee] - 10.74
+[mc_fee] - 10.74
+[mc_gross] - 360.00
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+13:54:10 Jan 10, 2009 PST - 2009-01-10 17:54:10
+INSERT INTO paypal_transactions(transaction_subject,payment_date,txn_type,subscr_id,last_name,residence_country,item_name,payment_gross,mc_currency,business,payment_type,protection_eligibility,verify_sign,payer_status,test_ipn,payer_email,txn_id,receiver_email,first_name,payer_id,receiver_id,payment_status,payment_fee,mc_fee,mc_gross,custom,charset,notify_version) VALUES('','2009-01-10 17:54:10','subscr_payment','S-6G497795HT199621M','User','US','s3mer','360.00','USD','gio_1219170247_biz@s3mer.com','instant','Ineligible','An5ns1Kso7MWUdW4ErQKJJJ4qi4-AopG7akqvny1PxoQ3b93j4amIDBM','verified','1','gio_1231616691_per@s3mer.com','5RH41507FU4488440','gio_1219170247_biz@s3mer.com','Test','7LQW3CGN5ZLZN','7PPDU8KKF7ALA','Completed','10.74','10.74','360.00','21','windows-1252','2.6')Array
+(
+    [txn_type] => subscr_signup
+    [subscr_id] => S-6G497795HT199621M
+    [last_name] => User
+    [residence_country] => US
+    [mc_currency] => USD
+    [item_name] => s3mer
+    [business] => gio_1219170247_biz@s3mer.com
+    [amount3] => 360.00
+    [recurring] => 1
+    [verify_sign] => AiPC9BjkCyDFQXbSkoZcgqH3hpacATSAOTmo8T3qXfo-tshE0SH4Kx4X
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1231616691_per@s3mer.com
+    [first_name] => Test
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [payer_id] => 7LQW3CGN5ZLZN
+    [reattempt] => 1
+    [subscr_date] => 13:54:09 Jan 10, 2009 PST
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+    [period3] => 1 M
+    [mc_amount3] => 360.00
+)
+
+[txn_type] - subscr_signup
+[subscr_id] - S-6G497795HT199621M
+[last_name] - User
+[residence_country] - US
+[mc_currency] - USD
+[item_name] - s3mer
+[business] - gio_1219170247_biz@s3mer.com
+[amount3] - 360.00
+[recurring] - 1
+[verify_sign] - AiPC9BjkCyDFQXbSkoZcgqH3hpacATSAOTmo8T3qXfo-tshE0SH4Kx4X
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1231616691_per@s3mer.com
+[first_name] - Test
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[payer_id] - 7LQW3CGN5ZLZN
+[reattempt] - 1
+[subscr_date] - 13:54:09 Jan 10, 2009 PST
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+[period3] - 1 M
+[mc_amount3] - 360.00
+
+INSERT INTO paypal_transactions(txn_type,subscr_id,last_name,residence_country,mc_currency,item_name,business,amount3,recurring,verify_sign,payer_status,test_ipn,payer_email,first_name,receiver_email,payer_id,reattempt,subscr_date,custom,charset,notify_version,period3,mc_amount3) VALUES('subscr_signup','S-6G497795HT199621M','User','US','USD','s3mer','gio_1219170247_biz@s3mer.com','360.00','1','AiPC9BjkCyDFQXbSkoZcgqH3hpacATSAOTmo8T3qXfo-tshE0SH4Kx4X','verified','1','gio_1231616691_per@s3mer.com','Test','gio_1219170247_biz@s3mer.com','7LQW3CGN5ZLZN','1','2009-01-10 17:54:09','21','windows-1252','2.6','1 M','360.00')Array
+(
+    [transaction_subject] => 
+    [payment_date] => 14:04:46 Jan 10, 2009 PST
+    [txn_type] => subscr_payment
+    [subscr_id] => S-0E599199RR9327923
+    [last_name] => User
+    [residence_country] => US
+    [item_name] => s3mer
+    [payment_gross] => 240.00
+    [mc_currency] => USD
+    [business] => gio_1219170247_biz@s3mer.com
+    [payment_type] => instant
+    [protection_eligibility] => Ineligible
+    [verify_sign] => Ad1TQj3J3Cp45O14dusoUW4.QqbUAkD-JtRiQbj6iDEORcHgjdFLJe76
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1231616691_per@s3mer.com
+    [txn_id] => 75B42075J92896139
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [first_name] => Test
+    [payer_id] => 7LQW3CGN5ZLZN
+    [receiver_id] => 7PPDU8KKF7ALA
+    [payment_status] => Completed
+    [payment_fee] => 7.26
+    [mc_fee] => 7.26
+    [mc_gross] => 240.00
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+)
+
+[transaction_subject] - 
+[payment_date] - 14:04:46 Jan 10, 2009 PST
+[txn_type] - subscr_payment
+[subscr_id] - S-0E599199RR9327923
+[last_name] - User
+[residence_country] - US
+[item_name] - s3mer
+[payment_gross] - 240.00
+[mc_currency] - USD
+[business] - gio_1219170247_biz@s3mer.com
+[payment_type] - instant
+[protection_eligibility] - Ineligible
+[verify_sign] - Ad1TQj3J3Cp45O14dusoUW4.QqbUAkD-JtRiQbj6iDEORcHgjdFLJe76
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1231616691_per@s3mer.com
+[txn_id] - 75B42075J92896139
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[first_name] - Test
+[payer_id] - 7LQW3CGN5ZLZN
+[receiver_id] - 7PPDU8KKF7ALA
+[payment_status] - Completed
+[payment_fee] - 7.26
+[mc_fee] - 7.26
+[mc_gross] - 240.00
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+14:04:46 Jan 10, 2009 PST - 2009-01-10 18:04:46
+INSERT INTO paypal_transactions(transaction_subject,payment_date,txn_type,subscr_id,last_name,residence_country,item_name,payment_gross,mc_currency,business,payment_type,protection_eligibility,verify_sign,payer_status,test_ipn,payer_email,txn_id,receiver_email,first_name,payer_id,receiver_id,payment_status,payment_fee,mc_fee,mc_gross,custom,charset,notify_version) VALUES('','2009-01-10 18:04:46','subscr_payment','S-0E599199RR9327923','User','US','s3mer','240.00','USD','gio_1219170247_biz@s3mer.com','instant','Ineligible','Ad1TQj3J3Cp45O14dusoUW4.QqbUAkD-JtRiQbj6iDEORcHgjdFLJe76','verified','1','gio_1231616691_per@s3mer.com','75B42075J92896139','gio_1219170247_biz@s3mer.com','Test','7LQW3CGN5ZLZN','7PPDU8KKF7ALA','Completed','7.26','7.26','240.00','21','windows-1252','2.6')Array
+(
+    [txn_type] => subscr_signup
+    [subscr_id] => S-0E599199RR9327923
+    [last_name] => User
+    [residence_country] => US
+    [mc_currency] => USD
+    [item_name] => s3mer
+    [business] => gio_1219170247_biz@s3mer.com
+    [amount3] => 240.00
+    [recurring] => 1
+    [verify_sign] => A0kDTjIZcUrbg0zf54h9U5d6cLT7AaCuiqofG-Wx7hWrrkGnY1.0E9YS
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1231616691_per@s3mer.com
+    [first_name] => Test
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [payer_id] => 7LQW3CGN5ZLZN
+    [reattempt] => 1
+    [subscr_date] => 14:04:44 Jan 10, 2009 PST
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+    [period3] => 1 M
+    [mc_amount3] => 240.00
+)
+
+[txn_type] - subscr_signup
+[subscr_id] - S-0E599199RR9327923
+[last_name] - User
+[residence_country] - US
+[mc_currency] - USD
+[item_name] - s3mer
+[business] - gio_1219170247_biz@s3mer.com
+[amount3] - 240.00
+[recurring] - 1
+[verify_sign] - A0kDTjIZcUrbg0zf54h9U5d6cLT7AaCuiqofG-Wx7hWrrkGnY1.0E9YS
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1231616691_per@s3mer.com
+[first_name] - Test
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[payer_id] - 7LQW3CGN5ZLZN
+[reattempt] - 1
+[subscr_date] - 14:04:44 Jan 10, 2009 PST
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+[period3] - 1 M
+[mc_amount3] - 240.00
+
+INSERT INTO paypal_transactions(txn_type,subscr_id,last_name,residence_country,mc_currency,item_name,business,amount3,recurring,verify_sign,payer_status,test_ipn,payer_email,first_name,receiver_email,payer_id,reattempt,subscr_date,custom,charset,notify_version,period3,mc_amount3) VALUES('subscr_signup','S-0E599199RR9327923','User','US','USD','s3mer','gio_1219170247_biz@s3mer.com','240.00','1','A0kDTjIZcUrbg0zf54h9U5d6cLT7AaCuiqofG-Wx7hWrrkGnY1.0E9YS','verified','1','gio_1231616691_per@s3mer.com','Test','gio_1219170247_biz@s3mer.com','7LQW3CGN5ZLZN','1','2009-01-10 18:04:44','21','windows-1252','2.6','1 M','240.00')Array
+(
+    [transaction_subject] => 
+    [payment_date] => 14:06:40 Jan 10, 2009 PST
+    [txn_type] => subscr_payment
+    [subscr_id] => S-7TJ38494560928049
+    [last_name] => User
+    [residence_country] => US
+    [item_name] => s3mer
+    [payment_gross] => 180.00
+    [mc_currency] => USD
+    [business] => gio_1219170247_biz@s3mer.com
+    [payment_type] => instant
+    [protection_eligibility] => Ineligible
+    [verify_sign] => AosX150ufy82keB2zjtMl.5YTO-aA.-SsiCoV0OTXNvcQIrO5OfQulLL
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1231616691_per@s3mer.com
+    [txn_id] => 3YT51011MR496563W
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [first_name] => Test
+    [payer_id] => 7LQW3CGN5ZLZN
+    [receiver_id] => 7PPDU8KKF7ALA
+    [payment_status] => Completed
+    [payment_fee] => 5.52
+    [mc_fee] => 5.52
+    [mc_gross] => 180.00
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+)
+
+[transaction_subject] - 
+[payment_date] - 14:06:40 Jan 10, 2009 PST
+[txn_type] - subscr_payment
+[subscr_id] - S-7TJ38494560928049
+[last_name] - User
+[residence_country] - US
+[item_name] - s3mer
+[payment_gross] - 180.00
+[mc_currency] - USD
+[business] - gio_1219170247_biz@s3mer.com
+[payment_type] - instant
+[protection_eligibility] - Ineligible
+[verify_sign] - AosX150ufy82keB2zjtMl.5YTO-aA.-SsiCoV0OTXNvcQIrO5OfQulLL
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1231616691_per@s3mer.com
+[txn_id] - 3YT51011MR496563W
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[first_name] - Test
+[payer_id] - 7LQW3CGN5ZLZN
+[receiver_id] - 7PPDU8KKF7ALA
+[payment_status] - Completed
+[payment_fee] - 5.52
+[mc_fee] - 5.52
+[mc_gross] - 180.00
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+14:06:40 Jan 10, 2009 PST - 2009-01-10 18:06:40
+INSERT INTO paypal_transactions(transaction_subject,payment_date,txn_type,subscr_id,last_name,residence_country,item_name,payment_gross,mc_currency,business,payment_type,protection_eligibility,verify_sign,payer_status,test_ipn,payer_email,txn_id,receiver_email,first_name,payer_id,receiver_id,payment_status,payment_fee,mc_fee,mc_gross,custom,charset,notify_version) VALUES('','2009-01-10 18:06:40','subscr_payment','S-7TJ38494560928049','User','US','s3mer','180.00','USD','gio_1219170247_biz@s3mer.com','instant','Ineligible','AosX150ufy82keB2zjtMl.5YTO-aA.-SsiCoV0OTXNvcQIrO5OfQulLL','verified','1','gio_1231616691_per@s3mer.com','3YT51011MR496563W','gio_1219170247_biz@s3mer.com','Test','7LQW3CGN5ZLZN','7PPDU8KKF7ALA','Completed','5.52','5.52','180.00','21','windows-1252','2.6')Array
+(
+    [txn_type] => subscr_signup
+    [subscr_id] => S-7TJ38494560928049
+    [last_name] => User
+    [residence_country] => US
+    [mc_currency] => USD
+    [item_name] => s3mer
+    [business] => gio_1219170247_biz@s3mer.com
+    [amount3] => 180.00
+    [recurring] => 1
+    [verify_sign] => AKyomkhUz-UCxc39-pvOKNkxEfS0AtLXq0aqDIQXeN4YhQ.6eFK9fJAh
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1231616691_per@s3mer.com
+    [first_name] => Test
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [payer_id] => 7LQW3CGN5ZLZN
+    [reattempt] => 1
+    [subscr_date] => 14:06:38 Jan 10, 2009 PST
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+    [period3] => 1 M
+    [mc_amount3] => 180.00
+)
+
+[txn_type] - subscr_signup
+[subscr_id] - S-7TJ38494560928049
+[last_name] - User
+[residence_country] - US
+[mc_currency] - USD
+[item_name] - s3mer
+[business] - gio_1219170247_biz@s3mer.com
+[amount3] - 180.00
+[recurring] - 1
+[verify_sign] - AKyomkhUz-UCxc39-pvOKNkxEfS0AtLXq0aqDIQXeN4YhQ.6eFK9fJAh
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1231616691_per@s3mer.com
+[first_name] - Test
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[payer_id] - 7LQW3CGN5ZLZN
+[reattempt] - 1
+[subscr_date] - 14:06:38 Jan 10, 2009 PST
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+[period3] - 1 M
+[mc_amount3] - 180.00
+
+INSERT INTO paypal_transactions(txn_type,subscr_id,last_name,residence_country,mc_currency,item_name,business,amount3,recurring,verify_sign,payer_status,test_ipn,payer_email,first_name,receiver_email,payer_id,reattempt,subscr_date,custom,charset,notify_version,period3,mc_amount3) VALUES('subscr_signup','S-7TJ38494560928049','User','US','USD','s3mer','gio_1219170247_biz@s3mer.com','180.00','1','AKyomkhUz-UCxc39-pvOKNkxEfS0AtLXq0aqDIQXeN4YhQ.6eFK9fJAh','verified','1','gio_1231616691_per@s3mer.com','Test','gio_1219170247_biz@s3mer.com','7LQW3CGN5ZLZN','1','2009-01-10 18:06:38','21','windows-1252','2.6','1 M','180.00')Array
+(
+    [transaction_subject] => 
+    [payment_date] => 14:17:57 Jan 10, 2009 PST
+    [txn_type] => subscr_payment
+    [subscr_id] => S-2PB061565N962440P
+    [last_name] => User
+    [residence_country] => US
+    [item_name] => s3mer
+    [payment_gross] => 300.00
+    [mc_currency] => USD
+    [business] => gio_1219170247_biz@s3mer.com
+    [payment_type] => instant
+    [protection_eligibility] => Ineligible
+    [verify_sign] => AwydN7VEbruJDkitZCYbH98cKp5wAVLDoj8adE7zFSiUzKdVGwhrTB9Z
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1231616691_per@s3mer.com
+    [txn_id] => 96X14781WH0598340
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [first_name] => Test
+    [payer_id] => 7LQW3CGN5ZLZN
+    [receiver_id] => 7PPDU8KKF7ALA
+    [payment_status] => Completed
+    [payment_fee] => 9.00
+    [mc_fee] => 9.00
+    [mc_gross] => 300.00
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+)
+
+[transaction_subject] - 
+[payment_date] - 14:17:57 Jan 10, 2009 PST
+[txn_type] - subscr_payment
+[subscr_id] - S-2PB061565N962440P
+[last_name] - User
+[residence_country] - US
+[item_name] - s3mer
+[payment_gross] - 300.00
+[mc_currency] - USD
+[business] - gio_1219170247_biz@s3mer.com
+[payment_type] - instant
+[protection_eligibility] - Ineligible
+[verify_sign] - AwydN7VEbruJDkitZCYbH98cKp5wAVLDoj8adE7zFSiUzKdVGwhrTB9Z
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1231616691_per@s3mer.com
+[txn_id] - 96X14781WH0598340
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[first_name] - Test
+[payer_id] - 7LQW3CGN5ZLZN
+[receiver_id] - 7PPDU8KKF7ALA
+[payment_status] - Completed
+[payment_fee] - 9.00
+[mc_fee] - 9.00
+[mc_gross] - 300.00
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+14:17:57 Jan 10, 2009 PST - 2009-01-10 18:17:57
+INSERT INTO paypal_transactions(transaction_subject,payment_date,txn_type,subscr_id,last_name,residence_country,item_name,payment_gross,mc_currency,business,payment_type,protection_eligibility,verify_sign,payer_status,test_ipn,payer_email,txn_id,receiver_email,first_name,payer_id,receiver_id,payment_status,payment_fee,mc_fee,mc_gross,custom,charset,notify_version) VALUES('','2009-01-10 18:17:57','subscr_payment','S-2PB061565N962440P','User','US','s3mer','300.00','USD','gio_1219170247_biz@s3mer.com','instant','Ineligible','AwydN7VEbruJDkitZCYbH98cKp5wAVLDoj8adE7zFSiUzKdVGwhrTB9Z','verified','1','gio_1231616691_per@s3mer.com','96X14781WH0598340','gio_1219170247_biz@s3mer.com','Test','7LQW3CGN5ZLZN','7PPDU8KKF7ALA','Completed','9.00','9.00','300.00','21','windows-1252','2.6')Array
+(
+    [txn_type] => subscr_signup
+    [subscr_id] => S-2PB061565N962440P
+    [last_name] => User
+    [residence_country] => US
+    [mc_currency] => USD
+    [item_name] => s3mer
+    [business] => gio_1219170247_biz@s3mer.com
+    [amount3] => 300.00
+    [recurring] => 1
+    [verify_sign] => AqcXpC0n7rHlKcUR0LvBsRFnRK0VAzMVOYs9x90FtpwDjgCxAzMSqtVm
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1231616691_per@s3mer.com
+    [first_name] => Test
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [payer_id] => 7LQW3CGN5ZLZN
+    [reattempt] => 1
+    [subscr_date] => 14:17:55 Jan 10, 2009 PST
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+    [period3] => 1 M
+    [mc_amount3] => 300.00
+)
+
+[txn_type] - subscr_signup
+[subscr_id] - S-2PB061565N962440P
+[last_name] - User
+[residence_country] - US
+[mc_currency] - USD
+[item_name] - s3mer
+[business] - gio_1219170247_biz@s3mer.com
+[amount3] - 300.00
+[recurring] - 1
+[verify_sign] - AqcXpC0n7rHlKcUR0LvBsRFnRK0VAzMVOYs9x90FtpwDjgCxAzMSqtVm
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1231616691_per@s3mer.com
+[first_name] - Test
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[payer_id] - 7LQW3CGN5ZLZN
+[reattempt] - 1
+[subscr_date] - 14:17:55 Jan 10, 2009 PST
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+[period3] - 1 M
+[mc_amount3] - 300.00
+
+INSERT INTO paypal_transactions(txn_type,subscr_id,last_name,residence_country,mc_currency,item_name,business,amount3,recurring,verify_sign,payer_status,test_ipn,payer_email,first_name,receiver_email,payer_id,reattempt,subscr_date,custom,charset,notify_version,period3,mc_amount3) VALUES('subscr_signup','S-2PB061565N962440P','User','US','USD','s3mer','gio_1219170247_biz@s3mer.com','300.00','1','AqcXpC0n7rHlKcUR0LvBsRFnRK0VAzMVOYs9x90FtpwDjgCxAzMSqtVm','verified','1','gio_1231616691_per@s3mer.com','Test','gio_1219170247_biz@s3mer.com','7LQW3CGN5ZLZN','1','2009-01-10 18:17:55','21','windows-1252','2.6','1 M','300.00')Array
+(
+    [test_ipn] => 1
+    [payment_type] => echeck
+    [payment_date] => 14:03:22 Jan. 10, 2009 PST
+    [payment_status] => Completed
+    [address_status] => confirmed
+    [payer_status] => verified
+    [first_name] => John
+    [last_name] => Smith
+    [payer_email] => buyer@paypalsandbox.com
+    [payer_id] => TESTBUYERID01
+    [address_name] => John Smith
+    [address_country] => United States
+    [address_country_code] => US
+    [address_zip] => 95131
+    [address_state] => CA
+    [address_city] => San Jose
+    [address_street] => 123, any street
+    [business] => seller@paypalsandbox.com
+    [receiver_email] => seller@paypalsandbox.com
+    [receiver_id] => TESTSELLERID1
+    [residence_country] => US
+    [item_name] => something
+    [item_number] => AK-1234
+    [quantity] => 1
+    [shipping] => 3.04
+    [tax] => 2.02
+    [mc_currency] => USD
+    [mc_fee] => 0.44
+    [mc_gross] => 12.34
+    [txn_type] => web_accept
+    [txn_id] => 22110223
+    [notify_version] => 2.1
+    [custom] => xyz123
+    [invoice] => abc1234
+    [charset] => windows-1252
+    [verify_sign] => AFcWxV21C7fd0v3bYYYRCpSSRl31A3KMCFxezSyUD5kMywbWzpsEVWzX
+)
+
+[test_ipn] - 1
+[payment_type] - echeck
+[payment_date] - 14:03:22 Jan. 10, 2009 PST
+[payment_status] - Completed
+[address_status] - confirmed
+[payer_status] - verified
+[first_name] - John
+[last_name] - Smith
+[payer_email] - buyer@paypalsandbox.com
+[payer_id] - TESTBUYERID01
+[address_name] - John Smith
+[address_country] - United States
+[address_country_code] - US
+[address_zip] - 95131
+[address_state] - CA
+[address_city] - San Jose
+[address_street] - 123, any street
+[business] - seller@paypalsandbox.com
+[receiver_email] - seller@paypalsandbox.com
+[receiver_id] - TESTSELLERID1
+[residence_country] - US
+[item_name] - something
+[item_number] - AK-1234
+[quantity] - 1
+[shipping] - 3.04
+[tax] - 2.02
+[mc_currency] - USD
+[mc_fee] - 0.44
+[mc_gross] - 12.34
+[txn_type] - web_accept
+[txn_id] - 22110223
+[notify_version] - 2.1
+[custom] - xyz123
+[invoice] - abc1234
+[charset] - windows-1252
+[verify_sign] - AFcWxV21C7fd0v3bYYYRCpSSRl31A3KMCFxezSyUD5kMywbWzpsEVWzX
+14:03:22 Jan. 10, 2009 PST - 2009-01-10 18:03:22
+INSERT INTO paypal_transactions(test_ipn,payment_type,payment_date,payment_status,address_status,payer_status,first_name,last_name,payer_email,payer_id,address_name,address_country,address_country_code,address_zip,address_state,address_city,address_street,business,receiver_email,receiver_id,residence_country,item_name,item_number,quantity,shipping,tax,mc_currency,mc_fee,mc_gross,txn_type,txn_id,notify_version,custom,invoice,charset,verify_sign) VALUES('1','echeck','2009-01-10 18:03:22','Completed','confirmed','verified','John','Smith','buyer@paypalsandbox.com','TESTBUYERID01','John Smith','United States','US','95131','CA','San Jose','123, any street','seller@paypalsandbox.com','seller@paypalsandbox.com','TESTSELLERID1','US','something','AK-1234','1','3.04','2.02','USD','0.44','12.34','web_accept','22110223','2.1','xyz123','abc1234','windows-1252','AFcWxV21C7fd0v3bYYYRCpSSRl31A3KMCFxezSyUD5kMywbWzpsEVWzX')Array
+(
+    [txn_type] => subscr_cancel
+    [subscr_id] => S-6G497795HT199621M
+    [last_name] => User
+    [residence_country] => US
+    [mc_currency] => USD
+    [item_name] => s3mer
+    [business] => gio_1219170247_biz@s3mer.com
+    [amount3] => 360.00
+    [recurring] => 1
+    [verify_sign] => AFcWxV21C7fd0v3bYYYRCpSSRl31A1E6.sApCg2uJUx4fDjYeRBM0YXC
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1231616691_per@s3mer.com
+    [first_name] => Test
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [payer_id] => 7LQW3CGN5ZLZN
+    [reattempt] => 1
+    [subscr_date] => 14:23:08 Jan 10, 2009 PST
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+    [period3] => 1 M
+    [mc_amount3] => 360.00
+)
+
+[txn_type] - subscr_cancel
+[subscr_id] - S-6G497795HT199621M
+[last_name] - User
+[residence_country] - US
+[mc_currency] - USD
+[item_name] - s3mer
+[business] - gio_1219170247_biz@s3mer.com
+[amount3] - 360.00
+[recurring] - 1
+[verify_sign] - AFcWxV21C7fd0v3bYYYRCpSSRl31A1E6.sApCg2uJUx4fDjYeRBM0YXC
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1231616691_per@s3mer.com
+[first_name] - Test
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[payer_id] - 7LQW3CGN5ZLZN
+[reattempt] - 1
+[subscr_date] - 14:23:08 Jan 10, 2009 PST
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+[period3] - 1 M
+[mc_amount3] - 360.00
+
+INSERT INTO paypal_transactions(txn_type,subscr_id,last_name,residence_country,mc_currency,item_name,business,amount3,recurring,verify_sign,payer_status,test_ipn,payer_email,first_name,receiver_email,payer_id,reattempt,subscr_date,custom,charset,notify_version,period3,mc_amount3) VALUES('subscr_cancel','S-6G497795HT199621M','User','US','USD','s3mer','gio_1219170247_biz@s3mer.com','360.00','1','AFcWxV21C7fd0v3bYYYRCpSSRl31A1E6.sApCg2uJUx4fDjYeRBM0YXC','verified','1','gio_1231616691_per@s3mer.com','Test','gio_1219170247_biz@s3mer.com','7LQW3CGN5ZLZN','1','2009-01-10 18:23:08','21','windows-1252','2.6','1 M','360.00')Array
+(
+    [txn_type] => subscr_cancel
+    [subscr_id] => S-0E599199RR9327923
+    [last_name] => User
+    [residence_country] => US
+    [mc_currency] => USD
+    [item_name] => s3mer
+    [business] => gio_1219170247_biz@s3mer.com
+    [amount3] => 240.00
+    [recurring] => 1
+    [verify_sign] => AOTRpr92.pbbT-v-Y7dxvVEjpHvIAM8WnBETTsVd1Zi0K4VwhABpSiX8
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1231616691_per@s3mer.com
+    [first_name] => Test
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [payer_id] => 7LQW3CGN5ZLZN
+    [reattempt] => 1
+    [subscr_date] => 14:23:29 Jan 10, 2009 PST
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+    [period3] => 1 M
+    [mc_amount3] => 240.00
+)
+
+[txn_type] - subscr_cancel
+[subscr_id] - S-0E599199RR9327923
+[last_name] - User
+[residence_country] - US
+[mc_currency] - USD
+[item_name] - s3mer
+[business] - gio_1219170247_biz@s3mer.com
+[amount3] - 240.00
+[recurring] - 1
+[verify_sign] - AOTRpr92.pbbT-v-Y7dxvVEjpHvIAM8WnBETTsVd1Zi0K4VwhABpSiX8
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1231616691_per@s3mer.com
+[first_name] - Test
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[payer_id] - 7LQW3CGN5ZLZN
+[reattempt] - 1
+[subscr_date] - 14:23:29 Jan 10, 2009 PST
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+[period3] - 1 M
+[mc_amount3] - 240.00
+
+INSERT INTO paypal_transactions(txn_type,subscr_id,last_name,residence_country,mc_currency,item_name,business,amount3,recurring,verify_sign,payer_status,test_ipn,payer_email,first_name,receiver_email,payer_id,reattempt,subscr_date,custom,charset,notify_version,period3,mc_amount3) VALUES('subscr_cancel','S-0E599199RR9327923','User','US','USD','s3mer','gio_1219170247_biz@s3mer.com','240.00','1','AOTRpr92.pbbT-v-Y7dxvVEjpHvIAM8WnBETTsVd1Zi0K4VwhABpSiX8','verified','1','gio_1231616691_per@s3mer.com','Test','gio_1219170247_biz@s3mer.com','7LQW3CGN5ZLZN','1','2009-01-10 18:23:29','21','windows-1252','2.6','1 M','240.00')Array
+(
+    [txn_type] => subscr_cancel
+    [subscr_id] => S-2PB061565N962440P
+    [last_name] => User
+    [residence_country] => US
+    [mc_currency] => USD
+    [item_name] => s3mer
+    [business] => gio_1219170247_biz@s3mer.com
+    [amount3] => 300.00
+    [recurring] => 1
+    [verify_sign] => AZQ9bRuCzW7pFAkyOeLmQtjsYaimA8nzGBrZaA.BpAZ.-9NbmgiAH5Uo
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1231616691_per@s3mer.com
+    [first_name] => Test
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [payer_id] => 7LQW3CGN5ZLZN
+    [reattempt] => 1
+    [subscr_date] => 14:23:47 Jan 10, 2009 PST
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+    [period3] => 1 M
+    [mc_amount3] => 300.00
+)
+
+[txn_type] - subscr_cancel
+[subscr_id] - S-2PB061565N962440P
+[last_name] - User
+[residence_country] - US
+[mc_currency] - USD
+[item_name] - s3mer
+[business] - gio_1219170247_biz@s3mer.com
+[amount3] - 300.00
+[recurring] - 1
+[verify_sign] - AZQ9bRuCzW7pFAkyOeLmQtjsYaimA8nzGBrZaA.BpAZ.-9NbmgiAH5Uo
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1231616691_per@s3mer.com
+[first_name] - Test
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[payer_id] - 7LQW3CGN5ZLZN
+[reattempt] - 1
+[subscr_date] - 14:23:47 Jan 10, 2009 PST
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+[period3] - 1 M
+[mc_amount3] - 300.00
+
+INSERT INTO paypal_transactions(txn_type,subscr_id,last_name,residence_country,mc_currency,item_name,business,amount3,recurring,verify_sign,payer_status,test_ipn,payer_email,first_name,receiver_email,payer_id,reattempt,subscr_date,custom,charset,notify_version,period3,mc_amount3) VALUES('subscr_cancel','S-2PB061565N962440P','User','US','USD','s3mer','gio_1219170247_biz@s3mer.com','300.00','1','AZQ9bRuCzW7pFAkyOeLmQtjsYaimA8nzGBrZaA.BpAZ.-9NbmgiAH5Uo','verified','1','gio_1231616691_per@s3mer.com','Test','gio_1219170247_biz@s3mer.com','7LQW3CGN5ZLZN','1','2009-01-10 18:23:47','21','windows-1252','2.6','1 M','300.00')Array
+(
+    [txn_type] => subscr_cancel
+    [subscr_id] => S-7TJ38494560928049
+    [last_name] => User
+    [residence_country] => US
+    [mc_currency] => USD
+    [item_name] => s3mer
+    [business] => gio_1219170247_biz@s3mer.com
+    [amount3] => 180.00
+    [recurring] => 1
+    [verify_sign] => A1waKBnoMMSc.wKboZS5L6bgju3IApSFo8Lvex8TKAH9ZpU47wc1IL9g
+    [payer_status] => verified
+    [test_ipn] => 1
+    [payer_email] => gio_1231616691_per@s3mer.com
+    [first_name] => Test
+    [receiver_email] => gio_1219170247_biz@s3mer.com
+    [payer_id] => 7LQW3CGN5ZLZN
+    [reattempt] => 1
+    [subscr_date] => 14:24:17 Jan 10, 2009 PST
+    [custom] => 21
+    [charset] => windows-1252
+    [notify_version] => 2.6
+    [period3] => 1 M
+    [mc_amount3] => 180.00
+)
+
+[txn_type] - subscr_cancel
+[subscr_id] - S-7TJ38494560928049
+[last_name] - User
+[residence_country] - US
+[mc_currency] - USD
+[item_name] - s3mer
+[business] - gio_1219170247_biz@s3mer.com
+[amount3] - 180.00
+[recurring] - 1
+[verify_sign] - A1waKBnoMMSc.wKboZS5L6bgju3IApSFo8Lvex8TKAH9ZpU47wc1IL9g
+[payer_status] - verified
+[test_ipn] - 1
+[payer_email] - gio_1231616691_per@s3mer.com
+[first_name] - Test
+[receiver_email] - gio_1219170247_biz@s3mer.com
+[payer_id] - 7LQW3CGN5ZLZN
+[reattempt] - 1
+[subscr_date] - 14:24:17 Jan 10, 2009 PST
+[custom] - 21
+[charset] - windows-1252
+[notify_version] - 2.6
+[period3] - 1 M
+[mc_amount3] - 180.00
+
+INSERT INTO paypal_transactions(txn_type,subscr_id,last_name,residence_country,mc_currency,item_name,business,amount3,recurring,verify_sign,payer_status,test_ipn,payer_email,first_name,receiver_email,payer_id,reattempt,subscr_date,custom,charset,notify_version,period3,mc_amount3) VALUES('subscr_cancel','S-7TJ38494560928049','User','US','USD','s3mer','gio_1219170247_biz@s3mer.com','180.00','1','A1waKBnoMMSc.wKboZS5L6bgju3IApSFo8Lvex8TKAH9ZpU47wc1IL9g','verified','1','gio_1231616691_per@s3mer.com','Test','gio_1219170247_biz@s3mer.com','7LQW3CGN5ZLZN','1','2009-01-10 18:24:17','21','windows-1252','2.6','1 M','180.00')Array
+(
+    [transaction_subject] => 
+    [payment_date] => 09:49:58 Jan 12, 2009 PST
+    [txn_type] => subscr_payment
+    [subscr_id] => S-4KM600070L4160147
+    [last_name] => Alex Resende
+    [residence_country] => BR
+    [item_name] => s3mer
+    [payment_gross] => 60.00
+    [mc_currency] => USD
+    [business] => payments@s3mer.com
+    [payment_type] => instant
+    [protection_eligibility] => Ineligible
+    [verify_sign] => A9gdGTOkpmaGBIGW5Qlax8v6qkolA35Ewt4FuhC0UxPkA8M92fG47Y-B
+    [payer_status] => unverified
+    [payer_email] => alexresende@jazzfilmes.com.br
+    [txn_id] => 9JG531734U5838203
+    [receiver_email] => payments@s3mer.com
+    [first_name] => Nilton
+    [payer_id] => WGRRF7XCDVRME
+    [receiver_id] => 6XUU5T78ZCKB4
+    [payment_status] => Completed
+    [payment_fee] => 2.64
+    [mc_fee] => 2.64
+    [mc_gross] => 60.00
+    [custom] => 402
+    [charset] => windows-1252
+    [notify_version] => 2.6
+)
+
+[transaction_subject] - 
+[payment_date] - 09:49:58 Jan 12, 2009 PST
+[txn_type] - subscr_payment
+[subscr_id] - S-4KM600070L4160147
+[last_name] - Alex Resende
+[residence_country] - BR
+[item_name] - s3mer
+[payment_gross] - 60.00
+[mc_currency] - USD
+[business] - payments@s3mer.com
+[payment_type] - instant
+[protection_eligibility] - Ineligible
+[verify_sign] - A9gdGTOkpmaGBIGW5Qlax8v6qkolA35Ewt4FuhC0UxPkA8M92fG47Y-B
+[payer_status] - unverified
+[payer_email] - alexresende@jazzfilmes.com.br
+[txn_id] - 9JG531734U5838203
+[receiver_email] - payments@s3mer.com
+[first_name] - Nilton
+[payer_id] - WGRRF7XCDVRME
+[receiver_id] - 6XUU5T78ZCKB4
+[payment_status] - Completed
+[payment_fee] - 2.64
+[mc_fee] - 2.64
+[mc_gross] - 60.00
+[custom] - 402
+[charset] - windows-1252
+[notify_version] - 2.6
+09:49:58 Jan 12, 2009 PST - 2009-01-12 13:49:58
+INSERT INTO paypal_transactions(transaction_subject,payment_date,txn_type,subscr_id,last_name,residence_country,item_name,payment_gross,mc_currency,business,payment_type,protection_eligibility,verify_sign,payer_status,payer_email,txn_id,receiver_email,first_name,payer_id,receiver_id,payment_status,payment_fee,mc_fee,mc_gross,custom,charset,notify_version) VALUES('','2009-01-12 13:49:58','subscr_payment','S-4KM600070L4160147','Alex Resende','BR','s3mer','60.00','USD','payments@s3mer.com','instant','Ineligible','A9gdGTOkpmaGBIGW5Qlax8v6qkolA35Ewt4FuhC0UxPkA8M92fG47Y-B','unverified','alexresende@jazzfilmes.com.br','9JG531734U5838203','payments@s3mer.com','Nilton','WGRRF7XCDVRME','6XUU5T78ZCKB4','Completed','2.64','2.64','60.00','402','windows-1252','2.6')Array
+(
+    [txn_type] => subscr_signup
+    [subscr_id] => S-4KM600070L4160147
+    [last_name] => Alex Resende
+    [residence_country] => BR
+    [mc_currency] => USD
+    [item_name] => s3mer
+    [business] => payments@s3mer.com
+    [amount3] => 60.00
+    [recurring] => 1
+    [verify_sign] => AaIHmoIzWLhOqQOHgzMvpHF1Io3RA3szvmlAcwubZiE3xzsl6HLC4tW-
+    [payer_status] => unverified
+    [payer_email] => alexresende@jazzfilmes.com.br
+    [first_name] => Nilton
+    [receiver_email] => payments@s3mer.com
+    [payer_id] => WGRRF7XCDVRME
+    [reattempt] => 1
+    [subscr_date] => 09:49:56 Jan 12, 2009 PST
+    [custom] => 402
+    [charset] => windows-1252
+    [notify_version] => 2.6
+    [period3] => 1 M
+    [mc_amount3] => 60.00
+)
+
+[txn_type] - subscr_signup
+[subscr_id] - S-4KM600070L4160147
+[last_name] - Alex Resende
+[residence_country] - BR
+[mc_currency] - USD
+[item_name] - s3mer
+[business] - payments@s3mer.com
+[amount3] - 60.00
+[recurring] - 1
+[verify_sign] - AaIHmoIzWLhOqQOHgzMvpHF1Io3RA3szvmlAcwubZiE3xzsl6HLC4tW-
+[payer_status] - unverified
+[payer_email] - alexresende@jazzfilmes.com.br
+[first_name] - Nilton
+[receiver_email] - payments@s3mer.com
+[payer_id] - WGRRF7XCDVRME
+[reattempt] - 1
+[subscr_date] - 09:49:56 Jan 12, 2009 PST
+[custom] - 402
+[charset] - windows-1252
+[notify_version] - 2.6
+[period3] - 1 M
+[mc_amount3] - 60.00
+
+INSERT INTO paypal_transactions(txn_type,subscr_id,last_name,residence_country,mc_currency,item_name,business,amount3,recurring,verify_sign,payer_status,payer_email,first_name,receiver_email,payer_id,reattempt,subscr_date,custom,charset,notify_version,period3,mc_amount3) VALUES('subscr_signup','S-4KM600070L4160147','Alex Resende','BR','USD','s3mer','payments@s3mer.com','60.00','1','AaIHmoIzWLhOqQOHgzMvpHF1Io3RA3szvmlAcwubZiE3xzsl6HLC4tW-','unverified','alexresende@jazzfilmes.com.br','Nilton','payments@s3mer.com','WGRRF7XCDVRME','1','2009-01-12 13:49:56','402','windows-1252','2.6','1 M','60.00')Array
+(
+    [transaction_subject] => 
+    [payment_date] => 15:53:39 Jan 13, 2009 PST
+    [txn_type] => subscr_payment
+    [subscr_id] => S-06S251407N5091437
+    [last_name] => AMOROSO
+    [residence_country] => PT
+    [item_name] => s3mer
+    [payment_gross] => 60.00
+    [mc_currency] => USD
+    [business] => payments@s3mer.com
+    [payment_type] => instant
+    [protection_eligibility] => Ineligible
+    [verify_sign] => ABuoo5HVuX2eNHq0IcqKtpbvtAclAPAeB7dOXvRdaGuVTm3.2puP9l8f
+    [payer_status] => unverified
+    [payer_email] => carlosamoroso@gmail.com
+    [txn_id] => 7P310352DX2334516
+    [receiver_email] => payments@s3mer.com
+    [first_name] => ANTONIO
+    [payer_id] => B5KETBBBRE8AE
+    [receiver_id] => 6XUU5T78ZCKB4
+    [payment_status] => Completed
+    [payment_fee] => 2.64
+    [mc_fee] => 2.64
+    [mc_gross] => 60.00
+    [custom] => 343
+    [charset] => windows-1252
+    [notify_version] => 2.6
+)
+
+[transaction_subject] - 
+[payment_date] - 15:53:39 Jan 13, 2009 PST
+[txn_type] - subscr_payment
+[subscr_id] - S-06S251407N5091437
+[last_name] - AMOROSO
+[residence_country] - PT
+[item_name] - s3mer
+[payment_gross] - 60.00
+[mc_currency] - USD
+[business] - payments@s3mer.com
+[payment_type] - instant
+[protection_eligibility] - Ineligible
+[verify_sign] - ABuoo5HVuX2eNHq0IcqKtpbvtAclAPAeB7dOXvRdaGuVTm3.2puP9l8f
+[payer_status] - unverified
+[payer_email] - carlosamoroso@gmail.com
+[txn_id] - 7P310352DX2334516
+[receiver_email] - payments@s3mer.com
+[first_name] - ANTONIO
+[payer_id] - B5KETBBBRE8AE
+[receiver_id] - 6XUU5T78ZCKB4
+[payment_status] - Completed
+[payment_fee] - 2.64
+[mc_fee] - 2.64
+[mc_gross] - 60.00
+[custom] - 343
+[charset] - windows-1252
+[notify_version] - 2.6
+15:53:39 Jan 13, 2009 PST - 2009-01-13 19:53:39
+INSERT INTO paypal_transactions(transaction_subject,payment_date,txn_type,subscr_id,last_name,residence_country,item_name,payment_gross,mc_currency,business,payment_type,protection_eligibility,verify_sign,payer_status,payer_email,txn_id,receiver_email,first_name,payer_id,receiver_id,payment_status,payment_fee,mc_fee,mc_gross,custom,charset,notify_version) VALUES('','2009-01-13 19:53:39','subscr_payment','S-06S251407N5091437','AMOROSO','PT','s3mer','60.00','USD','payments@s3mer.com','instant','Ineligible','ABuoo5HVuX2eNHq0IcqKtpbvtAclAPAeB7dOXvRdaGuVTm3.2puP9l8f','unverified','carlosamoroso@gmail.com','7P310352DX2334516','payments@s3mer.com','ANTONIO','B5KETBBBRE8AE','6XUU5T78ZCKB4','Completed','2.64','2.64','60.00','343','windows-1252','2.6')Array
+(
+    [txn_type] => subscr_signup
+    [subscr_id] => S-06S251407N5091437
+    [last_name] => AMOROSO
+    [residence_country] => PT
+    [mc_currency] => USD
+    [item_name] => s3mer
+    [business] => payments@s3mer.com
+    [amount3] => 60.00
+    [recurring] => 1
+    [verify_sign] => A9E.a7fXFNEdkpSDTq968Lv3qhvNAXqYJ718tYTFdPm1oCXV55yGzNfO
+    [payer_status] => unverified
+    [payer_email] => carlosamoroso@gmail.com
+    [first_name] => ANTONIO
+    [receiver_email] => payments@s3mer.com
+    [payer_id] => B5KETBBBRE8AE
+    [reattempt] => 1
+    [subscr_date] => 15:53:38 Jan 13, 2009 PST
+    [custom] => 343
+    [charset] => windows-1252
+    [notify_version] => 2.6
+    [period3] => 1 M
+    [mc_amount3] => 60.00
+)
+
+[txn_type] - subscr_signup
+[subscr_id] - S-06S251407N5091437
+[last_name] - AMOROSO
+[residence_country] - PT
+[mc_currency] - USD
+[item_name] - s3mer
+[business] - payments@s3mer.com
+[amount3] - 60.00
+[recurring] - 1
+[verify_sign] - A9E.a7fXFNEdkpSDTq968Lv3qhvNAXqYJ718tYTFdPm1oCXV55yGzNfO
+[payer_status] - unverified
+[payer_email] - carlosamoroso@gmail.com
+[first_name] - ANTONIO
+[receiver_email] - payments@s3mer.com
+[payer_id] - B5KETBBBRE8AE
+[reattempt] - 1
+[subscr_date] - 15:53:38 Jan 13, 2009 PST
+[custom] - 343
+[charset] - windows-1252
+[notify_version] - 2.6
+[period3] - 1 M
+[mc_amount3] - 60.00
+
+INSERT INTO paypal_transactions(txn_type,subscr_id,last_name,residence_country,mc_currency,item_name,business,amount3,recurring,verify_sign,payer_status,payer_email,first_name,receiver_email,payer_id,reattempt,subscr_date,custom,charset,notify_version,period3,mc_amount3) VALUES('subscr_signup','S-06S251407N5091437','AMOROSO','PT','USD','s3mer','payments@s3mer.com','60.00','1','A9E.a7fXFNEdkpSDTq968Lv3qhvNAXqYJ718tYTFdPm1oCXV55yGzNfO','unverified','carlosamoroso@gmail.com','ANTONIO','payments@s3mer.com','B5KETBBBRE8AE','1','2009-01-13 19:53:38','343','windows-1252','2.6','1 M','60.00')Array
+(
+    [txn_type] => subscr_signup
+    [subscr_id] => S-93849957H0909684R
+    [last_name] => Harding
+    [residence_country] => US
+    [mc_currency] => USD
+    [item_name] => s3mer
+    [business] => payments@s3mer.com
+    [amount3] => 60.00
+    [recurring] => 1
+    [verify_sign] => AiPC9BjkCyDFQXbSkoZcgqH3hpacA8q1B-Sp4OhngpfzmgZXty.jzsGZ
+    [payer_status] => unverified
+    [payer_email] => justin@intensivemedia.net
+    [first_name] => Justin
+    [receiver_email] => payments@s3mer.com
+    [payer_id] => VNBZBQAFRT6KW
+    [reattempt] => 1
+    [subscr_date] => 09:34:03 Jan 18, 2009 PST
+    [custom] => 391
+    [charset] => windows-1252
+    [notify_version] => 2.6
+    [period3] => 1 M
+    [mc_amount3] => 60.00
+)
+
+[txn_type] - subscr_signup
+[subscr_id] - S-93849957H0909684R
+[last_name] - Harding
+[residence_country] - US
+[mc_currency] - USD
+[item_name] - s3mer
+[business] - payments@s3mer.com
+[amount3] - 60.00
+[recurring] - 1
+[verify_sign] - AiPC9BjkCyDFQXbSkoZcgqH3hpacA8q1B-Sp4OhngpfzmgZXty.jzsGZ
+[payer_status] - unverified
+[payer_email] - justin@intensivemedia.net
+[first_name] - Justin
+[receiver_email] - payments@s3mer.com
+[payer_id] - VNBZBQAFRT6KW
+[reattempt] - 1
+[subscr_date] - 09:34:03 Jan 18, 2009 PST
+[custom] - 391
+[charset] - windows-1252
+[notify_version] - 2.6
+[period3] - 1 M
+[mc_amount3] - 60.00
+
+INSERT INTO paypal_transactions(txn_type,subscr_id,last_name,residence_country,mc_currency,item_name,business,amount3,recurring,verify_sign,payer_status,payer_email,first_name,receiver_email,payer_id,reattempt,subscr_date,custom,charset,notify_version,period3,mc_amount3) VALUES('subscr_signup','S-93849957H0909684R','Harding','US','USD','s3mer','payments@s3mer.com','60.00','1','AiPC9BjkCyDFQXbSkoZcgqH3hpacA8q1B-Sp4OhngpfzmgZXty.jzsGZ','unverified','justin@intensivemedia.net','Justin','payments@s3mer.com','VNBZBQAFRT6KW','1','2009-01-18 13:34:03','391','windows-1252','2.6','1 M','60.00')Array
+(
+    [transaction_subject] => 
+    [payment_date] => 09:34:05 Jan 18, 2009 PST
+    [txn_type] => subscr_payment
+    [subscr_id] => S-93849957H0909684R
+    [last_name] => Harding
+    [residence_country] => US
+    [item_name] => s3mer
+    [payment_gross] => 60.00
+    [mc_currency] => USD
+    [business] => payments@s3mer.com
+    [payment_type] => instant
+    [protection_eligibility] => Ineligible
+    [verify_sign] => An5ns1Kso7MWUdW4ErQKJJJ4qi4-Ah1.WWzvMdDtIotZ8V1VjnkZRMuM
+    [payer_status] => unverified
+    [payer_email] => justin@intensivemedia.net
+    [txn_id] => 6H965680PT6042713
+    [receiver_email] => payments@s3mer.com
+    [first_name] => Justin
+    [payer_id] => VNBZBQAFRT6KW
+    [receiver_id] => 6XUU5T78ZCKB4
+    [payment_status] => Completed
+    [payment_fee] => 2.04
+    [mc_fee] => 2.04
+    [mc_gross] => 60.00
+    [custom] => 391
+    [charset] => windows-1252
+    [notify_version] => 2.6
+)
+
+[transaction_subject] - 
+[payment_date] - 09:34:05 Jan 18, 2009 PST
+[txn_type] - subscr_payment
+[subscr_id] - S-93849957H0909684R
+[last_name] - Harding
+[residence_country] - US
+[item_name] - s3mer
+[payment_gross] - 60.00
+[mc_currency] - USD
+[business] - payments@s3mer.com
+[payment_type] - instant
+[protection_eligibility] - Ineligible
+[verify_sign] - An5ns1Kso7MWUdW4ErQKJJJ4qi4-Ah1.WWzvMdDtIotZ8V1VjnkZRMuM
+[payer_status] - unverified
+[payer_email] - justin@intensivemedia.net
+[txn_id] - 6H965680PT6042713
+[receiver_email] - payments@s3mer.com
+[first_name] - Justin
+[payer_id] - VNBZBQAFRT6KW
+[receiver_id] - 6XUU5T78ZCKB4
+[payment_status] - Completed
+[payment_fee] - 2.04
+[mc_fee] - 2.04
+[mc_gross] - 60.00
+[custom] - 391
+[charset] - windows-1252
+[notify_version] - 2.6
+09:34:05 Jan 18, 2009 PST - 2009-01-18 13:34:05
+INSERT INTO paypal_transactions(transaction_subject,payment_date,txn_type,subscr_id,last_name,residence_country,item_name,payment_gross,mc_currency,business,payment_type,protection_eligibility,verify_sign,payer_status,payer_email,txn_id,receiver_email,first_name,payer_id,receiver_id,payment_status,payment_fee,mc_fee,mc_gross,custom,charset,notify_version) VALUES('','2009-01-18 13:34:05','subscr_payment','S-93849957H0909684R','Harding','US','s3mer','60.00','USD','payments@s3mer.com','instant','Ineligible','An5ns1Kso7MWUdW4ErQKJJJ4qi4-Ah1.WWzvMdDtIotZ8V1VjnkZRMuM','unverified','justin@intensivemedia.net','6H965680PT6042713','payments@s3mer.com','Justin','VNBZBQAFRT6KW','6XUU5T78ZCKB4','Completed','2.04','2.04','60.00','391','windows-1252','2.6')Array
+(
+    [transaction_subject] => 
+    [payment_date] => 14:56:27 Jan 27, 2009 PST
+    [txn_type] => subscr_payment
+    [subscr_id] => S-6MR16628P9033912S
+    [last_name] => Geenen
+    [residence_country] => US
+    [item_name] => s3mer
+    [payment_gross] => 60.00
+    [mc_currency] => USD
+    [business] => payments@s3mer.com
+    [payment_type] => instant
+    [protection_eligibility] => Ineligible
+    [verify_sign] => AfrD4eauR0q8-rnmsaaRVPi0m1BpActmBvuB4RoyOna60GnZgKyiQv9D
+    [payer_status] => unverified
+    [payer_email] => kyle.geenen@trnty.edu
+    [txn_id] => 4KH16460NJ3096259
+    [receiver_email] => payments@s3mer.com
+    [first_name] => Charles
+    [payer_id] => 6PJW3YX54H6JY
+    [receiver_id] => 6XUU5T78ZCKB4
+    [payment_status] => Completed
+    [payment_fee] => 2.04
+    [mc_fee] => 2.04
+    [mc_gross] => 60.00
+    [custom] => 228
+    [charset] => windows-1252
+    [notify_version] => 2.6
+)
+
+[transaction_subject] - 
+[payment_date] - 14:56:27 Jan 27, 2009 PST
+[txn_type] - subscr_payment
+[subscr_id] - S-6MR16628P9033912S
+[last_name] - Geenen
+[residence_country] - US
+[item_name] - s3mer
+[payment_gross] - 60.00
+[mc_currency] - USD
+[business] - payments@s3mer.com
+[payment_type] - instant
+[protection_eligibility] - Ineligible
+[verify_sign] - AfrD4eauR0q8-rnmsaaRVPi0m1BpActmBvuB4RoyOna60GnZgKyiQv9D
+[payer_status] - unverified
+[payer_email] - kyle.geenen@trnty.edu
+[txn_id] - 4KH16460NJ3096259
+[receiver_email] - payments@s3mer.com
+[first_name] - Charles
+[payer_id] - 6PJW3YX54H6JY
+[receiver_id] - 6XUU5T78ZCKB4
+[payment_status] - Completed
+[payment_fee] - 2.04
+[mc_fee] - 2.04
+[mc_gross] - 60.00
+[custom] - 228
+[charset] - windows-1252
+[notify_version] - 2.6
+14:56:27 Jan 27, 2009 PST - 2009-01-27 18:56:27
+INSERT INTO paypal_transactions(transaction_subject,payment_date,txn_type,subscr_id,last_name,residence_country,item_name,payment_gross,mc_currency,business,payment_type,protection_eligibility,verify_sign,payer_status,payer_email,txn_id,receiver_email,first_name,payer_id,receiver_id,payment_status,payment_fee,mc_fee,mc_gross,custom,charset,notify_version) VALUES('','2009-01-27 18:56:27','subscr_payment','S-6MR16628P9033912S','Geenen','US','s3mer','60.00','USD','payments@s3mer.com','instant','Ineligible','AfrD4eauR0q8-rnmsaaRVPi0m1BpActmBvuB4RoyOna60GnZgKyiQv9D','unverified','kyle.geenen@trnty.edu','4KH16460NJ3096259','payments@s3mer.com','Charles','6PJW3YX54H6JY','6XUU5T78ZCKB4','Completed','2.04','2.04','60.00','228','windows-1252','2.6')Array
+(
+    [txn_type] => subscr_signup
+    [subscr_id] => S-6MR16628P9033912S
+    [last_name] => Geenen
+    [residence_country] => US
+    [mc_currency] => USD
+    [item_name] => s3mer
+    [business] => payments@s3mer.com
+    [amount3] => 60.00
+    [recurring] => 1
+    [verify_sign] => AY0iBRl82pVMoEZkxDGS87ZGjNYcA2orb1WTOgFJKVpLXJU0R35dHhsF
+    [payer_status] => unverified
+    [payer_email] => kyle.geenen@trnty.edu
+    [first_name] => Charles
+    [receiver_email] => payments@s3mer.com
+    [payer_id] => 6PJW3YX54H6JY
+    [reattempt] => 1
+    [subscr_date] => 14:56:26 Jan 27, 2009 PST
+    [custom] => 228
+    [charset] => windows-1252
+    [notify_version] => 2.6
+    [period3] => 1 M
+    [mc_amount3] => 60.00
+)
+
+[txn_type] - subscr_signup
+[subscr_id] - S-6MR16628P9033912S
+[last_name] - Geenen
+[residence_country] - US
+[mc_currency] - USD
+[item_name] - s3mer
+[business] - payments@s3mer.com
+[amount3] - 60.00
+[recurring] - 1
+[verify_sign] - AY0iBRl82pVMoEZkxDGS87ZGjNYcA2orb1WTOgFJKVpLXJU0R35dHhsF
+[payer_status] - unverified
+[payer_email] - kyle.geenen@trnty.edu
+[first_name] - Charles
+[receiver_email] - payments@s3mer.com
+[payer_id] - 6PJW3YX54H6JY
+[reattempt] - 1
+[subscr_date] - 14:56:26 Jan 27, 2009 PST
+[custom] - 228
+[charset] - windows-1252
+[notify_version] - 2.6
+[period3] - 1 M
+[mc_amount3] - 60.00
+
+INSERT INTO paypal_transactions(txn_type,subscr_id,last_name,residence_country,mc_currency,item_name,business,amount3,recurring,verify_sign,payer_status,payer_email,first_name,receiver_email,payer_id,reattempt,subscr_date,custom,charset,notify_version,period3,mc_amount3) VALUES('subscr_signup','S-6MR16628P9033912S','Geenen','US','USD','s3mer','payments@s3mer.com','60.00','1','AY0iBRl82pVMoEZkxDGS87ZGjNYcA2orb1WTOgFJKVpLXJU0R35dHhsF','unverified','kyle.geenen@trnty.edu','Charles','payments@s3mer.com','6PJW3YX54H6JY','1','2009-01-27 18:56:26','228','windows-1252','2.6','1 M','60.00')

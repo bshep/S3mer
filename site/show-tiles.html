@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Shows</title>
+<script type="text/javascript" src="js/buttons.js"></script>
+<script src="js/scriptaculous/prototype.js" type="text/javascript"></script>
+<script src="js/scriptaculous/scriptaculous.js" type="text/javascript"></script>
+<script src="js/s3mer_tilelist.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.5.0/build/reset-fonts-grids/reset-fonts-grids.css">
+<link href="styles/main.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body onload="onLoadShows()">
+<div class="container">
+  <div class="logo-box">
+    	<img src="images/s3mer_logo.gif" alt="s3mer.com" />
+  </div>
+    <div class="topmenu-box">
+    	<p>gcollazo@gmail.com&nbsp;&nbsp;<a href="#">[logout]</a></p>
+	  		<ul>
+        		<li><a href="#">download</a></li>
+                <li><a href="#">settings</a></li>
+                <li><a href="#">faq</a></li>
+                <li><a href="#">blog</a></li>
+                <li><a href="#">contact</a></li>
+				<li><a href="#"><img src="images/blanc16x16.gif" alt="Change Language" title="Change Language" class="world-icon" /></a></li>
+            </ul>
+    </div>
+    <div class="main-nav">
+   	  <div class="main-nav-top">
+        	<img src="images/borderL.gif" class="corner" style="display:none" />
+      </div>
+        	<ul>
+   		    <li><a href="player-tiles.html">Players</a></li>
+				<li><a href="#" class="tab-selected">SHOWS</a></li>
+        		<li><a href="#">LIBRARY</a></li>
+   	  </ul>
+
+      	<div class="toggle"><a href="#"><img src="images/buttons/tiles-d.gif" alt="tiles" /></a>&nbsp;<a href="#"><img src="images/buttons/list.gif" alt="list" /></a></div>
+
+    </div>
+    <div id="content" class="content">
+    <div id="content-boxes">
+      <div id="box1" class="box-positive" onclick="doSelect('box1')">
+            <div class="icon"><img src="images/icons/layout_header.png" alt="show" width="32" height="32" /></div>
+          <div class="title">Altamira</div>
+            <div class="right-side-buttons">
+              <p><a href="edit-show.html" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('box1_boton1','','images/buttons/edit-up.gif',1)" onmousedown="MM_swapImage('box1_boton1','','images/buttons/edit-down.gif',1)" onmouseup="MM_swapImgRestore()"><img src="images/buttons/edit.gif" name="box1_boton1" width="108" height="31" border="0" id="box1_boton1" /></a></p>
+              
+              <div class="player-disable"><p><a href="#" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('box1_Image5','','images/buttons/disable-up.gif',1)"  onmousedown="MM_swapImage('box1_Image5','','images/buttons/disable-down.gif',1)" onmouseup="MM_swapImgRestore()" onclick="doDisable('box1')"><img src="images/buttons/disable.gif" alt="Disable" name="box1_Image5" width="108" height="31" border="0" id="box1_Image5" /></a></p></div>
+              <div class="player-disable"><p class="player-enable"><a href="#" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('box1_Image4','','images/buttons/enable-up.gif',1)"  onmousedown="MM_swapImage('box1_Image4','','images/buttons/enable-down.gif',1)" onmouseup="MM_swapImgRestore()" onclick="doEnable('box1')"><img src="images/buttons/enable.gif" alt="Disable" name="box1_Image4" width="108" height="31" border="0" id="box1_Image4" /></a></p></div>
+
+        <p><a href="#" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('box1_Image3','','images/buttons/delete-up.gif',0)"  onmousedown="MM_swapImage('box1_Image3','','images/buttons/delete-down.gif',1)" onmouseup="MM_swapImgRestore()"><img src="images/buttons/delete.gif" alt="Delete" name="box1_Image3" width="108" height="31" border="0" id="box1_Image3" /></a></p>
+            </div>
+            <div class="right-side-details">
+              <p>Description Text goes here. Description Text goes here.Description Text goes here. Description Text goes here.</p>
+            </div>
+        </div>
+      <div id="box2" class="box-positive" onclick="doSelect('box2')">
+            <div class="icon"><img src="images/icons/layout_header.png" alt="show" width="32" height="32" /></div>
+            <div class="title">Altamira 2</div>
+            <div class="right-side-buttons">
+              <p><a href="edit-show.html" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('box2_boton1','','images/buttons/edit-up.gif',1)" onmousedown="MM_swapImage('box2_boton1','','images/buttons/edit-down.gif',1)" onmouseup="MM_swapImgRestore()"><img src="images/buttons/edit.gif" name="box2_boton1" width="108" height="31" border="0" id="box2_boton1" /></a></p>
+              
+              <div class="player-disable"><p><a href="#" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('box2_Image5','','images/buttons/disable-up.gif',1)"  onmousedown="MM_swapImage('box2_Image5','','images/buttons/disable-down.gif',1)" onmouseup="MM_swapImgRestore()" onclick="doDisable('box2')"><img src="images/buttons/disable.gif" alt="Disable" name="box2_Image5" width="108" height="31" border="0" id="box2_Image5" /></a></p></div>
+              <div class="player-disable"><p class="player-enable"><a href="#" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('box2_Image4','','images/buttons/enable-up.gif',1)"  onmousedown="MM_swapImage('box2_Image4','','images/buttons/enable-down.gif',1)" onmouseup="MM_swapImgRestore()" onclick="doEnable('box2')"><img src="images/buttons/enable.gif" alt="Disable" name="box2_Image4" width="108" height="31" border="0" id="box2_Image4" /></a></p></div>
+
+        <p><a href="#" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('box2_Image3','','images/buttons/delete-up.gif',0)"  onmousedown="MM_swapImage('box2_Image3','','images/buttons/delete-down.gif',1)" onmouseup="MM_swapImgRestore()"><img src="images/buttons/delete.gif" alt="Delete" name="box2_Image3" width="108" height="31" border="0" id="box2_Image3" /></a></p>
+            </div>
+            <div class="right-side-details">
+              <p>Description Text goes here. Description Text goes here.Description Text goes here. Description Text goes here.</p>
+            </div>
+          </div>
+      <div id="box3" class="box-negative" onclick="doSelect('box3')">
+            <div class="icon"><img src="images/icons/layout_header.png" alt="show" width="32" height="32" /></div>
+            <div class="title">Altamira 3</div>
+            <div class="right-side-buttons">
+              <p><a href="edit-show.html" onclick="" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('box3_boton1','','images/buttons/edit-up.gif',1)" onmousedown="MM_swapImage('box3_boton1','','images/buttons/edit-down.gif',1)" onmouseup="MM_swapImgRestore()"><img src="images/buttons/edit.gif" name="box3_boton1" width="108" height="31" border="0" id="box3_boton1" /></a></p>
+              
+              <div class="player-disable"><p><a href="#" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('box3_Image5','','images/buttons/disable-up.gif',1)"  onmousedown="MM_swapImage('box3_Image5','','images/buttons/disable-down.gif',1)" onmouseup="MM_swapImgRestore()" onclick="doDisable('box3')"><img src="images/buttons/disable.gif" alt="Disable" name="box3_Image5" width="108" height="31" border="0" id="box3_Image5" /></a></p></div>
+              <div class="player-disable"><p class="player-enable"><a href="#" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('box3_Image4','','images/buttons/enable-up.gif',1)"  onmousedown="MM_swapImage('box3_Image4','','images/buttons/enable-down.gif',1)" onmouseup="MM_swapImgRestore()" onclick="doEnable('box3')"><img src="images/buttons/enable.gif" alt="Disable" name="box3_Image4" width="108" height="31" border="0" id="box3_Image4" /></a></p></div>
+
+        <p><a href="#" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('box3_Image3','','images/buttons/delete-up.gif',0)"  onmousedown="MM_swapImage('box3_Image3','','images/buttons/delete-down.gif',1)" onmouseup="MM_swapImgRestore()"><img src="images/buttons/delete.gif" alt="Delete" name="box3_Image3" width="108" height="31" border="0" id="box3_Image3" /></a></p>
+            </div>
+            <div class="right-side-details">
+              <p>Description Text goes here. Description Text goes here.Description Text goes here. Description Text goes here.</p>
+            </div>
+        </div>
+      </div>
+		<a href="#" class="neutralLink"><div id="box-add" class="box-neutral">
+        	<div class="icon">
+        	  <div align="center"><img src="images/icons/add.png" width="16" height="16" /></div>
+        	</div>
+        	<div class="title">New Show</div>
+       	  <div class="right-side-details">
+			<p>Click here to create a new show</p>
+          </div>
+      </div></a>
+    </div>
+    <div class="bottom-menu">
+    	<ul>
+        	<li><a href="#">company</a></li>
+            <li><a href="#">terms of use</a></li>
+            <li><a href="#">privacy policy</a></li>
+            <li><a href="#">copyright</a></li>
+        </ul>
+    </div>
+</div>
+</body>
+
+
+
+</html>

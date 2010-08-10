@@ -1,0 +1,39 @@
+Key: test_ipn; Value: 1 
+Key: payment_type; Value: instant 
+Key: payment_date; Value: 09:01:16 Sep. 01, 2008 PDT 
+Key: payment_status; Value: Completed 
+Key: address_status; Value: confirmed 
+Key: payer_status; Value: unverified 
+Key: first_name; Value: John 
+Key: last_name; Value: Smith 
+Key: payer_email; Value: buyer@paypalsandbox.com 
+Key: payer_id; Value: TESTBUYERID01 
+Key: address_name; Value: John Smith 
+Key: address_country; Value: United States 
+Key: address_country_code; Value: US 
+Key: address_zip; Value: 95131 
+Key: address_state; Value: CA 
+Key: address_city; Value: San Jose 
+Key: address_street; Value: 123, any street 
+Key: receiver_email; Value: seller@paypalsandbox.com 
+Key: receiver_id; Value: TESTSELLERID1 
+Key: residence_country; Value: US 
+Key: item_name1; Value: something 
+Key: item_number1; Value: AK-1234 
+Key: quantity1; Value: 1 
+Key: tax; Value: 2.02 
+Key: mc_currency; Value: USD - US Dollars 
+Key: mc_fee; Value: 0.44 
+Key: mc_gross1; Value: 9.34 
+Key: mc_handling; Value: 2.06 
+Key: mc_handling1; Value: 1.67 
+Key: mc_shipping; Value: 3.02 
+Key: mc_shipping1; Value: 1.02 
+Key: txn_type; Value: cart 
+Key: txn_id; Value: 1691161 
+Key: notify_version; Value: 2.4 
+Key: custom; Value: xyz123 
+Key: invoice; Value: abc1234 
+Key: charset; Value: windows-1252 
+Key: verify_sign; Value: ArbmM.e7MwkctxQsAeQem.vzBz76AgOOJFj149xaV11ccVK40-eovMrh 
+Key: cmd; Value: _notify-validate 
