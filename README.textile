@@ -1,0 +1,29 @@
+h1. About S3mer
+
+S3mer was designed to be a cross-plataform digital signage application.  The main application runs using the Adobe AIR framework and the website runs using PHP and Smarty.
+
+S3mer development ceased around April 2010 and the decision was made to open source it sometime in August 2010.
+
+h1. License
+
+S3mer is distributed under the "GPLv3":http://www.gnu.org/licenses/gpl-3.0.txt [1] license.
+
+h1. Requirements
+
+* Apache
+* PHP
+* MySQL
+* FlexBuilder
+* Amazon S3 account
+
+h1. Getting the code up and running
+
+We provide no support to get the code setup on your own server.  However, it should be pretty straightforward to get up and running, most of the configuration is separated into their own files.
+
+* ApplicationSettings.as -> for player config
+* dbconfig.php -> for site config
+* scipts/db_schema.sql -> for db schema
+
+
+
+fn1. http://www.gnu.org/licenses/gpl-3.0.txt
